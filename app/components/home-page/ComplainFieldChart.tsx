@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
+  Label, // ⬅️ add this
 } from "recharts";
 
 const ComplainFieldChart = () => {
@@ -17,18 +18,30 @@ const ComplainFieldChart = () => {
     { name: "Thala", value: 25 },
   ];
 
+  const total = React.useMemo(
+    () => data.reduce((s, d) => s + d.value, 0),
+    [data]
+  );
+  const maxItem = React.useMemo(
+    () => data.reduce((a, b) => (b.value > a.value ? b : a), data[0]),
+    [data]
+  );
+  const maxPct = React.useMemo(
+    () => Math.round((maxItem.value / total) * 100),
+    [maxItem, total]
+  );
+
   return (
-    <div className="rounded-xl px-4! py-2! bg-white mt-2! h-[374px]">
+    <div className="rounded-xl px-4! py-2! bg-white mt-2!">
       <div>
         <p className="text-sm text-[#1E293B] font-bold">
           Complaint Field Distribution
         </p>
       </div>
 
-      <div className="h-[300px] mt-2 flex justify-center items-center">
+      <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
-            {/* 🔹 Gradients */}
             <defs>
               <linearGradient id="gradientShops" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stopColor="#013769" />
@@ -46,7 +59,6 @@ const ComplainFieldChart = () => {
               </linearGradient>
             </defs>
 
-            {/* 🟢 Pie */}
             <Pie
               data={data}
               dataKey="value"
@@ -59,9 +71,17 @@ const ComplainFieldChart = () => {
               <Cell fill="url(#gradientShops)" />
               <Cell fill="url(#gradientRairi)" />
               <Cell fill="url(#gradientThala)" />
+
+              <Label
+                position="center"
+                fill="#414D55"
+                fontSize={20}
+                fontWeight={700}
+              >
+                {`${maxPct}% ${maxItem.name}`}
+              </Label>
             </Pie>
 
-            {/* ✨ Tooltip - styled */}
             <Tooltip
               contentStyle={{
                 backgroundColor: "var(--primary)",
@@ -85,12 +105,22 @@ const ComplainFieldChart = () => {
               formatter={(value, name) => [`${value} Complaints`, name]}
             />
 
-            {/* 🔸 Legend - styled */}
             <Legend
               verticalAlign="bottom"
               align="center"
               iconType="square"
-              iconSize={12}
+              iconSize={10}
+              formatter={(value) => (
+                <span
+                  style={{
+                    color: "#636466",
+                    fontSize: "10px",
+                    fontWeight: 500,
+                  }}
+                >
+                  {value}
+                </span>
+              )}
             />
           </PieChart>
         </ResponsiveContainer>

@@ -9,7 +9,7 @@ import StatSummary from "./components/home-page/StatSummary";
 const page = () => {
   return (
     <div className="grid grid-cols-12 gap-2">
-      <div className="col-span-9 min-h-screen">
+      <div className="col-span-12 lg:col-span-8 xl:col-span-9 min-h-screen">
         <StatSummary />
         <AreachartComponent />
         <div className="grid grid-cols-2 gap-2">
@@ -17,7 +17,7 @@ const page = () => {
           <ComplainTypeChart />
         </div>
       </div>
-      <div className="col-span-3">
+      <div className="col-span-12 lg:col-span-4 xl:col-span-3">
         <FilterDataComponent />
         <ComplainStatusChart />
         <ComplainMap />

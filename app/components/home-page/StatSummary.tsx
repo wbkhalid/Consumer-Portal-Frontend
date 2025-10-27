@@ -1,12 +1,13 @@
 import React from "react";
 import CustomStatCard from "./CustomStatCard";
-import { IoDocumentTextOutline } from "react-icons/io5";
+import { IoCheckmarkDone, IoDocumentTextOutline } from "react-icons/io5";
 import { GoClock } from "react-icons/go";
 import { BsArrowUpRightSquare } from "react-icons/bs";
+import { TbSettingsExclamation, TbTimeDuration45 } from "react-icons/tb";
 
 const StatSummary = () => {
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
       <CustomStatCard
         title="Total Complaints"
         value={150}
@@ -31,21 +32,21 @@ const StatSummary = () => {
       <CustomStatCard
         title="Resolved"
         value={33}
-        icon={<IoDocumentTextOutline className="text-white text-lg" />}
+        icon={<IoCheckmarkDone className="text-white text-lg" />}
         iconBg="bg-(--success)"
         percentage={4.5}
       />
       <CustomStatCard
         title="Escalated"
         value={41}
-        icon={<GoClock className="text-white text-lg" />}
+        icon={<TbSettingsExclamation className="text-white text-lg" />}
         iconBg="bg-(--error)"
         percentage={4.5}
       />
       <CustomStatCard
         title="Avg Resolution"
         value={"90h"}
-        icon={<BsArrowUpRightSquare className="text-white text-lg" />}
+        icon={<TbTimeDuration45 className="text-white text-lg" />}
         iconBg="bg-(--primary)"
         percentage={4.5}
       />

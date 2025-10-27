@@ -131,13 +131,12 @@ const AreachartComponent = () => {
             color: "#ffffff",
             fontWeight: 600,
             fontSize: 13,
-            marginBottom: 4,
           }}
           itemStyle={{
             color: "#ffffff",
             fontSize: 12,
           }}
-          cursor={{ fill: "rgba(1, 55, 105, 0.1)" }} // faint highlight under hover
+          cursor={{ fill: "rgba(1, 55, 105, 0.1)" }}
           labelFormatter={(value) =>
             new Date(value).toLocaleDateString("en-GB", {
               day: "2-digit",

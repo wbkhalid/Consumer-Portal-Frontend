@@ -60,10 +60,10 @@ const ComplainStatusChart: React.FC = () => {
   };
 
   return (
-    <div className="rounded-xl px-4! py-2! bg-white mt-2! h-[374px]">
+    <div className="rounded-xl px-4! py-2! bg-white mt-2!">
       {/* Header */}
       <div>
-        <p className="text-sm text-[#202224] font-medium">
+        <p className="text-sm text-[#1E293B] font-bold">
           Complaint Resolution Status
         </p>
       </div>
@@ -92,18 +92,42 @@ const ComplainStatusChart: React.FC = () => {
             </Pie>
 
             <Tooltip
-              formatter={(value: number, name: string) => [
-                `${value} Complaints`,
-                name,
-              ]}
-              cursor={{ fill: "rgba(0,0,0,0.05)" }}
+              contentStyle={{
+                backgroundColor: "var(--primary)",
+                border: "none",
+                borderRadius: "10px",
+                color: "#ffffff",
+                boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+                padding: "10px 12px",
+              }}
+              labelStyle={{
+                color: "#ffffff",
+                fontWeight: 600,
+                fontSize: 13,
+                marginBottom: 4,
+              }}
+              itemStyle={{
+                color: "#ffffff",
+                fontSize: 12,
+              }}
             />
 
             <Legend
               verticalAlign="bottom"
               align="center"
-              iconType="circle"
+              iconType="square"
               iconSize={10}
+              formatter={(value) => (
+                <span
+                  style={{
+                    color: "#636466",
+                    fontSize: "10px",
+                    fontWeight: 500,
+                  }}
+                >
+                  {value}
+                </span>
+              )}
             />
           </PieChart>
         </ResponsiveContainer>
