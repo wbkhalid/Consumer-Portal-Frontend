@@ -22,7 +22,7 @@ const ComplainTypeChart = () => {
   return (
     <div className="rounded-xl px-4! py-2! bg-white mt-2! w-full">
       <div>
-        <p className="text-sm text-[#1E293B] font-bold mb-2!">
+        <p className="text-sm text-[#202224] font-bold mb-4!">
           Types of Complaints
         </p>
       </div>

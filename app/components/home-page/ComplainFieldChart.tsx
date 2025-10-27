@@ -34,7 +34,7 @@ const ComplainFieldChart = () => {
   return (
     <div className="rounded-xl px-4! py-2! bg-white mt-2!">
       <div>
-        <p className="text-sm text-[#1E293B] font-bold">
+        <p className="text-sm text-[#202224] font-bold mb-4!">
           Complaint Field Distribution
         </p>
       </div>

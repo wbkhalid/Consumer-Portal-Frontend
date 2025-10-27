@@ -24,9 +24,11 @@ const AreachartComponent = () => {
     <div className="rounded-xl px-4! py-2! bg-white mt-2!">
       <div className="mb-3! flex justify-between">
         <div>
-          <p className="text-sm text-[#202224]">Daily Average Complaints</p>
+          <p className="text-sm text-[#202224] font-bold mb-1!">
+            Daily Average Complaints
+          </p>
           <div className="flex gap-4 items-center">
-            <p className="font-extrabold text-2xl">Punjab</p>
+            <p className="font-extrabold text-xl">Punjab</p>
             <p className="text-sm">
               <span className="text-green-600 font-bold">+1.3%</span> VS LAST
               YEAR

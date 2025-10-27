@@ -17,20 +17,21 @@ const NavBar = () => {
   return (
     <nav className="bg-(--primary) px-4! py-1!">
       <div className="flex justify-between items-center">
-        <div className="flex items-center gap-[22px]">
+        <div className="flex items-center gap-4">
           <Link href="/">
             <Image
-              src="/images/logo-white.png"
+              src="/logo.png"
               width={40}
               height={40}
               alt="logo"
               priority
+              className="invert brightness-0 saturate-0"
             />
           </Link>
 
           <Flex align="center" className="gap-3!">
             <Heading size="5" className="text-white">
-              PC & CMD
+              Consumer Portal
             </Heading>
             <Popover.Root>
               <Popover.Trigger>
@@ -47,7 +48,7 @@ const NavBar = () => {
                 align="start"
                 className="min-w-[500px]! lg:min-w-[1000px]! p-1 rounded-xl shadow-xl bg-white"
               >
-                hello
+                Menu
               </Popover.Content>
             </Popover.Root>
           </Flex>
@@ -65,7 +66,7 @@ const NavBar = () => {
                     size="3"
                   />
                   <div>
-                    <p className="font-semibold">DFC Food</p>
+                    <p className="font-semibold">Admin</p>
                     <Text as="p" className="text-[9px]">
                       admin@gmail.com
                     </Text>
@@ -80,10 +81,10 @@ const NavBar = () => {
               <DropdownMenu.Label>
                 <Text size="2">admin@gmail.com</Text>
               </DropdownMenu.Label>
-              <DropdownMenu.Item>
+              <DropdownMenu.Item className="hover:bg-(--primary)!">
                 <Link href="/settings">Settings</Link>
               </DropdownMenu.Item>
-              <DropdownMenu.Item>
+              <DropdownMenu.Item className="hover:bg-(--primary)!">
                 <button>Log out</button>
               </DropdownMenu.Item>
             </DropdownMenu.Content>
