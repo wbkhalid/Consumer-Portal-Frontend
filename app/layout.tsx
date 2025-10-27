@@ -1,9 +1,10 @@
-import ThemeSwitcher from "@/components/RadixTheme";
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import "./theme-config.css";
+import ThemeSwitcher from "./components/RadixTheme";
+import NavBar from "./components/NavBar";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -26,7 +27,10 @@ export default function RootLayout({
       <body
         className={`${plusJakartaSans.variable} ${plusJakartaSans.variable} antialiased`}
       >
-        <ThemeSwitcher>{children}</ThemeSwitcher>
+        <ThemeSwitcher>
+          <NavBar />
+          <main className="p-2! bg-[#f3f4f9]">{children}</main>
+        </ThemeSwitcher>
       </body>
     </html>
   );
