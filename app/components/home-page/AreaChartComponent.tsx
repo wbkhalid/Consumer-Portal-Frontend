@@ -7,7 +7,6 @@ import {
   XAxis,
   YAxis,
   ResponsiveContainer,
-  Legend,
 } from "recharts";
 
 const AreachartComponent = () => {
@@ -36,7 +35,7 @@ const AreachartComponent = () => {
         </div>
         <div className="flex items-center gap-4 mt-2">
           <div className="flex items-center gap-1">
-            <span className="w-3 h-3  bg-[#AF0404] rounded-xs" />
+            <span className="w-3 h-3 bg-[#013769] rounded-xs" />
             <span className="text-xs text-[#202224] font-bold">
               Total Complaints
             </span>
@@ -46,7 +45,7 @@ const AreachartComponent = () => {
             <span className="text-xs text-[#202224] font-bold">Resolved</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="w-3 h-3 bg-[#013769] rounded-xs" />
+            <span className="w-3 h-3 bg-[#AF0404] rounded-xs" />
             <span className="text-xs text-[#202224] font-bold">Last Month</span>
           </div>
         </div>
@@ -58,18 +57,19 @@ const AreachartComponent = () => {
           margin={{ top: 10, right: 10, left: -30, bottom: 0 }}
         >
           <defs>
+            {/* ✅ Correct gradient colors */}
             <linearGradient id="colorComplaints" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#AF0404" stopOpacity={0.5} />
-              <stop offset="100%" stopColor="#AF0404" stopOpacity={0} />
+              <stop offset="5%" stopColor="#013769" stopOpacity={0.5} />
+              <stop offset="100%" stopColor="#013769" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="colorResolved" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#028B02" stopOpacity={0.5} />
               <stop offset="100%" stopColor="#028B02" stopOpacity={0} />
             </linearGradient>
-            {/* <linearGradient id="colorLastMonth" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#013769" stopOpacity={0.5} />
-              <stop offset="100%" stopColor="#013769" stopOpacity={0} />
-            </linearGradient> */}
+            <linearGradient id="colorLastMonth" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#AF0404" stopOpacity={0.5} />
+              <stop offset="100%" stopColor="#AF0404" stopOpacity={0} />
+            </linearGradient>
           </defs>
 
           <XAxis
@@ -126,14 +126,24 @@ const AreachartComponent = () => {
             ]}
           />
 
-          {/* 3 Lines with matching stroke + gradient fill */}
+          {/* ✅ Always visible dots + highlight on hover */}
           <Area
             type="monotone"
             dataKey="complaints"
-            stroke="#AF0404"
+            stroke="#013769"
             fill="url(#colorComplaints)"
             name="complaints"
             strokeWidth={2}
+            dot={{
+              r: 4,
+              fill: "#013769",
+              strokeWidth: 0,
+            }}
+            activeDot={{
+              fill: "#013769",
+              stroke: "#fff",
+              strokeWidth: 1,
+            }}
           />
           <Area
             type="monotone"
@@ -142,15 +152,35 @@ const AreachartComponent = () => {
             fill="url(#colorResolved)"
             name="resolved"
             strokeWidth={2}
+            dot={{
+              r: 4,
+              fill: "#028B02",
+              strokeWidth: 0,
+            }}
+            activeDot={{
+              fill: "#028B02",
+              stroke: "#fff",
+              strokeWidth: 1,
+            }}
           />
           <Area
             type="monotone"
             dataKey="lastMonth"
-            stroke="#013769"
+            stroke="#AF0404"
             fill="url(#colorLastMonth)"
             name="lastMonth"
             strokeWidth={2}
             strokeDasharray="5 5"
+            dot={{
+              r: 4,
+              fill: "#AF0404",
+              strokeWidth: 0,
+            }}
+            activeDot={{
+              fill: "#AF0404",
+              stroke: "#fff",
+              strokeWidth: 1,
+            }}
           />
         </AreaChart>
       </ResponsiveContainer>
