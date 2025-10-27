@@ -35,16 +35,20 @@ const CustomStatCard = ({
         <div className="flex items-center gap-1">
           {percentage >= 0 ? (
             <>
-              <IoMdTrendingUp className="text-green-500" size={24} />
+              <IoMdTrendingUp className="text-(--success)" size={24} />
               <Text as="p" className="font-semibold text-sm">
-                <Text color="green">{percentage.toFixed(1)}</Text> Last Month
+                <Text className="text-(--success)">
+                  {percentage.toFixed(1)}
+                </Text>{" "}
+                Last Month
               </Text>
             </>
           ) : (
             <>
-              <IoMdTrendingDown className="text-red-500" size={24} />
+              <IoMdTrendingDown className="text-(--error)" size={24} />
               <Text as="p" className="font-semibold text-sm">
-                <Text color="red">{percentage.toFixed(1)}</Text> Last Month
+                <Text className="text-(--error)">{percentage.toFixed(1)}</Text>{" "}
+                Last Month
               </Text>
             </>
           )}

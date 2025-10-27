@@ -110,7 +110,6 @@ const AreachartComponent = () => {
               color: "#ffffff",
               fontSize: 12,
             }}
-            cursor={{ fill: "rgba(1, 55, 105, 0.1)" }}
             labelFormatter={(value) =>
               new Date(value).toLocaleDateString("en-GB", {
                 day: "2-digit",
@@ -128,7 +127,6 @@ const AreachartComponent = () => {
             ]}
           />
 
-          {/* ✅ Always visible dots + highlight on hover */}
           <Area
             type="monotone"
             dataKey="complaints"
@@ -136,17 +134,24 @@ const AreachartComponent = () => {
             fill="url(#colorComplaints)"
             name="complaints"
             strokeWidth={2}
-            dot={{
-              r: 4,
-              fill: "#013769",
-              strokeWidth: 0,
-            }}
+            dot={(props) => (
+              <circle
+                cx={props.cx}
+                cy={props.cy}
+                r={4}
+                fill="#013769"
+                opacity={1}
+              />
+            )}
             activeDot={{
+              r: 4,
               fill: "#013769",
               stroke: "#fff",
               strokeWidth: 1,
+              opacity: 1,
             }}
           />
+
           <Area
             type="monotone"
             dataKey="resolved"
@@ -154,17 +159,24 @@ const AreachartComponent = () => {
             fill="url(#colorResolved)"
             name="resolved"
             strokeWidth={2}
-            dot={{
-              r: 4,
-              fill: "#028B02",
-              strokeWidth: 0,
-            }}
+            dot={(props) => (
+              <circle
+                cx={props.cx}
+                cy={props.cy}
+                r={4}
+                fill="#028B02"
+                opacity={1}
+              />
+            )}
             activeDot={{
+              r: 4,
               fill: "#028B02",
               stroke: "#fff",
               strokeWidth: 1,
+              opacity: 1,
             }}
           />
+
           <Area
             type="monotone"
             dataKey="lastMonth"
@@ -173,15 +185,21 @@ const AreachartComponent = () => {
             name="lastMonth"
             strokeWidth={2}
             strokeDasharray="5 5"
-            dot={{
-              r: 4,
-              fill: "#AF0404",
-              strokeWidth: 0,
-            }}
+            dot={(props) => (
+              <circle
+                cx={props.cx}
+                cy={props.cy}
+                r={4}
+                fill="#AF0404"
+                opacity={1}
+              />
+            )}
             activeDot={{
+              r: 4,
               fill: "#AF0404",
               stroke: "#fff",
               strokeWidth: 1,
+              opacity: 1,
             }}
           />
         </AreaChart>
