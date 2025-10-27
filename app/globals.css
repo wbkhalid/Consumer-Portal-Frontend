@@ -34,3 +34,7 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+
+.recharts-wrapper :focus:not(:focus-visible) {
+  outline: none;
+}
