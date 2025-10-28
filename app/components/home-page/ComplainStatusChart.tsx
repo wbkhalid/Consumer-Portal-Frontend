@@ -10,24 +10,27 @@ import {
   ResponsiveContainer,
   PieLabelRenderProps,
 } from "recharts";
+import { StatusStatsType } from "../../page";
 
-const ComplainStatusChart: React.FC = () => {
-  // 📊 Example data for complaint status
-  const data = [
-    { name: "Resolved", value: 45 },
-    { name: "Pending", value: 25 },
-    { name: "Escalated", value: 15 },
-    { name: "In Progress", value: 20 },
-  ];
+const ComplainStatusChart = ({ data }: { data: StatusStatsType[] }) => {
+  if (!data || data.length === 0) {
+    return (
+      <div className="rounded-xl px-4! py-2! bg-white mt-2!">
+        <p className="text-sm text-[#1E293B] font-bold">
+          Complaint Resolution Status
+        </p>
+        <div className="h-[300px] flex justify-center items-center text-sm text-gray-500">
+          No data available
+        </div>
+      </div>
+    );
+  }
 
-  // 🎨 Status colors
-  const COLORS: string[] = ["#028B02", "#013769", "#AF0404", "#E8BD0F"];
+  const COLORS = ["#028B02", "#013769", "#AF0404", "#E8BD0F"];
 
-  // 🧩 Type-safe custom label renderer
   const renderCustomizedLabel = (props: PieLabelRenderProps) => {
     const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
 
-    // Ensure all required values exist and are numbers
     if (
       typeof cx !== "number" ||
       typeof cy !== "number" ||
@@ -61,21 +64,21 @@ const ComplainStatusChart: React.FC = () => {
 
   return (
     <div className="rounded-xl px-4! py-2! bg-white mt-2!">
-      {/* Header */}
-      <div>
-        <p className="text-sm text-[#1E293B] font-bold">
-          Complaint Resolution Status
-        </p>
-      </div>
+      <p className="text-sm text-[#1E293B] font-bold">
+        Complaint Resolution Status
+      </p>
 
-      {/* Chart */}
       <div className="h-[300px] mt-2 flex justify-center items-center">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
-              data={data}
-              dataKey="value"
-              nameKey="name"
+              data={
+                data.map((d) => ({ ...d })) satisfies {
+                  [key: string]: string | number;
+                }[]
+              }
+              dataKey="count"
+              nameKey="status"
               cx="50%"
               cy="50%"
               labelLine={false}
@@ -110,6 +113,7 @@ const ComplainStatusChart: React.FC = () => {
                 color: "#ffffff",
                 fontSize: 12,
               }}
+              formatter={(value, name) => [`${value} Complaints`, name]}
             />
 
             <Legend

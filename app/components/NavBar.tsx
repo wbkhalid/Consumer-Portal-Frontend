@@ -31,7 +31,7 @@ const NavBar = () => {
 
           <Flex align="center" className="gap-3!">
             <Heading size="5" className="text-white">
-              Consumer Portal
+              CPC
             </Heading>
             <Popover.Root>
               <Popover.Trigger>

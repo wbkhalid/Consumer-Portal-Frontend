@@ -10,14 +10,17 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { ComplaintTypeStatsType } from "../../page";
 
-const ComplainTypeChart = () => {
-  const data = [
-    { type: "Hidden Charges", complaints: 120 },
-    { type: "Additional Charges", complaints: 90 },
-    { type: "Unexpected Costs", complaints: 75 },
-    { type: "Extra Fees", complaints: 110 },
-  ];
+const ComplainTypeChart = ({ data }: { data: ComplaintTypeStatsType[] }) => {
+  // const data = [
+  //   { type: "Hidden Charges", complaints: 120 },
+  //   { type: "Additional Charges", complaints: 90 },
+  //   { type: "Unexpected Costs", complaints: 75 },
+  //   { type: "Extra Fees", complaints: 110 },
+  // ];
+
+  console.log(data);
 
   return (
     <div className="rounded-xl px-4! py-2! bg-white mt-2! w-full">
@@ -35,7 +38,7 @@ const ComplainTypeChart = () => {
           >
             <CartesianGrid vertical={false} strokeWidth={1} stroke="#CBD5E1" />
             <XAxis
-              dataKey="type"
+              dataKey="complaintType"
               tickLine={false}
               axisLine={false}
               tick={{ fontSize: 12 }}
@@ -71,7 +74,7 @@ const ComplainTypeChart = () => {
               formatter={(value, name) => [`${value} Complaints`, name]}
             />
             <Bar
-              dataKey="complaints"
+              dataKey="count"
               fill="#013769"
               radius={[5, 5, 5, 5]}
               barSize={35}

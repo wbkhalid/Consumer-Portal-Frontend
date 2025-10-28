@@ -8,20 +8,12 @@ import {
   YAxis,
   ResponsiveContainer,
 } from "recharts";
+import { DailyAvergeType } from "../../page";
 
-const AreachartComponent = () => {
-  const data = [
-    { date: "2025-10-21", complaints: 120, resolved: 90, lastMonth: 110 },
-    { date: "2025-10-22", complaints: 98, resolved: 70, lastMonth: 105 },
-    { date: "2025-10-23", complaints: 150, resolved: 100, lastMonth: 130 },
-    { date: "2025-10-24", complaints: 80, resolved: 65, lastMonth: 75 },
-    { date: "2025-10-25", complaints: 170, resolved: 120, lastMonth: 160 },
-    { date: "2025-10-26", complaints: 140, resolved: 110, lastMonth: 130 },
-    { date: "2025-10-27", complaints: 180, resolved: 150, lastMonth: 175 },
-  ];
-
+const AreachartComponent = ({ data }: { data: DailyAvergeType[] }) => {
   return (
     <div className="rounded-xl px-4! py-2! bg-white mt-2!">
+      {/* Header */}
       <div className="mb-3! flex justify-between">
         <div>
           <p className="text-sm text-[#202224] font-bold mb-1!">
@@ -35,32 +27,39 @@ const AreachartComponent = () => {
             </p>
           </div>
         </div>
+
+        {/* Legend */}
         <div className="flex items-center gap-4 mt-2">
           <div className="flex items-center gap-1">
-            <span className="w-3 h-3 bg-[#013769] rounded-xs" />
+            <span className="w-3 h-3 bg-[var(--primary)] rounded-xs" />
             <span className="text-xs text-[#202224] font-bold">
               Total Complaints
             </span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="w-3 h-3 bg-[#028B02] rounded-xs" />
+            <span className="w-3 h-3 bg-[var(--success)] rounded-xs" />
             <span className="text-xs text-[#202224] font-bold">Resolved</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="w-3 h-3 bg-[#AF0404] rounded-xs" />
-            <span className="text-xs text-[#202224] font-bold">Last Month</span>
+            <span className="w-3 h-3 bg-[var(--warning)] rounded-xs" />
+            <span className="text-xs text-[#202224] font-bold">Pending</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <span className="w-3 h-3 bg-[var(--error)] rounded-xs" />
+            <span className="text-xs text-[#202224] font-bold">Rejected</span>
           </div>
         </div>
       </div>
 
+      {/* Chart */}
       <ResponsiveContainer width="100%" height={290}>
         <AreaChart
           data={data}
           margin={{ top: 10, right: 10, left: -30, bottom: 0 }}
         >
+          {/* Gradients */}
           <defs>
-            {/* ✅ Correct gradient colors */}
-            <linearGradient id="colorComplaints" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#013769" stopOpacity={0.5} />
               <stop offset="100%" stopColor="#013769" stopOpacity={0} />
             </linearGradient>
@@ -68,12 +67,17 @@ const AreachartComponent = () => {
               <stop offset="5%" stopColor="#028B02" stopOpacity={0.5} />
               <stop offset="100%" stopColor="#028B02" stopOpacity={0} />
             </linearGradient>
-            <linearGradient id="colorLastMonth" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="colorPending" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#E8BD0F" stopOpacity={0.5} />
+              <stop offset="100%" stopColor="#E8BD0F" stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="colorRejected" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#AF0404" stopOpacity={0.5} />
               <stop offset="100%" stopColor="#AF0404" stopOpacity={0} />
             </linearGradient>
           </defs>
 
+          {/* Axes */}
           <XAxis
             dataKey="date"
             axisLine={false}
@@ -93,6 +97,7 @@ const AreachartComponent = () => {
             tick={{ fill: "#636466", fontSize: 12, fontWeight: 500 }}
           />
 
+          {/* Tooltip */}
           <Tooltip
             contentStyle={{
               backgroundColor: "var(--primary)",
@@ -117,90 +122,45 @@ const AreachartComponent = () => {
                 year: "numeric",
               })
             }
-            formatter={(value, name) => [
-              `${value} Complaints`,
-              name === "complaints"
-                ? "Total Complaints"
-                : name === "resolved"
-                ? "Resolved"
-                : "Last Month",
-            ]}
           />
 
+          {/* Areas */}
           <Area
             type="monotone"
-            dataKey="complaints"
+            dataKey="totalCount"
             stroke="#013769"
-            fill="url(#colorComplaints)"
-            name="complaints"
+            fill="url(#colorTotal)"
+            name="Total Complaints"
             strokeWidth={2}
-            dot={(props) => (
-              <circle
-                cx={props.cx}
-                cy={props.cy}
-                r={4}
-                fill="#013769"
-                opacity={1}
-              />
-            )}
-            activeDot={{
-              r: 4,
-              fill: "#013769",
-              stroke: "#fff",
-              strokeWidth: 1,
-              opacity: 1,
-            }}
+            activeDot={{ r: 4, fill: "#013769", stroke: "#fff" }}
           />
-
           <Area
             type="monotone"
-            dataKey="resolved"
+            dataKey="resolvedCount"
             stroke="#028B02"
             fill="url(#colorResolved)"
-            name="resolved"
+            name="Resolved"
             strokeWidth={2}
-            dot={(props) => (
-              <circle
-                cx={props.cx}
-                cy={props.cy}
-                r={4}
-                fill="#028B02"
-                opacity={1}
-              />
-            )}
-            activeDot={{
-              r: 4,
-              fill: "#028B02",
-              stroke: "#fff",
-              strokeWidth: 1,
-              opacity: 1,
-            }}
+            activeDot={{ r: 4, fill: "#028B02", stroke: "#fff" }}
           />
-
           <Area
             type="monotone"
-            dataKey="lastMonth"
+            dataKey="pendingCount"
+            stroke="#E8BD0F"
+            fill="url(#colorPending)"
+            name="Pending"
+            strokeWidth={2}
+            activeDot={{ r: 4, fill: "#E8BD0F", stroke: "#fff" }}
+          />
+          <Area
+            type="monotone"
+            dataKey="rejectedCount"
             stroke="#AF0404"
-            fill="url(#colorLastMonth)"
-            name="lastMonth"
+            fill="url(#colorRejected)"
+            name="Rejected"
             strokeWidth={2}
             strokeDasharray="5 5"
-            dot={(props) => (
-              <circle
-                cx={props.cx}
-                cy={props.cy}
-                r={4}
-                fill="#AF0404"
-                opacity={1}
-              />
-            )}
-            activeDot={{
-              r: 4,
-              fill: "#AF0404",
-              stroke: "#fff",
-              strokeWidth: 1,
-              opacity: 1,
-            }}
+            activeDot={{ r: 4, fill: "#AF0404", stroke: "#fff" }}
           />
         </AreaChart>
       </ResponsiveContainer>
