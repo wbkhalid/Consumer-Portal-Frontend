@@ -3,9 +3,10 @@
 import CustomSearchDropdown, { Option } from "../CustomSearchDropdown";
 import { Button } from "@radix-ui/themes";
 import CustomTextField from "../CustomTextField";
+import { useRouter } from "next/navigation";
 
 const FilterDataComponent = () => {
-  // Example options (replace these with your API data later)
+  const router = useRouter();
   const districtOptions: Option[] = [
     { label: "Lahore", value: "lahore" },
     { label: "Karachi", value: "karachi" },
@@ -43,7 +44,12 @@ const FilterDataComponent = () => {
         />
 
         <CustomSearchDropdown placeholder="Status" options={statusOptions} />
-        <Button className="bg-(--primary)! h-9!">Apply Filter</Button>
+        <Button
+          className="bg-(--primary)! h-9!"
+          onClick={() => router.push("/meeting")}
+        >
+          Apply Filter
+        </Button>
       </div>
     </div>
   );

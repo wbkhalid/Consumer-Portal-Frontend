@@ -21,6 +21,7 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
                   "Complaint Type",
                   "Product Type",
                   "Sectors",
+                  "Remarks",
                   "Audio Attach",
                   "Files",
                 ]?.map((header) => (
@@ -56,6 +57,9 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
                   </TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
                     {item?.sector}
+                  </TableBodyCell>
+                  <TableBodyCell className="whitespace-nowrap">
+                    {item?.remarks}
                   </TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
                     {item?.listAudio.length === 0 ? (
