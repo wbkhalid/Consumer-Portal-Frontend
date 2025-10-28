@@ -19,13 +19,15 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
           percentage={8.5}
         />
       </Link>
-      <CustomStatCard
-        title="Pending"
-        value={data?.pendingComplaints}
-        icon={<GoClock className="text-white text-lg" />}
-        iconBg="bg-(--primary)"
-        percentage={-4.5}
-      />
+      <Link href="/pending">
+        <CustomStatCard
+          title="Pending"
+          value={data?.pendingComplaints}
+          icon={<GoClock className="text-white text-lg" />}
+          iconBg="bg-(--primary)"
+          percentage={-4.5}
+        />
+      </Link>
       <CustomStatCard
         title="In Progress"
         value={data?.inProgressComplaints}
