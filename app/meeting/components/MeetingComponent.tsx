@@ -5,7 +5,7 @@ const MeetingComponent = () => {
   return (
     <div className="relative w-full h-screen">
       <Image
-        src="/images/meeting.png"
+        src="/images/meeting1.png"
         alt="Meeting"
         fill
         priority
