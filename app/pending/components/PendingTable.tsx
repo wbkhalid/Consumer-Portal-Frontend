@@ -1,8 +1,11 @@
 import Image from "next/image";
 import TableBodyCell from "../../components/table/TableBodyCell";
 import TableHeaderCell from "../../components/table/TableHeaderCell";
+import { SiGooglemeet } from "react-icons/si";
+import { useRouter } from "next/navigation";
 
 const PendingTable = () => {
+  const router = useRouter();
   const rowsData = [
     {
       shopName: "Al fatha Store",
@@ -120,6 +123,7 @@ const PendingTable = () => {
                   "Product Type",
                   "Sectors",
                   "Remarks",
+                  "Video Calling",
                   "Audio Attach",
                   "Files",
                 ]?.map((header) => (
@@ -158,6 +162,14 @@ const PendingTable = () => {
                   </TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
                     {item?.remarks}
+                  </TableBodyCell>
+                  <TableBodyCell className="whitespace-nowrap">
+                    {
+                      <SiGooglemeet
+                        onClick={() => router.push("/meeting")}
+                        className="w-5 h-5 cursor-pointer!"
+                      />
+                    }
                   </TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
                     {item?.listAudio.length === 0 ? (
