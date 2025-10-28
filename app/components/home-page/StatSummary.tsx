@@ -28,13 +28,15 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
           percentage={-4.5}
         />
       </Link>
-      <CustomStatCard
-        title="In Progress"
-        value={data?.inProgressComplaints}
-        icon={<BsArrowUpRightSquare className="text-white text-lg" />}
-        iconBg="bg-(--warning)"
-        percentage={4.5}
-      />
+      <Link href="/in-progress">
+        <CustomStatCard
+          title="In Progress"
+          value={data?.inProgressComplaints}
+          icon={<BsArrowUpRightSquare className="text-white text-lg" />}
+          iconBg="bg-(--warning)"
+          percentage={4.5}
+        />
+      </Link>
       <CustomStatCard
         title="Resolved"
         value={data?.resolvedComplaints}
