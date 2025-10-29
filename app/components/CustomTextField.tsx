@@ -56,7 +56,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
         required={required}
         readOnly={readOnly}
         onBlur={onBlur}
-        className={`w-full rounded-md border border-[#e5e6e8] hover:border-(--priamry)! bg-theme focus:outline-none shadow-none! ${className}`}
+        className={`w-full rounded-md border border-[#e5e6e8] hover:border-(--priamry)! focus:outline-none shadow-none! ${className}`}
         style={
           {
             "--text-field-focus-color": "#013769",
