@@ -9,13 +9,16 @@ import { RxCross1 } from "react-icons/rx";
 import CustomTextArea from "../CustomTextArea";
 import CustomSearchDropdown, { Option } from "../CustomSearchDropdown";
 import { useState } from "react";
-import { ManageComplainsData } from "../../hooks/useGetAllComplains";
+import useGetAllComplains, {
+  ManageComplainsData,
+} from "../../hooks/useGetAllComplains";
 
 interface pendingComplainType {
   pendingComplain: number;
 }
 
 const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
+  const { data: pendingData } = useGetAllComplains({ status: 0 });
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
   const [dialogStep, setDialogStep] = useState<1 | 2 | 3>(1);
@@ -26,109 +29,6 @@ const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
     { label: "Assistant Director", value: "assistant_director" },
     { label: "Section Officer", value: "section_officer" },
     { label: "Inspector", value: "inspector" },
-  ];
-
-  const rowsData = [
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Extra Charge",
-      productType: "Fruit",
-      sector: "Ingredient Comdentiality",
-      status: 0,
-      remarks:
-        "Hey! Hallo! Welcome! I would like to express my concern regarding the pricing of fruits at your shop. It seems that the prices are significantly higher than what is typically found in other local markets.",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Vegetable",
-      sector: "Mfg Date & Expiry",
-      status: 1,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Grans",
-      sector: "Quality of Product",
-      status: 2,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Fruit",
-      sector: "Keeping Component Parts Confidential",
-      status: 3,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Vegetable",
-      sector: "Ingredient Comdentiality",
-      status: 0,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Grans",
-      sector: "Mfg Date & Expiry",
-      status: 2,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Fruit",
-      sector: "Quality of Product",
-      status: 2,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Vegetable",
-      sector: "Keeping Component Parts Confidential",
-      status: 2,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Vegetable",
-      sector: "Ingredient Comdentiality",
-      status: 3,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
   ];
 
   const getDialogWidth = () => {
@@ -163,7 +63,7 @@ const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
               <div className="mb-2 flex gap-2 items-center px-3!">
                 <p className="text-[#181D27] font-semibold">Pending</p>
                 <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-                  {pendingComplain} Records
+                  {pendingData?.length} Records
                 </p>
               </div>
             </Dialog.Title>
@@ -187,7 +87,7 @@ const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {rowsData.map((item, index) => (
+                  {pendingData?.map((item, index) => (
                     <tr
                       key={index}
                       className={`transition-colors duration-150 ${
@@ -195,12 +95,12 @@ const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
                       } hover:bg-gray-100`}
                     >
                       <TableBodyCell>{index + 1}</TableBodyCell>
-                      <TableBodyCell>{item.shopName}</TableBodyCell>
-                      <TableBodyCell>{item.phoneNumber}</TableBodyCell>
-                      <TableBodyCell>{item.complaintType}</TableBodyCell>
-                      <TableBodyCell>{item.productType}</TableBodyCell>
-                      <TableBodyCell>{item.sector}</TableBodyCell>
-                      <TableBodyCell>{item.remarks}</TableBodyCell>
+                      <TableBodyCell>{item?.shopName}</TableBodyCell>
+                      <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
+                      <TableBodyCell>{item?.complaintType}</TableBodyCell>
+                      <TableBodyCell>{item?.productType}</TableBodyCell>
+                      <TableBodyCell>{item?.sector}</TableBodyCell>
+                      <TableBodyCell>{item?.remarks}</TableBodyCell>
                       <TableBodyCell>
                         <FaRegPenToSquare
                           onClick={() => {
@@ -218,7 +118,6 @@ const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
           </>
         )}
 
-        {/* ---------------- STEP 2 : Assign Form ---------------- */}
         {dialogStep === 2 && selectedComplaint && (
           <>
             <div className="px-2! flex justify-between items-center">
@@ -258,7 +157,7 @@ const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
               <div className="flex justify-between items-center mt-2!">
                 <Button
                   variant="outline"
-                  className="text-[#111]! outline! outline-[#111]! shadow-none! cursor-pointer! hover:text-white! hover:bg-[#111]! text-[12px]!"
+                  className="text-(--primary)! outline! outline-(--primary)! shadow-none! cursor-pointer! hover:text-white! hover:bg-(--primary)! text-[12px]!"
                   style={{ outlineWidth: "1px" }}
                   onClick={() => {
                     setSelectedComplaint(null);
@@ -269,7 +168,7 @@ const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
                 </Button>
 
                 <Button
-                  className="bg-(--primary)! cursor-pointer!"
+                  className="bg-(--primary)! cursor-pointer! hover:opacity-85!"
                   onClick={() => {
                     setDialogStep(3);
                   }}

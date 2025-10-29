@@ -1,7 +1,7 @@
 import useData from "./useData";
 
 interface Props {
-  id?: number;
+  status?: number | string;
   refresh?: boolean;
 }
 
@@ -17,10 +17,12 @@ export interface ManageComplainsData {
   listOfImage: string[];
 }
 
-const useGetAllComplains = ({ refresh = false }: Props = {}) =>
+const useGetAllComplains = ({ refresh = false, status }: Props = {}) =>
   useData<ManageComplainsData>({
     refresh,
-    endpoint: `/api/AdminDashboard/ComplaintsList`,
+    endpoint: `/api/AdminDashboard/ComplaintsList${
+      status !== undefined ? `?status=${status}` : ""
+    }`,
   });
 
 export default useGetAllComplains;
