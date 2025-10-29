@@ -163,7 +163,7 @@ const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
               <div className="mb-2 flex gap-2 items-center px-3!">
                 <p className="text-[#181D27] font-semibold">Pending</p>
                 <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-                  {rowsData.length} Records
+                  {pendingComplain} Records
                 </p>
               </div>
             </Dialog.Title>

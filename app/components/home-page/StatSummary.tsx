@@ -6,6 +6,7 @@ import { TbSettingsExclamation, TbTimeDuration45 } from "react-icons/tb";
 import { ComplainDashboardType } from "../../page";
 import Link from "next/link";
 import PendingDialog from "./PendingDialog";
+import InProgressDialog from "./InProgressDialog";
 
 const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
   return (
@@ -21,16 +22,8 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
       </Link>
 
       <PendingDialog pendingComplain={data?.pendingComplaints ?? 0} />
+      <InProgressDialog inProgressComplain={data?.inProgressComplaints ?? 0} />
 
-      <Link href="/in-progress">
-        <CustomStatCard
-          title="In Progress"
-          value={data?.inProgressComplaints}
-          icon={<BsArrowUpRightSquare className="text-white text-lg" />}
-          iconBg="bg-(--warning)"
-          percentage={4.5}
-        />
-      </Link>
       <CustomStatCard
         title="Resolved"
         value={data?.resolvedComplaints}
