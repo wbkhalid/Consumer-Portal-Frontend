@@ -453,13 +453,12 @@ const MeetingComponent = () => {
                 />
 
                 {/* Right Icon */}
-                <div className="relative w-7 h-7 cursor-pointer bg-(--primary) rounded-full">
+                <div className="relative w-7 h-7 cursor-pointer bg-(--primary) rounded-full p-1!">
                   <Image
                     src="/meet/send.png"
                     alt="Send"
-                    fill
-                    className="object-contain"
-                    sizes="20px"
+                    width={20}
+                    height={20}
                   />
                 </div>
               </div>
