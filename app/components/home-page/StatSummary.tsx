@@ -40,7 +40,7 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
       />
       <CustomStatCard
         title="Avg Resolution"
-        value={`${data?.avgResolutionHours.toFixed(2)}h`}
+        value={`${data?.avgResolutionHours?.toFixed(2)}h`}
         icon={<TbTimeDuration45 className="text-white text-lg" />}
         iconBg="bg-(--primary)"
         percentage={4.5}
