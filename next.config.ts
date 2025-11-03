@@ -6,11 +6,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: `http://110.39.184.210:193/api/:path*`,
+        destination: `http://45.115.86.186:191/api/:path*`,
       },
       {
         source: "/upload/:path*",
-        destination: `http://110.39.184.210:193/upload/:path*`,
+        destination: `http://45.115.86.186:191/upload/:path*`,
       },
     ];
   },
@@ -18,8 +18,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "http",
-        hostname: "110.39.184.210",
-        port: "193",
+        hostname: "45.115.86.186",
+        port: "191",
         pathname: "/upload/**",
       },
     ],

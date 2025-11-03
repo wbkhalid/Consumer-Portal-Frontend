@@ -12,6 +12,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { GoChevronDown, GoChevronRight } from "react-icons/go";
+import MegaMenu from "./MegaMenu";
 
 const NavBar = () => {
   return (
@@ -48,7 +49,7 @@ const NavBar = () => {
                 align="start"
                 className="min-w-[500px]! lg:min-w-[1000px]! p-1 rounded-xl shadow-xl bg-white"
               >
-                Menu
+                <MegaMenu />
               </Popover.Content>
             </Popover.Root>
           </Flex>

@@ -8,6 +8,8 @@ interface TableHeaderCellProps {
   sortable?: string;
   onSort?: () => void;
   className?: string;
+  colSpan?: number;
+  rowSpan?: number;
 }
 
 const TableHeaderCell: React.FC<TableHeaderCellProps> = ({
@@ -15,10 +17,14 @@ const TableHeaderCell: React.FC<TableHeaderCellProps> = ({
   sortable,
   onSort,
   className,
+  colSpan = 1,
+  rowSpan = 1,
 }) => {
   const alignmentClass = label.toLowerCase() === "actions" ? "justify-end" : "";
   return (
     <th
+      colSpan={colSpan}
+      rowSpan={rowSpan}
       className={`px-4! py-2! whitespace-nowrap text-[#535862]  border-b border-b-[#E9EAEB] ${alignmentClass} ${className} ${
         sortable ? "cursor-pointer select-none" : ""
       }`}

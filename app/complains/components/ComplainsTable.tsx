@@ -62,7 +62,7 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
                     {item?.remarks}
                   </TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
-                    {item?.listAudio.length === 0 ? (
+                    {!item?.listAudio || item?.listAudio?.length === 0 ? (
                       <div className="bg-[#efcdcd] rounded-full px-2! py-0.5! w-fit text-(--error)">
                         No
                       </div>
