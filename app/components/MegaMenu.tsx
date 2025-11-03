@@ -63,12 +63,12 @@ const MegaMenu = () => {
       icon: <FiClock className="text-white" size={22} />,
       route: "/others-report/defective-product-report",
     },
-    // {
-    //   label: "Faulty service Report",
-    //   description: "Export complaint data to Excel or PDF",
-    //   icon: <FiDatabase className="text-white" size={22} />,
-    //   route: "/others-report/faulty-service-report",
-    // },
+    {
+      label: "Faulty service Report",
+      description: "Export complaint data to Excel or PDF",
+      icon: <FiDatabase className="text-white" size={22} />,
+      route: "/others-report/faulty-service-report",
+    },
   ];
 
   return (
