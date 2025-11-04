@@ -69,6 +69,18 @@ const MegaMenu = () => {
       icon: <FiDatabase className="text-white" size={22} />,
       route: "/others-report/faulty-service-report",
     },
+    {
+      label: "City Wise Faulty service Report",
+      description: "Export complaint data to Excel or PDF",
+      icon: <FiDatabase className="text-white" size={22} />,
+      route: "/others-report/city-wise-faulty-service-report",
+    },
+    {
+      label: "City Wise Defective Product Report",
+      description: "Export complaint data to Excel or PDF",
+      icon: <FiDatabase className="text-white" size={22} />,
+      route: "/others-report/city-wise-defective-product-report",
+    },
   ];
 
   return (

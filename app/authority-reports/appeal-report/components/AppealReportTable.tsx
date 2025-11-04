@@ -25,15 +25,13 @@ const AppealReportTable = () => {
     { district: "Abbottabad", appeals: 140 },
   ];
 
-  // 🧮 Total Appeals
   const totalAppeals = rowsData.reduce((sum, r) => sum + r.appeals, 0);
 
   return (
     <div className="relative">
-      <div className="h-[calc(100vh-128px)] overflow-y-auto scrollbar-hide relative">
-        <table className="min-w-full text-sm border border-[#E9EAEB] border-collapse">
-          {/* ===== Table Header ===== */}
-          <thead className="sticky top-0 z-10 bg-white">
+      <div className="h-[calc(100vh-130px)] overflow-y-auto scrollbar-hide relative">
+        <table className="min-w-full text-sm">
+          <thead className="sticky top-0 z-10 bg-white ">
             <tr className="font-semibold text-[#292D32] text-center">
               {headers.map((header) => (
                 <TableHeaderCell key={header} label={header} />
