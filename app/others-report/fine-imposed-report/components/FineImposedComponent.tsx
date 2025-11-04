@@ -1,16 +1,14 @@
 "use client";
 import { Button } from "@radix-ui/themes";
-import CityWiseDefectiveProductTable from "./CityWiseDefectiveProductTable";
+import FineImposedTable from "./FineImposedTable";
 
-const CityWiseDefectiveProductComponent = () => {
+const FineImposedComponent = () => {
   return (
     <div className="border border-[#e2e8f0] rounded-lg py-1! overflow-hidden max-h-[calc(100vh-10px)]">
       {/* Header Section */}
       <div className="flex justify-between items-center px-2! py-2!">
         <div className="flex items-center gap-1">
-          <p className="text-(--primary) font-semibold">
-            City Wise Defective Product Report
-          </p>
+          <p className="text-(--primary) font-semibold">Fine Imposed Report</p>
           {/* <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {15} Records
           </p> */}
@@ -24,13 +22,13 @@ const CityWiseDefectiveProductComponent = () => {
               //   setEditData(null);
             }}
           >
-            Defective Product Report
+            Fine Imposed Report
           </Button>
         </div>
       </div>
-      <CityWiseDefectiveProductTable />
+      <FineImposedTable />
     </div>
   );
 };
 
-export default CityWiseDefectiveProductComponent;
+export default FineImposedComponent;

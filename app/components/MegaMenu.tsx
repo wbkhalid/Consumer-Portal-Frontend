@@ -81,6 +81,54 @@ const MegaMenu = () => {
       icon: <FiDatabase className="text-white" size={22} />,
       route: "/others-report/city-wise-defective-product-report",
     },
+    {
+      label: "Complaint Institution Report",
+      description: "Export complaint data to Excel or PDF",
+      icon: <FiDatabase className="text-white" size={22} />,
+      route: "/others-report/complaint-institution-report",
+    },
+    {
+      label: "Decided Complaint Report",
+      description: "Export complaint data to Excel or PDF",
+      icon: <FiDatabase className="text-white" size={22} />,
+      route: "/others-report/decided-complaint",
+    },
+    {
+      label: "Online Business Report",
+      description: "Export complaint data to Excel or PDF",
+      icon: <FiDatabase className="text-white" size={22} />,
+      route: "/others-report/online-business-report",
+    },
+    {
+      label: "Brand Wise Report",
+      description: "Export complaint data to Excel or PDF",
+      icon: <FiDatabase className="text-white" size={22} />,
+      route: "/others-report/brand-report",
+    },
+    {
+      label: "Aging Report",
+      description: "Export complaint data to Excel or PDF",
+      icon: <FiDatabase className="text-white" size={22} />,
+      route: "/others-report/aging-report",
+    },
+    {
+      label: "Fine Imposed Report",
+      description: "Export complaint data to Excel or PDF",
+      icon: <FiDatabase className="text-white" size={22} />,
+      route: "/others-report/fine-imposed-report",
+    },
+    {
+      label: "Ratio Report",
+      description: "Export complaint data to Excel or PDF",
+      icon: <FiDatabase className="text-white" size={22} />,
+      route: "/others-report/ratio-report",
+    },
+    {
+      label: "Frequency Report",
+      description: "Export complaint data to Excel or PDF",
+      icon: <FiDatabase className="text-white" size={22} />,
+      route: "/others-report/complaint-frequency",
+    },
   ];
 
   return (
