@@ -19,6 +19,14 @@ import {
   FiMoreHorizontal,
   FiDatabase,
   FiClock,
+  FiTrendingUp,
+  FiGlobe,
+  FiBox,
+  FiCheckCircle,
+  FiShoppingCart,
+  FiAlertTriangle,
+  FiPercent,
+  FiLayers,
 } from "react-icons/fi";
 
 const MegaMenu = () => {
@@ -59,75 +67,86 @@ const MegaMenu = () => {
   const otherReports = [
     {
       label: "Defective Product Report",
-      description: "List of all pending complaints",
-      icon: <FiClock className="text-white" size={22} />,
+      description: "View complaints related to defective or damaged products.",
+      icon: <FiBox className="text-white" size={22} />,
       route: "/others-report/defective-product-report",
     },
     {
-      label: "Faulty service Report",
-      description: "Export complaint data to Excel or PDF",
-      icon: <FiDatabase className="text-white" size={22} />,
+      label: "Faulty Service Report",
+      description: "Track complaints about poor or unsatisfactory services.",
+      icon: <FiAlertTriangle className="text-white" size={22} />,
       route: "/others-report/faulty-service-report",
     },
     {
-      label: "City Wise Faulty service Report",
-      description: "Export complaint data to Excel or PDF",
-      icon: <FiDatabase className="text-white" size={22} />,
+      label: "City Wise Faulty Service Report",
+      description: "Analyze faulty service complaints distributed by city.",
+      icon: <FiGlobe className="text-white" size={22} />,
       route: "/others-report/city-wise-faulty-service-report",
     },
     {
       label: "City Wise Defective Product Report",
-      description: "Export complaint data to Excel or PDF",
-      icon: <FiDatabase className="text-white" size={22} />,
+      description: "Analyze defective product complaints grouped by city.",
+      icon: <FiBarChart2 className="text-white" size={22} />,
       route: "/others-report/city-wise-defective-product-report",
     },
     {
       label: "Complaint Institution Report",
-      description: "Export complaint data to Excel or PDF",
-      icon: <FiDatabase className="text-white" size={22} />,
+      description: "View complaint distribution by responsible institutions.",
+      icon: <FiLayers className="text-white" size={22} />,
       route: "/others-report/complaint-institution-report",
     },
     {
       label: "Decided Complaint Report",
-      description: "Export complaint data to Excel or PDF",
-      icon: <FiDatabase className="text-white" size={22} />,
+      description:
+        "See a list of complaints that have been resolved or closed.",
+      icon: <FiCheckCircle className="text-white" size={22} />,
       route: "/others-report/decided-complaint",
     },
     {
       label: "Online Business Report",
-      description: "Export complaint data to Excel or PDF",
-      icon: <FiDatabase className="text-white" size={22} />,
+      description:
+        "Monitor complaints filed against online businesses or stores.",
+      icon: <FiShoppingCart className="text-white" size={22} />,
       route: "/others-report/online-business-report",
     },
     {
       label: "Brand Wise Report",
-      description: "Export complaint data to Excel or PDF",
-      icon: <FiDatabase className="text-white" size={22} />,
+      description: "Evaluate complaint frequency by brand or company.",
+      icon: <FiFileText className="text-white" size={22} />,
       route: "/others-report/brand-report",
     },
     {
       label: "Aging Report",
-      description: "Export complaint data to Excel or PDF",
-      icon: <FiDatabase className="text-white" size={22} />,
+      description: "Check pending complaints based on their age and duration.",
+      icon: <FiClock className="text-white" size={22} />,
       route: "/others-report/aging-report",
     },
     {
       label: "Fine Imposed Report",
-      description: "Export complaint data to Excel or PDF",
-      icon: <FiDatabase className="text-white" size={22} />,
+      description:
+        "Track fines imposed on businesses after complaint resolution.",
+      icon: <FiTrendingUp className="text-white" size={22} />,
       route: "/others-report/fine-imposed-report",
     },
     {
       label: "Ratio Report",
-      description: "Export complaint data to Excel or PDF",
-      icon: <FiDatabase className="text-white" size={22} />,
+      description:
+        "Compare resolved versus pending complaints in percentage form.",
+      icon: <FiPercent className="text-white" size={22} />,
       route: "/others-report/ratio-report",
     },
     {
       label: "Frequency Report",
-      description: "Export complaint data to Excel or PDF",
-      icon: <FiDatabase className="text-white" size={22} />,
+      description:
+        "Identify users or brands with frequent complaint occurrences.",
+      icon: <FiPieChart className="text-white" size={22} />,
       route: "/others-report/complaint-frequency",
+    },
+    {
+      label: "Section Report",
+      description: "Break down complaints by legal or departmental sections.",
+      icon: <FiDatabase className="text-white" size={22} />,
+      route: "/others-report/section-complaint",
     },
   ];
 
@@ -180,12 +199,12 @@ const MegaMenu = () => {
                     <Text
                       as="p"
                       weight="medium"
-                      size="3"
+                      size="2"
                       className="text-(--primary)"
                     >
                       Other Reports
                     </Text>
-                    <Text as="p" size="2" className="text-gray-500">
+                    <Text as="p" size="1" className="text-gray-500">
                       View more available reports
                     </Text>
                   </Box>
@@ -214,12 +233,12 @@ const MegaMenu = () => {
                       <Text
                         as="p"
                         weight="medium"
-                        size="3"
+                        size="2"
                         className="text-(--primary)"
                       >
                         {report.label}
                       </Text>
-                      <Text as="p" size="2" className="text-gray-500">
+                      <Text as="p" size="1" className="text-gray-500">
                         {report.description}
                       </Text>
                     </Box>
