@@ -5,12 +5,19 @@ interface Props {
   refresh?: boolean;
 }
 
+export interface SectionsDetails {
+  name: string;
+  description: string;
+}
+
 export interface ManageComplainsData {
   shopName: string;
   phoneNumber: string;
   complaintType: string;
-  productType: string;
-  sector: string;
+  categoryName: string;
+  sectionCategoryName: string;
+  sectionsDetails: SectionsDetails[];
+  entryType: number;
   status: number;
   remarks: string;
   listAudio: string[];

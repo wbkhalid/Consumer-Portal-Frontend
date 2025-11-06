@@ -20,11 +20,12 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
                   "Phone #",
                   "Complaint Type",
                   "Category",
-                  "Section",
+                  "Section Category Name",
+                  "Section Name",
+                  "Section Description",
                   "Remarks",
                   "Audio Attach",
                   "Files",
-                  "Entry Type",
                 ]?.map((header) => (
                   <TableHeaderCell key={header} label={header} />
                 ))}
@@ -54,10 +55,20 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
                     {item?.complaintType}
                   </TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
-                    {item?.productType}
+                    {item?.categoryName}
                   </TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
-                    {item?.sector}
+                    {item?.sectionCategoryName}
+                  </TableBodyCell>
+                  <TableBodyCell className="whitespace-nowrap">
+                    {item?.sectionsDetails
+                      ?.map((section) => section?.name)
+                      .join(", ")}
+                  </TableBodyCell>
+                  <TableBodyCell className="whitespace-nowrap">
+                    {item?.sectionsDetails
+                      ?.map((section) => section?.description)
+                      .join(", ")}
                   </TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
                     {item?.remarks}

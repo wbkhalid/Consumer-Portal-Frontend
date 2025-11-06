@@ -1,3 +1,4 @@
+"use client";
 import { Theme } from "@radix-ui/themes";
 import { ReactNode } from "react";
 
@@ -6,5 +7,9 @@ interface ThemeSwitcherProps {
 }
 
 export default function ThemeSwitcher({ children }: ThemeSwitcherProps) {
-  return <Theme>{children}</Theme>;
+  return (
+    <Theme accentColor="blue" grayColor="gray">
+      <div>{children}</div>
+    </Theme>
+  );
 }
