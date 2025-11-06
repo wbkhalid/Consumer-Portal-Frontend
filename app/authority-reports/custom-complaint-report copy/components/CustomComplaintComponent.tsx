@@ -2,7 +2,6 @@
 
 import { Button } from "@radix-ui/themes";
 import CustomComplaintTable from "./CustomComplaintTable";
-import Form from "../list/RegisterForm";
 
 const CustomComplaintComponent = () => {
   return (
@@ -18,7 +17,7 @@ const CustomComplaintComponent = () => {
           </p>
         </div>
         <div>
-          {/* <Button
+          <Button
             className="bg-(--primary)! cursor-pointer! rounded-full!"
             onClick={() => {
               //   setIsOpen(true);
@@ -27,8 +26,7 @@ const CustomComplaintComponent = () => {
             }}
           >
             Add Custom Complaint
-          </Button> */}
-          {/* <Form /> */}
+          </Button>
         </div>
       </div>
       <CustomComplaintTable />

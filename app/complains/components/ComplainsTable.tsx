@@ -19,11 +19,12 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
                   "Shop Name",
                   "Phone #",
                   "Complaint Type",
-                  "Product Type",
-                  "Sectors",
+                  "Category",
+                  "Section",
                   "Remarks",
                   "Audio Attach",
                   "Files",
+                  "Entry Type",
                 ]?.map((header) => (
                   <TableHeaderCell key={header} label={header} />
                 ))}

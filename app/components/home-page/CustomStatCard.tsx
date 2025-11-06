@@ -22,7 +22,7 @@ const CustomStatCard = ({
       <Flex justify="between" className="mb-3!">
         <Box>
           <p className="font-semibold text-[#202224]">{title}</p>
-          <p className="font-bold text-2xl">{value?.toLocaleString()}</p>
+          <p className="font-bold text-2xl">{value}</p>
         </Box>
         <div
           className={`${iconBg}  w-8 h-8 rounded-md flex items-center justify-center`}

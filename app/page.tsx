@@ -31,11 +31,13 @@ export interface DailyAvergeType {
 
 export interface ComplainDashboardType {
   totalComplaints: number;
-  pendingComplaints: number;
   inProgressComplaints: number;
+  inProcessComplaints: number;
+  escalatedComplaints: number;
+  superEscalatedComplaints: number;
   resolvedComplaints: number;
   rejectedComplaints: number;
-  avgResolutionHours: number;
+  cancelledComplaints: number;
   productTypeStats: ProductTypeStatType[];
   complaintTypeStats: ComplaintTypeStatsType[];
   statusStats: StatusStatsType[];

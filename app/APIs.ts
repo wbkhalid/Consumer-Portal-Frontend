@@ -1,0 +1,6 @@
+export const AUTH_API = "/api/Auth";
+export const COMPLAINT_API = "/api/Complaint";
+export const LOOKUP_API = "/api/Lookup";
+export const SECTION_CATEGORY_API = "/api/SectionCategory";
+export const SECTION_API = "/api/Section";
+export const COMPLAINT_CATEGORY_API = "/api/ComplaintCategory";

@@ -5,6 +5,7 @@ import "./globals.css";
 import "./theme-config.css";
 import ThemeSwitcher from "./components/RadixTheme";
 import NavBar from "./components/NavBar";
+import { ToastContainer } from "react-toastify";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
           <NavBar />
           <main className="p-2! bg-[#f3f4f9]">{children}</main>
         </ThemeSwitcher>
+        <ToastContainer />
       </body>
     </html>
   );

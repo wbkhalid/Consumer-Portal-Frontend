@@ -21,26 +21,26 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         />
       </Link>
 
-      <PendingDialog pendingComplain={data?.pendingComplaints ?? 0} />
       <InProgressDialog inProgressComplain={data?.inProgressComplaints ?? 0} />
+      <PendingDialog pendingComplain={data?.inProcessComplaints ?? 0} />
 
       <CustomStatCard
-        title="Resolved"
-        value={data?.resolvedComplaints}
+        title="Escalation"
+        value={data?.escalatedComplaints}
         icon={<IoCheckmarkDone className="text-white text-lg" />}
         iconBg="bg-(--success)"
         percentage={4.5}
       />
       <CustomStatCard
-        title="Escalated"
-        value={data?.rejectedComplaints}
+        title="Super Escalation"
+        value={data?.superEscalatedComplaints}
         icon={<TbSettingsExclamation className="text-white text-lg" />}
         iconBg="bg-(--error)"
         percentage={4.5}
       />
       <CustomStatCard
-        title="Avg Resolution"
-        value={`${data?.avgResolutionHours?.toFixed(2)}h`}
+        title="Resolved"
+        value={`${data?.resolvedComplaints}`}
         icon={<TbTimeDuration45 className="text-white text-lg" />}
         iconBg="bg-(--primary)"
         percentage={4.5}

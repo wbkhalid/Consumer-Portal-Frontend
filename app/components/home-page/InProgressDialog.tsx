@@ -20,7 +20,7 @@ const InProgressDialog = ({ inProgressComplain }: InProgressComplainType) => {
       <Dialog.Trigger>
         <div className="cursor-pointer!">
           <CustomStatCard
-            title="In Progress"
+            title="In-Progress"
             value={inProgressComplain}
             icon={<BsArrowUpRightSquare className="text-white text-lg" />}
             iconBg="bg-(--warning)"
@@ -29,10 +29,10 @@ const InProgressDialog = ({ inProgressComplain }: InProgressComplainType) => {
         </div>
       </Dialog.Trigger>
 
-      <Dialog.Content className={`px-0! max-w-[900px]!`}>
+      <Dialog.Content className={`px-0! max-w-[1000px]!`}>
         <Dialog.Title>
           <div className="mb-2 flex gap-2 items-center px-3!">
-            <p className="text-[#181D27] font-semibold">InProgress</p>
+            <p className="text-[#181D27] font-semibold">In-Progress</p>
             <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
               {inProgressData?.length} Records
             </p>
@@ -48,10 +48,11 @@ const InProgressDialog = ({ inProgressComplain }: InProgressComplainType) => {
                   "Shop Name",
                   "Phone #",
                   "Complaint Type",
-                  "Product Type",
-                  "Sector",
+                  "Category",
+                  "Section",
                   "Remarks",
                   "Meet",
+                  "Entry Type",
                 ].map((header) => (
                   <TableHeaderCell key={header} label={header} />
                 ))}

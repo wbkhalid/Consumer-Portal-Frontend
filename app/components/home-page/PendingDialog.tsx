@@ -32,7 +32,7 @@ const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
   ];
 
   const getDialogWidth = () => {
-    if (dialogStep === 1) return "lg:max-w-[900px]!";
+    if (dialogStep === 1) return "lg:max-w-[1000px]!";
     return "lg:max-w-[450px]!";
   };
   return (
@@ -47,7 +47,7 @@ const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
       <Dialog.Trigger>
         <div className="cursor-pointer!">
           <CustomStatCard
-            title="Pending"
+            title="Proceeding"
             value={pendingComplain}
             icon={<GoClock className="text-white text-lg" />}
             iconBg="bg-(--primary)"
@@ -61,7 +61,7 @@ const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
           <>
             <Dialog.Title>
               <div className="mb-2 flex gap-2 items-center px-3!">
-                <p className="text-[#181D27] font-semibold">Pending</p>
+                <p className="text-[#181D27] font-semibold">Proceeding</p>
                 <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
                   {pendingData?.length} Records
                 </p>
@@ -77,10 +77,11 @@ const PendingDialog = ({ pendingComplain }: pendingComplainType) => {
                       "Shop Name",
                       "Phone #",
                       "Complaint Type",
-                      "Product Type",
-                      "Sector",
+                      "Category",
+                      "Section",
                       "Remarks",
                       "Assign Complaint",
+                      "Entry Type",
                     ].map((header) => (
                       <TableHeaderCell key={header} label={header} />
                     ))}
