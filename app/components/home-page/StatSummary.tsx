@@ -5,7 +5,7 @@ import { BsArrowUpRightSquare } from "react-icons/bs";
 import { TbSettingsExclamation, TbTimeDuration45 } from "react-icons/tb";
 import { ComplainDashboardType } from "../../page";
 import Link from "next/link";
-import PendingDialog from "./PendingDialog";
+import ProceedingDialog from "./ProceedingDialog";
 import InProgressDialog from "./InProgressDialog";
 
 const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
@@ -22,7 +22,7 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
       </Link>
 
       <InProgressDialog inProgressComplain={data?.inProgressComplaints ?? 0} />
-      <PendingDialog pendingComplain={data?.inProcessComplaints ?? 0} />
+      <ProceedingDialog proceedingComplain={data?.inProcessComplaints ?? 0} />
 
       <CustomStatCard
         title="Escalation"
