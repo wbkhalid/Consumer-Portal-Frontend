@@ -16,7 +16,7 @@ const STATUS_COLORS: Record<string, string> = {
   Escalation: "#DC2626", // red
   SuperEscalation: "#af0404", // dark red
   DecidedOnMerit: "#028b02", // green
-  Exparte: "#9333EA", // purple
+  Exparty: "#9333EA", // purple
   Withdraw: "#6B7280", // gray
   NonProsecution: "#EAB308", // yellow
 };
@@ -83,9 +83,9 @@ const AreachartComponent = ({ data }: { data: DailyAvergeType[] }) => {
           <div className="flex items-center gap-1">
             <span
               className="w-3 h-3 rounded-xs"
-              style={{ backgroundColor: STATUS_COLORS.Exparte }}
+              style={{ backgroundColor: STATUS_COLORS.Exparty }}
             />
-            <span className="text-xs text-[#202224] font-bold">Ex-Parte</span>
+            <span className="text-xs text-[#202224] font-bold">Ex-Party</span>
           </div>
           <div className="flex items-center gap-1">
             <span
@@ -191,15 +191,15 @@ const AreachartComponent = ({ data }: { data: DailyAvergeType[] }) => {
               />
             </linearGradient>
 
-            <linearGradient id="colorExparte" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="colorExparty" x1="0" y1="0" x2="0" y2="1">
               <stop
                 offset="5%"
-                stopColor={STATUS_COLORS.Exparte}
+                stopColor={STATUS_COLORS.Exparty}
                 stopOpacity={0.5}
               />
               <stop
                 offset="100%"
-                stopColor={STATUS_COLORS.Exparte}
+                stopColor={STATUS_COLORS.Exparty}
                 stopOpacity={0}
               />
             </linearGradient>
@@ -333,10 +333,10 @@ const AreachartComponent = ({ data }: { data: DailyAvergeType[] }) => {
           />
           <Area
             type="monotone"
-            dataKey="exparteCount"
-            stroke={STATUS_COLORS.Exparte}
-            fill="url(#colorExparte)"
-            name="Ex-Parte"
+            dataKey="expartyCount"
+            stroke={STATUS_COLORS.Exparty}
+            fill="url(#colorExparty)"
+            name="Ex-Party"
             strokeWidth={2}
             activeDot={{ r: 4, fill: STATUS_COLORS.Exparte, stroke: "#fff" }}
           />

@@ -33,7 +33,7 @@ const ComplainStatusChart = ({ data }: { data: StatusStatsType[] }) => {
     Escalation: "#DC2626", // red
     SuperEscalation: "#af0404", // dark rose/red
     DecidedOnMerit: "#028b02", // green
-    Exparte: "#9333EA", // purple
+    Exparty: "#9333EA", // purple
     Withdraw: "#6B7280", // gray
     NonProsecution: "#EAB308", // yellow
   };

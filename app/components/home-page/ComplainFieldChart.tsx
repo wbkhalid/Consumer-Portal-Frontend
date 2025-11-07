@@ -88,7 +88,7 @@ const ComplainFieldChart = ({
               <Label
                 position="center"
                 fill="#414D55"
-                fontSize={18}
+                fontSize={8}
                 fontWeight={700}
               >
                 {`${maxPct}% ${maxItem.complaintCategory}`}

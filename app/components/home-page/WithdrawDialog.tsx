@@ -2,28 +2,27 @@ import { Dialog } from "@radix-ui/themes";
 import CustomStatCard from "./CustomStatCard";
 import TableHeaderCell from "../table/TableHeaderCell";
 import TableBodyCell from "../table/TableBodyCell";
-import { BsArrowUpRightSquare } from "react-icons/bs";
-import { SiGooglemeet } from "react-icons/si";
-import { useRouter } from "next/navigation";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
+import { IoCloseCircleOutline } from "react-icons/io5";
 
-interface ProceedingComplainType {
-  proceedingComplain: number;
+interface WithDrawType {
+  withdrawComplaint: number;
 }
 
-const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
-  const { data: proceedingData } = useGetAllComplains({ status: 1 });
-  const router = useRouter();
+const WithdrawDialog = ({ withdrawComplaint }: WithDrawType) => {
+  const { data: withdrawComplaintData } = useGetAllComplains({
+    status: 6,
+  });
 
   return (
     <Dialog.Root>
       <Dialog.Trigger>
         <div className="cursor-pointer!">
           <CustomStatCard
-            title="Proceeding"
-            value={proceedingComplain}
-            icon={<BsArrowUpRightSquare className="text-white text-lg" />}
-            iconBg="bg-(--warning)"
+            title="Withdraw"
+            value={withdrawComplaint}
+            icon={<IoCloseCircleOutline className="text-white text-lg" />}
+            iconBg="bg-[#6B7280]"
             percentage={4.5}
           />
         </div>
@@ -32,9 +31,9 @@ const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
       <Dialog.Content className={`px-0! max-w-[1000px]!`}>
         <Dialog.Title>
           <div className="mb-2 flex gap-2 items-center px-3!">
-            <p className="text-(--primary) font-bold text-sm">Proceeding</p>
+            <p className="text-(--primary) font-bold text-sm">Withdraw</p>
             <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-              {proceedingData?.length} Records
+              {withdrawComplaintData?.length} Records
             </p>
           </div>
         </Dialog.Title>
@@ -53,14 +52,13 @@ const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
                   "Section Name",
                   "Section Description",
                   "Remarks",
-                  "Meet",
                 ].map((header) => (
                   <TableHeaderCell key={header} label={header} />
                 ))}
               </tr>
             </thead>
             <tbody>
-              {proceedingData?.map((item, index) => (
+              {withdrawComplaintData?.map((item, index) => (
                 <tr
                   key={index}
                   className={`transition-colors duration-150 ${
@@ -91,12 +89,12 @@ const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
                       ?.map((section) => section?.description)
                       .join(", ")}
                   </TableBodyCell>
-                  <TableBodyCell>{item?.remarks}</TableBodyCell>
                   <TableBodyCell>
-                    <SiGooglemeet
-                      onClick={() => router.push("/meeting")}
-                      className="text-(--primary) w-4 h-4 cursor-pointer!"
-                    />
+                    {item?.remarks
+                      ? `${item.remarks.slice(0, 50)}${
+                          item.remarks.length > 50 ? "..." : ""
+                        }`
+                      : "—"}
                   </TableBodyCell>
                 </tr>
               ))}
@@ -108,4 +106,4 @@ const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
   );
 };
 
-export default ProceedingDialog;
+export default WithdrawDialog;

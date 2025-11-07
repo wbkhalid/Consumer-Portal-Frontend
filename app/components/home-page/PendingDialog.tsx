@@ -18,7 +18,7 @@ interface PendingComplainType {
 }
 
 const PendingDialog = ({ pendingComplain }: PendingComplainType) => {
-  const { data: inProgressData } = useGetAllComplains({ status: 0 });
+  const { data: pendingData } = useGetAllComplains({ status: 0 });
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
   const [dialogStep, setDialogStep] = useState<1 | 2 | 3>(1);
@@ -61,9 +61,9 @@ const PendingDialog = ({ pendingComplain }: PendingComplainType) => {
           <>
             <Dialog.Title>
               <div className="mb-2 flex gap-2 items-center px-3!">
-                <p className="text-[#181D27] font-semibold">Pending</p>
+                <p className="text-(--primary) font-bold text-sm">Pending</p>
                 <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-                  {inProgressData?.length} Records
+                  {pendingData?.length} Records
                 </p>
               </div>
             </Dialog.Title>
@@ -89,7 +89,7 @@ const PendingDialog = ({ pendingComplain }: PendingComplainType) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {inProgressData?.map((item, index) => (
+                  {pendingData?.map((item, index) => (
                     <tr
                       key={index}
                       className={`transition-colors duration-150 ${
@@ -167,8 +167,8 @@ const PendingDialog = ({ pendingComplain }: PendingComplainType) => {
 
               <CustomTextArea label="Remarks" placeholder="Remarks" />
               <CustomSearchDropdown
-                label="Select DG"
-                placeholder="Select DG"
+                label="Select AD"
+                placeholder="Select AD"
                 options={directorOptions}
               />
 
@@ -208,7 +208,7 @@ const PendingDialog = ({ pendingComplain }: PendingComplainType) => {
               height={120}
               className="mb-3"
             />
-            <h3 className="font-bold ">Complain Assigned to DC Sialkot.</h3>
+            <h3 className="font-bold ">Complain Assigned to AD Sialkot.</h3>
           </div>
         )}
       </Dialog.Content>

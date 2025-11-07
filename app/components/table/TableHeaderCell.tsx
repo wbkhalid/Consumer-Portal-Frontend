@@ -31,7 +31,7 @@ const TableHeaderCell: React.FC<TableHeaderCellProps> = ({
       onClick={sortable ? onSort : undefined}
     >
       <div className={`flex items-center ${alignmentClass} gap-1`}>
-        <span>{label}</span>
+        <span className="text-xs">{label}</span>
         {sortable && <FaSort className="text-xs text-[#535862]" />}
       </div>
     </th>
