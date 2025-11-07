@@ -6,13 +6,13 @@ import ComplainTypeChart from "./components/home-page/ComplainTypeChart";
 import FilterDataComponent from "./components/home-page/FilterDataComponent";
 import StatSummary from "./components/home-page/StatSummary";
 
-export interface ProductTypeStatType {
-  productType: string;
+export interface ComplaintCategoryStatsType {
+  complaintCategory: string;
   count: number;
 }
 
-export interface ComplaintTypeStatsType {
-  complaintType: string;
+export interface SectionTypeStatsType {
+  sectionName: string;
   count: number;
 }
 
@@ -31,15 +31,16 @@ export interface DailyAvergeType {
 
 export interface ComplainDashboardType {
   totalComplaints: number;
-  inProgressComplaints: number;
-  inProcessComplaints: number;
+  inPendingComplaints: number;
+  inProceedingComplaints: number;
   escalatedComplaints: number;
   superEscalatedComplaints: number;
-  resolvedComplaints: number;
-  rejectedComplaints: number;
-  cancelledComplaints: number;
-  productTypeStats: ProductTypeStatType[];
-  complaintTypeStats: ComplaintTypeStatsType[];
+  decidedOnMeritComplaints: number;
+  exparteComplaints: number;
+  withdrawnComplaints: number;
+  nonProsecutedComplaints: number;
+  complaintCategoryStats: ComplaintCategoryStatsType[];
+  sectionTypeStats: SectionTypeStatsType[];
   statusStats: StatusStatsType[];
   dailyAverageComplaints: DailyAvergeType[];
 }
@@ -66,8 +67,10 @@ const page = async () => {
           data={complainDashboardData?.dailyAverageComplaints}
         />
         <div className="grid grid-cols-2 gap-2">
-          <ComplainFieldChart />
-          <ComplainTypeChart data={complainDashboardData?.complaintTypeStats} />
+          <ComplainFieldChart
+            data={complainDashboardData?.complaintCategoryStats}
+          />
+          <ComplainTypeChart data={complainDashboardData?.sectionTypeStats} />
         </div>
       </div>
       <div className="col-span-12 lg:col-span-4 xl:col-span-3">

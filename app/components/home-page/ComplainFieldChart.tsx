@@ -8,59 +8,71 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
-  Label, // ⬅️ add this
+  Label,
 } from "recharts";
+import { ComplaintCategoryStatsType } from "../../page";
 
-const ComplainFieldChart = () => {
-  const data = [
-    { name: "Shops", value: 45 },
-    { name: "Rairi", value: 30 },
-    { name: "Thala", value: 25 },
+// Random color generator helper
+const getColor = (index: number) => {
+  const COLORS = [
+    "#013769", // blue
+    "#1C84BF", // light blue
+    "#17B436", // green
+    "#E8BD0F", // yellow
+    "#DC2626", // red
+    "#9333EA", // purple
+    "#6B7280", // gray
+    "#14B8A6", // teal
+    "#F97316", // orange
   ];
+  return COLORS[index % COLORS.length];
+};
 
+const ComplainFieldChart = ({
+  data,
+}: {
+  data: ComplaintCategoryStatsType[];
+}) => {
+  // Total
   const total = React.useMemo(
-    () => data.reduce((s, d) => s + d.value, 0),
+    () => data.reduce((s, d) => s + d.count, 0),
     [data]
   );
+
+  // Max value item
   const maxItem = React.useMemo(
-    () => data.reduce((a, b) => (b.value > a.value ? b : a), data[0]),
+    () => data.reduce((a, b) => (b.count > a.count ? b : a), data[0]),
     [data]
   );
+
+  // Max percentage
   const maxPct = React.useMemo(
-    () => Math.round((maxItem.value / total) * 100),
+    () => (total > 0 ? Math.round((maxItem.count / total) * 100) : 0),
     [maxItem, total]
+  );
+
+  // Add color property dynamically to each item
+  const chartData = React.useMemo(
+    () =>
+      data.map((item, i) => ({
+        name: item.complaintCategory,
+        value: item.count,
+        color: getColor(i),
+      })),
+    [data]
   );
 
   return (
     <div className="rounded-xl px-4! py-2! bg-white mt-2!">
-      <div>
-        <p className="text-sm text-[#202224] font-bold mb-4!">
-          Complaint Field Distribution
-        </p>
-      </div>
+      <p className="text-sm text-[#202224] font-bold mb-4!">
+        Complaint Field Distribution
+      </p>
 
       <div className="h-[300px] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
-            <defs>
-              <linearGradient id="gradientShops" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#013769" />
-                <stop offset="100%" stopColor="#1C84BF" />
-              </linearGradient>
-
-              <linearGradient id="gradientRairi" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#1C84BF" />
-                <stop offset="100%" stopColor="#38bdf8" />
-              </linearGradient>
-
-              <linearGradient id="gradientThala" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#17B436" />
-                <stop offset="100%" stopColor="#10F23D" />
-              </linearGradient>
-            </defs>
-
             <Pie
-              data={data}
+              data={chartData}
               dataKey="value"
               nameKey="name"
               innerRadius={80}
@@ -68,20 +80,22 @@ const ComplainFieldChart = () => {
               paddingAngle={2}
               stroke="none"
             >
-              <Cell fill="url(#gradientShops)" />
-              <Cell fill="url(#gradientRairi)" />
-              <Cell fill="url(#gradientThala)" />
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
 
+              {/* Center Label */}
               <Label
                 position="center"
                 fill="#414D55"
-                fontSize={20}
+                fontSize={18}
                 fontWeight={700}
               >
-                {`${maxPct}% ${maxItem.name}`}
+                {`${maxPct}% ${maxItem.complaintCategory}`}
               </Label>
             </Pie>
 
+            {/* Tooltip */}
             <Tooltip
               contentStyle={{
                 backgroundColor: "var(--primary)",
@@ -105,16 +119,17 @@ const ComplainFieldChart = () => {
               formatter={(value, name) => [`${value} Complaints`, name]}
             />
 
+            {/* Legend */}
             <Legend
               verticalAlign="bottom"
               align="center"
-              iconType="square"
+              iconType="circle"
               iconSize={10}
               formatter={(value) => (
                 <span
                   style={{
                     color: "#636466",
-                    fontSize: "10px",
+                    fontSize: "11px",
                     fontWeight: 500,
                   }}
                 >

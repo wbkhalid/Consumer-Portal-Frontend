@@ -26,11 +26,20 @@ const ComplainStatusChart = ({ data }: { data: StatusStatsType[] }) => {
     );
   }
 
-  const COLORS = ["#028B02", "#013769", "#AF0404", "#E8BD0F"];
+  // 🌈 Define color mapping for each status
+  const STATUS_COLORS: Record<string, string> = {
+    Pending: "#013769", // blue
+    Proceeding: "#e8bd0f", // amber
+    Escalation: "#DC2626", // red
+    SuperEscalation: "#af0404", // dark rose/red
+    DecidedOnMerit: "#028b02", // green
+    Exparte: "#9333EA", // purple
+    Withdraw: "#6B7280", // gray
+    NonProsecution: "#EAB308", // yellow
+  };
 
   const renderCustomizedLabel = (props: PieLabelRenderProps) => {
     const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
-
     if (
       typeof cx !== "number" ||
       typeof cy !== "number" ||
@@ -89,7 +98,7 @@ const ComplainStatusChart = ({ data }: { data: StatusStatsType[] }) => {
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
+                  fill={STATUS_COLORS[entry.status] || "#9CA3AF"} // fallback gray
                 />
               ))}
             </Pie>
@@ -119,7 +128,7 @@ const ComplainStatusChart = ({ data }: { data: StatusStatsType[] }) => {
             <Legend
               verticalAlign="bottom"
               align="center"
-              iconType="square"
+              iconType="circle"
               iconSize={10}
               formatter={(value) => (
                 <span

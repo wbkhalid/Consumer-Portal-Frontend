@@ -7,64 +7,64 @@ import { SiGooglemeet } from "react-icons/si";
 import { useRouter } from "next/navigation";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
 
-const data = [
-  {
-    shopName: "Naan shop",
-    phoneNumber: "03215467946",
-    complaintType: "Expire Date Not Mention",
-    categoryName: "SEEDS",
-    sectionCategoryName: "Defective products ",
-    sectionsDetails: [
-      {
-        name: "SECTION 11",
-        description: "Quality of Product",
-      },
-      {
-        name: "SECTION 11",
-        description: "Manufacturing Date & Expiry ",
-      },
-      {
-        name: "SECTION 16",
-        description: "Non-Disclosure of Capabilities",
-      },
-    ],
-    entryType: 0,
-    status: 1,
-    remarks: "Poorly maintained",
-    listAudio: [],
-    listOfImage: [
-      "/Upload/05d2fb21-fd22-43b3-bfc8-1e05fe767f35_1000000790.png",
-    ],
-  },
-  {
-    shopName: "Naan shop",
-    phoneNumber: "03215467946",
-    complaintType: "Expire Date Not Mention",
-    categoryName: "SEEDS",
-    sectionCategoryName: "Defective products ",
-    sectionsDetails: [
-      {
-        name: "SECTION 11",
-        description: "Quality of Product",
-      },
-      {
-        name: "SECTION 11",
-        description: "Manufacturing Date & Expiry ",
-      },
-      {
-        name: "SECTION 16",
-        description: "Non-Disclosure of Capabilities",
-      },
-    ],
-    entryType: 0,
-    status: 1,
-    remarks: "Poorly maintained",
-    listAudio: [],
-    listOfImage: [
-      "/Upload/cf594298-ed95-4137-8815-ac807930b31b_1000000790.png",
-    ],
-  },
-];
+// const data = [
+//   {
+//     shopName: "Naan shop",
+//     phoneNumber: "03215467946",
+//     complaintType: "Expire Date Not Mention",
+//     categoryName: "SEEDS",
+//     sectionCategoryName: "Defective products ",
+//     sectionsDetails: [
+//       {
+//         name: "SECTION 11",
+//         description: "Quality of Product",
+//       },
+//       {
+//         name: "SECTION 11",
+//         description: "Manufacturing Date & Expiry ",
+//       },
+//       {
+//         name: "SECTION 16",
+//         description: "Non-Disclosure of Capabilities",
+//       },
+//     ],
+//     entryType: 0,
+//     status: 1,
+//     remarks: "Poorly maintained",
+//     listAudio: [],
+//     listOfImage: [
+//       "/Upload/05d2fb21-fd22-43b3-bfc8-1e05fe767f35_1000000790.png",
+//     ],
+//   },
+//   {
+//     shopName: "Naan shop",
+//     phoneNumber: "03215467946",
+//     complaintType: "Expire Date Not Mention",
+//     categoryName: "SEEDS",
+//     sectionCategoryName: "Defective products ",
+//     sectionsDetails: [
+//       {
+//         name: "SECTION 11",
+//         description: "Quality of Product",
+//       },
+//       {
+//         name: "SECTION 11",
+//         description: "Manufacturing Date & Expiry ",
+//       },
+//       {
+//         name: "SECTION 16",
+//         description: "Non-Disclosure of Capabilities",
+//       },
+//     ],
+//     entryType: 0,
+//     status: 1,
+//     remarks: "Poorly maintained",
+//     listAudio: [],
+//     listOfImage: [
+//       "/Upload/cf594298-ed95-4137-8815-ac807930b31b_1000000790.png",
+//     ],
+//   },
+// ];
 
 interface ProceedingComplainType {
   proceedingComplain: number;

@@ -13,11 +13,11 @@ import useGetAllComplains, {
   ManageComplainsData,
 } from "../../hooks/useGetAllComplains";
 
-interface InProgressComplainType {
-  inProgressComplain: number;
+interface PendingComplainType {
+  pendingComplain: number;
 }
 
-const InProgressDialog = ({ inProgressComplain }: InProgressComplainType) => {
+const PendingDialog = ({ pendingComplain }: PendingComplainType) => {
   const { data: inProgressData } = useGetAllComplains({ status: 0 });
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
@@ -47,8 +47,8 @@ const InProgressDialog = ({ inProgressComplain }: InProgressComplainType) => {
       <Dialog.Trigger>
         <div className="cursor-pointer!">
           <CustomStatCard
-            title="In Progess"
-            value={inProgressComplain}
+            title="Pending"
+            value={pendingComplain}
             icon={<GoClock className="text-white text-lg" />}
             iconBg="bg-(--primary)"
             percentage={-4.5}
@@ -61,7 +61,7 @@ const InProgressDialog = ({ inProgressComplain }: InProgressComplainType) => {
           <>
             <Dialog.Title>
               <div className="mb-2 flex gap-2 items-center px-3!">
-                <p className="text-[#181D27] font-semibold">In progress</p>
+                <p className="text-[#181D27] font-semibold">Pending</p>
                 <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
                   {inProgressData?.length} Records
                 </p>
@@ -216,176 +216,4 @@ const InProgressDialog = ({ inProgressComplain }: InProgressComplainType) => {
   );
 };
 
-export default InProgressDialog;
-
-// import { Dialog } from "@radix-ui/themes";
-// import CustomStatCard from "./CustomStatCard";
-// import TableHeaderCell from "../table/TableHeaderCell";
-// import TableBodyCell from "../table/TableBodyCell";
-// import { BsArrowUpRightSquare } from "react-icons/bs";
-// import { SiGooglemeet } from "react-icons/si";
-// import { useRouter } from "next/navigation";
-// import useGetAllComplains from "../../hooks/useGetAllComplains";
-
-// const data = [
-//   {
-//     shopName: "Naan shop",
-//     phoneNumber: "03215467946",
-//     complaintType: "Expire Date Not Mention",
-//     categoryName: "SEEDS",
-//     sectionCategoryName: "Defective products ",
-//     sectionsDetails: [
-//       {
-//         name: "SECTION 11",
-//         description: "Quality of Product",
-//       },
-//       {
-//         name: "SECTION 11",
-//         description: "Manufacturing Date & Expiry ",
-//       },
-//       {
-//         name: "SECTION 16",
-//         description: "Non-Disclosure of Capabilities",
-//       },
-//     ],
-//     entryType: 0,
-//     status: 1,
-//     remarks: "Poorly maintained",
-//     listAudio: [],
-//     listOfImage: [
-//       "/Upload/05d2fb21-fd22-43b3-bfc8-1e05fe767f35_1000000790.png",
-//     ],
-//   },
-//   {
-//     shopName: "Naan shop",
-//     phoneNumber: "03215467946",
-//     complaintType: "Expire Date Not Mention",
-//     categoryName: "SEEDS",
-//     sectionCategoryName: "Defective products ",
-//     sectionsDetails: [
-//       {
-//         name: "SECTION 11",
-//         description: "Quality of Product",
-//       },
-//       {
-//         name: "SECTION 11",
-//         description: "Manufacturing Date & Expiry ",
-//       },
-//       {
-//         name: "SECTION 16",
-//         description: "Non-Disclosure of Capabilities",
-//       },
-//     ],
-//     entryType: 0,
-//     status: 1,
-//     remarks: "Poorly maintained",
-//     listAudio: [],
-//     listOfImage: [
-//       "/Upload/cf594298-ed95-4137-8815-ac807930b31b_1000000790.png",
-//     ],
-//   },
-// ];
-
-// interface InProgressComplainType {
-//   inProgressComplain: number;
-// }
-
-// const InProgressDialog = ({ inProgressComplain }: InProgressComplainType) => {
-//   const { data: inProgressData } = useGetAllComplains({ status: 1 });
-//   const router = useRouter();
-
-//   return (
-//     <Dialog.Root>
-//       <Dialog.Trigger>
-//         <div className="cursor-pointer!">
-//           <CustomStatCard
-//             title="In-Progress"
-//             value={inProgressComplain}
-//             icon={<BsArrowUpRightSquare className="text-white text-lg" />}
-//             iconBg="bg-(--warning)"
-//             percentage={4.5}
-//           />
-//         </div>
-//       </Dialog.Trigger>
-
-//       <Dialog.Content className={`px-0! max-w-[1000px]!`}>
-//         <Dialog.Title>
-//           <div className="mb-2 flex gap-2 items-center px-3!">
-//             <p className="text-[#181D27] font-semibold">In-Progress</p>
-//             <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-//               {inProgressData?.length} Records
-//             </p>
-//           </div>
-//         </Dialog.Title>
-
-//         <div className="max-h-[70vh] overflow-y-auto scrollbar-hide">
-//           <table className="w-full border-collapse text-sm">
-//             <thead className="sticky top-0 z-10">
-//               <tr className="font-semibold bg-white">
-//                 {[
-//                   "Sr #",
-//                   "Shop Name",
-//                   "Phone #",
-//                   "Complaint Type",
-//                   "Category",
-//                   "Section Category Name",
-//                   "Section Name",
-//                   "Section Description",
-//                   "Remarks",
-//                   "Audio Attach",
-//                   "Files",
-//                 ].map((header) => (
-//                   <TableHeaderCell key={header} label={header} />
-//                 ))}
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {inProgressData?.map((item, index) => (
-//                 <tr
-//                   key={index}
-//                   className={`transition-colors duration-150 ${
-//                     index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-//                   } hover:bg-gray-100`}
-//                 >
-//                   <TableBodyCell>{index + 1}</TableBodyCell>
-//                   <TableBodyCell>{item?.shopName}</TableBodyCell>
-//                   <TableBodyCell className="whitespace-nowrap">
-//                     {item?.phoneNumber}
-//                   </TableBodyCell>
-//                   <TableBodyCell className="whitespace-nowrap">
-//                     {item?.complaintType}
-//                   </TableBodyCell>
-//                   <TableBodyCell className="whitespace-nowrap">
-//                     {item?.categoryName}
-//                   </TableBodyCell>
-//                   <TableBodyCell className="whitespace-nowrap">
-//                     {item?.sectionCategoryName}
-//                   </TableBodyCell>
-//                   <TableBodyCell>
-//                     {item?.sectionsDetails
-//                       ?.map((section) => section?.name)
-//                       .join(", ")}
-//                   </TableBodyCell>
-//                   <TableBodyCell>
-//                     {item?.sectionsDetails
-//                       ?.map((section) => section?.description)
-//                       .join(", ")}
-//                   </TableBodyCell>
-//                   <TableBodyCell>{item?.remarks}</TableBodyCell>
-//                   <TableBodyCell>
-//                     <SiGooglemeet
-//                       onClick={() => router.push("/meeting")}
-//                       className="text-(--primary) w-4 h-4 cursor-pointer!"
-//                     />
-//                   </TableBodyCell>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       </Dialog.Content>
-//     </Dialog.Root>
-//   );
-// };
-
-// export default InProgressDialog;
+export default PendingDialog;

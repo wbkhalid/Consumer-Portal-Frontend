@@ -10,9 +10,9 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { ComplaintTypeStatsType } from "../../page";
+import { SectionTypeStatsType } from "../../page";
 
-const ComplainTypeChart = ({ data }: { data: ComplaintTypeStatsType[] }) => {
+const ComplainTypeChart = ({ data }: { data: SectionTypeStatsType[] }) => {
   // const data = [
   //   { type: "Hidden Charges", complaints: 120 },
   //   { type: "Additional Charges", complaints: 90 },
@@ -34,15 +34,15 @@ const ComplainTypeChart = ({ data }: { data: ComplaintTypeStatsType[] }) => {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
-            margin={{ top: 10, right: 20, left: 0, bottom: 30 }}
+            margin={{ top: 10, right: 0, left: 30, bottom: 60 }}
           >
             <CartesianGrid vertical={false} strokeWidth={1} stroke="#CBD5E1" />
             <XAxis
-              dataKey="complaintType"
+              dataKey="sectionName"
               tickLine={false}
               axisLine={false}
               tick={{ fontSize: 12 }}
-              angle={-20}
+              angle={-25}
               textAnchor="end"
             />
             <YAxis
