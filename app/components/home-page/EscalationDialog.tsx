@@ -2,9 +2,7 @@ import { Button, Dialog } from "@radix-ui/themes";
 import CustomStatCard from "./CustomStatCard";
 import TableHeaderCell from "../table/TableHeaderCell";
 import TableBodyCell from "../table/TableBodyCell";
-import useGetAllComplains, {
-  ManageComplainsData,
-} from "../../hooks/useGetAllComplains";
+import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { TbAlertTriangle } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,25 +10,27 @@ import { toast } from "react-toastify";
 import apiClient from "../../services/api-client";
 import { COMPLAINT_API } from "../../APIs";
 import Image from "next/image";
-import DatePicker from "../DatePicker";
-import { formatDate } from "../../utils/utils";
+import { formatDate, toLocal } from "../../utils/utils";
 import { RxCross1 } from "react-icons/rx";
 import { FaRegPenToSquare } from "react-icons/fa6";
+import { format, parseISO } from "date-fns";
 
 interface EscalationType {
   escalationComplaint: number;
+  escalationData: ManageComplainsData[];
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const EscalationDialog = ({ escalationComplaint }: EscalationType) => {
+const EscalationDialog = ({
+  escalationComplaint,
+  escalationData,
+  setRefresh,
+}: EscalationType) => {
   const router = useRouter();
-  const [refresh, setRefresh] = useState(false);
-  const { data: escalationComplaintData } = useGetAllComplains({
-    status: 2,
-    refresh,
-  });
+
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
-  const [dialogStep, setDialogStep] = useState<1 | 2 | 3>(1);
+  const [dialogStep, setDialogStep] = useState<1 | 2>(1);
   const [hearingDate, setHearingDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -52,7 +52,7 @@ const EscalationDialog = ({ escalationComplaint }: EscalationType) => {
         assignedTo: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         hearingDate: hearingDate,
         verdict: 0,
-        remarks: selectedComplaint?.remarks,
+        assigneeRemarks: selectedComplaint?.assigneeRemarks,
       };
 
       console.log("📤 Sending payload:", payload);
@@ -74,6 +74,7 @@ const EscalationDialog = ({ escalationComplaint }: EscalationType) => {
     } finally {
       setLoading(false);
       setSelectedComplaint(null);
+      setHearingDate(null);
       setDialogStep(1);
     }
   };
@@ -85,6 +86,7 @@ const EscalationDialog = ({ escalationComplaint }: EscalationType) => {
         if (!open) {
           setSelectedComplaint(null);
           setDialogStep(1);
+          setHearingDate(null);
         }
       }}
     >
@@ -101,7 +103,7 @@ const EscalationDialog = ({ escalationComplaint }: EscalationType) => {
       </Dialog.Trigger>
 
       <Dialog.Content
-        className={`px-0!${
+        className={`px-0! ${
           dialogStep === 1 ? "lg:max-w-[900px]!" : "lg:max-w-[700px]!"
         }`}
         onInteractOutside={(event) => {
@@ -114,12 +116,12 @@ const EscalationDialog = ({ escalationComplaint }: EscalationType) => {
           <>
             <Dialog.Title>
               <div className="flex justify-between items-center px-3!">
-                <div className="mb-2 flex gap-2 items-center px-3!">
+                <div className="mb-2 flex gap-2 items-center ">
                   <p className="text-(--primary) font-bold text-sm">
                     Escalation
                   </p>
                   <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-                    {escalationComplaintData?.length} Records
+                    {escalationData?.length} Records
                   </p>
                 </div>
                 <div
@@ -136,7 +138,7 @@ const EscalationDialog = ({ escalationComplaint }: EscalationType) => {
                 <thead className="sticky top-0 z-10">
                   <tr className="font-semibold bg-white">
                     {[
-                      "Sr #",
+                      "ID",
                       "Shop Name",
                       "Phone #",
                       "Complaint Type",
@@ -145,7 +147,9 @@ const EscalationDialog = ({ escalationComplaint }: EscalationType) => {
                       "Section Name",
                       "Section Description",
                       "Remarks",
+                      "Assignee Remarks",
                       "Hearing Date",
+                      "Hearing Time",
                       "Deatils",
                     ].map((header) => (
                       <TableHeaderCell key={header} label={header} />
@@ -153,14 +157,14 @@ const EscalationDialog = ({ escalationComplaint }: EscalationType) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {escalationComplaintData?.map((item, index) => (
+                  {escalationData?.map((item, index) => (
                     <tr
-                      key={index}
+                      key={item?.id}
                       className={`transition-colors duration-150 ${
                         index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
                       } hover:bg-gray-100`}
                     >
-                      <TableBodyCell>{index + 1}</TableBodyCell>
+                      <TableBodyCell>{item?.id}</TableBodyCell>
                       <TableBodyCell>{item?.shopName}</TableBodyCell>
                       <TableBodyCell className="whitespace-nowrap">
                         {item?.phoneNumber}
@@ -192,12 +196,35 @@ const EscalationDialog = ({ escalationComplaint }: EscalationType) => {
                           : "—"}
                       </TableBodyCell>
                       <TableBodyCell>
-                        {item?.hearingDate && formatDate(item?.hearingDate)}
+                        {item?.assigneeRemarks
+                          ? item?.assigneeRemarks?.slice(0, 50) +
+                            (item?.assigneeRemarks?.length > 50 ? "..." : "")
+                          : ""}
+                      </TableBodyCell>
+                      <TableBodyCell>
+                        {item?.hearingDate
+                          ? format(toLocal(item.hearingDate), "dd-MM-yyyy")
+                          : "--"}
+                      </TableBodyCell>
+
+                      <TableBodyCell>
+                        {item?.hearingDate
+                          ? format(toLocal(item.hearingDate), "hh:mm a")
+                          : "--"}
                       </TableBodyCell>
                       <TableBodyCell>
                         <FaRegPenToSquare
                           onClick={() => {
                             setSelectedComplaint(item);
+                            if (item?.hearingDate) {
+                              const d = parseISO(item.hearingDate);
+                              const localDate = new Date(
+                                d.getTime() - d.getTimezoneOffset() * 60000
+                              );
+                              setHearingDate(localDate);
+                            } else {
+                              setHearingDate(null);
+                            }
                             setDialogStep(2);
                           }}
                           className="text-(--primary) w-4 h-4 cursor-pointer!"
@@ -247,14 +274,19 @@ const EscalationDialog = ({ escalationComplaint }: EscalationType) => {
                   <p className="text-xs">Create Meeting</p>
                 </div>
                 <div className="w-fit">
-                  <DatePicker
-                    initialDate={
-                      selectedComplaint?.hearingDate
-                        ? new Date(selectedComplaint.hearingDate)
-                        : null
-                    }
-                    onSelectDate={(date) => setHearingDate(date)}
-                  />
+                  <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
+                    <input
+                      type="datetime-local"
+                      aria-label="Hearing date"
+                      className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
+                      value={
+                        hearingDate
+                          ? format(hearingDate, "yyyy-MM-dd'T'HH:mm")
+                          : ""
+                      }
+                      onChange={(e) => setHearingDate(parseISO(e.target.value))}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -362,6 +394,7 @@ const EscalationDialog = ({ escalationComplaint }: EscalationType) => {
                 onClick={() => {
                   setSelectedComplaint(null);
                   setDialogStep(1);
+                  setHearingDate(null);
                 }}
               >
                 Cancel

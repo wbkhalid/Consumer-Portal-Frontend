@@ -2,20 +2,20 @@ import { Dialog } from "@radix-ui/themes";
 import CustomStatCard from "./CustomStatCard";
 import TableHeaderCell from "../table/TableHeaderCell";
 import TableBodyCell from "../table/TableBodyCell";
-import useGetAllComplains from "../../hooks/useGetAllComplains";
+import useGetAllComplains, {
+  ManageComplainsData,
+} from "../../hooks/useGetAllComplains";
 import { BiError } from "react-icons/bi";
 
 interface NonProsectionType {
   nonProsectionComplaint: number;
+  nonProsecutionData: ManageComplainsData[];
 }
 
 const NonProsecutionDialog = ({
   nonProsectionComplaint,
+  nonProsecutionData,
 }: NonProsectionType) => {
-  const { data: nonProsectionComplaintData } = useGetAllComplains({
-    status: 7,
-  });
-
   return (
     <Dialog.Root>
       <Dialog.Trigger>
@@ -37,7 +37,7 @@ const NonProsecutionDialog = ({
               Non Prosecution
             </p>
             <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-              {nonProsectionComplaintData?.length} Records
+              {nonProsecutionData?.length} Records
             </p>
           </div>
         </Dialog.Title>
@@ -62,7 +62,7 @@ const NonProsecutionDialog = ({
               </tr>
             </thead>
             <tbody>
-              {nonProsectionComplaintData?.map((item, index) => (
+              {nonProsecutionData?.map((item, index) => (
                 <tr
                   key={index}
                   className={`transition-colors duration-150 ${

@@ -2,18 +2,15 @@ import { Dialog } from "@radix-ui/themes";
 import CustomStatCard from "./CustomStatCard";
 import TableHeaderCell from "../table/TableHeaderCell";
 import TableBodyCell from "../table/TableBodyCell";
-import useGetAllComplains from "../../hooks/useGetAllComplains";
+import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { MdOutlineFlagCircle } from "react-icons/md";
 
 interface WithDrawType {
   exPartyComplaint: number;
+  exParteData: ManageComplainsData[];
 }
 
-const ExParteDialog = ({ exPartyComplaint }: WithDrawType) => {
-  const { data: exPartyComplaintData } = useGetAllComplains({
-    status: 5,
-  });
-
+const ExParteDialog = ({ exPartyComplaint, exParteData }: WithDrawType) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger>
@@ -33,7 +30,7 @@ const ExParteDialog = ({ exPartyComplaint }: WithDrawType) => {
           <div className="mb-2 flex gap-2 items-center px-3!">
             <p className="text-(--primary) font-bold text-sm">Ex-Party</p>
             <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-              {exPartyComplaintData?.length} Records
+              {exParteData?.length} Records
             </p>
           </div>
         </Dialog.Title>
@@ -58,7 +55,7 @@ const ExParteDialog = ({ exPartyComplaint }: WithDrawType) => {
               </tr>
             </thead>
             <tbody>
-              {exPartyComplaintData?.map((item, index) => (
+              {exParteData?.map((item, index) => (
                 <tr
                   key={index}
                   className={`transition-colors duration-150 ${

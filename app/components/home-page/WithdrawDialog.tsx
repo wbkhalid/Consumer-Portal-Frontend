@@ -2,18 +2,17 @@ import { Dialog } from "@radix-ui/themes";
 import CustomStatCard from "./CustomStatCard";
 import TableHeaderCell from "../table/TableHeaderCell";
 import TableBodyCell from "../table/TableBodyCell";
-import useGetAllComplains from "../../hooks/useGetAllComplains";
+import useGetAllComplains, {
+  ManageComplainsData,
+} from "../../hooks/useGetAllComplains";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
 interface WithDrawType {
   withdrawComplaint: number;
+  withDrawData: ManageComplainsData[];
 }
 
-const WithdrawDialog = ({ withdrawComplaint }: WithDrawType) => {
-  const { data: withdrawComplaintData } = useGetAllComplains({
-    status: 6,
-  });
-
+const WithdrawDialog = ({ withdrawComplaint, withDrawData }: WithDrawType) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger>
@@ -33,7 +32,7 @@ const WithdrawDialog = ({ withdrawComplaint }: WithDrawType) => {
           <div className="mb-2 flex gap-2 items-center px-3!">
             <p className="text-(--primary) font-bold text-sm">Withdraw</p>
             <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-              {withdrawComplaintData?.length} Records
+              {withDrawData?.length} Records
             </p>
           </div>
         </Dialog.Title>
@@ -58,7 +57,7 @@ const WithdrawDialog = ({ withdrawComplaint }: WithDrawType) => {
               </tr>
             </thead>
             <tbody>
-              {withdrawComplaintData?.map((item, index) => (
+              {withDrawData?.map((item, index) => (
                 <tr
                   key={index}
                   className={`transition-colors duration-150 ${

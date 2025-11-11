@@ -10,9 +10,7 @@ import { RxCross1 } from "react-icons/rx";
 import CustomTextArea from "../CustomTextArea";
 import CustomSearchDropdown, { Option } from "../CustomSearchDropdown";
 import { useState } from "react";
-import useGetAllComplains, {
-  ManageComplainsData,
-} from "../../hooks/useGetAllComplains";
+import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { formatDate } from "../../utils/utils";
 import { COMPLAINT_API } from "../../APIs";
 import apiClient from "../../services/api-client";
@@ -21,15 +19,19 @@ import { useRouter } from "next/navigation";
 
 interface PendingComplainType {
   pendingComplain: number;
+  pendingData: ManageComplainsData[];
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PendingDialog = ({ pendingComplain }: PendingComplainType) => {
+const PendingDialog = ({
+  pendingComplain,
+  pendingData,
+  setRefresh,
+}: PendingComplainType) => {
   const router = useRouter();
-  const [refresh, setRefresh] = useState(false);
-  const { data: pendingData } = useGetAllComplains({ status: 0, refresh });
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
-  const [dialogStep, setDialogStep] = useState<1 | 2 | 3>(1);
+  const [dialogStep, setDialogStep] = useState<1 | 2>(1);
   const [remarks, setRemarks] = useState("");
   const [loading, setLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);

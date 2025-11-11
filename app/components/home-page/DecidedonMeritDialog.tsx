@@ -2,18 +2,20 @@ import { Dialog } from "@radix-ui/themes";
 import CustomStatCard from "./CustomStatCard";
 import TableHeaderCell from "../table/TableHeaderCell";
 import TableBodyCell from "../table/TableBodyCell";
-import useGetAllComplains from "../../hooks/useGetAllComplains";
+import useGetAllComplains, {
+  ManageComplainsData,
+} from "../../hooks/useGetAllComplains";
 import { IoCheckmarkDone } from "react-icons/io5";
 
 interface OnMeritType {
   onMeritComplaint: number;
+  decidedOnMeritData: ManageComplainsData[];
 }
 
-const DecidedonMeritDialog = ({ onMeritComplaint }: OnMeritType) => {
-  const { data: onMeritComplaintData } = useGetAllComplains({
-    status: 4,
-  });
-
+const DecidedonMeritDialog = ({
+  onMeritComplaint,
+  decidedOnMeritData,
+}: OnMeritType) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger>
@@ -35,7 +37,7 @@ const DecidedonMeritDialog = ({ onMeritComplaint }: OnMeritType) => {
               Decided on Merit
             </p>
             <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-              {onMeritComplaintData?.length} Records
+              {decidedOnMeritData?.length} Records
             </p>
           </div>
         </Dialog.Title>
@@ -60,7 +62,7 @@ const DecidedonMeritDialog = ({ onMeritComplaint }: OnMeritType) => {
               </tr>
             </thead>
             <tbody>
-              {onMeritComplaintData?.map((item, index) => (
+              {decidedOnMeritData?.map((item, index) => (
                 <tr
                   key={index}
                   className={`transition-colors duration-150 ${

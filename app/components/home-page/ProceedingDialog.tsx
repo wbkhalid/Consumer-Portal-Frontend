@@ -4,27 +4,29 @@ import TableHeaderCell from "../table/TableHeaderCell";
 import TableBodyCell from "../table/TableBodyCell";
 import { BsArrowUpRightSquare } from "react-icons/bs";
 import { useRouter } from "next/navigation";
-import useGetAllComplains, {
-  ManageComplainsData,
-} from "../../hooks/useGetAllComplains";
+import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import Image from "next/image";
-import { formatDate } from "../../utils/utils";
-import DatePicker from "../DatePicker";
+import { formatDate, toLocal } from "../../utils/utils";
 import apiClient from "../../services/api-client";
 import { COMPLAINT_API } from "../../APIs";
 import { toast } from "react-toastify";
+import { format, parseISO } from "date-fns";
 
 interface ProceedingComplainType {
   proceedingComplain: number;
+  proceedingData: ManageComplainsData[];
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
+const ProceedingDialog = ({
+  proceedingComplain,
+  proceedingData,
+  setRefresh,
+}: ProceedingComplainType) => {
   const router = useRouter();
-  const [refresh, setRefresh] = useState(false);
-  const { data: proceedingData } = useGetAllComplains({ status: 1, refresh });
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
   const [dialogStep, setDialogStep] = useState<1 | 2 | 3>(1);
@@ -49,7 +51,7 @@ const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
         assignedTo: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         hearingDate: hearingDate,
         verdict: 0,
-        remarks: selectedComplaint?.remarks,
+        assigneeRemarks: selectedComplaint?.assigneeRemarks,
       };
 
       console.log("📤 Sending payload:", payload);
@@ -71,6 +73,7 @@ const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
     } finally {
       setLoading(false);
       setSelectedComplaint(null);
+      setHearingDate(null);
       setDialogStep(1);
     }
   };
@@ -81,6 +84,7 @@ const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
       onOpenChange={(open) => {
         if (!open) {
           setSelectedComplaint(null);
+          setHearingDate(null);
           setDialogStep(1);
         }
       }}
@@ -144,6 +148,7 @@ const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
                       "Remarks",
                       "Assignee Remarks",
                       "Hearing Date",
+                      "Hearing Time",
                       "Deatils",
                     ].map((header) => (
                       <TableHeaderCell key={header} label={header} />
@@ -195,12 +200,29 @@ const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
                           : ""}
                       </TableBodyCell>
                       <TableBodyCell>
-                        {item?.hearingDate && formatDate(item?.hearingDate)}
+                        {item?.hearingDate
+                          ? format(toLocal(item.hearingDate), "dd-MM-yyyy")
+                          : "--"}
+                      </TableBodyCell>
+
+                      <TableBodyCell>
+                        {item?.hearingDate
+                          ? format(toLocal(item.hearingDate), "hh:mm a")
+                          : "--"}
                       </TableBodyCell>
                       <TableBodyCell>
                         <FaRegPenToSquare
                           onClick={() => {
                             setSelectedComplaint(item);
+                            if (item?.hearingDate) {
+                              const d = parseISO(item.hearingDate);
+                              const localDate = new Date(
+                                d.getTime() - d.getTimezoneOffset() * 60000
+                              );
+                              setHearingDate(localDate);
+                            } else {
+                              setHearingDate(null);
+                            }
                             setDialogStep(2);
                           }}
                           className="text-(--primary) w-4 h-4 cursor-pointer!"
@@ -250,14 +272,19 @@ const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
                   <p className="text-xs">Create Meeting</p>
                 </div>
                 <div className="w-fit">
-                  <DatePicker
-                    initialDate={
-                      selectedComplaint?.hearingDate
-                        ? new Date(selectedComplaint.hearingDate)
-                        : null
-                    }
-                    onSelectDate={(date) => setHearingDate(date)}
-                  />
+                  <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
+                    <input
+                      type="datetime-local"
+                      aria-label="Hearing date"
+                      className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
+                      value={
+                        hearingDate
+                          ? format(hearingDate, "yyyy-MM-dd'T'HH:mm")
+                          : ""
+                      }
+                      onChange={(e) => setHearingDate(parseISO(e.target.value))}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -370,6 +397,7 @@ const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
                 style={{ outlineWidth: "1px" }}
                 onClick={() => {
                   setSelectedComplaint(null);
+                  setHearingDate(null);
                   setDialogStep(1);
                 }}
               >
@@ -377,7 +405,7 @@ const ProceedingDialog = ({ proceedingComplain }: ProceedingComplainType) => {
               </Button>
 
               <Button
-                className="bg-(--primary)! cursor-pointer! hover:opacity-85!"
+                className="bg-(--primary)! cursor-pointer! hover:opacity-85! text-white!"
                 disabled={loading}
                 onClick={handleHearingComplaint}
               >

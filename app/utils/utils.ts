@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 export const formatDate = (dateString?: string) => {
   if (!dateString) return "-";
@@ -18,6 +18,11 @@ export const LongFormatDate = (dateStr: string | null): string => {
     month: "short",
     year: "numeric",
   });
+};
+
+export const toLocal = (dateString: string) => {
+  const d = parseISO(dateString);
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000);
 };
 
 export const statusData = [
