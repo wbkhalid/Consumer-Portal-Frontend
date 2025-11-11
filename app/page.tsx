@@ -6,6 +6,10 @@ import ComplainTypeChart from "./components/home-page/ComplainTypeChart";
 import FilterDataComponent from "./components/home-page/FilterDataComponent";
 import StatSummary from "./components/home-page/StatSummary";
 
+interface PageProps {
+  searchParams: Promise<{ districtId?: string; status?: string }>;
+}
+
 export interface ComplaintCategoryStatsType {
   complaintCategory: string;
   count: number;
@@ -45,19 +49,19 @@ export interface ComplainDashboardType {
   dailyAverageComplaints: DailyAvergeType[];
 }
 
-// 10/22/2025
+const page = async ({ searchParams }: PageProps) => {
+  const { districtId, status } = await searchParams;
 
-const page = async () => {
-  const response = await fetch(
-    `${process.env.BACKEND_API}/api/AdminDashboard`,
-    {
-      cache: "no-store",
-    }
-  );
+  const query = new URLSearchParams();
+  if (districtId) query.append("districtId", districtId);
+  if (status) query.append("status", status);
 
+  const url = `${process.env.BACKEND_API}/api/AdminDashboard${
+    query.toString() ? `?${query.toString()}` : ""
+  }`;
+
+  const response = await fetch(url, { cache: "no-store" });
   const complainDashboardData: ComplainDashboardType = await response.json();
-
-  console.log(complainDashboardData, "response");
 
   return (
     <div className="grid grid-cols-12 gap-2">

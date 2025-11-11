@@ -11,6 +11,7 @@ export interface SectionsDetails {
 }
 
 export interface ManageComplainsData {
+  id: number;
   shopName: string;
   phoneNumber: string;
   complaintType: string;
@@ -19,9 +20,12 @@ export interface ManageComplainsData {
   sectionsDetails: SectionsDetails[];
   entryType: number;
   status: number;
-  remarks: string;
+  remarks: string | null;
+  hearingDate: string | null;
+  assigneeRemarks: string | null;
   listAudio: string[];
   listOfImage: string[];
+  createdAt: string;
 }
 
 const useGetAllComplains = ({ refresh = false, status }: Props = {}) =>

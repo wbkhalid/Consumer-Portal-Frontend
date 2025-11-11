@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   BarChart,
   Bar,
@@ -34,21 +33,21 @@ const ComplainTypeChart = ({ data }: { data: SectionTypeStatsType[] }) => {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
-            margin={{ top: 10, right: 0, left: 30, bottom: 60 }}
+            margin={{ top: 20, right: 0, left: 20, bottom: 60 }}
           >
             <CartesianGrid vertical={false} strokeWidth={1} stroke="#CBD5E1" />
             <XAxis
               dataKey="sectionName"
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 12 }}
-              angle={-25}
+              tick={{ fontSize: 10 }}
+              angle={-30}
               textAnchor="end"
             />
             <YAxis
               tickLine={false}
               axisLine={false}
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 10 }}
               tickFormatter={(value) => `${value}`}
             />
             <Tooltip

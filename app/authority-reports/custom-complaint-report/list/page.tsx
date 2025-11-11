@@ -45,13 +45,6 @@ interface ComplaintCategory {
 }
 
 const CustomComplaintReportPage = async () => {
-  // const res = await fetch(
-  //   `${process.env.NEXT_PUBLIC_BACKEND_API}${TIME_SLOT_API}`,
-  //   { cache: "no-store" }
-  // );
-  // const response = await res.json();
-  // const data: TimeSlot[] = await response.data;
-
   const res2 = await fetch(
     process.env.BACKEND_API + LOOKUP_API + "/divisions?countaryId=1",
     {

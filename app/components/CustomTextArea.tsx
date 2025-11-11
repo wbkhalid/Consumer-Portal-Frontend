@@ -45,7 +45,7 @@ const CustomTextArea: React.FC<CustomTextAreaProps> = ({
         onChange={onChange}
         required={required}
         rows={rows}
-        className={`w-full max-h-20! rounded-md border border-transparent hover:border-(--priamry)! bg-theme focus:outline-none shadow-none! resize-none ${className}`}
+        className={`w-full max-h-20! rounded-md border border-[#EFF0F2] focus:border-(--priamry)! bg-theme focus:outline-none shadow-none! resize-none ${className}`}
         {...rest}
       />
 

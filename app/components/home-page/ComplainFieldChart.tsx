@@ -84,15 +84,23 @@ const ComplainFieldChart = ({
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
 
-              {/* Center Label */}
               <Label
+                value={`${maxPct}%`}
                 position="center"
                 fill="#414D55"
-                fontSize={8}
+                fontSize={18}
                 fontWeight={700}
-              >
-                {`${maxPct}% ${maxItem.complaintCategory}`}
-              </Label>
+              />
+
+              {/* Center Label - Line 2 */}
+              <Label
+                value={maxItem.complaintCategory}
+                position="center"
+                dy={18} // y-offset for second line
+                fill="#414D55"
+                fontSize={9}
+                fontWeight={500}
+              />
             </Pie>
 
             {/* Tooltip */}
@@ -123,7 +131,7 @@ const ComplainFieldChart = ({
             <Legend
               verticalAlign="bottom"
               align="center"
-              iconType="circle"
+              iconType="square"
               iconSize={10}
               formatter={(value) => (
                 <span

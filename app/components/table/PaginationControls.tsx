@@ -53,16 +53,16 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
   const pages = generatePageNumbers();
 
   return (
-    <div className="flex justify-between items-center gap-1 px-1">
+    <div className="flex justify-between items-center gap-1 px-1!">
       {/* Previous */}
       <Button
         type="button"
         variant="outline"
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
-        className={`!text-[#414651] !outline !outline-[#D5D7DA] !shadow-none ${
-          currentPage === 1 ? "!cursor-not-allowed" : "!cursor-pointer"
-        }  !text-[12px] px-3 py-1 hover:bg-[#F5F7FA]`}
+        className={`text-[#414651]! outline! outline-[#D5D7DA]! shadow-none! ${
+          currentPage === 1 ? "cursor-not-allowed!" : "cursor-pointer!"
+        }  !text-[12px]! px-3! py-1! hover:bg-[#F5F7FA]`}
         style={{ outlineWidth: "1px" }}
       >
         <FaArrowLeft size={12} />
@@ -74,13 +74,13 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
         {pages.map((page, index) => (
           <React.Fragment key={index}>
             {page === "..." ? (
-              <span className="px-2 text-gray-400 text-sm">...</span>
+              <span className="px-2! text-gray-400 text-sm">...</span>
             ) : (
               <button
                 onClick={() => onPageChange(Number(page))}
-                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors duration-150 ${
+                className={`px-3! py-1! rounded-md text-sm font-medium transition-colors duration-150 cursor-pointer! ${
                   currentPage === page
-                    ? "bg-main text-white"
+                    ? "bg-(--primary) text-white"
                     : "bg-white text-gray-700 hover:bg-gray-100"
                 }`}
               >
@@ -97,9 +97,9 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
         variant="outline"
         disabled={currentPage === totalPages}
         onClick={() => onPageChange(currentPage + 1)}
-        className={`!text-[#414651] !outline !outline-[#D5D7DA] !shadow-none ${
-          currentPage === totalPages ? "!cursor-not-allowed" : "!cursor-pointer"
-        } !text-[12px] px-3 py-1 hover:bg-[#F5F7FA]`}
+        className={`text-[#414651]! outline! outline-[#D5D7DA]! shadow-none! ${
+          currentPage === totalPages ? "cursor-not-allowed!" : "cursor-pointer!"
+        } text-[12px]! px-3! py-1! hover:bg-[#F5F7FA]`}
         style={{ outlineWidth: "1px" }}
       >
         Next
