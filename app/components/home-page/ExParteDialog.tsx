@@ -40,7 +40,7 @@ const ExParteDialog = ({ exPartyComplaint, exParteData }: WithDrawType) => {
             <thead className="sticky top-0 z-10">
               <tr className="font-semibold bg-white">
                 {[
-                  "Sr #",
+                  "ID",
                   "Shop Name",
                   "Phone #",
                   "Complaint Type",
@@ -57,12 +57,12 @@ const ExParteDialog = ({ exPartyComplaint, exParteData }: WithDrawType) => {
             <tbody>
               {exParteData?.map((item, index) => (
                 <tr
-                  key={index}
+                  key={item?.id}
                   className={`transition-colors duration-150 ${
                     index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
                   } hover:bg-gray-100`}
                 >
-                  <TableBodyCell>{index + 1}</TableBodyCell>
+                  <TableBodyCell>{item?.id}</TableBodyCell>
                   <TableBodyCell>{item?.shopName}</TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
                     {item?.phoneNumber}

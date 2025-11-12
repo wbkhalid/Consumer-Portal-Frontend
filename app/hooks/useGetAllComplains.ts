@@ -16,6 +16,8 @@ export interface ManageComplainsData {
   phoneNumber: string;
   complaintType: string;
   categoryName: string;
+  address: string;
+  billBoardImage: string;
   sectionCategoryName: string;
   sectionsDetails: SectionsDetails[];
   entryType: number;
