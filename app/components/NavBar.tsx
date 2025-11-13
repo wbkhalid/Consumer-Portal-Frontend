@@ -13,8 +13,33 @@ import Image from "next/image";
 import Link from "next/link";
 import { GoChevronDown, GoChevronRight } from "react-icons/go";
 import MegaMenu from "./MegaMenu";
+import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
+import { useEffect, useState } from "react";
 
 const NavBar = () => {
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  useEffect(() => {
+    const handleChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", handleChange);
+    return () => document.removeEventListener("fullscreenchange", handleChange);
+  }, []);
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error("Error attempting to enable fullscreen:", err);
+      });
+      setIsFullScreen(true);
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen().catch((err) => {
+        console.error("Error attempting to exit fullscreen:", err);
+      });
+      setIsFullScreen(false);
+    }
+  };
+
   return (
     <nav className="bg-(--primary) px-4! py-1!">
       <div className="flex justify-between items-center">
@@ -55,7 +80,19 @@ const NavBar = () => {
           </Flex>
         </div>
 
-        <div className="hidden md:block ">
+        <div className="hidden md:flex items-center gap-2 ">
+          <IconButton
+            className="bg-transparent! text-white hover:bg-white/10! cursor-pointer!"
+            onClick={toggleFullScreen}
+            radius="full"
+          >
+            {isFullScreen ? (
+              <AiOutlineFullscreenExit className="text-2xl" />
+            ) : (
+              <AiOutlineFullscreen className="text-2xl" />
+            )}
+          </IconButton>
+
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
               <Box className="bg-[#1a4b78]! rounded-full p-0.5! pr-3! cursor-pointer">

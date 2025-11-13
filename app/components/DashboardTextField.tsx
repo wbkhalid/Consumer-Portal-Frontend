@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Text, TextField } from "@radix-ui/themes";
 
-type CustomTextFieldProps = {
+type DashboardTextFieldProps = {
   label?: string;
   name?: string;
   size?: "1" | "2" | "3";
@@ -17,7 +17,7 @@ type CustomTextFieldProps = {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
 
-const CustomTextField: React.FC<CustomTextFieldProps> = ({
+const DashboardTextField: React.FC<DashboardTextFieldProps> = ({
   label,
   name,
   placeholder,
@@ -56,17 +56,19 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
         required={required}
         readOnly={readOnly}
         onBlur={onBlur}
-        className={`w-full rounded-md border border-[#e5e6e8] hover:border-(--priamry)! focus:outline-none shadow-none! text-white ${className}`}
+        className={`w-full rounded-none! border border-[#1BCEF5]! focus:border-[#1BCEF5]! bg-(--primary)! focus:outline-none shadow-none! text-white!  [&_.rt-TextFieldInput::placeholder]:text-white! ${className}`}
         style={
           {
-            "--text-field-focus-color": "#fff",
+            "--text-field-focus-color": "#1BCEF5",
           } as React.CSSProperties
         }
         {...rest}
       >
-        {/* End adornment slot */}
         {endAdornment && (
-          <TextField.Slot side="right" className="text-white">
+          <TextField.Slot
+            side="right"
+            className="text-white! placeholder:text-[#E61313]!"
+          >
             {endAdornment}
           </TextField.Slot>
         )}
@@ -81,4 +83,4 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   );
 };
 
-export default CustomTextField;
+export default DashboardTextField;
