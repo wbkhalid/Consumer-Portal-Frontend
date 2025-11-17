@@ -35,13 +35,13 @@ const ComplainFieldChart = ({
 }) => {
   // Total
   const total = React.useMemo(
-    () => data.reduce((s, d) => s + d.count, 0),
+    () => data?.reduce((s, d) => s + d?.count, 0),
     [data]
   );
 
   // Max value item
   const maxItem = React.useMemo(
-    () => data.reduce((a, b) => (b.count > a.count ? b : a), data[0]),
+    () => data?.reduce((a, b) => (b?.count > a?.count ? b : a), data[0]),
     [data]
   );
 
@@ -54,9 +54,9 @@ const ComplainFieldChart = ({
   // Add color property dynamically to each item
   const chartData = React.useMemo(
     () =>
-      data.map((item, i) => ({
-        name: item.complaintCategory,
-        value: item.count,
+      data?.map((item, i) => ({
+        name: item?.complaintCategory,
+        value: item?.count,
         color: getColor(i),
       })),
     [data]
@@ -94,7 +94,7 @@ const ComplainFieldChart = ({
 
               {/* Center Label - Line 2 */}
               <Label
-                value={maxItem.complaintCategory}
+                value={maxItem?.complaintCategory}
                 position="center"
                 dy={18} // y-offset for second line
                 fill="#414D55"

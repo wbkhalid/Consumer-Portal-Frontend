@@ -5,8 +5,22 @@ import { Button, TextField } from "@radix-ui/themes";
 import { FiSearch } from "react-icons/fi";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
 import ComplainsTable from "./ComplainsTable";
+import Forms from "./list/Forms";
+import { OptionType } from "../../components/Form/CustomSelect";
 
-const ComplainComponent = () => {
+interface Props {
+  divisionOptions: OptionType[];
+  sectionCategoryOptions: OptionType[];
+  sectionOptions: OptionType[];
+  complaintCategoryOptions: OptionType[];
+}
+
+const ComplainComponent = ({
+  divisionOptions,
+  sectionCategoryOptions,
+  sectionOptions,
+  complaintCategoryOptions,
+}: Props) => {
   const { data: complainData } = useGetAllComplains();
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -47,9 +61,15 @@ const ComplainComponent = () => {
             </TextField.Slot>
           </TextField.Root>
 
-          <Button className="rounded-full! cursor-pointer! bg-(--primary)">
+          {/* <Button className="rounded-full! cursor-pointer! bg-(--primary)">
             Manual Complaint
-          </Button>
+          </Button> */}
+          <Forms
+            divisionOptions={divisionOptions}
+            sectionCategoryOptions={sectionCategoryOptions}
+            sectionOptions={sectionOptions}
+            complaintCategoryOptions={complaintCategoryOptions}
+          />
         </div>
       </div>
 
