@@ -67,27 +67,27 @@ const page = async ({ searchParams }: PageProps) => {
     <>
       <div className="-m-2! bg-[#002344] ">
         <div className="grid grid-cols-12 gap-2 p-2!">
-          <div className="col-span-3 h-[80vh] overflow-y-scroll flex flex-col gap-2 scrollbar-hide ">
+          <div className="col-span-12 md:col-span-3 h-[80vh] overflow-y-scroll flex flex-col gap-2 scrollbar-hide ">
             <DashboardFilter />
             <DashboardStatusChart data={complainDashboardData?.statusStats} />
             <DashboardFieldChart
               data={complainDashboardData?.complaintCategoryStats}
             />
           </div>
-          <div className="col-span-6 h-[80vh]">
+          <div className="col-span-12 md:col-span-6 h-[80vh]">
             <DashboardMap />
           </div>
-          <div className="col-span-3 h-[80vh] overflow-y-scroll scrollbar-hide ">
+          <div className="col-span-12 md:col-span-3 h-[80vh] overflow-y-scroll scrollbar-hide ">
             <DashboardStatSummary data={complainDashboardData} />
           </div>
         </div>
         <div className="grid grid-cols-12 gap-2 p-2! pt-0!">
-          <div className="col-span-8">
+          <div className="col-span-12 md:col-span-8">
             <DashboardAreaChart
               data={complainDashboardData?.dailyAverageComplaints}
             />
           </div>
-          <div className="col-span-4 ">
+          <div className="col-span-12 md:col-span-4 ">
             <DashboardTypeChart
               data={complainDashboardData?.sectionTypeStats}
             />
