@@ -10,78 +10,36 @@ import {
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Marker, MarkerClusterer } from "@googlemaps/markerclusterer";
+import { ComplaintsListType } from "../page";
 
-export const complaints = [
-  {
-    id: 1,
-    title: "Water Leakage Issue",
-    address: "Model Town, Lahore",
-    lat: 31.4827,
-    lng: 74.3294,
-  },
-  {
-    id: 2,
-    title: "Street Light Not Working",
-    address: "Johar Town, Lahore",
-    lat: 31.4674,
-    lng: 74.2662,
-  },
-  {
-    id: 3,
-    title: "Garbage Not Collected",
-    address: "Bahria Town, Lahore",
-    lat: 31.3847,
-    lng: 74.2409,
-  },
-  {
-    id: 4,
-    title: "Sewerage Overflow",
-    address: "Gulberg III, Lahore",
-    lat: 31.5204,
-    lng: 74.3587,
-  },
-  {
-    id: 5,
-    title: "Road Broken",
-    address: "Cantt, Lahore",
-    lat: 31.5207,
-    lng: 74.3996,
-  },
-];
-
-const DashboardMap = () => {
+const DashboardMap = ({ data }: { data: ComplaintsListType[] }) => {
   return (
     <div className="relative w-full h-full overflow-hidden">
       <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API || ""}>
         <Map
           defaultCenter={{ lat: 31.5204, lng: 74.3587 }}
           mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
-          defaultZoom={6}
-          mapTypeId="satellite"
+          defaultZoom={7}
+          mapTypeId="hybrid"
           disableDefaultUI
+          fullscreenControl={true}
+          mapTypeControl={false}
         >
-          <Markers complaints={complaints} />
+          <Markers complaints={data} />
         </Map>
       </APIProvider>
     </div>
   );
 };
 
-type Complaint = {
-  id: number;
-  title: string;
-  address: string;
-  lat: number;
-  lng: number;
-};
-
-type Props = { complaints: Complaint[] };
+interface Props {
+  complaints: ComplaintsListType[];
+}
 
 const Markers = ({ complaints }: Props) => {
   const map = useMap();
-  const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(
-    null
-  );
+  const [selectedComplaint, setSelectedComplaint] =
+    useState<ComplaintsListType | null>(null);
 
   const [markers, setMarkers] = useState<{ [id: number]: Marker }>({});
   const clusterer = useRef<MarkerClusterer | null>(null);
@@ -91,6 +49,16 @@ const Markers = ({ complaints }: Props) => {
     if (!clusterer.current) {
       clusterer.current = new MarkerClusterer({ map });
     }
+  }, [map]);
+
+  useEffect(() => {
+    if (!map) return;
+
+    const listener = map.addListener("click", () => {
+      setSelectedComplaint(null);
+    });
+
+    return () => listener.remove();
   }, [map]);
 
   useEffect(() => {
@@ -117,9 +85,9 @@ const Markers = ({ complaints }: Props) => {
     <>
       {complaints.map((complaint) => (
         <AdvancedMarker
-          key={complaint.id}
-          position={{ lat: complaint.lat, lng: complaint.lng }}
-          ref={(marker) => setMarkerRef(marker, complaint.id)}
+          key={complaint?.complaintId}
+          position={{ lat: complaint?.lattitude, lng: complaint?.longitude }}
+          ref={(marker) => setMarkerRef(marker, complaint.complaintId)}
           onClick={() => setSelectedComplaint(complaint)}
         >
           <Image src="/images/marker.png" width={24} height={24} alt="marker" />
@@ -129,10 +97,11 @@ const Markers = ({ complaints }: Props) => {
       {selectedComplaint && (
         <InfoWindow
           position={{
-            lat: selectedComplaint.lat,
-            lng: selectedComplaint.lng,
+            lat: selectedComplaint?.lattitude,
+            lng: selectedComplaint?.longitude,
           }}
           onCloseClick={() => setSelectedComplaint(null)}
+          pixelOffset={[0, -15]}
         >
           <div
             style={{
@@ -150,7 +119,7 @@ const Markers = ({ complaints }: Props) => {
                 fontSize: "10px",
               }}
             >
-              {selectedComplaint.address}
+              {selectedComplaint?.address}
             </div>
 
             <div
@@ -161,7 +130,7 @@ const Markers = ({ complaints }: Props) => {
                 marginTop: "2px",
               }}
             >
-              {selectedComplaint.title}
+              {selectedComplaint?.title}
             </div>
           </div>
         </InfoWindow>

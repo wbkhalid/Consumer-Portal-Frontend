@@ -33,6 +33,14 @@ export interface DailyAvergeType {
   rejectedCount: number;
 }
 
+export interface ComplaintsListType {
+  complaintId: number;
+  title: string;
+  address: string;
+  lattitude: number;
+  longitude: number;
+}
+
 export interface ComplainDashboardType {
   totalComplaints: number;
   inPendingComplaints: number;
@@ -47,6 +55,7 @@ export interface ComplainDashboardType {
   sectionTypeStats: SectionTypeStatsType[];
   statusStats: StatusStatsType[];
   dailyAverageComplaints: DailyAvergeType[];
+  complaintsList: ComplaintsListType[];
 }
 
 const page = async ({ searchParams }: PageProps) => {
@@ -75,7 +84,7 @@ const page = async ({ searchParams }: PageProps) => {
             />
           </div>
           <div className="col-span-12 md:col-span-6 h-[80vh]">
-            <DashboardMap />
+            <DashboardMap data={complainDashboardData?.complaintsList} />
           </div>
           <div className="col-span-12 md:col-span-3 h-[80vh] overflow-y-scroll scrollbar-hide ">
             <DashboardStatSummary data={complainDashboardData} />
