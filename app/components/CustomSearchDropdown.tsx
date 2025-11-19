@@ -13,7 +13,7 @@ import Image from "next/image";
 export type Option = {
   label: string;
   value: string;
-  icon?: string; // optional icon URL
+  icon?: string;
 };
 
 type CustomSearchDropdownProps = {
@@ -30,6 +30,7 @@ type CustomSearchDropdownProps = {
   onInputChange?: (val: string) => void;
   iconPlacement?: "none" | "menu" | "value" | "both";
   isClearable?: boolean;
+  isRegister?: boolean;
 };
 
 const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
@@ -46,6 +47,7 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
   onInputChange,
   iconPlacement = "none",
   isClearable = true,
+  isRegister = false,
 }) => {
   const selectedOption =
     options?.find((opt) => String(opt.value) === String(value ?? "")) || null;
@@ -94,7 +96,9 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
         <Text
           as="label"
           htmlFor={name}
-          className="block mb-1 text-[#2A2A2B] font-semibold text-sm"
+          className={`block mb-1! font-semibold ${
+            isRegister ? "text-white" : "text-[#2A2A2B]"
+          }   text-sm`}
         >
           {label}
         </Text>
@@ -151,7 +155,7 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
             borderWidth: 1.5,
             borderColor: state.isFocused ? "var(--primary)" : "#EFF0F2",
             boxShadow: "none",
-            borderRadius: 6,
+            borderRadius: isRegister ? 999 : 8,
             height: 40,
             minHeight: 40,
             padding: "0 0.25rem",

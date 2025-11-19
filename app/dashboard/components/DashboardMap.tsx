@@ -90,7 +90,12 @@ const Markers = ({ complaints }: Props) => {
           ref={(marker) => setMarkerRef(marker, complaint.complaintId)}
           onClick={() => setSelectedComplaint(complaint)}
         >
-          <Image src="/images/marker.png" width={24} height={24} alt="marker" />
+          <Image
+            src="/images/green-marker.png"
+            width={24}
+            height={24}
+            alt="marker"
+          />
         </AdvancedMarker>
       ))}
 
@@ -105,7 +110,7 @@ const Markers = ({ complaints }: Props) => {
         >
           <div
             style={{
-              backgroundColor: "#002344",
+              backgroundColor: "#014D54",
               border: "1px solid #1BCEF5",
               borderRadius: 0,
               padding: "4px 8px",

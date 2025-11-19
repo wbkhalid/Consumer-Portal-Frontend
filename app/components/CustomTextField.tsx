@@ -56,17 +56,17 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
         required={required}
         readOnly={readOnly}
         onBlur={onBlur}
-        className={`w-full rounded-md border border-[#e5e6e8] hover:border-(--priamry)! focus:outline-none shadow-none! text-white ${className}`}
-        style={
-          {
-            "--text-field-focus-color": "#fff",
-          } as React.CSSProperties
-        }
+        className={`w-full rounded-full! hover:border-(--priamry)! focus:outline-none shadow-none! text-white ${className}`}
+        // style={
+        //   {
+        //     "--text-field-focus-color": "#fff",
+        //   } as React.CSSProperties
+        // }
         {...rest}
       >
         {/* End adornment slot */}
         {endAdornment && (
-          <TextField.Slot side="right" className="text-white">
+          <TextField.Slot side="left" className="text-white">
             {endAdornment}
           </TextField.Slot>
         )}

@@ -74,7 +74,7 @@ const page = async ({ searchParams }: PageProps) => {
 
   return (
     <>
-      <div className="-m-2! bg-[#002344] ">
+      <div className="-m-2! bg-[#014D54] ">
         <div className="grid grid-cols-12 gap-2 p-2!">
           <div className="col-span-12 md:col-span-3 h-[80vh] overflow-y-scroll flex flex-col gap-2 scrollbar-hide ">
             <DashboardFilter />

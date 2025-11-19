@@ -260,7 +260,7 @@ const DashboardAreaChart = ({ data }: { data: DailyAvergeType[] }) => {
           {/* Tooltip */}
           <Tooltip
             contentStyle={{
-              backgroundColor: "#002344",
+              backgroundColor: "#014D54",
               border: "1px solid #1BCEF5",
               borderRadius: "0",
             }}

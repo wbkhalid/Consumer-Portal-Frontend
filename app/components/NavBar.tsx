@@ -15,6 +15,26 @@ import { GoChevronDown, GoChevronRight } from "react-icons/go";
 import MegaMenu from "./MegaMenu";
 import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { useEffect, useState } from "react";
+import DashboardSearchDropdown from "./DashboardSearchDropdown";
+
+const dashboardData = [
+  {
+    id: "market-grading-dashboard",
+    name: "Market Grading",
+  },
+  {
+    id: "mandi-dashboard",
+    name: "Mandi",
+  },
+  {
+    id: "premises-dashboard",
+    name: "Premises",
+  },
+  {
+    id: "CPC-dashboard",
+    name: "CPC",
+  },
+];
 
 const NavBar = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -62,7 +82,7 @@ const NavBar = () => {
             <Popover.Root>
               <Popover.Trigger>
                 <IconButton
-                  className="bg-[#1a4b78]! w-5! h-5! cursor-pointer!"
+                  className="bg-[#014D54]! w-5! h-5! cursor-pointer!"
                   radius="full"
                 >
                   <GoChevronRight className=" text-white" />
@@ -92,10 +112,22 @@ const NavBar = () => {
               <AiOutlineFullscreen className="text-2xl" />
             )}
           </IconButton>
+          <div className="w-32">
+            <DashboardSearchDropdown
+              placeholder="CPC"
+              fontSize="14px"
+              options={
+                dashboardData?.map((dashboard) => ({
+                  label: dashboard?.name,
+                  value: String(dashboard?.id),
+                })) ?? []
+              }
+            />
+          </div>
 
           <DropdownMenu.Root>
             <DropdownMenu.Trigger>
-              <Box className="bg-[#1a4b78]! rounded-full p-0.5! pr-3! cursor-pointer">
+              <Box className="bg-[#014D54]! rounded-full p-0.5! pr-3! cursor-pointer">
                 <Flex align="center" gap="3" className="text-white">
                   <Avatar
                     src="/images/user.png"
@@ -121,6 +153,9 @@ const NavBar = () => {
               </DropdownMenu.Label>
               <DropdownMenu.Item className="hover:bg-(--primary)!">
                 <Link href="/settings">Settings</Link>
+              </DropdownMenu.Item>
+              <DropdownMenu.Item className="hover:bg-(--primary)!">
+                <Link href="/register">Register</Link>
               </DropdownMenu.Item>
               <DropdownMenu.Item className="hover:bg-(--primary)!">
                 <button>Log out</button>

@@ -106,7 +106,7 @@ const DashboardStatusChart = ({ data }: { data: StatusStatsType[] }) => {
                   return (
                     <div
                       style={{
-                        backgroundColor: "#002344",
+                        backgroundColor: "#014D54",
                         border: "1px solid #1BCEF5",
                         borderRadius: 0,
                         padding: "2px 6px",
