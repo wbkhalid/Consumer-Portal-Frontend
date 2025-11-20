@@ -4,6 +4,7 @@ import TableHeaderCell from "../table/TableHeaderCell";
 import TableBodyCell from "../table/TableBodyCell";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { MdOutlineFlagCircle } from "react-icons/md";
+import { formatDate } from "../../utils/utils";
 
 interface WithDrawType {
   exPartyComplaint: number;
@@ -41,6 +42,7 @@ const ExParteDialog = ({ exPartyComplaint, exParteData }: WithDrawType) => {
               <tr className="font-semibold bg-white">
                 {[
                   "ID",
+                  "Date",
                   "Shop Name",
                   "Phone #",
                   "Complaint Type",
@@ -63,6 +65,9 @@ const ExParteDialog = ({ exPartyComplaint, exParteData }: WithDrawType) => {
                   } hover:bg-gray-100`}
                 >
                   <TableBodyCell>{item?.id}</TableBodyCell>
+                  <TableBodyCell className="whitespace-nowrap">
+                    {formatDate(item?.createdAt)}
+                  </TableBodyCell>
                   <TableBodyCell>{item?.shopName}</TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
                     {item?.phoneNumber}

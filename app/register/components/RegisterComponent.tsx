@@ -19,31 +19,32 @@ import useGetSelectedTehsil from "../../hooks/useGetSelectedTehsil";
 import useGetAllRoles from "../../hooks/useGetAllRoles";
 import CustomTextField from "../../components/CustomTextField";
 
-const schema = z.object({
-  fullName: z.string().min(1, "Full Name is required"),
-  phoneNumber: z.string().min(1, "phone Number is required"),
-  cnic: z.string().min(15, "CNIC must be 15 characters (XXXXX-XXXXXXX-X)"),
-  roleName: z.string().min(1, "Role is required"),
-  divisionId: z.number(),
-  districtId: z.number(),
-  tehsilId: z.number(),
-  // password: z
-  //   .string()
-  //   .min(6, "Password must be at least 6 characters")
-  //   .regex(/[A-Z]/, "Password must contain at least 1 uppercase letter")
-  //   .regex(/[a-z]/, "Password must contain at least 1 lowercase letter")
-  //   .regex(/[0-9]/, "Password must contain at least 1 number")
-  //   .regex(
-  //     /[^A-Za-z0-9]/,
-  //     "Password must contain at least 1 special character"
-  //   ),
+const schema = z
+  .object({
+    fullName: z.string().min(1, "Full Name is required"),
+    phoneNumber: z.string().min(1, "phone Number is required"),
+    cnic: z.string().min(15, "CNIC must be 15 characters (XXXXX-XXXXXXX-X)"),
+    roleName: z.string().min(1, "Role is required"),
+    divisionId: z.number(),
+    districtId: z.number(),
+    tehsilId: z.number(),
+    password: z
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .regex(/[A-Z]/, "Password must contain at least 1 uppercase letter")
+      .regex(/[a-z]/, "Password must contain at least 1 lowercase letter")
+      .regex(/[0-9]/, "Password must contain at least 1 number")
+      .regex(
+        /[^A-Za-z0-9]/,
+        "Password must contain at least 1 special character"
+      ),
 
-  // confirmPassword: z.string().min(1, "Confirm Password is required"),
-});
-// .refine((data) => data.password === data.confirmPassword, {
-//   message: "Passwords do not match",
-//   path: ["confirmPassword"],
-// });
+    confirmPassword: z.string().min(1, "Confirm Password is required"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 type Register = z.infer<typeof schema>;
 
@@ -58,6 +59,7 @@ const RegisterComponent = () => {
   const router = useRouter();
   const selectedDivisionId = watch("divisionId");
   const selectedDistrictId = watch("districtId");
+  // const selectedRole = watch("roleName");
   const { data: selectedDivisionData } = useGetSelectedDivision({
     id: 1,
   });
@@ -71,14 +73,25 @@ const RegisterComponent = () => {
 
   const onSubmit = async (formData: Register) => {
     try {
-      const response = await apiClient.post(`${AUTH_API}/register`, formData);
+      const { confirmPassword, ...paylaod } = formData;
+      const response = await apiClient.post(`${AUTH_API}/register`, paylaod);
 
       console.log(response?.data);
 
-      toast.success("Register successful!");
-      router.push("/dashboard");
+      if (response?.data?.responseCode === 200) {
+        toast.success(
+          response?.data?.responseMessage || "Register successful!"
+        );
+        router.push("/login");
+      } else {
+        toast.error(
+          response?.data?.responseMessage ||
+            "Register failed. Please try again."
+        );
+      }
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
+      console.log(err, "errror");
 
       toast.error(
         error.response?.data?.message || "Register failed. Please try again."
@@ -246,7 +259,9 @@ const RegisterComponent = () => {
               )}
             />
 
-            {/* <CustomPasswordField
+            {/* {selectedRole === "Admin" && (
+              <> */}
+            <CustomPasswordField
               label="Password"
               placeholder="Password"
               {...register("password")}
@@ -258,7 +273,9 @@ const RegisterComponent = () => {
               placeholder="Confirm Password"
               {...register("confirmPassword")}
               error={errors?.confirmPassword?.message}
-            /> */}
+            />
+            {/* </>
+            )} */}
           </div>
 
           <Button

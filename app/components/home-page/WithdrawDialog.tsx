@@ -4,6 +4,7 @@ import TableHeaderCell from "../table/TableHeaderCell";
 import TableBodyCell from "../table/TableBodyCell";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { IoCloseCircleOutline } from "react-icons/io5";
+import { formatDate } from "../../utils/utils";
 
 interface WithDrawType {
   withdrawComplaint: number;
@@ -41,6 +42,7 @@ const WithdrawDialog = ({ withdrawComplaint, withDrawData }: WithDrawType) => {
               <tr className="font-semibold bg-white">
                 {[
                   "ID",
+                  "Date",
                   "Shop Name",
                   "Phone #",
                   "Complaint Type",
@@ -63,6 +65,9 @@ const WithdrawDialog = ({ withdrawComplaint, withDrawData }: WithDrawType) => {
                   } hover:bg-gray-100`}
                 >
                   <TableBodyCell>{item?.id}</TableBodyCell>
+                  <TableBodyCell className="whitespace-nowrap">
+                    {formatDate(item?.createdAt)}
+                  </TableBodyCell>
                   <TableBodyCell>{item?.shopName}</TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
                     {item?.phoneNumber}

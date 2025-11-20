@@ -6,6 +6,7 @@ import useGetAllComplains, {
   ManageComplainsData,
 } from "../../hooks/useGetAllComplains";
 import { IoCheckmarkDone } from "react-icons/io5";
+import { formatDate } from "../../utils/utils";
 
 interface OnMeritType {
   onMeritComplaint: number;
@@ -48,6 +49,7 @@ const DecidedonMeritDialog = ({
               <tr className="font-semibold bg-white">
                 {[
                   "ID",
+                  "Date",
                   "Shop Name",
                   "Phone #",
                   "Complaint Type",
@@ -70,6 +72,9 @@ const DecidedonMeritDialog = ({
                   } hover:bg-gray-100`}
                 >
                   <TableBodyCell>{item?.id}</TableBodyCell>
+                  <TableBodyCell className="whitespace-nowrap">
+                    {formatDate(item?.createdAt)}
+                  </TableBodyCell>
                   <TableBodyCell>{item?.shopName}</TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
                     {item?.phoneNumber}

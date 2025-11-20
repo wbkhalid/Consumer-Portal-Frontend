@@ -4,7 +4,7 @@ import { PropsWithChildren } from "react";
 const SubmitButton = ({ children }: PropsWithChildren) => {
   return (
     <Button
-      className="w-[187px]! h-[41px]! bg-primary! py-[0.688em]! px-[1em]! font-bold! rounded-[5px]! border! border-primary!"
+      className="w-[187px]! h-[41px]! bg-(--primary)! py-[0.688em]! px-[1em]! font-bold! rounded-[5px]! "
       type="submit"
     >
       {children}

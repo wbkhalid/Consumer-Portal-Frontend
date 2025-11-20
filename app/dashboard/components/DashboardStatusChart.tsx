@@ -15,8 +15,8 @@ const DashboardStatusChart = ({ data }: { data: StatusStatsType[] }) => {
   if (!data || data.length === 0) {
     return (
       <div className="p-1! bg-(--primary) border border-[#1BCEF5]">
-        <p className="text-sm text-[#1E293B] font-bold">Complaint Resolved</p>
-        <div className="h-[300px] flex justify-center items-center text-sm text-gray-500">
+        <p className="text-sm text-white font-bold">Complaint Resolved</p>
+        <div className="h-[300px] flex justify-center items-center text-sm text-white">
           No data available
         </div>
       </div>

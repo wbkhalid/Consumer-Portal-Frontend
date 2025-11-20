@@ -2,6 +2,7 @@
 import {
   Avatar,
   Box,
+  Button,
   DropdownMenu,
   Flex,
   Heading,
@@ -15,29 +16,22 @@ import { GoChevronDown, GoChevronRight } from "react-icons/go";
 import MegaMenu from "./MegaMenu";
 import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { useEffect, useState } from "react";
-import DashboardSearchDropdown from "./DashboardSearchDropdown";
+import { usePathname } from "next/navigation";
 
-const dashboardData = [
+const navBarLinkData = [
   {
-    id: "market-grading-dashboard",
-    name: "Market Grading",
+    label: "Establishment",
+    link: "https://cpc.punjabpak.com/dashboard",
   },
   {
-    id: "mandi-dashboard",
-    name: "Mandi",
-  },
-  {
-    id: "premises-dashboard",
-    name: "Premises",
-  },
-  {
-    id: "CPC-dashboard",
-    name: "CPC",
+    label: "Operational",
+    link: "https://dashboard.pccmdpunjab.gov.pk/",
   },
 ];
 
 const NavBar = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const currentPath = usePathname();
   useEffect(() => {
     const handleChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
@@ -77,7 +71,7 @@ const NavBar = () => {
 
           <Flex align="center" className="gap-3!">
             <Heading size="5" className="text-white">
-              CPC
+              Directorate of Commodities
             </Heading>
             <Popover.Root>
               <Popover.Trigger>
@@ -112,56 +106,64 @@ const NavBar = () => {
               <AiOutlineFullscreen className="text-2xl" />
             )}
           </IconButton>
-          <div className="w-32">
-            <DashboardSearchDropdown
-              placeholder="CPC"
-              fontSize="14px"
-              options={
-                dashboardData?.map((dashboard) => ({
-                  label: dashboard?.name,
-                  value: String(dashboard?.id),
-                })) ?? []
-              }
-            />
-          </div>
 
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-              <Box className="bg-[#014D54]! rounded-full p-0.5! pr-3! cursor-pointer">
-                <Flex align="center" gap="3" className="text-white">
-                  <Avatar
-                    src="/images/user.png"
-                    fallback="?"
-                    radius="full"
-                    size="3"
-                  />
-                  <div>
-                    <p className="font-semibold">Admin</p>
-                    <Text as="p" className="text-[9px]">
-                      admin@gmail.com
-                    </Text>
-                  </div>
-                  <Box>
-                    <GoChevronDown size={12} />
-                  </Box>
-                </Flex>
-              </Box>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content>
-              <DropdownMenu.Label>
-                <Text size="2">admin@gmail.com</Text>
-              </DropdownMenu.Label>
-              <DropdownMenu.Item className="hover:bg-(--primary)!">
-                <Link href="/settings">Settings</Link>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item className="hover:bg-(--primary)!">
-                <Link href="/register">Register</Link>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item className="hover:bg-(--primary)!">
-                <button>Log out</button>
-              </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
+          {currentPath === "/dashboard" && (
+            <div className="flex gap-4 items-center bg-(--primary-bg) text-white p-1!">
+              {navBarLinkData.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.link}
+                  className={`
+        p-2!  text-sm
+        ${item.label === "Establishment" ? "bg-(--primary)" : "bg-transparent"}
+        text-white
+      `}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          )}
+          {currentPath !== "/dashboard" && (
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger>
+                <Box className="bg-[#014D54]! rounded-full p-0.5! pr-3! cursor-pointer">
+                  <Flex align="center" gap="3" className="text-white">
+                    <Avatar
+                      src="/logo.png"
+                      fallback="?"
+                      radius="full"
+                      size="3"
+                      className="bg-white!"
+                    />
+                    <div>
+                      <p className="font-semibold">CPC</p>
+                      <Text as="p" className="text-[9px]">
+                        admin@gmail.com
+                      </Text>
+                    </div>
+                    <Box>
+                      <GoChevronDown size={12} />
+                    </Box>
+                  </Flex>
+                </Box>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content>
+                <DropdownMenu.Label>
+                  <Text size="2">admin@gmail.com</Text>
+                </DropdownMenu.Label>
+                <DropdownMenu.Item className="hover:bg-(--primary)!">
+                  <Link href="/settings">Settings</Link>
+                </DropdownMenu.Item>
+                <DropdownMenu.Item className="hover:bg-(--primary)!">
+                  <Link href="/register">Register</Link>
+                </DropdownMenu.Item>
+                <DropdownMenu.Item className="hover:bg-(--primary)!">
+                  <button>Log out</button>
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
+          )}
         </div>
       </div>
     </nav>

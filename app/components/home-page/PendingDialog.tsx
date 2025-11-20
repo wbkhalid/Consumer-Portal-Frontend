@@ -11,7 +11,7 @@ import CustomTextArea from "../CustomTextArea";
 import CustomSearchDropdown, { Option } from "../CustomSearchDropdown";
 import { useState } from "react";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
-import { formatDate } from "../../utils/utils";
+import { formatDate, getDaysOld } from "../../utils/utils";
 import { COMPLAINT_API } from "../../APIs";
 import apiClient from "../../services/api-client";
 import { toast } from "react-toastify";
@@ -146,6 +146,7 @@ const PendingDialog = ({
                     {[
                       "ID",
                       "Date",
+                      "Days Old",
                       "Shop Name",
                       "Phone #",
                       "Complaint Type",
@@ -161,55 +162,60 @@ const PendingDialog = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {pendingData?.map((item, index) => (
-                    <tr
-                      key={item?.id}
-                      className={`transition-colors duration-150 ${
-                        index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                      } hover:bg-gray-100`}
-                    >
-                      <TableBodyCell>{item?.id}</TableBodyCell>
-                      <TableBodyCell className="whitespace-nowrap">
-                        {formatDate(item?.createdAt)}
-                      </TableBodyCell>
-                      <TableBodyCell>{item?.shopName}</TableBodyCell>
-                      <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
-                      <TableBodyCell className="whitespace-nowrap">
-                        {item?.complaintType}
-                      </TableBodyCell>
-                      <TableBodyCell className="whitespace-nowrap">
-                        {item?.categoryName}
-                      </TableBodyCell>
-                      <TableBodyCell className="whitespace-nowrap">
-                        {item?.sectionCategoryName}
-                      </TableBodyCell>
-                      <TableBodyCell>
-                        {item?.sectionsDetails
-                          ?.map((section) => section?.name)
-                          .join(", ")}
-                      </TableBodyCell>
-                      <TableBodyCell>
-                        {item?.sectionsDetails
-                          ?.map((section) => section?.description)
-                          .join(", ")}
-                      </TableBodyCell>
-                      <TableBodyCell>
-                        {item?.remarks
-                          ? item?.remarks?.slice(0, 50) +
-                            (item?.remarks?.length > 50 ? "..." : "")
-                          : ""}
-                      </TableBodyCell>
-                      <TableBodyCell>
-                        <FaRegPenToSquare
-                          onClick={() => {
-                            setSelectedComplaint(item);
-                            setDialogStep(2);
-                          }}
-                          className="text-(--primary) w-4 h-4 cursor-pointer!"
-                        />
-                      </TableBodyCell>
-                    </tr>
-                  ))}
+                  {pendingData
+                    ?.sort((a, b) => b?.id - a?.id)
+                    ?.map((item, index) => (
+                      <tr
+                        key={item?.id}
+                        className={`transition-colors duration-150 ${
+                          index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
+                        } hover:bg-gray-100`}
+                      >
+                        <TableBodyCell>{item?.id}</TableBodyCell>
+                        <TableBodyCell className="whitespace-nowrap">
+                          {formatDate(item?.createdAt)}
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          {getDaysOld(item?.createdAt)}
+                        </TableBodyCell>
+                        <TableBodyCell>{item?.shopName}</TableBodyCell>
+                        <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
+                        <TableBodyCell className="whitespace-nowrap">
+                          {item?.complaintType}
+                        </TableBodyCell>
+                        <TableBodyCell className="whitespace-nowrap">
+                          {item?.categoryName}
+                        </TableBodyCell>
+                        <TableBodyCell className="whitespace-nowrap">
+                          {item?.sectionCategoryName}
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          {item?.sectionsDetails
+                            ?.map((section) => section?.name)
+                            .join(", ")}
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          {item?.sectionsDetails
+                            ?.map((section) => section?.description)
+                            .join(", ")}
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          {item?.remarks
+                            ? item?.remarks?.slice(0, 50) +
+                              (item?.remarks?.length > 50 ? "..." : "")
+                            : ""}
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          <FaRegPenToSquare
+                            onClick={() => {
+                              setSelectedComplaint(item);
+                              setDialogStep(2);
+                            }}
+                            className="text-(--primary) w-4 h-4 cursor-pointer!"
+                          />
+                        </TableBodyCell>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>

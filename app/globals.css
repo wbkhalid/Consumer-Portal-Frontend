@@ -3,7 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary-bg: #014d54;
   --primary: #06626a;
+  --primary-border: #1bcef5;
   --warning: #e8bd0f;
   --success: #028b02;
   --error: #af0404;
@@ -33,6 +35,10 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.no-inner-padding .rt-BaseMenuViewport {
+  padding: 0 !important;
 }
 
 .recharts-wrapper :focus:not(:focus-visible) {

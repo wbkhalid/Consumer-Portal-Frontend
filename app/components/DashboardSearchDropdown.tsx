@@ -193,11 +193,11 @@ const DashboardSearchDropdown: React.FC<DashboardSearchDropdownProps> = ({
           option: (base, state) => ({
             ...base,
             backgroundColor: state.isSelected
-              ? "#fff"
+              ? "var(--primary-bg)"
               : state.isFocused
               ? "rgba(255, 255, 255, 0.2)"
               : "var(--primary)",
-            color: state.isSelected ? "#E61313" : "#fff",
+            color: state.isSelected ? "#fff" : "#fff",
             cursor: "pointer",
             fontSize,
             padding: "4px 8px",

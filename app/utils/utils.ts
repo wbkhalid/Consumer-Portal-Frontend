@@ -25,6 +25,16 @@ export const toLocal = (dateString: string) => {
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000);
 };
 
+export const getDaysOld = (dateString: string) => {
+  const createdDate = new Date(dateString);
+  const today = new Date();
+
+  const diffTime = today.getTime() - createdDate.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  return diffDays;
+};
+
 export const statusData = [
   { id: 0, label: "Pending" },
   { id: 1, label: "Proceeding" },

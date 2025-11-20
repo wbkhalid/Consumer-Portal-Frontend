@@ -1,6 +1,6 @@
 "use client";
 import CustomStatCard from "./CustomStatCard";
-import { IoDocumentTextOutline } from "react-icons/io5";
+import { IoDocumentTextOutline, IoTimeOutline } from "react-icons/io5";
 import { ComplainDashboardType } from "../../page";
 import Link from "next/link";
 import ProceedingDialog from "./ProceedingDialog";
@@ -13,6 +13,7 @@ import SuperEscalationDialog from "./SuperEscalationDialog";
 import EscalationDialog from "./EscalationDialog";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
 import { useState } from "react";
+import { BsCashStack } from "react-icons/bs";
 
 const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
   const [refresh, setRefresh] = useState(false);
@@ -87,6 +88,21 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
       <NonProsecutionDialog
         nonProsectionComplaint={data?.nonProsecutedComplaints ?? 0}
         nonProsecutionData={nonProsecutionData ?? []}
+      />
+
+      <CustomStatCard
+        title="Avg Resolution Time"
+        value={data?.avgResolutionTime || 0}
+        icon={<IoTimeOutline className="text-white text-lg" />}
+        iconBg="bg-[#EAB308]"
+        percentage={4.5}
+      />
+      <CustomStatCard
+        title="Total Fine"
+        value={0}
+        icon={<BsCashStack className="text-white text-lg" />}
+        iconBg="bg-[#EAB308]"
+        percentage={4.5}
       />
     </div>
   );

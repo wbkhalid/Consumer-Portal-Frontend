@@ -7,7 +7,7 @@ import { LuMailQuestion } from "react-icons/lu";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AxiosError } from "axios";
+import { AxiosError, isAxiosError } from "axios";
 import { AUTH_API } from "../../APIs";
 import { toast } from "react-toastify";
 import apiClient from "../../services/api-client";
@@ -15,7 +15,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 const schema = z.object({
-  emailOrPhone: z.string().email("Invalid email address"),
+  emailOrPhone: z.string(),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -42,11 +42,16 @@ const LoginComponent = () => {
       toast.success("Login successful!");
       router.push("/dashboard");
     } catch (err) {
-      const error = err as AxiosError<{ message?: string }>;
+      if (isAxiosError(err)) {
+        console.log(err.response?.data?.responseMessage, "err");
 
-      toast.error(
-        error.response?.data?.message || "Login failed. Please try again."
-      );
+        toast.error(
+          err.response?.data?.responseMessage ||
+            "Login failed. Please try again."
+        );
+      } else {
+        toast.error("Something went wrong.");
+      }
     }
   };
 

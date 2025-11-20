@@ -4,6 +4,7 @@ import TableHeaderCell from "../table/TableHeaderCell";
 import TableBodyCell from "../table/TableBodyCell";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { BiError } from "react-icons/bi";
+import { formatDate } from "../../utils/utils";
 
 interface NonProsectionType {
   nonProsectionComplaint: number;
@@ -46,6 +47,7 @@ const NonProsecutionDialog = ({
               <tr className="font-semibold bg-white">
                 {[
                   "ID",
+                  "Date",
                   "Shop Name",
                   "Phone #",
                   "Complaint Type",
@@ -68,6 +70,9 @@ const NonProsecutionDialog = ({
                   } hover:bg-gray-100`}
                 >
                   <TableBodyCell>{item?.id}</TableBodyCell>
+                  <TableBodyCell className="whitespace-nowrap">
+                    {formatDate(item?.createdAt)}
+                  </TableBodyCell>
                   <TableBodyCell>{item?.shopName}</TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
                     {item?.phoneNumber}

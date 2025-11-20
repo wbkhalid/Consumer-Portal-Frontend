@@ -5,6 +5,7 @@ import ComplainStatusChart from "./components/home-page/ComplainStatusChart";
 import ComplainTypeChart from "./components/home-page/ComplainTypeChart";
 import FilterDataComponent from "./components/home-page/FilterDataComponent";
 import StatSummary from "./components/home-page/StatSummary";
+import DashboardMap from "./dashboard/components/DashboardMap";
 
 interface PageProps {
   searchParams: Promise<{ districtId?: string; status?: string }>;
@@ -32,6 +33,13 @@ export interface DailyAvergeType {
   resolvedCount: number;
   rejectedCount: number;
 }
+export interface ComplaintsListType {
+  complaintId: number;
+  title: string;
+  address: string;
+  lattitude: number;
+  longitude: number;
+}
 
 export interface ComplainDashboardType {
   totalComplaints: number;
@@ -43,10 +51,12 @@ export interface ComplainDashboardType {
   expartyComplaints: number;
   withdrawnComplaints: number;
   nonProsecutedComplaints: number;
+  avgResolutionTime: number;
   complaintCategoryStats: ComplaintCategoryStatsType[];
   sectionTypeStats: SectionTypeStatsType[];
   statusStats: StatusStatsType[];
   dailyAverageComplaints: DailyAvergeType[];
+  complaintsList: ComplaintsListType[];
 }
 
 const page = async ({ searchParams }: PageProps) => {
@@ -80,7 +90,7 @@ const page = async ({ searchParams }: PageProps) => {
       <div className="col-span-12 lg:col-span-4 xl:col-span-3">
         <FilterDataComponent />
         <ComplainStatusChart data={complainDashboardData?.statusStats} />
-        <ComplainMap />
+        <ComplainMap data={complainDashboardData?.complaintsList} />
       </div>
     </div>
   );

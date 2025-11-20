@@ -30,6 +30,7 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
 
   const headers = [
     { label: "Id", sortable: "id" },
+    { label: "Date" },
     { label: "Shop Name" },
     { label: "Phone #" },
     { label: "Complaint Type", sortable: "complaintType" },
@@ -118,6 +119,9 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
                 } hover:bg-gray-100`}
               >
                 <TableBodyCell>{item?.id}</TableBodyCell>
+                <TableBodyCell className="whitespace-nowrap">
+                  {formatDate(item?.createdAt)}
+                </TableBodyCell>
                 <TableBodyCell>{item?.shopName}</TableBodyCell>
                 <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
                 <TableBodyCell>{item?.complaintType}</TableBodyCell>

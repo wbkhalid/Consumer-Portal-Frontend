@@ -10,7 +10,7 @@ import apiClient from "../../services/api-client";
 import { COMPLAINT_API } from "../../APIs";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { formatDate, toLocal } from "../../utils/utils";
+import { formatDate, getDaysOld, toLocal } from "../../utils/utils";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import { RxCross1 } from "react-icons/rx";
 import { format, parseISO } from "date-fns";
@@ -169,6 +169,8 @@ const SuperEscalationDialog = ({
                   <tr className="font-semibold bg-white">
                     {[
                       "ID",
+                      "Date",
+                      "Days Old",
                       "Shop Name",
                       "Phone #",
                       "Complaint Type",
@@ -188,92 +190,100 @@ const SuperEscalationDialog = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {superEscalationData?.map((item, index) => (
-                    <tr
-                      key={item?.id}
-                      className={`transition-colors duration-150 ${
-                        index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                      } hover:bg-gray-100`}
-                    >
-                      <TableBodyCell>{item?.id}</TableBodyCell>
-                      <TableBodyCell>{item?.shopName}</TableBodyCell>
-                      <TableBodyCell className="whitespace-nowrap">
-                        {item?.phoneNumber}
-                      </TableBodyCell>
-                      <TableBodyCell className="whitespace-nowrap">
-                        {item?.complaintType}
-                      </TableBodyCell>
-                      <TableBodyCell className="whitespace-nowrap">
-                        {item?.categoryName}
-                      </TableBodyCell>
-                      <TableBodyCell className="whitespace-nowrap">
-                        {item?.sectionCategoryName}
-                      </TableBodyCell>
-                      <TableBodyCell>
-                        {item?.sectionsDetails
-                          ?.map((section) => section?.name)
-                          .join(", ")}
-                      </TableBodyCell>
-                      <TableBodyCell>
-                        {item?.sectionsDetails
-                          ?.map((section) => section?.description)
-                          .join(", ")}
-                      </TableBodyCell>
-                      <TableBodyCell>
-                        {item?.remarks
-                          ? item?.remarks?.slice(0, 50) +
-                            (item?.remarks?.length > 50 ? "..." : "")
-                          : ""}
-                      </TableBodyCell>
-                      <TableBodyCell>
-                        {item?.assigneeRemarks
-                          ? item?.assigneeRemarks?.slice(0, 50) +
-                            (item?.assigneeRemarks?.length > 50 ? "..." : "")
-                          : ""}
-                      </TableBodyCell>
-                      <TableBodyCell>
-                        {item?.hearingDate
-                          ? format(toLocal(item.hearingDate), "dd-MM-yyyy")
-                          : "--"}
-                      </TableBodyCell>
+                  {superEscalationData
+                    ?.sort((a, b) => b?.id - a?.id)
+                    ?.map((item, index) => (
+                      <tr
+                        key={item?.id}
+                        className={`transition-colors duration-150 ${
+                          index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
+                        } hover:bg-gray-100`}
+                      >
+                        <TableBodyCell>{item?.id}</TableBodyCell>
+                        <TableBodyCell className="whitespace-nowrap">
+                          {formatDate(item?.createdAt)}
+                        </TableBodyCell>
+                        <TableBodyCell className="whitespace-nowrap">
+                          {getDaysOld(item?.createdAt)}
+                        </TableBodyCell>
+                        <TableBodyCell>{item?.shopName}</TableBodyCell>
+                        <TableBodyCell className="whitespace-nowrap">
+                          {item?.phoneNumber}
+                        </TableBodyCell>
+                        <TableBodyCell className="whitespace-nowrap">
+                          {item?.complaintType}
+                        </TableBodyCell>
+                        <TableBodyCell className="whitespace-nowrap">
+                          {item?.categoryName}
+                        </TableBodyCell>
+                        <TableBodyCell className="whitespace-nowrap">
+                          {item?.sectionCategoryName}
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          {item?.sectionsDetails
+                            ?.map((section) => section?.name)
+                            .join(", ")}
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          {item?.sectionsDetails
+                            ?.map((section) => section?.description)
+                            .join(", ")}
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          {item?.remarks
+                            ? item?.remarks?.slice(0, 50) +
+                              (item?.remarks?.length > 50 ? "..." : "")
+                            : ""}
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          {item?.assigneeRemarks
+                            ? item?.assigneeRemarks?.slice(0, 50) +
+                              (item?.assigneeRemarks?.length > 50 ? "..." : "")
+                            : ""}
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          {item?.hearingDate
+                            ? format(toLocal(item.hearingDate), "dd-MM-yyyy")
+                            : "--"}
+                        </TableBodyCell>
 
-                      <TableBodyCell>
-                        {item?.hearingDate
-                          ? format(toLocal(item.hearingDate), "hh:mm a")
-                          : "--"}
-                      </TableBodyCell>
-                      <TableBodyCell>
-                        <FaRegPenToSquare
-                          onClick={() => {
-                            setSelectedComplaint(item);
-                            if (item?.hearingDate) {
-                              const d = parseISO(item.hearingDate);
-                              const localDate = new Date(
-                                d.getTime() - d.getTimezoneOffset() * 60000
-                              );
-                              setHearingDate(localDate);
-                            } else {
-                              setHearingDate(null);
-                            }
-                            setDialogStep(2);
-                          }}
-                          className="text-(--primary) w-4 h-4 cursor-pointer!"
-                        />
-                      </TableBodyCell>
-                      <TableBodyCell>
-                        <div
-                          className="bg-(--primary) rounded-full py-1! px-2! text-[10px] text-white! whitespace-nowrap cursor-pointer"
-                          onClick={() => {
-                            setSelectedComplaint(item);
-                            setDialogStep(3);
-                            setIsResolved(true);
-                          }}
-                        >
-                          Update Status
-                        </div>
-                      </TableBodyCell>
-                    </tr>
-                  ))}
+                        <TableBodyCell>
+                          {item?.hearingDate
+                            ? format(toLocal(item.hearingDate), "hh:mm a")
+                            : "--"}
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          <FaRegPenToSquare
+                            onClick={() => {
+                              setSelectedComplaint(item);
+                              if (item?.hearingDate) {
+                                const d = parseISO(item.hearingDate);
+                                const localDate = new Date(
+                                  d.getTime() - d.getTimezoneOffset() * 60000
+                                );
+                                setHearingDate(localDate);
+                              } else {
+                                setHearingDate(null);
+                              }
+                              setDialogStep(2);
+                            }}
+                            className="text-(--primary) w-4 h-4 cursor-pointer!"
+                          />
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          <div
+                            className="bg-(--primary) rounded-full py-1! px-2! text-[10px] text-white! whitespace-nowrap cursor-pointer"
+                            onClick={() => {
+                              setSelectedComplaint(item);
+                              setDialogStep(3);
+                              setIsResolved(true);
+                            }}
+                          >
+                            Update Status
+                          </div>
+                        </TableBodyCell>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>

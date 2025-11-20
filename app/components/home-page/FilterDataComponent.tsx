@@ -14,26 +14,26 @@ const FilterDataComponent = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(
     searchParams.get("districtId")
   );
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(
-    searchParams.get("status")
-  );
+  // const [selectedStatus, setSelectedStatus] = useState<string | null>(
+  //   searchParams.get("status")
+  // );
 
-  const statusOptions: Option[] = [
-    { label: "Pending", value: "0" },
-    { label: "Proceeding", value: "1" },
-    { label: "Escalation", value: "2" },
-    { label: "Super Escalation", value: "3" },
-    { label: "Decided on Merit", value: "4" },
-    { label: "Ex-Party", value: "5" },
-    { label: "Withdraw", value: "6" },
-    { label: "Non Prosecution", value: "7" },
-  ];
+  // const statusOptions: Option[] = [
+  //   { label: "Pending", value: "0" },
+  //   { label: "Proceeding", value: "1" },
+  //   { label: "Escalation", value: "2" },
+  //   { label: "Super Escalation", value: "3" },
+  //   { label: "Decided on Merit", value: "4" },
+  //   { label: "Ex-Party", value: "5" },
+  //   { label: "Withdraw", value: "6" },
+  //   { label: "Non Prosecution", value: "7" },
+  // ];
 
   const handleApplyFilter = () => {
     const params = new URLSearchParams();
 
     if (selectedDistrict) params.set("districtId", selectedDistrict);
-    if (selectedStatus) params.set("status", selectedStatus);
+    // if (selectedStatus) params.set("status", selectedStatus);
 
     // push to same route with updated query params
     router.push(`/?${params.toString()}`);
@@ -56,14 +56,17 @@ const FilterDataComponent = () => {
           onChange={(val) => setSelectedDistrict(val)}
         />
 
-        <CustomSearchDropdown
+        {/* <CustomSearchDropdown
           placeholder="Status"
           options={statusOptions}
           value={selectedStatus ?? ""}
           onChange={(val) => setSelectedStatus(val)}
-        />
+        /> */}
 
-        <Button className="bg-(--primary)! h-9!" onClick={handleApplyFilter}>
+        <Button
+          className="bg-(--primary)! h-9! cursor-pointer!"
+          onClick={handleApplyFilter}
+        >
           Apply Filter
         </Button>
       </div>

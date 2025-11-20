@@ -37,8 +37,13 @@ export interface ComplaintsListType {
   complaintId: number;
   title: string;
   address: string;
+  phoneNumber: string;
+  category: string;
   lattitude: number;
   longitude: number;
+  createdAt: string;
+  sections: string[];
+  sectionCategories: string[];
 }
 
 export interface ComplainDashboardType {
@@ -51,6 +56,7 @@ export interface ComplainDashboardType {
   expartyComplaints: number;
   withdrawnComplaints: number;
   nonProsecutedComplaints: number;
+  avgResolutionTime: number;
   complaintCategoryStats: ComplaintCategoryStatsType[];
   sectionTypeStats: SectionTypeStatsType[];
   statusStats: StatusStatsType[];

@@ -158,15 +158,15 @@ const ComplaintForm = ({
       >
         <Dialog.Title>
           <Flex justify="between" align="center" className="mb-5!">
-            <Heading as="h6" className="text-primary! py-2!">
+            <p className="text-(--primary) py-2! font-bold text-xl">
               Complained Box
-            </Heading>
+            </p>
             <Dialog.Close>
               <IconButton
                 radius="full"
-                className="w-8! h-8! bg-primary/10! py-2!"
+                className="w-6! h-6! bg-(--primary)! py-2!"
               >
-                <IoClose className="text-primary" />
+                <IoClose className="text-white" />
               </IconButton>
             </Dialog.Close>
           </Flex>

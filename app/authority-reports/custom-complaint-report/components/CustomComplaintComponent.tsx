@@ -3,8 +3,22 @@
 import { Button } from "@radix-ui/themes";
 import CustomComplaintTable from "./CustomComplaintTable";
 import Form from "../list/RegisterForm";
+import Forms from "../list/Forms";
+import { OptionType } from "../../../components/Form/CustomSelect";
 
-const CustomComplaintComponent = () => {
+interface Props {
+  divisionOptions: OptionType[];
+  sectionCategoryOptions: OptionType[];
+  sectionOptions: OptionType[];
+  complaintCategoryOptions: OptionType[];
+}
+
+const CustomComplaintComponent = ({
+  divisionOptions,
+  sectionCategoryOptions,
+  sectionOptions,
+  complaintCategoryOptions,
+}: Props) => {
   return (
     <div className="border border-[#e2e8f0] rounded-lg py-1! overflow-hidden max-h-[calc(100vh-10px)]">
       {/* Header Section */}
@@ -17,19 +31,12 @@ const CustomComplaintComponent = () => {
             {15} Records
           </p>
         </div>
-        <div>
-          {/* <Button
-            className="bg-(--primary)! cursor-pointer! rounded-full!"
-            onClick={() => {
-              //   setIsOpen(true);
-              //   setIsEdit(false);
-              //   setEditData(null);
-            }}
-          >
-            Add Custom Complaint
-          </Button> */}
-          {/* <Form /> */}
-        </div>
+        <Forms
+          divisionOptions={divisionOptions}
+          sectionCategoryOptions={sectionCategoryOptions}
+          sectionOptions={sectionOptions}
+          complaintCategoryOptions={complaintCategoryOptions}
+        />
       </div>
       <CustomComplaintTable />
     </div>
