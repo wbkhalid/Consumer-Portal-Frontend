@@ -14,7 +14,7 @@ import { StatusStatsType } from "../../page";
 const DashboardStatusChart = ({ data }: { data: StatusStatsType[] }) => {
   if (!data || data.length === 0) {
     return (
-      <div className="p-1! bg-(--primary) border border-[#1BCEF5]">
+      <div className="p-1! bg-(--dashboard-primary) border border-(--dashboard-border)">
         <p className="text-sm text-white font-bold">Complaint Resolved</p>
         <div className="h-[300px] flex justify-center items-center text-sm text-white">
           No data available
@@ -69,7 +69,7 @@ const DashboardStatusChart = ({ data }: { data: StatusStatsType[] }) => {
   };
 
   return (
-    <div className="px-3! py-2! bg-(--primary) border border-[#1BCEF5]">
+    <div className="px-3! py-2! bg-(--dashboard-primary) border border-(--dashboard-border)">
       <p className="text-sm text-white font-bold ">Complaint Resolved</p>
 
       <div className="h-[250px] mt-1 flex justify-center items-center">
@@ -106,8 +106,8 @@ const DashboardStatusChart = ({ data }: { data: StatusStatsType[] }) => {
                   return (
                     <div
                       style={{
-                        backgroundColor: "#014D54",
-                        border: "1px solid #1BCEF5",
+                        backgroundColor: "var(--dashboard-primary)",
+                        border: "1px solid var(--dashboard-border)",
                         borderRadius: 0,
                         padding: "2px 6px",
                         textAlign: "center",

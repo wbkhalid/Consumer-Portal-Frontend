@@ -3,7 +3,7 @@
 import { Box, Button, Text, TextField } from "@radix-ui/themes";
 import Image from "next/image";
 import CustomPasswordField from "../../components/CustomPasswordField";
-import { LuMailQuestion } from "react-icons/lu";
+import { LuMailQuestion, LuPhone } from "react-icons/lu";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,9 +13,10 @@ import { toast } from "react-toastify";
 import apiClient from "../../services/api-client";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import CustomTextField from "../../components/CustomTextField";
 
 const schema = z.object({
-  emailOrPhone: z.string(),
+  emailOrPhone: z.string().trim().min(1, "Email or phone is required"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -76,15 +77,16 @@ const LoginComponent = () => {
           <p className="text-white font-extrabold text-3xl text-center">
             Welcome Back!
           </p>
-          <p className="text-white text-center">
-            Please enter your email and password to log in and continue.
+          <p className="text-white text-center my-1!">
+            Please enter your email or phone and password to log in and
+            continue.
           </p>
 
           <div className="w-full flex flex-col gap-3 mt-3">
             {/* Email */}
-            <Box>
+            {/* <Box>
               <Text as="label" className="block mb-1! text-white text-sm">
-                Email Address
+                Email or Phone #
               </Text>
 
               <TextField.Root
@@ -99,11 +101,19 @@ const LoginComponent = () => {
               </TextField.Root>
 
               {errors.emailOrPhone && (
-                <p className="text-red-300 text-sm mt-1">
+                <p className="text-red-600 text-xs mt-1">
                   {errors?.emailOrPhone?.message}
                 </p>
               )}
-            </Box>
+            </Box> */}
+
+            <CustomTextField
+              label="Email or Phone #"
+              placeholder="Email or Phone #"
+              endAdornment={<LuPhone size={18} />}
+              error={errors.emailOrPhone?.message}
+              {...register("emailOrPhone")}
+            />
 
             {/* Password */}
             <CustomPasswordField

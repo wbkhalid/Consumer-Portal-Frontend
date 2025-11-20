@@ -52,21 +52,21 @@ const DashboardMap = ({ data }: { data: ComplaintsListType[] }) => {
       </div>
 
       {/* 🔥 Add z-index so it appears on top */}
-      <div className="absolute top-1 left-1 z-50 flex gap-4 items-center bg-(--primary) text-white p-1!">
+      {/* <div className="absolute top-1 left-1 z-50 flex gap-4 items-center bg-(--primary) text-white p-1!">
         {dashboardDropdownItems.map((item) => (
           <Link
             key={item.label}
             href={item.link}
             className={`
         p-2!  text-sm
-        ${item.label === "CPC" ? "bg-(--primary-bg)" : "bg-transparent"}
+        ${item.label === "CPC" ? "bg-(--dashboard-primary-bg)" : "bg-transparent"}
         text-white
       `}
           >
             {item.label}
           </Link>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -148,20 +148,20 @@ const Markers = ({ complaints }: Props) => {
           pixelOffset={[0, -15]}
         >
           {/* <img src="/images/division-card.png" alt="complain-img" /> */}
-          <div className="bg-(--primary) border border-[#1BCEF5] py-1! px-2! text-white text-[10px]">
+          <div className="bg-(--dashboard-primary) border border-(--dasboard-border) p-1!  text-white text-[10px]">
             <div className="flex gap-3 justify-between items-center">
               <p className="font-semibold">{selectedComplaint?.title}</p>
               <p>{formatDate(selectedComplaint?.createdAt)}</p>
             </div>
             <p className="my-0.5!">{selectedComplaint?.address}</p>
             <div className="flex flex-col gap-0.5">
-              <div className="flex gap-2 bg-(--primary-bg) p-1! items-center">
+              <div className="flex gap-2 bg-(--dashboard-primary-bg) p-1! items-center">
                 <p className="w-20 whitespace-nowrap">Shop Phone #</p>
                 <p className="flex-1">{selectedComplaint?.phoneNumber}</p>
               </div>
 
               <div className="flex flex-col gap-0.5">
-                <div className="flex gap-2 bg-(--primary-bg) p-1! items-center">
+                <div className="flex gap-2 bg-(--dashboard-primary-bg) p-1! items-center">
                   <p className="w-20 whitespace-nowrap">Section Category</p>
                   <p className="flex-1 flex gap-1 flex-wrap">
                     {selectedComplaint?.sectionCategories?.map((cat, i) => (
@@ -173,7 +173,7 @@ const Markers = ({ complaints }: Props) => {
                   </p>
                 </div>
 
-                <div className="flex gap-2 bg-(--primary-bg) p-1! items-center">
+                <div className="flex gap-2 bg-(--dashboard-primary-bg) p-1! items-center">
                   <p className="w-20 whitespace-nowrap">Section</p>
                   <p className="flex-1 flex gap-1 flex-wrap">
                     {selectedComplaint?.sections?.map((sec, i) => (
@@ -186,7 +186,7 @@ const Markers = ({ complaints }: Props) => {
                 </div>
               </div>
 
-              <div className="flex gap-2 bg-(--primary-bg) p-1! items-center">
+              <div className="flex gap-2 bg-(--dashboard-primary-bg) p-1! items-center">
                 <p className="w-20 whitespace-nowrap">Category</p>
                 <p className="flex-1">{selectedComplaint?.category}</p>
               </div>

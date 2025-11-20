@@ -4,11 +4,14 @@
   --background: #ffffff;
   --foreground: #171717;
   --primary-bg: #014d54;
-  --primary: #06626a;
+  --primary: #013769;
   --primary-border: #1bcef5;
   --warning: #e8bd0f;
   --success: #028b02;
   --error: #af0404;
+  --dashboard-primary: #0a929e;
+  --dashboard-primary-bg: #8ed1da;
+  --dashboard-border: #1c4f51;
 }
 
 @theme inline {

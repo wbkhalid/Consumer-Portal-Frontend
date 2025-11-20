@@ -33,7 +33,21 @@ const DashboardFieldChart = ({
 }: {
   data: ComplaintCategoryStatsType[];
 }) => {
+  if (!data || data.length === 0) {
+    return (
+      <div className="p-1! bg-(--dashboard-primary) border border-(--dashboard-border)">
+        <p className="text-sm text-white font-bold">
+          Complaint Field Distribution
+        </p>
+        <div className="h-[300px] flex justify-center items-center text-sm text-white">
+          No data available
+        </div>
+      </div>
+    );
+  }
+
   // Total
+
   const total = React.useMemo(
     () => data.reduce((s, d) => s + d.count, 0),
     [data]
@@ -85,7 +99,7 @@ const DashboardFieldChart = ({
   };
 
   return (
-    <div className="px-3! py-2! bg-(--primary) border border-[#1BCEF5]">
+    <div className="px-3! py-2! bg-(--dashboard-primary) border border-(--dashboard-border)">
       <p className="text-sm text-white font-bold">
         Complaint Field Distribution
       </p>
@@ -114,8 +128,8 @@ const DashboardFieldChart = ({
                   return (
                     <div
                       style={{
-                        backgroundColor: "#014D54",
-                        border: "1px solid #1BCEF5",
+                        backgroundColor: "var(--dashboard-primary)",
+                        border: "1px solid var(--dashboard-border)",
                         borderRadius: 0,
                         padding: "2px 6px",
                         textAlign: "center",

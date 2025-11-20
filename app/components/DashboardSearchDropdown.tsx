@@ -165,15 +165,15 @@ const DashboardSearchDropdown: React.FC<DashboardSearchDropdownProps> = ({
         styles={{
           control: (base, state) => ({
             ...base,
-            backgroundColor: "var(--primary)",
+            backgroundColor: "var(--dashboard-primary)",
             borderWidth: 1,
-            borderColor: state.isFocused ? "#1BCEF5" : "#1BCEF5",
+            borderColor: "var(--dashboard-border)",
             boxShadow: "none",
             borderRadius: 0,
             height: 40,
             minHeight: 40,
             padding: "0",
-            "&:hover": { borderColor: "#1BCEF5" },
+            // "&:hover": { borderColor: "#1BCEF5" },
           }),
           menuPortal: (base) => ({
             ...base,
@@ -182,7 +182,7 @@ const DashboardSearchDropdown: React.FC<DashboardSearchDropdownProps> = ({
           }),
           menuList: (base) => ({
             ...base,
-            backgroundColor: "var(--primary)",
+            backgroundColor: "var(--dashboard-primary-bg)",
             color: "#fff",
             borderRadius: 0,
             padding: "0 0",
@@ -193,17 +193,17 @@ const DashboardSearchDropdown: React.FC<DashboardSearchDropdownProps> = ({
           option: (base, state) => ({
             ...base,
             backgroundColor: state.isSelected
-              ? "var(--primary-bg)"
+              ? "var(--dashboard-primary-bg)"
               : state.isFocused
               ? "rgba(255, 255, 255, 0.2)"
-              : "var(--primary)",
+              : "var(--dashboard-primary)",
             color: state.isSelected ? "#fff" : "#fff",
             cursor: "pointer",
             fontSize,
             padding: "4px 8px",
             transition: "all 0.15s ease",
             "&:active": {
-              backgroundColor: "#1BCEF5",
+              backgroundColor: "var(--dashboard-primary-bg)",
               color: "#fff",
             },
           }),

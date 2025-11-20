@@ -17,7 +17,7 @@ const DashboardStatCard = ({
   percentage,
 }: DashboardStatCardProps) => {
   return (
-    <div className="bg-(--primary) border border-[#1BCEF5] p-2!">
+    <div className="bg-(--dashboard-primary) border border-(--dashboard-border) p-2!">
       <div className="flex justify-between items-center mb-1!">
         <div className="flex gap-1 items-center text-white">
           <div className={`${iconBg} p-0.5!`}>{icon}</div>

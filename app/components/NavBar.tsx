@@ -55,7 +55,13 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="bg-(--primary) px-4! py-1!">
+    <nav
+      className={` ${
+        currentPath === "/dashboard"
+          ? "bg-(--dashboard-primary)"
+          : "bg-(--primary)"
+      }  px-4! py-1!`}
+    >
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <Link href="/">
@@ -71,12 +77,16 @@ const NavBar = () => {
 
           <Flex align="center" className="gap-3!">
             <Heading size="5" className="text-white">
-              Directorate of Commodities
+              CPC
             </Heading>
             <Popover.Root>
               <Popover.Trigger>
                 <IconButton
-                  className="bg-[#014D54]! w-5! h-5! cursor-pointer!"
+                  className={` ${
+                    currentPath === "/dashboard"
+                      ? "bg-(--dashboard-primary-bg)!"
+                      : "bg-white/10!"
+                  } w-5! h-5! cursor-pointer!`}
                   radius="full"
                 >
                   <GoChevronRight className=" text-white" />
@@ -108,14 +118,18 @@ const NavBar = () => {
           </IconButton>
 
           {currentPath === "/dashboard" && (
-            <div className="flex gap-4 items-center bg-(--primary-bg) text-white p-1!">
+            <div className="flex gap-4 items-center bg-(--dashboard-primary-bg) text-white p-1!">
               {navBarLinkData.map((item) => (
                 <Link
                   key={item.label}
                   href={item.link}
                   className={`
         p-2!  text-sm
-        ${item.label === "Establishment" ? "bg-(--primary)" : "bg-transparent"}
+        ${
+          item.label === "Establishment"
+            ? "bg-(--dashboard-primary)"
+            : "bg-transparent"
+        }
         text-white
       `}
                 >
@@ -127,7 +141,7 @@ const NavBar = () => {
           {currentPath !== "/dashboard" && (
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
-                <Box className="bg-[#014D54]! rounded-full p-0.5! pr-3! cursor-pointer">
+                <Box className="bg-white/10! rounded-full p-0.5! pr-3! cursor-pointer">
                   <Flex align="center" gap="3" className="text-white">
                     <Avatar
                       src="/logo.png"
