@@ -14,6 +14,7 @@ import EscalationDialog from "./EscalationDialog";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
 import { useState } from "react";
 import { BsCashStack } from "react-icons/bs";
+import { TbCloudDownload } from "react-icons/tb";
 
 const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
   const [refresh, setRefresh] = useState(false);
@@ -102,6 +103,13 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         value={0}
         icon={<BsCashStack className="text-white text-lg" />}
         iconBg="bg-[#EAB308]"
+        percentage={4.5}
+      />
+      <CustomStatCard
+        title="Downloads"
+        value={0}
+        icon={<TbCloudDownload className="text-white text-lg" />}
+        iconBg="bg-[#028b02]"
         percentage={4.5}
       />
     </div>

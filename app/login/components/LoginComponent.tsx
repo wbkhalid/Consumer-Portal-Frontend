@@ -32,13 +32,13 @@ const LoginComponent = () => {
 
   const onSubmit = async (formData: Login) => {
     try {
-      // const response = await apiClient.post(`/api/Auth/login `, formData);
+      const response = await apiClient.post(`/api/Auth/login `, formData);
 
-      // const token = response?.data?.data?.token;
-      // const expiration = response?.data?.data?.expiration;
+      const token = response?.data?.data?.token;
+      const expiration = response?.data?.data?.expiration;
 
-      Cookies.set("token", "hello", {
-        // expires: new Date(expiration),
+      Cookies.set("token", token, {
+        expires: new Date(expiration),
       });
       toast.success("Login successful!");
       router.push("/");
