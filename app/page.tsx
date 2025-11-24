@@ -5,7 +5,6 @@ import ComplainStatusChart from "./components/home-page/ComplainStatusChart";
 import ComplainTypeChart from "./components/home-page/ComplainTypeChart";
 import FilterDataComponent from "./components/home-page/FilterDataComponent";
 import StatSummary from "./components/home-page/StatSummary";
-import DashboardMap from "./dashboard/components/DashboardMap";
 
 interface PageProps {
   searchParams: Promise<{ districtId?: string; status?: string }>;

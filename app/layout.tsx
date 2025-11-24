@@ -7,10 +7,10 @@ import ThemeSwitcher from "./components/RadixTheme";
 import "./globals.css";
 import "./theme-config.css";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta-sans",
-  subsets: ["latin"],
-});
+// const plusJakartaSans = Plus_Jakarta_Sans({
+//   variable: "--font-plus-jakarta-sans",
+//   subsets: ["latin"],
+// });
 
 export const metadata: Metadata = {
   title: "Consumer Portal",
@@ -25,9 +25,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${plusJakartaSans.variable}  antialiased`}>
+      <body>
         <ThemeSwitcher>
-          {/* <NavBar /> */}
           <NavbarToggle>{children}</NavbarToggle>
         </ThemeSwitcher>
         <ToastContainer />

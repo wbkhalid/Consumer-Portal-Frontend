@@ -8,7 +8,7 @@ interface ThemeSwitcherProps {
 
 export default function ThemeSwitcher({ children }: ThemeSwitcherProps) {
   return (
-    <Theme accentColor="green" grayColor="gray">
+    <Theme accentColor="blue" grayColor="gray">
       <div>{children}</div>
     </Theme>
   );

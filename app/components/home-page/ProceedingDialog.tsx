@@ -16,6 +16,7 @@ import { toast } from "react-toastify";
 import { format, parseISO } from "date-fns";
 import CustomTextArea from "../CustomTextArea";
 import CustomSearchDropdown, { Option } from "../CustomSearchDropdown";
+import { MdOutlineFileDownload } from "react-icons/md";
 
 interface ProceedingComplainType {
   proceedingComplain: number;
@@ -181,6 +182,7 @@ const ProceedingDialog = ({
                       "Assignee Remarks",
                       "Hearing Date",
                       "Hearing Time",
+                      "Generate Report",
                       "Deatils",
                       "Proceeding",
                     ].map((header) => (
@@ -250,6 +252,12 @@ const ProceedingDialog = ({
                           {item?.hearingDate
                             ? format(toLocal(item.hearingDate), "hh:mm a")
                             : "--"}
+                        </TableBodyCell>
+                        <TableBodyCell>
+                          <MdOutlineFileDownload
+                            // onClick={() => generateComplaintPDF(item)}
+                            className="text-(--primary) w-5 h-5 cursor-pointer!"
+                          />
                         </TableBodyCell>
                         <TableBodyCell>
                           <FaRegPenToSquare

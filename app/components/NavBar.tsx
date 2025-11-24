@@ -2,7 +2,6 @@
 import {
   Avatar,
   Box,
-  Button,
   DropdownMenu,
   Flex,
   Heading,
@@ -17,6 +16,8 @@ import MegaMenu from "./MegaMenu";
 import { AiOutlineFullscreen, AiOutlineFullscreenExit } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const navBarLinkData = [
   {
@@ -32,6 +33,12 @@ const navBarLinkData = [
 const NavBar = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const currentPath = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    Cookies.remove("token"); // token delete
+    router.push("/login"); // login page redirect
+  };
   useEffect(() => {
     const handleChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
@@ -162,18 +169,25 @@ const NavBar = () => {
                   </Flex>
                 </Box>
               </DropdownMenu.Trigger>
+
               <DropdownMenu.Content>
                 <DropdownMenu.Label>
                   <Text size="2">admin@gmail.com</Text>
                 </DropdownMenu.Label>
+
                 <DropdownMenu.Item className="hover:bg-(--primary)!">
                   <Link href="/settings">Settings</Link>
                 </DropdownMenu.Item>
+
                 <DropdownMenu.Item className="hover:bg-(--primary)!">
                   <Link href="/register">Register</Link>
                 </DropdownMenu.Item>
-                <DropdownMenu.Item className="hover:bg-(--primary)!">
-                  <button>Log out</button>
+
+                <DropdownMenu.Item
+                  onSelect={handleLogout}
+                  className="hover:bg-(--primary)!"
+                >
+                  Log out
                 </DropdownMenu.Item>
               </DropdownMenu.Content>
             </DropdownMenu.Root>
