@@ -47,14 +47,12 @@ const DeleteDialog = ({
 
           <div className="flex gap-4 mt-8!">
             <div className="flex-1">
-              <Button
-                size="3"
-                variant="outline"
+              <button
                 onClick={() => setOpen(false)}
-                className="w-full! cursor-pointer!  text-(--primary)! outline outline-(--primary)!"
+                className="w-full! h-10 cursor-pointer!  text-[#94A3B8]! border border-[#94A3B8]! rounded-md hover:bg-[#F1F5F9]!"
               >
                 No
-              </Button>
+              </button>
             </div>
             <div className="flex-1">
               <Button

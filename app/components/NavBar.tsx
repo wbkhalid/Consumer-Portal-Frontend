@@ -26,7 +26,7 @@ const navBarLinkData = [
   },
   {
     label: "Operational",
-    link: "https://dashboard.pccmdpunjab.gov.pk/",
+    link: "https://pc-cmd-frontend.vercel.app/",
   },
 ];
 
