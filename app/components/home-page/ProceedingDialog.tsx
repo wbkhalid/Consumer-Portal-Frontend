@@ -17,6 +17,7 @@ import { format, parseISO } from "date-fns";
 import CustomTextArea from "../CustomTextArea";
 import CustomSearchDropdown, { Option } from "../CustomSearchDropdown";
 import { MdOutlineFileDownload } from "react-icons/md";
+import { generateComplaintPDF } from "../../utils/generateComplainPdf";
 
 interface ProceedingComplainType {
   proceedingComplain: number;
@@ -71,7 +72,7 @@ const ProceedingDialog = ({
       const payload = {
         complaintId: selectedComplaint?.id,
         status: isResolved ? selectedStatus : 1,
-        updatedBy: "",
+        updatedBy: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         assignedTo: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         hearingDate: isResolved ? selectedComplaint?.hearingDate : hearingDate,
         verdict: 0,
@@ -255,7 +256,7 @@ const ProceedingDialog = ({
                         </TableBodyCell>
                         <TableBodyCell>
                           <MdOutlineFileDownload
-                            // onClick={() => generateComplaintPDF(item)}
+                            onClick={() => generateComplaintPDF(item)}
                             className="text-(--primary) w-5 h-5 cursor-pointer!"
                           />
                         </TableBodyCell>
@@ -273,6 +274,7 @@ const ProceedingDialog = ({
                                 setHearingDate(null);
                               }
                               setDialogStep(2);
+                              setIsResolved(false);
                             }}
                             className="text-(--primary) w-4 h-4 cursor-pointer!"
                           />
