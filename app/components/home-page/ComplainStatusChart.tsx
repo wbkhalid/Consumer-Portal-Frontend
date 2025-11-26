@@ -13,7 +13,7 @@ import {
 import { StatusStatsType } from "../../page";
 
 const ComplainStatusChart = ({ data }: { data: StatusStatsType[] }) => {
-  if (!data || data.length === 0) {
+  if (!data || data?.length === 0) {
     return (
       <div className="rounded-xl px-4! py-2! bg-white mt-2!">
         <p className="text-sm text-[#1E293B] font-bold">
@@ -82,7 +82,7 @@ const ComplainStatusChart = ({ data }: { data: StatusStatsType[] }) => {
           <PieChart>
             <Pie
               data={
-                data.map((d) => ({ ...d })) satisfies {
+                data?.map((d) => ({ ...d })) satisfies {
                   [key: string]: string | number;
                 }[]
               }
@@ -95,10 +95,10 @@ const ComplainStatusChart = ({ data }: { data: StatusStatsType[] }) => {
               outerRadius={110}
               stroke="none"
             >
-              {data.map((entry, index) => (
+              {data?.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={STATUS_COLORS[entry.status] || "#9CA3AF"} // fallback gray
+                  fill={STATUS_COLORS[entry?.status] || "#9CA3AF"} // fallback gray
                 />
               ))}
             </Pie>

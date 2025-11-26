@@ -80,7 +80,7 @@ const ComplainFieldChart = ({
               paddingAngle={2}
               stroke="none"
             >
-              {chartData.map((entry, index) => (
+              {chartData?.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
 

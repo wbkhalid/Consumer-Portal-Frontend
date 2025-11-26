@@ -16,6 +16,7 @@ interface CustomPasswordFieldProps {
   error?: string;
   maxLength?: number;
   pattern?: string;
+  isRegister?: boolean;
 }
 
 const CustomPasswordField: React.FC<CustomPasswordFieldProps> = ({
@@ -29,6 +30,7 @@ const CustomPasswordField: React.FC<CustomPasswordFieldProps> = ({
   error,
   maxLength,
   pattern,
+  isRegister = false,
   ...rest
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,7 +45,9 @@ const CustomPasswordField: React.FC<CustomPasswordFieldProps> = ({
         <Text
           as="label"
           htmlFor={name}
-          className="block mb-1! text-white  text-sm"
+          className={`block mb-1! font-semibold ${
+            isRegister ? "text-white" : "text-[#2A2A2B]"
+          } text-xs`}
         >
           {label}
         </Text>
@@ -60,7 +64,9 @@ const CustomPasswordField: React.FC<CustomPasswordFieldProps> = ({
           required={required}
           maxLength={maxLength}
           pattern={pattern}
-          className={`h-20 w-full! pr-10 rounded-full! border border-transparent bg-white focus:outline-none ${className}`}
+          className={`h-20 w-full! pr-10 ${
+            isRegister ? "rounded-full!" : "rounded-lg!"
+          } border border-transparent bg-white focus:outline-none ${className}`}
           {...rest}
         >
           <TextField.Slot>

@@ -13,6 +13,7 @@ type CustomTextFieldProps = {
   required?: boolean;
   error?: string;
   readOnly?: boolean;
+  isRegister?: boolean;
   endAdornment?: React.ReactNode;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
@@ -30,6 +31,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   error,
   readOnly = false,
   endAdornment,
+  isRegister = false,
   onBlur,
   ...rest
 }) => {
@@ -39,7 +41,9 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
         <Text
           as="label"
           htmlFor={name}
-          className="block mb-1 text-white font-semibold text-sm"
+          className={`block mb-1! ${
+            isRegister ? "text-white" : "text-[#2A2A2B]"
+          } font-semibold text-xs`}
         >
           {label}
         </Text>
@@ -56,7 +60,9 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
         required={required}
         readOnly={readOnly}
         onBlur={onBlur}
-        className={`w-full rounded-full! hover:border-(--priamry)! focus:outline-none shadow-none! text-white ${className}`}
+        className={`w-full  ${
+          isRegister ? "rounded-full!" : "rounded-lg!"
+        } hover:border-(--priamry)!   text-white ${className}`}
         // style={
         //   {
         //     "--text-field-focus-color": "#fff",

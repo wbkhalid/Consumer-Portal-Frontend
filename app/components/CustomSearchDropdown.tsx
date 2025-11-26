@@ -98,7 +98,7 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
           htmlFor={name}
           className={`block mb-1! font-semibold ${
             isRegister ? "text-white" : "text-[#2A2A2B]"
-          }   text-sm`}
+          }   text-xs`}
         >
           {label}
         </Text>
