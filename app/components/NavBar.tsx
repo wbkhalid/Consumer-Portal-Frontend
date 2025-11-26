@@ -179,9 +179,9 @@ const NavBar = () => {
                   <Link href="/settings">Settings</Link>
                 </DropdownMenu.Item>
 
-                <DropdownMenu.Item className="hover:bg-(--primary)!">
+                {/* <DropdownMenu.Item className="hover:bg-(--primary)!">
                   <Link href="/register">Register</Link>
-                </DropdownMenu.Item>
+                </DropdownMenu.Item> */}
 
                 <DropdownMenu.Item
                   onSelect={handleLogout}

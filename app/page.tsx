@@ -57,6 +57,8 @@ export interface ComplainDashboardType {
   withdrawnComplaints: number;
   nonProsecutedComplaints: number;
   avgResolutionTime: number;
+  appDownloadsCount: number;
+  appealsCount: number;
   complaintCategoryStats: ComplaintCategoryStatsType[];
   sectionTypeStats: SectionTypeStatsType[];
   statusStats: StatusStatsType[];

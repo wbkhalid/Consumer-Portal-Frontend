@@ -17,6 +17,7 @@ import { BsCashStack } from "react-icons/bs";
 import { TbCloudDownload } from "react-icons/tb";
 import Cookies from "js-cookie";
 import { useSearchParams } from "next/navigation";
+import { MdOutlineRecordVoiceOver } from "react-icons/md";
 
 const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
   const searchParams = useSearchParams();
@@ -182,14 +183,27 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         iconBg="bg-[#EAB308]"
         percentage={4.5}
       />
+      <Link href={`/users`}>
+        <CustomStatCard
+          title="Downloads"
+          value={data?.appDownloadsCount}
+          icon={<TbCloudDownload className="text-white text-lg" />}
+          iconBg="bg-[#028b02]"
+          percentage={4.5}
+        />
+      </Link>
 
-      <CustomStatCard
-        title="Downloads"
-        value={0}
-        icon={<TbCloudDownload className="text-white text-lg" />}
-        iconBg="bg-[#028b02]"
-        percentage={4.5}
-      />
+      <Link
+        href={`/appeals${params.toString() ? `?${params.toString()}` : ""}`}
+      >
+        <CustomStatCard
+          title="Appeals"
+          value={data?.appealsCount}
+          icon={<MdOutlineRecordVoiceOver className="text-white text-lg" />}
+          iconBg="bg-[#028b02]"
+          percentage={4.5}
+        />
+      </Link>
     </div>
   );
 };
