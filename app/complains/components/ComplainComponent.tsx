@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Button, TextField } from "@radix-ui/themes";
+import { TextField } from "@radix-ui/themes";
 import { FiSearch } from "react-icons/fi";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
 import ComplainsTable from "./ComplainsTable";
 import Forms from "./list/Forms";
 import { OptionType } from "../../components/Form/CustomSelect";
+import { useSearchParams } from "next/navigation";
+import Cookies from "js-cookie";
 
 interface Props {
   divisionOptions: OptionType[];
@@ -21,7 +23,28 @@ const ComplainComponent = ({
   sectionOptions,
   complaintCategoryOptions,
 }: Props) => {
-  const { data: complainData } = useGetAllComplains();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams();
+
+  const isValid = (v: string | undefined | null): v is string =>
+    v !== null && v !== undefined && v !== "" && v !== "0";
+
+  const divisionId = isValid(Cookies.get("divisionId"))
+    ? Cookies.get("divisionId")
+    : searchParams.get("divisionId");
+
+  const districtId = isValid(Cookies.get("districtId"))
+    ? Cookies.get("districtId")
+    : searchParams.get("districtId");
+
+  const tehsilId = isValid(Cookies.get("tehsilId"))
+    ? Cookies.get("tehsilId")
+    : searchParams.get("tehsilId");
+  const { data: complainData } = useGetAllComplains({
+    divisionId: divisionId || "",
+    districtId: districtId || "",
+    tehsilId: tehsilId || "",
+  });
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredData = useMemo(() => {

@@ -15,30 +15,103 @@ import useGetAllComplains from "../../hooks/useGetAllComplains";
 import { useState } from "react";
 import { BsCashStack } from "react-icons/bs";
 import { TbCloudDownload } from "react-icons/tb";
+import Cookies from "js-cookie";
+import { useSearchParams } from "next/navigation";
 
 const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
+  const searchParams = useSearchParams();
+
+  const isValid = (v: string | undefined | null): v is string =>
+    v !== null && v !== undefined && v !== "" && v !== "0";
+
+  const divisionId = isValid(Cookies.get("divisionId"))
+    ? Cookies.get("divisionId")
+    : searchParams.get("divisionId");
+
+  const districtId = isValid(Cookies.get("districtId"))
+    ? Cookies.get("districtId")
+    : searchParams.get("districtId");
+
+  const tehsilId = isValid(Cookies.get("tehsilId"))
+    ? Cookies.get("tehsilId")
+    : searchParams.get("tehsilId");
+
   const [refresh, setRefresh] = useState(false);
-  const { data: pendingData } = useGetAllComplains({ status: 0, refresh });
-  const { data: proceedingData } = useGetAllComplains({ status: 1, refresh });
-  const { data: escalationData } = useGetAllComplains({ status: 2, refresh });
+
+  const params = new URLSearchParams();
+  if (divisionId) params.set("divisionId", divisionId);
+  if (districtId) params.set("districtId", districtId);
+  if (tehsilId) params.set("tehsilId", tehsilId);
+
+  const { data: pendingData } = useGetAllComplains({
+    status: 0,
+    refresh,
+    divisionId: divisionId || "",
+    districtId: districtId || "",
+    tehsilId: tehsilId || "",
+  });
+
+  const { data: proceedingData } = useGetAllComplains({
+    status: 1,
+    refresh,
+    divisionId: divisionId || "",
+    districtId: districtId || "",
+    tehsilId: tehsilId || "",
+  });
+
+  const { data: escalationData } = useGetAllComplains({
+    status: 2,
+    refresh,
+    divisionId: divisionId || "",
+    districtId: districtId || "",
+    tehsilId: tehsilId || "",
+  });
+
   const { data: superEscalationData } = useGetAllComplains({
     status: 3,
     refresh,
+    divisionId: divisionId || "",
+    districtId: districtId || "",
+    tehsilId: tehsilId || "",
   });
+
   const { data: decidedOnMeritData } = useGetAllComplains({
     status: 4,
     refresh,
+    divisionId: divisionId || "",
+    districtId: districtId || "",
+    tehsilId: tehsilId || "",
   });
-  const { data: exParteData } = useGetAllComplains({ status: 5, refresh });
-  const { data: withDrawData } = useGetAllComplains({ status: 6, refresh });
+
+  const { data: exParteData } = useGetAllComplains({
+    status: 5,
+    refresh,
+    divisionId: divisionId || "",
+    districtId: districtId || "",
+    tehsilId: tehsilId || "",
+  });
+
+  const { data: withDrawData } = useGetAllComplains({
+    status: 6,
+    refresh,
+    divisionId: divisionId || "",
+    districtId: districtId || "",
+    tehsilId: tehsilId || "",
+  });
+
   const { data: nonProsecutionData } = useGetAllComplains({
     status: 7,
     refresh,
+    divisionId: divisionId || "",
+    districtId: districtId || "",
+    tehsilId: tehsilId || "",
   });
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
-      <Link href="/complains">
+      <Link
+        href={`/complains${params.toString() ? `?${params.toString()}` : ""}`}
+      >
         <CustomStatCard
           title="Total Complaints"
           value={data?.totalComplaints}
@@ -48,11 +121,13 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         />
       </Link>
 
+      {/* All dialogs receiving filtered data */}
       <PendingDialog
         pendingComplain={data?.inPendingComplaints ?? 0}
         setRefresh={setRefresh}
         pendingData={pendingData ?? []}
       />
+
       <ProceedingDialog
         proceedingComplain={data?.inProceedingComplaints ?? 0}
         setRefresh={setRefresh}
@@ -91,6 +166,7 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         nonProsecutionData={nonProsecutionData ?? []}
       />
 
+      {/* Static bottom cards */}
       <CustomStatCard
         title="Avg Resolution Time"
         value={data?.avgResolutionTime || 0}
@@ -98,6 +174,7 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         iconBg="bg-[#EAB308]"
         percentage={4.5}
       />
+
       <CustomStatCard
         title="Total Fine"
         value={0}
@@ -105,6 +182,7 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         iconBg="bg-[#EAB308]"
         percentage={4.5}
       />
+
       <CustomStatCard
         title="Downloads"
         value={0}

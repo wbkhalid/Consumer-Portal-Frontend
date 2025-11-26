@@ -3,7 +3,7 @@
 import CustomSearchDropdown from "../CustomSearchDropdown";
 import { Button } from "@radix-ui/themes";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import useGetSelectedDivision from "../../hooks/useGetSelectedDivision";
 import useGetSelectedDistrict from "../../hooks/useGetSelectedDistrict";
@@ -15,7 +15,12 @@ const FilterDataComponent = () => {
   const role = Cookies.get("role");
   const cookieDivisionId = Cookies.get("divisionId");
   const cookieDistrictId = Cookies.get("districtId");
-  const cookietehsilId = Cookies.get("tehsilId");
+
+  useEffect(() => {
+    setSelectedDivision(searchParams.get("divisionId") || null);
+    setSelectedDistrict(searchParams.get("districtId") || null);
+    setSelectedTehsil(searchParams.get("tehsilId") || null);
+  }, [searchParams]);
 
   if (role === "AC") return null;
 
@@ -32,15 +37,31 @@ const FilterDataComponent = () => {
     "AD",
   ].includes(role ?? "");
 
-  const [selectedDivision, setSelectedDivision] = useState<string | null>(
-    canShowDistrict ? cookieDivisionId || null : searchParams.get("divisionId")
-  );
-  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(
-    canShowTehsil ? cookieDistrictId || null : searchParams.get("districtId")
-  );
-  const [selectedTehsil, setSelectedTehsil] = useState<string | null>(
-    searchParams.get("tehsilId")
-  );
+  // const [selectedDivision, setSelectedDivision] = useState<string | null>(
+  //   canShowDistrict ? cookieDivisionId || null : searchParams.get("divisionId")
+  // );
+  // const [selectedDistrict, setSelectedDistrict] = useState<string | null>(
+  //   canShowTehsil ? cookieDistrictId || null : searchParams.get("districtId")
+  // );
+  // const [selectedTehsil, setSelectedTehsil] = useState<string | null>(
+  //   searchParams.get("tehsilId")
+  // );
+
+  const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
+  const [selectedTehsil, setSelectedTehsil] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (canShowDivision)
+      setSelectedDivision(
+        searchParams.get("divisionId") || cookieDivisionId || null
+      );
+    if (canShowDistrict)
+      setSelectedDistrict(
+        searchParams.get("districtId") || cookieDistrictId || null
+      );
+    if (canShowTehsil) setSelectedTehsil(searchParams.get("tehsilId") || null);
+  }, [searchParams, cookieDivisionId, cookieDistrictId]);
 
   const { data: divisionData } = useGetSelectedDivision({ id: 1 });
   const { data: districtData } = useGetSelectedDistrict({
@@ -60,7 +81,24 @@ const FilterDataComponent = () => {
 
   return (
     <div className="rounded-xl px-4! py-3! bg-white">
-      <p className="text-sm text-[#202224] font-bold mb-4!">Apply Filters</p>
+      <div className=" text-[#202224]  mb-4! flex justify-between items-center">
+        <p className="text-sm text-[#202224] font-bold ">Apply Filters</p>
+
+        <Button
+          size="1"
+          variant="soft"
+          className="cursor-pointer!"
+          onClick={() => {
+            setSelectedDivision(null);
+            setSelectedDistrict(null);
+            setSelectedTehsil(null);
+
+            router.push(window.location.pathname);
+          }}
+        >
+          Clear Filters
+        </Button>
+      </div>
 
       <div className="flex flex-col! gap-2">
         {canShowDivision && (

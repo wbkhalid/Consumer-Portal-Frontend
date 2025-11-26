@@ -2,6 +2,9 @@ import useData from "./useData";
 
 interface Props {
   status?: number | string;
+  divisionId?: number | string;
+  districtId?: number | string;
+  tehsilId?: number | string;
   refresh?: boolean;
 }
 
@@ -30,12 +33,32 @@ export interface ManageComplainsData {
   createdAt: string;
 }
 
-const useGetAllComplains = ({ refresh = false, status }: Props = {}) =>
-  useData<ManageComplainsData>({
+const useGetAllComplains = ({
+  refresh = false,
+  divisionId,
+  districtId,
+  tehsilId,
+  status,
+}: Props = {}) => {
+  const params = new URLSearchParams();
+
+  if (divisionId !== undefined && divisionId !== "" && divisionId !== "0")
+    params.append("divisionId", String(divisionId));
+  if (districtId !== undefined && districtId !== "" && districtId !== "0")
+    params.append("districtId", String(districtId));
+  if (tehsilId !== undefined && tehsilId !== "" && tehsilId !== "0")
+    params.append("tehsilId", String(tehsilId));
+  if (status !== undefined && status !== "" && status !== "0")
+    params.append("status", String(status));
+
+  const queryString = params.toString();
+
+  return useData<ManageComplainsData>({
     refresh,
     endpoint: `/api/AdminDashboard/ComplaintsList${
-      status !== undefined ? `?status=${status}` : ""
+      queryString ? `?${queryString}` : ""
     }`,
   });
+};
 
 export default useGetAllComplains;
