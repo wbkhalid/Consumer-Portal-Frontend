@@ -16,6 +16,7 @@ import { COMPLAINT_API } from "../../APIs";
 import apiClient from "../../services/api-client";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 interface PendingComplainType {
   pendingComplain: number;
@@ -35,6 +36,7 @@ const PendingDialog = ({
   const [remarks, setRemarks] = useState("");
   const [loading, setLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const userId = Cookies.get("userId");
 
   const directorOptions: Option[] = [
     { label: "Director General", value: "director_general" },
@@ -54,7 +56,7 @@ const PendingDialog = ({
       const payload = {
         complaintId: selectedComplaint?.id,
         status: 1,
-        updatedBy: "",
+        updatedBy: userId,
         assignedTo: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         hearingDate: null,
         verdict: 0,
@@ -84,6 +86,7 @@ const PendingDialog = ({
       setLoading(false);
       setSelectedComplaint(null);
       setDialogStep(1);
+      setRemarks("");
     }
   };
 
@@ -95,6 +98,7 @@ const PendingDialog = ({
         if (!open) {
           setSelectedComplaint(null);
           setDialogStep(1);
+          setRemarks("");
         }
       }}
     >
@@ -302,7 +306,7 @@ const PendingDialog = ({
                             className="w-full sm:w-60 rounded-md border border-(--primary)"
                           >
                             <source
-                              src={`http://103.4.95.24:151${audioUrl}`}
+                              src={`http://103.226.216.18:151${audioUrl}`}
                               type="audio/mpeg"
                             />
                             Your browser does not support the audio element.

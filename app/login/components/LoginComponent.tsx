@@ -45,6 +45,7 @@ const LoginComponent = () => {
       Cookies.set("divisionId", userProfile?.divisionId ?? 0);
       Cookies.set("districtId", userProfile?.districtId ?? 0);
       Cookies.set("tehsilId", userProfile?.tehsilId ?? 0);
+      Cookies.set("userId", userProfile?.userId ?? "");
 
       toast.success("Login successful!");
       router.push("/");

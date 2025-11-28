@@ -170,7 +170,7 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
       {/* Static bottom cards */}
       <CustomStatCard
         title="Avg Resolution Time"
-        value={data?.avgResolutionTime || 0}
+        value={`${data?.avgResolutionTime.toFixed(2)}h`}
         icon={<IoTimeOutline className="text-white text-lg" />}
         iconBg="bg-[#EAB308]"
         percentage={4.5}

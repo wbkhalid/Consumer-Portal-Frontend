@@ -1,4 +1,10 @@
+import axios from "axios";
 import { format, parseISO } from "date-fns";
+import { FILE_UPLOAD_API } from "../APIs";
+import apiClient from "../services/api-client";
+
+export const DecisionPhotos = "decisionphoto";
+export const decionsVideos = "decisionvideo";
 
 export const formatDate = (dateString?: string) => {
   if (!dateString) return "-";
@@ -33,6 +39,35 @@ export const getDaysOld = (dateString: string) => {
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
   return diffDays;
+};
+
+export const uploadFile = async (
+  e: React.ChangeEvent<HTMLInputElement>,
+  category: string
+) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("category", category);
+
+  try {
+    const response = await apiClient.post(
+      `${FILE_UPLOAD_API}/upload-files`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    console.log("API Response:", response);
+    return response.data;
+  } catch (err) {
+    console.error("Upload failed:", err);
+  }
 };
 
 export const statusData = [

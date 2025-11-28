@@ -5,19 +5,27 @@ import TableBodyCell from "../table/TableBodyCell";
 import { BsArrowUpRightSquare } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import Image from "next/image";
-import { formatDate, getDaysOld, toLocal } from "../../utils/utils";
+import {
+  decionsVideos,
+  DecisionPhotos,
+  formatDate,
+  getDaysOld,
+  toLocal,
+  uploadFile,
+} from "../../utils/utils";
 import apiClient from "../../services/api-client";
 import { COMPLAINT_API } from "../../APIs";
 import { toast } from "react-toastify";
 import { format, parseISO } from "date-fns";
 import CustomTextArea from "../CustomTextArea";
 import CustomSearchDropdown, { Option } from "../CustomSearchDropdown";
-import { MdOutlineFileDownload } from "react-icons/md";
+import { MdOutlineFileDownload, MdUploadFile } from "react-icons/md";
 import { generateComplaintPDF } from "../../utils/generateComplainPdf";
+import Cookies from "js-cookie";
 
 interface ProceedingComplainType {
   proceedingComplain: number;
@@ -31,6 +39,7 @@ const ProceedingDialog = ({
   setRefresh,
 }: ProceedingComplainType) => {
   const router = useRouter();
+
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
   const [dialogStep, setDialogStep] = useState<1 | 2 | 3>(1);
@@ -40,12 +49,68 @@ const ProceedingDialog = ({
   const [submittionRemarks, setSubmittionRemarks] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<number | null>(null);
   const [isResolved, setIsResolved] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [videoUrl, setVideoUrl] = useState<string>("");
+  const userId = Cookies.get("userId");
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   const submitStatusdata: Option[] = [
     { value: "4", label: "Decided on Merit" },
     { value: "5", label: "Ex-Party" },
     { value: "7", label: "Non-Prosecution" },
   ];
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    console.log("Selected Image:", file);
+
+    if (!file) return;
+
+    // 5MB = 5 * 1024 * 1024
+    if (file.size > 5 * 1024 * 1024) {
+      toast.warning("Image size must be less than 5MB.");
+      return;
+    }
+
+    try {
+      const fileName = await uploadFile(e, DecisionPhotos);
+      setImageUrl(fileName?.data?.fileUrl);
+      console.log(fileName?.data?.fileUrl, "file");
+    } catch (error) {
+      toast.error("Error uploading file.");
+      console.error("Upload error:", error);
+    }
+  };
+
+  const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+    const video = document.createElement("video");
+
+    video.preload = "metadata";
+    video.onloadedmetadata = async () => {
+      URL.revokeObjectURL(url);
+
+      const duration = video.duration;
+      if (duration > 15 * 60) {
+        toast.warning("Video must be less than 15 minutes.");
+        return;
+      }
+      video.src = url;
+    };
+
+    try {
+      const fileName = await uploadFile(e, decionsVideos);
+      setVideoUrl(fileName?.data?.fileUrl);
+      console.log(fileName?.data?.fileUrl, "file");
+    } catch (error) {
+      toast.error("Error uploading file.");
+      console.error("Upload error:", error);
+    }
+  };
 
   const handleHearingComplaint = async () => {
     if (!selectedComplaint) return;
@@ -57,6 +122,10 @@ const ProceedingDialog = ({
       }
       if (!submittionRemarks.trim()) {
         toast.warning("Please enter remarks for the resolved complaint.");
+        return;
+      }
+      if (!imageUrl) {
+        toast.warning("Please Uplaod document");
         return;
       }
     } else {
@@ -72,13 +141,25 @@ const ProceedingDialog = ({
       const payload = {
         complaintId: selectedComplaint?.id,
         status: isResolved ? selectedStatus : 1,
-        updatedBy: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        updatedBy: userId,
         assignedTo: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         hearingDate: isResolved ? selectedComplaint?.hearingDate : hearingDate,
         verdict: 0,
         assigneeRemarks: selectedComplaint?.assigneeRemarks,
         closingRemarks: isResolved ? submittionRemarks : "",
         isClosed: isResolved ? true : false,
+        complaintDecisionFiles: isResolved
+          ? [
+              {
+                filePath: imageUrl,
+                fileType: 0,
+              },
+              {
+                filePath: videoUrl,
+                fileType: 1,
+              },
+            ]
+          : null,
       };
 
       console.log("📤 Sending payload:", payload);
@@ -106,6 +187,10 @@ const ProceedingDialog = ({
       setSelectedComplaint(null);
       setHearingDate(null);
       setDialogStep(1);
+      setImageUrl("");
+      setVideoUrl("");
+      setSelectedStatus(null);
+      setSubmittionRemarks("");
     }
   };
 
@@ -118,6 +203,10 @@ const ProceedingDialog = ({
           setHearingDate(null);
           setDialogStep(1);
           setIsResolved(false);
+          setImageUrl("");
+          setVideoUrl("");
+          setSelectedStatus(null);
+          setSubmittionRemarks("");
         }
       }}
     >
@@ -411,7 +500,7 @@ const ProceedingDialog = ({
                             className="w-full sm:w-60 rounded-md border border-(--primary)"
                           >
                             <source
-                              src={`http://103.4.95.24:151${audioUrl}`}
+                              src={`http://103.226.216.18:151${audioUrl}`}
                               type="audio/mpeg"
                             />
                             Your browser does not support the audio element.
@@ -537,7 +626,7 @@ const ProceedingDialog = ({
               </div>
             </div>
 
-            <div className=" max-h-[54vh] overflow-scroll!">
+            <div className=" max-h-[50vh] overflow-scroll!">
               <div className="flex justify-between items-center mt-4!">
                 <div className="flex flex-col ">
                   <p className="text-xs text-[#555555]">Phone No</p>
@@ -593,7 +682,7 @@ const ProceedingDialog = ({
                             className="w-full sm:w-60 rounded-md border border-(--primary)"
                           >
                             <source
-                              src={`http://103.4.95.24:151${audioUrl}`}
+                              src={`http://103.226.216.18:151${audioUrl}`}
                               type="audio/mpeg"
                             />
                             Your browser does not support the audio element.
@@ -654,6 +743,57 @@ const ProceedingDialog = ({
                   })) ?? []
                 }
               />
+
+              <div
+                className="flex justify-center items-center gap-3 border border-[#E2E8F0] p-4! rounded-md cursor-pointer mt-1!"
+                onClick={() => imageInputRef.current?.click()}
+              >
+                <div className="bg-black/10 rounded-full p-2!">
+                  <MdUploadFile className="text-(--primary) text-xl" />
+                </div>
+
+                <div className="flex flex-col text-xs">
+                  <p className="font-bold">
+                    {imageUrl
+                      ? "Document Uploaded"
+                      : "Upload Case Decision Document"}
+                  </p>
+                  <p className="text-xs text-gray-500">JPG, PNG (Max: 5MB)</p>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  ref={imageInputRef}
+                  onChange={handleImageChange}
+                />
+              </div>
+
+              <div
+                className="flex justify-center items-center gap-3 border border-[#E2E8F0] p-4! rounded-md cursor-pointer mt-1!"
+                onClick={() => videoInputRef.current?.click()}
+              >
+                <div className="bg-black/10 rounded-full p-2!">
+                  <MdUploadFile className="text-(--primary) text-xl" />
+                </div>
+
+                <div className="flex flex-col text-xs">
+                  <p className="font-bold">
+                    {" "}
+                    {videoUrl ? "Video Uploaded" : "Upload Court Session Video"}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    MP4, MOV (Max: 15 min)
+                  </p>
+                </div>
+                <input
+                  type="file"
+                  accept="video/*"
+                  className="hidden"
+                  ref={videoInputRef}
+                  onChange={handleVideoChange}
+                />
+              </div>
             </div>
             <div className="flex justify-between items-center mt-2! mb-2!">
               <Button
