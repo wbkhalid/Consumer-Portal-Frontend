@@ -7,18 +7,18 @@ import { MdOutlineFlagCircle } from "react-icons/md";
 import { formatDate } from "../../utils/utils";
 
 interface WithDrawType {
-  exPartyComplaint: number;
+  exParteComplaint: number;
   exParteData: ManageComplainsData[];
 }
 
-const ExParteDialog = ({ exPartyComplaint, exParteData }: WithDrawType) => {
+const ExParteDialog = ({ exParteComplaint, exParteData }: WithDrawType) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger>
         <div className="cursor-pointer!">
           <CustomStatCard
-            title="Ex-Party"
-            value={exPartyComplaint}
+            title="Ex-Parte"
+            value={exParteComplaint}
             icon={<MdOutlineFlagCircle className="text-white text-lg" />}
             iconBg="bg-[#9333EA]"
             percentage={4.5}
@@ -29,14 +29,14 @@ const ExParteDialog = ({ exPartyComplaint, exParteData }: WithDrawType) => {
       <Dialog.Content className={`px-0! max-w-[1000px]!`}>
         <Dialog.Title>
           <div className="mb-2 flex gap-2 items-center px-3!">
-            <p className="text-(--primary) font-bold text-sm">Ex-Party</p>
+            <p className="text-(--primary) font-bold text-sm">Ex-Parte</p>
             <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
               {exParteData?.length} Records
             </p>
           </div>
         </Dialog.Title>
 
-        <div className="max-h-[70vh] overflow-y-auto scrollbar-hide">
+        <div className="max-h-[70vh] overflow-y-auto">
           <table className="w-full border-collapse text-sm">
             <thead className="sticky top-0 z-10">
               <tr className="font-semibold bg-white">

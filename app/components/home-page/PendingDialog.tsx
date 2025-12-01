@@ -15,8 +15,9 @@ import { formatDate, getDaysOld } from "../../utils/utils";
 import { COMPLAINT_API } from "../../APIs";
 import apiClient from "../../services/api-client";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
+import useGetAllStaff from "../../hooks/useGetAllStaff";
 
 interface PendingComplainType {
   pendingComplain: number;
@@ -36,16 +37,30 @@ const PendingDialog = ({
   const [remarks, setRemarks] = useState("");
   const [loading, setLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const userId = Cookies.get("userId");
+  const [selectedStaff, setSelectedStaff] = useState("");
+  const searchParams = useSearchParams();
 
-  const directorOptions: Option[] = [
-    { label: "Director General", value: "director_general" },
-    { label: "Additional Director", value: "additional_director" },
-    { label: "Deputy Director", value: "deputy_director" },
-    { label: "Assistant Director", value: "assistant_director" },
-    { label: "Section Officer", value: "section_officer" },
-    { label: "Inspector", value: "inspector" },
-  ];
+  const isValid = (v: string | undefined | null): v is string =>
+    v !== null && v !== undefined && v !== "" && v !== "0";
+
+  const divisionId = isValid(Cookies.get("divisionId"))
+    ? Cookies.get("divisionId")
+    : searchParams.get("divisionId");
+
+  const districtId = isValid(Cookies.get("districtId"))
+    ? Cookies.get("districtId")
+    : searchParams.get("districtId");
+
+  const tehsilId = isValid(Cookies.get("tehsilId"))
+    ? Cookies.get("tehsilId")
+    : searchParams.get("tehsilId");
+
+  const { data: staffData } = useGetAllStaff({
+    divisionId: divisionId || "",
+    districtId: districtId || "",
+    tehsilId: tehsilId || "",
+  });
+  const userId = Cookies.get("userId");
 
   const handleAssignComplaint = async () => {
     if (!selectedComplaint) return;
@@ -57,7 +72,7 @@ const PendingDialog = ({
         complaintId: selectedComplaint?.id,
         status: 1,
         updatedBy: userId,
-        assignedTo: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        assignedTo: selectedStaff,
         hearingDate: null,
         verdict: 0,
         assigneeRemarks: remarks,
@@ -87,6 +102,7 @@ const PendingDialog = ({
       setSelectedComplaint(null);
       setDialogStep(1);
       setRemarks("");
+      setSelectedStaff("");
     }
   };
 
@@ -99,6 +115,7 @@ const PendingDialog = ({
           setSelectedComplaint(null);
           setDialogStep(1);
           setRemarks("");
+          setSelectedStaff("");
         }
       }}
     >
@@ -143,7 +160,7 @@ const PendingDialog = ({
               </div>
             </Dialog.Title>
 
-            <div className="max-h-[70vh] overflow-y-auto scrollbar-hide">
+            <div className="max-h-[70vh] overflow-y-auto">
               <table className="w-full border-collapse text-sm">
                 <thead className="sticky top-0 z-10">
                   <tr className="font-semibold bg-white">
@@ -228,27 +245,28 @@ const PendingDialog = ({
 
         {dialogStep === 2 && selectedComplaint && (
           <div className="px-4! max-h-[70vh]! overflow-hidden!">
-            <div className="">
-              <div className="flex gap-2 items-center">
+            <div className="flex justify-between  gap-2 items-center">
+              <div className="w-8 h-8 overflow-hidden rounded-xs ">
                 <Image
-                  src="/images/dummy-image1.png"
+                  src={selectedComplaint?.billBoardImage}
                   alt="Shop Banner"
                   width={36}
                   height={36}
-                  className="rounded-xs"
+                  className="w-full h-full object-cover"
                 />
-                <div className="flex flex-col gap-0">
-                  <p className="font-bold text-lg">
-                    {selectedComplaint?.shopName}
-                  </p>
-                  <p className="text-sm">
-                    {formatDate(selectedComplaint?.createdAt)}
-                  </p>
-                </div>
+              </div>
+
+              <div className="flex flex-col gap-0">
+                <p className="font-bold text-lg">
+                  {selectedComplaint?.shopName}
+                </p>
+                <p className="text-sm">
+                  {formatDate(selectedComplaint?.createdAt)}
+                </p>
               </div>
             </div>
 
-            <div className=" max-h-[55vh] overflow-scroll!">
+            <div className=" max-h-[52vh] overflow-scroll!">
               <div className="flex justify-between items-center mt-4!">
                 <div className="flex flex-col ">
                   <p className="text-xs text-[#555555]">Phone No</p>
@@ -356,9 +374,16 @@ const PendingDialog = ({
                   onChange={(e) => setRemarks(e.target.value)}
                 />
                 <CustomSearchDropdown
-                  label="Select AD"
-                  placeholder="Select AD"
-                  options={directorOptions}
+                  label="Select Assignee"
+                  placeholder="Select Assignee"
+                  value={selectedStaff}
+                  onChange={(val) => setSelectedStaff(val)}
+                  options={
+                    staffData?.map((status) => ({
+                      label: status?.roles[0],
+                      value: status?.userId,
+                    })) ?? []
+                  }
                 />
               </div>
             </div>

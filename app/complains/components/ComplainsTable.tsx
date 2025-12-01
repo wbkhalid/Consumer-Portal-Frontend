@@ -91,7 +91,7 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
 
   return (
     <div className="relative">
-      <div className="h-[calc(100vh-120px)] overflow-y-auto scrollbar-hide relative">
+      <div className="h-[calc(100vh-120px)] overflow-x-auto relative">
         <table className="min-w-full text-sm mb-10!">
           <thead className="sticky top-0 z-10 bg-white">
             <tr className="font-semibold">

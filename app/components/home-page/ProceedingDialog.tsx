@@ -26,6 +26,7 @@ import CustomSearchDropdown, { Option } from "../CustomSearchDropdown";
 import { MdOutlineFileDownload, MdUploadFile } from "react-icons/md";
 import { generateComplaintPDF } from "../../utils/generateComplainPdf";
 import Cookies from "js-cookie";
+import CustomTextField from "../CustomTextField";
 
 interface ProceedingComplainType {
   proceedingComplain: number;
@@ -57,7 +58,7 @@ const ProceedingDialog = ({
 
   const submitStatusdata: Option[] = [
     { value: "4", label: "Decided on Merit" },
-    { value: "5", label: "Ex-Party" },
+    { value: "5", label: "Ex-Parte" },
     { value: "7", label: "Non-Prosecution" },
   ];
 
@@ -253,7 +254,7 @@ const ProceedingDialog = ({
               </div>
             </Dialog.Title>
 
-            <div className="max-h-[70vh] overflow-y-auto scrollbar-hide">
+            <div className="max-h-[70vh] overflow-y-auto ">
               <table className="w-full border-collapse text-sm">
                 <thead className="sticky top-0 z-10">
                   <tr className="font-semibold bg-white">
@@ -743,6 +744,8 @@ const ProceedingDialog = ({
                   })) ?? []
                 }
               />
+
+              <CustomTextField label="Fine" />
 
               <div
                 className="flex justify-center items-center gap-3 border border-[#E2E8F0] p-4! rounded-md cursor-pointer mt-1!"

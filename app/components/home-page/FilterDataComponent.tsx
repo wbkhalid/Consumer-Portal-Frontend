@@ -10,6 +10,9 @@ import useGetSelectedDistrict from "../../hooks/useGetSelectedDistrict";
 import useGetSelectedTehsil from "../../hooks/useGetSelectedTehsil";
 
 const FilterDataComponent = () => {
+  const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
+  const [selectedTehsil, setSelectedTehsil] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const role = Cookies.get("role");
@@ -47,20 +50,20 @@ const FilterDataComponent = () => {
   //   searchParams.get("tehsilId")
   // );
 
-  const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
-  const [selectedTehsil, setSelectedTehsil] = useState<string | null>(null);
-
   useEffect(() => {
-    if (canShowDivision)
-      setSelectedDivision(
-        searchParams.get("divisionId") || cookieDivisionId || null
-      );
-    if (canShowDistrict)
-      setSelectedDistrict(
-        searchParams.get("districtId") || cookieDistrictId || null
-      );
-    if (canShowTehsil) setSelectedTehsil(searchParams.get("tehsilId") || null);
+    // if (canShowDivision) {
+    setSelectedDivision(
+      cookieDivisionId ?? searchParams.get("divisionId") ?? null
+    );
+    // }
+    // if (canShowDistrict) {
+    setSelectedDistrict(
+      cookieDistrictId ?? searchParams.get("districtId") ?? null
+    );
+    // }
+    // if (canShowTehsil) {
+    setSelectedTehsil(searchParams.get("tehsilId") ?? null);
+    // }
   }, [searchParams, cookieDivisionId, cookieDistrictId]);
 
   const { data: divisionData } = useGetSelectedDivision({ id: 1 });

@@ -28,6 +28,7 @@ import {
   FiPercent,
   FiLayers,
 } from "react-icons/fi";
+import { FaUsers } from "react-icons/fa";
 
 const MegaMenu = () => {
   const [open, setOpen] = useState(false);
@@ -36,6 +37,12 @@ const MegaMenu = () => {
     {
       title: "Authority Reports",
       items: [
+        {
+          label: "Staff Management",
+          description: "View and Manage staff data",
+          icon: <FaUsers className="text-white" size={22} />,
+          route: "/staff",
+        },
         {
           label: "Custom Complaint Report",
           description: "Manage custom complaints report",
@@ -158,7 +165,7 @@ const MegaMenu = () => {
             <Heading as="h4" size="3" className="text-(--primary) mb-4!">
               {category.title}
             </Heading>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
               {category.items.map((item) => (
                 <Popover.Close key={item.label}>
                   <Link href={item.route}>

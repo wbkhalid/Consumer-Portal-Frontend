@@ -34,6 +34,8 @@ const NavBar = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const currentPath = usePathname();
   const router = useRouter();
+  const role = Cookies.get("role");
+  const fullName = Cookies.get("fullName");
 
   const handleLogout = () => {
     Cookies.remove("token"); // token delete
@@ -83,8 +85,8 @@ const NavBar = () => {
           </Link>
 
           <Flex align="center" className="gap-3!">
-            <Heading size="5" className="text-white">
-              CPC
+            <Heading size="3" className="text-white">
+              Directorate Consumer Protection Council
             </Heading>
             <Popover.Root>
               <Popover.Trigger>
@@ -103,7 +105,8 @@ const NavBar = () => {
               <Popover.Content
                 side="bottom"
                 align="start"
-                className="min-w-[500px]! lg:min-w-[1000px]! p-1 rounded-xl shadow-xl bg-white"
+                alignOffset={-250}
+                className="min-w-[500px]! md:min-w-[700px]! lg:min-w-[1000px]! rounded-xl shadow-xl bg-white"
               >
                 <MegaMenu />
               </Popover.Content>
@@ -158,9 +161,9 @@ const NavBar = () => {
                       className="bg-white!"
                     />
                     <div>
-                      <p className="font-semibold">CPC</p>
+                      <p className="font-semibold">{role || ""}</p>
                       <Text as="p" className="text-[9px]">
-                        admin@gmail.com
+                        {fullName || ""}
                       </Text>
                     </div>
                     <Box>
@@ -172,7 +175,7 @@ const NavBar = () => {
 
               <DropdownMenu.Content>
                 <DropdownMenu.Label>
-                  <Text size="2">admin@gmail.com</Text>
+                  <Text size="2">{fullName || ""}</Text>
                 </DropdownMenu.Label>
 
                 <DropdownMenu.Item className="hover:bg-(--primary)!">
@@ -180,7 +183,7 @@ const NavBar = () => {
                 </DropdownMenu.Item>
 
                 {/* <DropdownMenu.Item className="hover:bg-(--primary)!">
-                  <Link href="/register">Register</Link>
+                  <Link href="/staff">Staff Management</Link>
                 </DropdownMenu.Item> */}
 
                 <DropdownMenu.Item

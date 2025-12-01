@@ -61,8 +61,8 @@ const DashboardStatSummary = ({ data }: { data: ComplainDashboardType }) => {
         percentage={8.5}
       />
       <DashboardStatCard
-        title="Ex-Party"
-        value={data?.expartyComplaints}
+        title="Ex-Parte"
+        value={data?.exparteComplaints}
         icon={<IoCheckmarkDone className="text-white text-lg" />}
         iconBg="bg-[#3BA2F1]"
         percentage={8.5}

@@ -53,7 +53,7 @@ export interface ComplainDashboardType {
   escalatedComplaints: number;
   superEscalatedComplaints: number;
   decidedOnMeritComplaints: number;
-  expartyComplaints: number;
+  exparteComplaints: number;
   withdrawnComplaints: number;
   nonProsecutedComplaints: number;
   avgResolutionTime: number;
@@ -140,20 +140,20 @@ const DashboardPage = async ({ searchParams }: PageProps) => {
       <div className="col-span-12 lg:col-span-8 xl:col-span-9">
         <StatSummary data={complainDashboardData} />
         <AreachartComponent
-          data={complainDashboardData.dailyAverageComplaints}
+          data={complainDashboardData?.dailyAverageComplaints}
         />
         <div className="grid grid-cols-2 gap-2">
           <ComplainFieldChart
-            data={complainDashboardData.complaintCategoryStats}
+            data={complainDashboardData?.complaintCategoryStats}
           />
-          <ComplainTypeChart data={complainDashboardData.sectionTypeStats} />
+          <ComplainTypeChart data={complainDashboardData?.sectionTypeStats} />
         </div>
       </div>
 
       <div className="col-span-12 lg:col-span-4 xl:col-span-3">
         <FilterDataComponent />
-        <ComplainStatusChart data={complainDashboardData.statusStats} />
-        <ComplainMap data={complainDashboardData.complaintsList} />
+        <ComplainStatusChart data={complainDashboardData?.statusStats} />
+        <ComplainMap data={complainDashboardData?.complaintsList} />
       </div>
     </div>
   );

@@ -76,7 +76,7 @@ export const statusData = [
   { id: 2, label: "Escalation" },
   { id: 3, label: "Super Escalation" },
   { id: 4, label: "Decided on Merit" },
-  { id: 5, label: "Ex-Party" },
+  { id: 5, label: "Ex-Parte" },
   { id: 6, label: "Withdraw" },
   { id: 7, label: "Non-Prosecution" },
 ];

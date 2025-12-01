@@ -153,7 +153,7 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
       />
 
       <ExParteDialog
-        exPartyComplaint={data?.expartyComplaints ?? 0}
+        exParteComplaint={data?.exparteComplaints ?? 0}
         exParteData={exParteData ?? []}
       />
 

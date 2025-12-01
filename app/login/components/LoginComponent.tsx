@@ -32,12 +32,15 @@ const LoginComponent = () => {
 
   const onSubmit = async (formData: Login) => {
     try {
-      const response = await apiClient.post(`${AUTH_API}//login`, formData);
+      const response = await apiClient.post(`${AUTH_API}/login`, formData);
+      console.log(response, "response");
 
       const token = response?.data?.data?.token;
       const expiration = response?.data?.data?.expiration;
-      const role = response?.data?.data?.role?.[0];
+      const role = response?.data?.data?.roles?.[0];
       const userProfile = response?.data?.data?.userProfile;
+
+      console.log(userProfile, "userProfile");
 
       // Save cookies client-side
       Cookies.set("token", token, { expires: new Date(expiration) });
@@ -46,6 +49,7 @@ const LoginComponent = () => {
       Cookies.set("districtId", userProfile?.districtId ?? 0);
       Cookies.set("tehsilId", userProfile?.tehsilId ?? 0);
       Cookies.set("userId", userProfile?.userId ?? "");
+      Cookies.set("fullName", userProfile?.fullName ?? "");
 
       toast.success("Login successful!");
       router.push("/");

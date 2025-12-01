@@ -43,7 +43,7 @@ const DecidedonMeritDialog = ({
           </div>
         </Dialog.Title>
 
-        <div className="max-h-[70vh] overflow-y-auto scrollbar-hide">
+        <div className="max-h-[70vh] overflow-y-auto  ">
           <table className="w-full border-collapse text-sm">
             <thead className="sticky top-0 z-10">
               <tr className="font-semibold bg-white">
