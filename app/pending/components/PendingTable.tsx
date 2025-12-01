@@ -1,178 +1,210 @@
 import Image from "next/image";
 import TableBodyCell from "../../components/table/TableBodyCell";
 import TableHeaderCell from "../../components/table/TableHeaderCell";
-import { SiGooglemeet } from "react-icons/si";
-import { useRouter } from "next/navigation";
+import { ManageComplainsData } from "../../hooks/useGetAllComplains";
+import { formatDate } from "../../utils/utils";
+import { useMemo, useState } from "react";
+import PaginationControls from "../../components/table/PaginationControls";
+import { FaEye } from "react-icons/fa";
+import PendingDialog from "./PendingDialog";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import apiClient from "../../services/api-client";
+import { COMPLAINT_API } from "../../APIs";
+import useGetAllStaff from "../../hooks/useGetAllStaff";
+import { useRegionFilters } from "../../hooks/useRegionFilters";
 
-const PendingTable = () => {
-  const router = useRouter();
-  const rowsData = [
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Extra Charge",
-      productType: "Fruit",
-      sector: "Ingredient Comdentiality",
-      status: 0,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Vegetable",
-      sector: "Mfg Date & Expiry",
-      status: 1,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Grans",
-      sector: "Quality of Product",
-      status: 2,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Fruit",
-      sector: "Keeping Component Parts Confidential",
-      status: 3,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Vegetable",
-      sector: "Ingredient Comdentiality",
-      status: 0,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Grans",
-      sector: "Mfg Date & Expiry",
-      status: 2,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Fruit",
-      sector: "Quality of Product",
-      status: 2,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Vegetable",
-      sector: "Keeping Component Parts Confidential",
-      status: 2,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
-    {
-      shopName: "Al fatha Store",
-      phoneNumber: "03174478587",
-      complaintType: "Expire Date Not Mention",
-      productType: "Vegetable",
-      sector: "Ingredient Comdentiality",
-      status: 3,
-      remarks: "Extra Charges",
-      listAudio: [],
-      listOfImage: [],
-    },
+interface PendingTableProps {
+  rowsData: ManageComplainsData[];
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const PAGE_SIZE = 10;
+
+const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: "asc" | "desc";
+  } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedComplaint, setSelectedComplaint] =
+    useState<ManageComplainsData | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [remarks, setRemarks] = useState("");
+  const [selectedStaff, setSelectedStaff] = useState("");
+  const [loading, setLoading] = useState(false);
+  const userId = Cookies.get("userId");
+  const { divisionId, districtId, tehsilId } = useRegionFilters();
+
+  const { data: staffData } = useGetAllStaff({
+    divisionId: divisionId || "",
+    districtId: districtId || "",
+    tehsilId: tehsilId || "",
+  });
+
+  const headers = [
+    { label: "Id", sortable: "id" },
+    { label: "Date" },
+    { label: "Shop Name" },
+    { label: "Phone #" },
+    { label: "Complaint Type", sortable: "complaintType" },
+    { label: "Category", sortable: "categoryName" },
+    { label: "Section Category Name", sortable: "sectionCategoryName" },
+    { label: "Section Name", sortable: "sectionName" },
+    { label: "Section Description", sortable: "sectionDescription" },
+    { label: "Remarks" },
+    { label: "Audio Attach" },
+    { label: "Files" },
+    { label: "View" },
   ];
+
+  const handleSort = (key: string) => {
+    setSortConfig((prev) => {
+      if (prev?.key === key) {
+        return { key, direction: prev.direction === "asc" ? "desc" : "asc" };
+      }
+      return { key, direction: "asc" };
+    });
+    setCurrentPage(1);
+  };
+
+  const sortedData = useMemo(() => {
+    if (!sortConfig) return rowsData;
+
+    const { key, direction } = sortConfig;
+    return [...rowsData].sort((a, b) => {
+      let aValue = "";
+      let bValue = "";
+
+      if (key === "sectionName") {
+        aValue = a.sectionsDetails?.map((s) => s.name).join(", ") ?? "";
+        bValue = b.sectionsDetails?.map((s) => s.name).join(", ") ?? "";
+      } else if (key === "sectionDescription") {
+        aValue = a.sectionsDetails?.map((s) => s.description).join(", ") ?? "";
+        bValue = b.sectionsDetails?.map((s) => s.description).join(", ") ?? "";
+      } else {
+        aValue = String(a[key as keyof ManageComplainsData] ?? "");
+        bValue = String(b[key as keyof ManageComplainsData] ?? "");
+      }
+
+      if (aValue < bValue) return direction === "asc" ? -1 : 1;
+      if (aValue > bValue) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
+  }, [rowsData, sortConfig]);
+
+  const totalPages = Math.ceil(sortedData.length / PAGE_SIZE);
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    return sortedData.slice(startIndex, startIndex + PAGE_SIZE);
+  }, [sortedData, currentPage]);
+
+  const handleAssignComplaint = async () => {
+    if (!selectedComplaint) return;
+
+    if (!remarks || !selectedStaff) {
+      toast.warning("Please add remarks and select Assignee");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const payload = {
+        complaintId: selectedComplaint?.id,
+        status: 1,
+        updatedBy: userId,
+        assignedTo: selectedStaff,
+        hearingDate: null,
+        verdict: 0,
+        assigneeRemarks: remarks,
+      };
+
+      console.log("📤 Sending payload:", payload);
+
+      const response = await apiClient.post(
+        COMPLAINT_API + "/update-status",
+        payload
+      );
+      console.log(response, "response");
+
+      if (response.status === 200) {
+        toast.success(
+          response?.data?.message || "Complaint assigned successfully."
+        );
+        setRefresh((prev) => !prev);
+        setIsDialogOpen(false);
+      }
+    } catch (error) {
+      console.error("Error assigning complaint:", error);
+      toast.error("Something went wrong while assigning.");
+    } finally {
+      setLoading(false);
+      setSelectedComplaint(null);
+      setIsDialogOpen(false);
+      setRemarks("");
+      setSelectedStaff("");
+    }
+  };
 
   return (
     <>
       <div className="relative">
-        <div className="h-[calc(100vh-130px)] overflow-y-auto scrollbar-hide relative">
-          <table className="min-w-full text-sm">
+        <div className="h-[calc(100vh-120px)] overflow-y-auto scrollbar-hide relative">
+          <table className="min-w-full text-sm mb-10!">
             <thead className="sticky top-0 z-10">
               <tr className="font-semibold bg-white">
-                {[
-                  "Sr #",
-                  "Shop Name",
-                  "Phone #",
-                  "Complaint Type",
-                  "Product Type",
-                  "Sectors",
-                  "Remarks",
-                  "Video Calling",
-                  "Audio Attach",
-                  "Files",
-                ]?.map((header) => (
-                  <TableHeaderCell key={header} label={header} />
+                {headers?.map((header) => (
+                  <TableHeaderCell
+                    key={header?.label}
+                    label={header?.label}
+                    sortable={header?.sortable}
+                    onSort={
+                      header.sortable
+                        ? () => handleSort(header.sortable!)
+                        : undefined
+                    }
+                  />
                 ))}
               </tr>
             </thead>
 
             <tbody>
-              {rowsData?.map((item, index) => (
+              {paginatedData?.map((item, index) => (
                 <tr
                   key={index}
                   className={`transition-colors duration-150 ${
                     index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
                   } hover:bg-gray-100`}
                 >
+                  <TableBodyCell>{item?.id}</TableBodyCell>
                   <TableBodyCell className="whitespace-nowrap">
-                    {index + 1}
+                    {formatDate(item?.createdAt)}
                   </TableBodyCell>
 
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.shopName}
+                  <TableBodyCell>{item?.shopName}</TableBodyCell>
+                  <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
+                  <TableBodyCell>{item?.complaintType}</TableBodyCell>
+                  <TableBodyCell>{item?.categoryName}</TableBodyCell>
+                  <TableBodyCell>{item?.sectionCategoryName}</TableBodyCell>
+                  <TableBodyCell>
+                    {item?.sectionsDetails?.map((s) => s?.name).join(", ")}
+                  </TableBodyCell>
+                  <TableBodyCell>
+                    {item?.sectionsDetails
+                      ?.map((s) => s?.description)
+                      .join(", ")}
                   </TableBodyCell>
 
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.phoneNumber}
+                  <TableBodyCell className="min-w-[200px]">
+                    {item?.remarks
+                      ? item?.remarks?.slice(0, 50) +
+                        (item?.remarks?.length > 50 ? "..." : "")
+                      : ""}
                   </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.complaintType}
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.productType}
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.sector}
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.remarks}
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {
-                      <SiGooglemeet
-                        onClick={() => router.push("/meeting")}
-                        className="w-5 h-5 cursor-pointer!"
-                      />
-                    }
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.listAudio.length === 0 ? (
+
+                  <TableBodyCell>
+                    {!item?.listAudio || item?.listAudio?.length === 0 ? (
                       <div className="bg-[#efcdcd] rounded-full px-2! py-0.5! w-fit text-(--error)">
                         No
                       </div>
@@ -182,28 +214,67 @@ const PendingTable = () => {
                       </div>
                     )}
                   </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    <div className="flex gap-1">
-                      <Image
-                        src="/images/dummy-image1.png"
-                        alt=""
-                        width={25}
-                        height={25}
-                      />
-                      <Image
-                        src="/images/dummy-image2.png"
-                        alt=""
-                        width={25}
-                        height={25}
-                      />
-                    </div>
+                  <TableBodyCell>
+                    {!item?.listOfImage || item?.listOfImage?.length === 0 ? (
+                      <div className="bg-[#efcdcd] rounded-full px-2! py-0.5! w-fit text-(--error)">
+                        No
+                      </div>
+                    ) : (
+                      <div className="flex gap-1">
+                        {item?.listOfImage?.map((imgUrl, i) => (
+                          <div
+                            key={i}
+                            className="relative w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]"
+                          >
+                            <Image
+                              src={imgUrl}
+                              alt={`attachment-${i}`}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </TableBodyCell>
+
+                  <TableBodyCell>
+                    <FaEye
+                      className="text-lg text-(--primary) cursor-pointer"
+                      onClick={() => {
+                        setSelectedComplaint(item);
+                        isDialogOpen;
+                        setIsDialogOpen(true);
+                      }}
+                    />
                   </TableBodyCell>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       </div>
+      <PendingDialog
+        selectedComplaint={selectedComplaint}
+        setSelectedComplaint={setSelectedComplaint}
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        remarks={remarks}
+        setRemarks={setRemarks}
+        selectedStaff={selectedStaff}
+        setSelectedStaff={setSelectedStaff}
+        loading={loading}
+        setLoading={setLoading}
+        handleAssignComplaint={handleAssignComplaint}
+        staffData={staffData}
+      />
     </>
   );
 };

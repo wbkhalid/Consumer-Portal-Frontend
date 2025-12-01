@@ -1,11 +1,11 @@
-import React from "react";
 import PendingComponent from "./components/PendingComponent";
+import { Suspense } from "react";
 
 const PendingPage = () => {
   return (
-    <div>
+    <Suspense fallback={<div>Loading pending complaints...</div>}>
       <PendingComponent />
-    </div>
+    </Suspense>
   );
 };
 

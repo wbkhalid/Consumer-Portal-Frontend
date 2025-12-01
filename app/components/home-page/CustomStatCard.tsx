@@ -1,6 +1,5 @@
-import { Box, Card, Flex, Text } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import { IoMdTrendingDown, IoMdTrendingUp } from "react-icons/io";
-import { IoDocumentTextOutline } from "react-icons/io5";
 
 interface CustomStatCardProps {
   title: string;

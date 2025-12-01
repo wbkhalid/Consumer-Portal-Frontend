@@ -22,8 +22,6 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
     direction: "asc" | "desc";
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-
-  // 🟢 NEW: Dialog state
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
   const [openDialog, setOpenDialog] = useState(false);

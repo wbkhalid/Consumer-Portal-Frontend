@@ -15,27 +15,27 @@ import useGetAllComplains from "../../hooks/useGetAllComplains";
 import { useState } from "react";
 import { BsCashStack } from "react-icons/bs";
 import { TbCloudDownload } from "react-icons/tb";
-import Cookies from "js-cookie";
-import { useSearchParams } from "next/navigation";
 import { MdOutlineRecordVoiceOver } from "react-icons/md";
+import { GoClock } from "react-icons/go";
+import { useRegionFilters } from "../../hooks/useRegionFilters";
 
 const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
-  const searchParams = useSearchParams();
+  // const isValid = (v: string | undefined | null): v is string =>
+  //   v !== null && v !== undefined && v !== "" && v !== "0";
 
-  const isValid = (v: string | undefined | null): v is string =>
-    v !== null && v !== undefined && v !== "" && v !== "0";
+  // const divisionId = isValid(Cookies.get("divisionId"))
+  //   ? Cookies.get("divisionId")
+  //   : searchParams.get("divisionId");
 
-  const divisionId = isValid(Cookies.get("divisionId"))
-    ? Cookies.get("divisionId")
-    : searchParams.get("divisionId");
+  // const districtId = isValid(Cookies.get("districtId"))
+  //   ? Cookies.get("districtId")
+  //   : searchParams.get("districtId");
 
-  const districtId = isValid(Cookies.get("districtId"))
-    ? Cookies.get("districtId")
-    : searchParams.get("districtId");
+  // const tehsilId = isValid(Cookies.get("tehsilId"))
+  //   ? Cookies.get("tehsilId")
+  //   : searchParams.get("tehsilId");
 
-  const tehsilId = isValid(Cookies.get("tehsilId"))
-    ? Cookies.get("tehsilId")
-    : searchParams.get("tehsilId");
+  const { divisionId, districtId, tehsilId } = useRegionFilters();
 
   const [refresh, setRefresh] = useState(false);
 
@@ -44,13 +44,13 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
   if (districtId) params.set("districtId", districtId);
   if (tehsilId) params.set("tehsilId", tehsilId);
 
-  const { data: pendingData } = useGetAllComplains({
-    status: 0,
-    refresh,
-    divisionId: divisionId || "",
-    districtId: districtId || "",
-    tehsilId: tehsilId || "",
-  });
+  // const { data: pendingData } = useGetAllComplains({
+  //   status: 0,
+  //   refresh,
+  //   divisionId: divisionId || "",
+  //   districtId: districtId || "",
+  //   tehsilId: tehsilId || "",
+  // });
 
   const { data: proceedingData } = useGetAllComplains({
     status: 1,
@@ -122,12 +122,24 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         />
       </Link>
 
+      <Link
+        href={`/pending${params.toString() ? `?${params.toString()}` : ""}`}
+      >
+        <CustomStatCard
+          title="Pending"
+          value={data?.inPendingComplaints ?? 0}
+          icon={<GoClock className="text-white text-lg" />}
+          iconBg="bg-(--primary)"
+          percentage={-4.5}
+        />
+      </Link>
+
       {/* All dialogs receiving filtered data */}
-      <PendingDialog
+      {/* <PendingDialog
         pendingComplain={data?.inPendingComplaints ?? 0}
         setRefresh={setRefresh}
         pendingData={pendingData ?? []}
-      />
+      /> */}
 
       <ProceedingDialog
         proceedingComplain={data?.inProceedingComplaints ?? 0}

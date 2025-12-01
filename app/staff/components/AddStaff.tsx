@@ -24,7 +24,7 @@ const schema = z
   .object({
     fullName: z.string().min(1, "Full Name is required"),
     phoneNumber: z.string().min(1, "Phone Number is required"),
-    cnic: z.string().min(15, "CNIC must be 15 characters"),
+    // cnic: z.string().min(15, "CNIC must be 15 characters"),
     roleName: z.string().min(1, "Role is required"),
 
     divisionId: z.number().optional(),
@@ -192,7 +192,7 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
             {...register("phoneNumber")}
           />
 
-          <CustomTextField
+          {/* <CustomTextField
             label="CNIC"
             placeholder="12345-1234567-1"
             endAdornment={<LuUser size={18} />}
@@ -218,7 +218,7 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
 
               e.target.value = formatted;
             }}
-          />
+          /> */}
 
           <Controller
             name="roleName"
