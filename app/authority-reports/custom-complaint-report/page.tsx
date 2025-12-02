@@ -42,22 +42,6 @@ interface ComplaintCategory {
 }
 
 const CustomComplaintPage = async () => {
-  const res2 = await fetch(
-    process.env.BACKEND_API + LOOKUP_API + "/divisions?countaryId=1",
-    {
-      cache: "no-store",
-    }
-  );
-  const response2: DivisionLookupResponse = await res2.json();
-  const divisionsData: DivisionLookup[] = response2.data;
-
-  const divisionOptions: OptionType[] = divisionsData.map((division) => {
-    return {
-      value: String(division.id),
-      label: division.name,
-    };
-  });
-
   const res3 = await fetch(process.env.BACKEND_API + SECTION_CATEGORY_API, {
     cache: "no-store",
   });
@@ -97,12 +81,9 @@ const CustomComplaintPage = async () => {
     }
   );
 
-  console.log("ladjsajdaddj");
-
   return (
     <div>
       <CustomComplaintComponent
-        divisionOptions={divisionOptions}
         sectionCategoryOptions={sectionCategoryOptions}
         sectionOptions={sectionOptions}
         complaintCategoryOptions={complaintCategoryOptions}

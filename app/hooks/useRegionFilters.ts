@@ -9,6 +9,9 @@ export const useRegionFilters = () => {
   const isValid = (v: string | undefined | null): v is string =>
     v !== null && v !== undefined && v !== "" && v !== "0";
 
+  const startDate = searchParams.get("startDate") || "";
+  const endDate = searchParams.get("endDate") || "";
+
   const getValue = (cookieKey: string, queryKey: string) => {
     const cookieValue = Cookies.get(cookieKey);
     if (isValid(cookieValue)) return cookieValue;
@@ -21,5 +24,5 @@ export const useRegionFilters = () => {
   const districtId = getValue("districtId", "districtId");
   const tehsilId = getValue("tehsilId", "tehsilId");
 
-  return { divisionId, districtId, tehsilId };
+  return { divisionId, districtId, tehsilId, startDate, endDate };
 };

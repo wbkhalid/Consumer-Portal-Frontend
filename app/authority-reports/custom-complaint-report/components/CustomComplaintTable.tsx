@@ -17,6 +17,7 @@ const CustomComplaintTable = ({ rowsData }: CustomComplaintProp) => {
     "Address",
     "Complaint Type",
     "Section Category",
+    "Nature of Complaint",
     "Sections",
   ];
 
@@ -57,6 +58,7 @@ const CustomComplaintTable = ({ rowsData }: CustomComplaintProp) => {
                 <TableBodyCell>
                   {item?.sectionsDetails?.map((s) => s?.name).join(", ")}
                 </TableBodyCell>
+                <TableBodyCell>{item?.sectionCategoryName}</TableBodyCell>
               </tr>
             ))}
           </tbody>

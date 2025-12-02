@@ -9,6 +9,8 @@ interface Props {
   year?: string;
   startDate?: string;
   endDate?: string;
+  section?: string;
+  sectionCategory?: string;
 }
 
 export interface SectionsDetails {
@@ -44,6 +46,8 @@ const useGetCustomComplaints = ({
   year,
   startDate,
   endDate,
+  section,
+  sectionCategory,
 }: Props = {}) => {
   const params = new URLSearchParams();
 
@@ -59,8 +63,18 @@ const useGetCustomComplaints = ({
     params.append("startDate", String(startDate));
   if (endDate !== undefined && endDate !== "" && endDate !== "0")
     params.append("endDate", String(endDate));
+  if (section !== undefined && section !== "" && section !== "0")
+    params.append("section", String(section));
+  if (
+    sectionCategory !== undefined &&
+    sectionCategory !== "" &&
+    sectionCategory !== "0"
+  )
+    params.append("sectionCategory", String(sectionCategory));
 
   const queryString = params.toString();
+
+  console.log(queryString, "query");
 
   return useData<ManageCustomComplainsData>({
     refresh,

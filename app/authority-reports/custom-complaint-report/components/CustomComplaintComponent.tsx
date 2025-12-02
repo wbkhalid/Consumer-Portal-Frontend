@@ -2,25 +2,42 @@
 
 import { Button } from "@radix-ui/themes";
 import CustomComplaintTable from "./CustomComplaintTable";
-import Form from "../list/RegisterForm";
 import Forms from "../list/Forms";
 import { OptionType } from "../../../components/Form/CustomSelect";
 import useGetCustomComplaints from "../../../hooks/useGetCustomComplaints";
+import CustomDateRangePicker from "../../../components/CustomDateRangePicker";
+import { useRegionFilters } from "../../../hooks/useRegionFilters";
+import CustomSelect from "../../../components/CustomSelect";
+import useGetSectionCategory from "../../../hooks/useGetSectionCategory";
+import { useState } from "react";
+import useGetAllSections from "../../../hooks/useGetAllSections";
 
 interface Props {
-  divisionOptions: OptionType[];
   sectionCategoryOptions: OptionType[];
   sectionOptions: OptionType[];
   complaintCategoryOptions: OptionType[];
 }
 
 const CustomComplaintComponent = ({
-  divisionOptions,
   sectionCategoryOptions,
   sectionOptions,
   complaintCategoryOptions,
 }: Props) => {
-  const { data: customComplaintData } = useGetCustomComplaints();
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSection, setSelectedSection] = useState("");
+  const { divisionId, districtId, tehsilId, startDate, endDate } =
+    useRegionFilters();
+  const { data: customComplaintData } = useGetCustomComplaints({
+    startDate,
+    endDate,
+    divisionId,
+    districtId,
+    tehsilId,
+    section: selectedSection,
+    sectionCategory: selectedCategory,
+  });
+  const { data: sectionCategoryData } = useGetSectionCategory();
+  const { data: sectionData } = useGetAllSections();
 
   return (
     <div className="border border-[#e2e8f0] rounded-lg py-1! overflow-hidden max-h-[calc(100vh-10px)]">
@@ -34,11 +51,32 @@ const CustomComplaintComponent = ({
             {customComplaintData?.length.toLocaleString()} Records
           </p>
         </div>
-        <Forms
-          sectionCategoryOptions={sectionCategoryOptions}
-          sectionOptions={sectionOptions}
-          complaintCategoryOptions={complaintCategoryOptions}
-        />
+        <div className="flex items-center gap-1">
+          <CustomSelect
+            value={selectedSection}
+            onChange={(val) => setSelectedSection(val as string)}
+            options={sectionData?.map((section) => ({
+              label: `${section?.name}-${section.description}`,
+              value: section?.id,
+            }))}
+          />
+          <CustomSelect
+            value={selectedCategory}
+            onChange={(val) => setSelectedCategory(val as string)}
+            options={sectionCategoryData?.map((category) => ({
+              label: category?.name,
+              value: category?.id,
+            }))}
+          />
+
+          <CustomDateRangePicker />
+
+          <Forms
+            sectionCategoryOptions={sectionCategoryOptions}
+            sectionOptions={sectionOptions}
+            complaintCategoryOptions={complaintCategoryOptions}
+          />
+        </div>
       </div>
       <CustomComplaintTable rowsData={customComplaintData} />
     </div>
