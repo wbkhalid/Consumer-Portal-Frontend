@@ -1,11 +1,7 @@
 import { Button, Dialog } from "@radix-ui/themes";
-
-import { BsArrowUpRightSquare } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { useRef, useState } from "react";
-import { RxCross1 } from "react-icons/rx";
-import { FaRegPenToSquare } from "react-icons/fa6";
 import Image from "next/image";
 import {
   decionsVideos,
@@ -13,21 +9,16 @@ import {
   formatDate,
   uploadFile,
 } from "../../utils/utils";
-import apiClient from "../../services/api-client";
-import { COMPLAINT_API } from "../../APIs";
 import { toast } from "react-toastify";
 import { format, parseISO } from "date-fns";
-
-import { MdOutlineFileDownload, MdUploadFile } from "react-icons/md";
-import { generateComplaintPDF } from "../../utils/generateComplainPdf";
-import Cookies from "js-cookie";
+import { MdUploadFile } from "react-icons/md";
 import CustomSearchDropdown, {
   Option,
 } from "../../components/CustomSearchDropdown";
 import CustomTextField from "../../components/CustomTextField";
 import CustomTextArea from "../../components/CustomTextArea";
 
-interface ProceedingDialogProps {
+interface EscalationDialogProps {
   isDialogOpen: boolean;
   setIsDialogOpen: (value: boolean) => void;
   selectedComplaint: ManageComplainsData | null;
@@ -53,16 +44,15 @@ interface ProceedingDialogProps {
   fineAmount: number;
 }
 
-const ProceedingDialog = ({
+const EscalationDialog = ({
   isDialogOpen,
-  setIsDialogOpen,
   selectedComplaint,
   setSelectedComplaint,
   dialogStep,
+  setIsDialogOpen,
   setDialogStep,
   hearingDate,
   setHearingDate,
-  isResolved,
   setIsResolved,
   selectedStatus,
   setSelectedStatus,
@@ -73,11 +63,10 @@ const ProceedingDialog = ({
   videoUrl,
   setVideoUrl,
   loading,
-  setLoading,
   handleHearingComplaint,
   setFineAmount,
   fineAmount,
-}: ProceedingDialogProps) => {
+}: EscalationDialogProps) => {
   const router = useRouter();
 
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -599,4 +588,4 @@ const ProceedingDialog = ({
   );
 };
 
-export default ProceedingDialog;
+export default EscalationDialog;

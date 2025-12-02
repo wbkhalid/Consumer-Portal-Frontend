@@ -14,7 +14,11 @@ import EscalationDialog from "./EscalationDialog";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
 import { useState } from "react";
 import { BsArrowUpRightSquare, BsCashStack } from "react-icons/bs";
-import { TbCloudDownload } from "react-icons/tb";
+import {
+  TbAlertTriangle,
+  TbCloudDownload,
+  TbSettingsExclamation,
+} from "react-icons/tb";
 import { MdOutlineRecordVoiceOver } from "react-icons/md";
 import { GoClock } from "react-icons/go";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
@@ -159,17 +163,42 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         proceedingData={proceedingData ?? []}
       /> */}
 
-      <EscalationDialog
+      {/* <EscalationDialog
         escalationComplaint={data?.escalatedComplaints ?? 0}
         setRefresh={setRefresh}
         escalationData={escalationData ?? []}
-      />
+      /> */}
 
-      <SuperEscalationDialog
+      <Link
+        href={`/escalation${params.toString() ? `?${params.toString()}` : ""}`}
+      >
+        <CustomStatCard
+          title="Escalation"
+          value={data?.escalatedComplaints ?? 0}
+          icon={<TbAlertTriangle className="text-white text-lg" />}
+          iconBg="bg-[#DC2626]"
+          percentage={4.5}
+        />
+      </Link>
+      <Link
+        href={`/super-escalation${
+          params.toString() ? `?${params.toString()}` : ""
+        }`}
+      >
+        <CustomStatCard
+          title="Super Escalation"
+          value={data?.superEscalatedComplaints ?? 0}
+          icon={<TbSettingsExclamation className="text-white text-lg" />}
+          iconBg="bg-[#af0404]"
+          percentage={4.5}
+        />
+      </Link>
+
+      {/* <SuperEscalationDialog
         superEscalationComplaint={data?.superEscalatedComplaints ?? 0}
         setRefresh={setRefresh}
         superEscalationData={superEscalationData ?? []}
-      />
+      /> */}
 
       <DecidedonMeritDialog
         onMeritComplaint={data?.decidedOnMeritComplaints ?? 0}
