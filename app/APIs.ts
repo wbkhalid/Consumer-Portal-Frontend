@@ -7,3 +7,4 @@ export const COMPLAINT_CATEGORY_API = "/api/ComplaintCategory";
 export const ADMIN_DASHBOARD_API = "/api/AdminDashboard";
 export const COMPLAINT_APPEALS_API = "/api/ComplaintAppeals";
 export const FILE_UPLOAD_API = "/api/UploadFiles";
+export const COMPLAINT_REPORT_API = "/api/ComplaintReports";

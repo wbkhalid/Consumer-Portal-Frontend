@@ -53,19 +53,19 @@ const MegaMenu = () => {
           label: "Complaint Summary Report",
           description: "View summary of all complaints",
           icon: <FiBarChart2 className="text-white" size={22} />,
-          route: "/authority-reports/complaint-summary",
+          route: "/authority-reports/complaint-reports/complaint-summary/list",
         },
         {
           label: "Analytical Report",
           description: "Analyze complaint trends",
           icon: <FiPieChart className="text-white" size={22} />,
-          route: "/authority-reports/analytical-report",
+          route: "/authority-reports/complaint-reports/analytical-reports/list",
         },
         {
           label: "Appeals Report",
           description: "Manage submitted appeals data",
           icon: <FiFlag className="text-white" size={22} />,
-          route: "/authority-reports/appeal-report",
+          route: "/authority-reports/complaint-reports/appeals-report/list",
         },
       ],
     },
@@ -100,14 +100,15 @@ const MegaMenu = () => {
       label: "Complaint Institution Report",
       description: "View complaint distribution by responsible institutions.",
       icon: <FiLayers className="text-white" size={22} />,
-      route: "/others-report/complaint-institution-report",
+      route:
+        "/others-report/complaint-reports/complaint-institution-report/list",
     },
     {
       label: "Decided Complaint Report",
       description:
         "See a list of complaints that have been resolved or closed.",
       icon: <FiCheckCircle className="text-white" size={22} />,
-      route: "/others-report/decided-complaint",
+      route: "/others-report/complaint-reports/decided-complaint-report/list",
     },
     {
       label: "Online Business Report",
@@ -126,14 +127,14 @@ const MegaMenu = () => {
       label: "Aging Report",
       description: "Check pending complaints based on their age and duration.",
       icon: <FiClock className="text-white" size={22} />,
-      route: "/others-report/aging-report",
+      route: "/others-report/complaint-reports/aging-report/list",
     },
     {
       label: "Fine Imposed Report",
       description:
         "Track fines imposed on businesses after complaint resolution.",
       icon: <FiTrendingUp className="text-white" size={22} />,
-      route: "/others-report/fine-imposed-report",
+      route: "/others-report/complaint-reports/fine-imposed-report/list",
     },
     {
       label: "Ratio Report",
@@ -147,7 +148,7 @@ const MegaMenu = () => {
       description:
         "Identify users or brands with frequent complaint occurrences.",
       icon: <FiPieChart className="text-white" size={22} />,
-      route: "/others-report/complaint-frequency",
+      route: "/others-report/complaint-reports/frequency-report/list",
     },
     {
       label: "Section Report",

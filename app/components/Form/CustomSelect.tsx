@@ -14,7 +14,7 @@ import makeAnimated from "react-select/animated";
 interface Props {
   options: OptionType[];
   id?: string;
-  value?: OptionType[] | null;
+  value?: OptionType | OptionType[] | null;
   onChangeSingle?: (
     newValue: SingleValue<OptionType>,
     actionMeta: ActionMeta<OptionType>
