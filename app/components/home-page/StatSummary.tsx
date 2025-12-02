@@ -13,7 +13,7 @@ import SuperEscalationDialog from "./SuperEscalationDialog";
 import EscalationDialog from "./EscalationDialog";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
 import { useState } from "react";
-import { BsCashStack } from "react-icons/bs";
+import { BsArrowUpRightSquare, BsCashStack } from "react-icons/bs";
 import { TbCloudDownload } from "react-icons/tb";
 import { MdOutlineRecordVoiceOver } from "react-icons/md";
 import { GoClock } from "react-icons/go";
@@ -134,6 +134,18 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         />
       </Link>
 
+      <Link
+        href={`/proceeding${params.toString() ? `?${params.toString()}` : ""}`}
+      >
+        <CustomStatCard
+          title="Proceeding"
+          value={data?.inProceedingComplaints ?? 0}
+          icon={<BsArrowUpRightSquare className="text-white text-lg" />}
+          iconBg="bg-(--warning)"
+          percentage={-4.5}
+        />
+      </Link>
+
       {/* All dialogs receiving filtered data */}
       {/* <PendingDialog
         pendingComplain={data?.inPendingComplaints ?? 0}
@@ -141,11 +153,11 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         pendingData={pendingData ?? []}
       /> */}
 
-      <ProceedingDialog
+      {/* <ProceedingDialog
         proceedingComplain={data?.inProceedingComplaints ?? 0}
         setRefresh={setRefresh}
         proceedingData={proceedingData ?? []}
-      />
+      /> */}
 
       <EscalationDialog
         escalationComplaint={data?.escalatedComplaints ?? 0}

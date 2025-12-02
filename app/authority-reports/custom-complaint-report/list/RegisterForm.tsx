@@ -1,29 +1,25 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Dialog, Flex, Heading, IconButton } from "@radix-ui/themes";
+import { Button, Dialog, Flex, IconButton } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
-import { SingleValue } from "react-select";
 import { toast } from "react-toastify";
 import { z } from "zod";
-import { AUTH_API, LOOKUP_API } from "../../../APIs";
-import CustomLabel from "../../../components/Form/CustomLabel";
-import CustomRadixInput from "../../../components/Form/CustomRadixInput";
-import CustomSelect, {
-  defaultNumberOption,
-  OptionType,
-} from "../../../components/Form/CustomSelect";
-import ErrorMessage from "../../../components/Form/ErrorMessage";
+import { AUTH_API } from "../../../APIs";
 import SubmitButton from "../../../components/Form/SubmitButton";
 import apiClient, { AxiosError } from "../../../services/api-client";
+import CustomTextField from "../../../components/CustomTextField";
+import CustomSearchDropdown from "../../../components/CustomSearchDropdown";
+import useGetSelectedDivision from "../../../hooks/useGetSelectedDivision";
+import useGetSelectedDistrict from "../../../hooks/useGetSelectedDistrict";
+import useGetSelectedTehsil from "../../../hooks/useGetSelectedTehsil";
 
 const schema = z.object({
   fullName: z.string().min(1, { message: "Please add Full Name!" }),
   phoneNumber: z.string().min(1, { message: "Please add Phone Number!" }),
-  cnic: z.string().min(13, { message: "CNIC must be of 13 digits!" }),
   divisionId: z
     .number()
     .refine((val) => val !== 0, { message: "Please add Division!" })
@@ -42,29 +38,14 @@ const schema = z.object({
   roleName: z.string().default("User"),
 });
 
-// Input type (what the form needs)
 type RegisterInput = z.input<typeof schema>;
 
-interface DistrictLookup {
-  id: number;
-  provinceId: number;
-  name: string;
-  shortName: string;
-}
-
-interface TehsilLookup {
-  id: number;
-  districtId: number;
-  name: string;
-  shortName: string;
-}
-
 interface Props {
-  divisionOptions: OptionType[];
+  setUserId: Dispatch<SetStateAction<string>>;
   setOpenComplaintForm: Dispatch<SetStateAction<boolean>>;
 }
 
-const RegisterForm = ({ divisionOptions, setOpenComplaintForm }: Props) => {
+const RegisterForm = ({ setUserId, setOpenComplaintForm }: Props) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
   const {
@@ -83,28 +64,41 @@ const RegisterForm = ({ divisionOptions, setOpenComplaintForm }: Props) => {
     },
   });
   console.log("errors", errors);
+  const selectedDivisionId = watch("divisionId");
+  const selectedDistrictId = watch("districtId");
+  const phoneNumber = watch("phoneNumber");
 
   const handleClose = () => {
     setDialogOpen(false);
     console.log("close dialog");
   };
 
-  const selectedDivisionId = watch("divisionId");
-  const selectedDistrictId = watch("districtId");
-
   const onSubmit = async (formData: RegisterInput) => {
     console.log(errors);
 
     try {
       const response = await apiClient.post(AUTH_API + "/register", formData);
-      console.log("Response:", response);
-      router.refresh();
-      toast.success("Registered Successfully");
-      handleClose();
+
       console.log("response", response);
-      if (response.status === 200) {
+      if (response?.data?.responseCode === 200) {
         setOpenComplaintForm(true);
+        setUserId(response?.data?.data?.id);
+        console.log("Response:", response?.data?.data?.id);
+        router.refresh();
+        toast.success("Registered Successfully");
+        handleClose();
       }
+
+      // if (response?.data?.responseCode === 400) {
+      //   const response = await apiClient.post(
+      //     AUTH_API + "/login-phone",
+      //     phoneNumber
+      //   );
+
+      //   console.log(response, "///response////");
+
+      //   toast.error(response?.data?.responseMessage);
+      // }
     } catch (err) {
       const axiosError = err as AxiosError<{ error: string }>;
       console.error(
@@ -115,78 +109,16 @@ const RegisterForm = ({ divisionOptions, setOpenComplaintForm }: Props) => {
     }
   };
 
-  const [lookUpDistricts, setLookUpDistricts] = useState<DistrictLookup[]>();
-  const [districtOptions, setDistrictOptions] = useState<OptionType[]>([]);
+  const { data: selectedDivisionData } = useGetSelectedDivision({
+    id: 1,
+  });
 
-  useEffect(() => {
-    const getDistricts = async (selectedDivisionId: number) => {
-      try {
-        const response = await apiClient.get(
-          `${LOOKUP_API}/districts/${selectedDivisionId}`
-        );
-        setLookUpDistricts(response.data.data);
-      } catch (err) {
-        console.log("err", err);
-      }
-    };
-    if (selectedDivisionId) {
-      getDistricts(selectedDivisionId);
-    }
-  }, [selectedDivisionId]);
-
-  useEffect(() => {
-    if (lookUpDistricts) {
-      const districtOptions: OptionType[] = lookUpDistricts?.map((district) => {
-        return {
-          value: String(district.id),
-          label: district.name,
-        };
-      });
-
-      console.log("lookUpDistricts", lookUpDistricts);
-
-      if (districtOptions) {
-        setDistrictOptions(districtOptions);
-      }
-    }
-  }, [lookUpDistricts]);
-
-  const [lookUpTehsils, setLookUpTehsils] = useState<TehsilLookup[]>();
-  const [thesilOptions, setTehsilOptions] = useState<OptionType[]>([]);
-
-  useEffect(() => {
-    const getTehsils = async (selectedDistrictId: number) => {
-      try {
-        const response = await apiClient.get(
-          `${LOOKUP_API}/tehsils/${selectedDistrictId}`
-        );
-        setLookUpTehsils(response.data.data);
-        console.log("lookUpTehsils", lookUpTehsils);
-      } catch (err) {
-        console.log("err", err);
-      }
-    };
-    if (selectedDistrictId) {
-      getTehsils(selectedDistrictId);
-    }
-  }, [selectedDistrictId]);
-
-  useEffect(() => {
-    if (lookUpTehsils) {
-      const thesilOptions: OptionType[] = lookUpTehsils?.map((thesil) => {
-        return {
-          value: String(thesil.id),
-          label: thesil.name,
-        };
-      });
-
-      console.log("lookUpTehsils", lookUpTehsils);
-
-      if (thesilOptions) {
-        setTehsilOptions(thesilOptions);
-      }
-    }
-  }, [lookUpTehsils]);
+  const { data: selectedDistrictData } = useGetSelectedDistrict({
+    id: selectedDivisionId,
+  });
+  const { data: selectedTehsilData } = useGetSelectedTehsil({
+    id: selectedDistrictId,
+  });
 
   return (
     <Dialog.Root open={isDialogOpen} onOpenChange={setDialogOpen}>
@@ -197,11 +129,10 @@ const RegisterForm = ({ divisionOptions, setOpenComplaintForm }: Props) => {
       </Dialog.Trigger>
 
       <Dialog.Content
-        size="4"
         maxWidth="896px"
-        className="py-[15px]! px-5"
-        onInteractOutside={(e) => e.preventDefault()} // 👈 disables close on outside click
-        onEscapeKeyDown={(e) => e.preventDefault()} // 👈 disables close on Esc
+        className="p-3!"
+        onInteractOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <Dialog.Title>
           <Flex justify="between" align="center" className="mb-5!">
@@ -211,7 +142,7 @@ const RegisterForm = ({ divisionOptions, setOpenComplaintForm }: Props) => {
             <Dialog.Close>
               <IconButton
                 radius="full"
-                className="w-6! h-6! bg-(--primary)! py-2!"
+                className="w-5! h-5! bg-(--primary)! py-2! cursor-pointer!"
               >
                 <IoClose className="text-white" />
               </IconButton>
@@ -222,216 +153,112 @@ const RegisterForm = ({ divisionOptions, setOpenComplaintForm }: Props) => {
           Make changes to your profile.
         </Dialog.Description>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-1 md:grid-cols-3 mb-2.5 items-center gap-5">
-            <CustomLabel
-              inputNode={
-                <>
-                  <CustomRadixInput
-                    placeholder="Enter Name"
-                    {...register("fullName")}
-                  />
-                  <ErrorMessage>{errors.fullName?.message}</ErrorMessage>
-                </>
-              }
-            >
-              Full Name
-            </CustomLabel>
+          <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-3">
+            <CustomTextField
+              label="Full Name"
+              placeholder="Enter Full Name"
+              error={errors.fullName?.message}
+              {...register("fullName")}
+            />
+            <CustomTextField
+              label="Phone Number"
+              placeholder="03XXXXXXXXX"
+              error={errors.phoneNumber?.message}
+              {...register("phoneNumber")}
+            />
 
-            <CustomLabel
-              inputNode={
-                <>
-                  <CustomRadixInput
-                    placeholder="Enter Phone Number"
-                    {...register("phoneNumber")}
-                  />
-                  <ErrorMessage>{errors.phoneNumber?.message}</ErrorMessage>
-                </>
-              }
-            >
-              Phone Number
-            </CustomLabel>
+            <Controller
+              name="divisionId"
+              control={control}
+              render={({ field }) => (
+                <CustomSearchDropdown
+                  label="Division"
+                  name="divisionId"
+                  placeholder="Select Division"
+                  error={errors.divisionId?.message}
+                  value={String(field.value)}
+                  onChange={(val) => field.onChange(Number(val))}
+                  options={
+                    selectedDivisionData?.map((division) => ({
+                      label: division?.name,
+                      value: String(division?.id),
+                    })) ?? []
+                  }
+                />
+              )}
+            />
 
-            <CustomLabel
-              inputNode={
-                <>
-                  <CustomRadixInput
-                    placeholder="Enter CNIC"
-                    {...register("cnic")}
-                  />
-                  <ErrorMessage>{errors.cnic?.message}</ErrorMessage>
-                </>
-              }
-            >
-              CNIC
-            </CustomLabel>
+            <Controller
+              name="districtId"
+              control={control}
+              render={({ field }) => (
+                <CustomSearchDropdown
+                  label="District"
+                  name="districtId"
+                  placeholder="Select District"
+                  disabled={!selectedDivisionId}
+                  error={errors.districtId?.message}
+                  value={String(field.value)}
+                  onChange={(val) => field.onChange(Number(val))}
+                  options={
+                    selectedDistrictData?.map((district) => ({
+                      label: district?.name,
+                      value: String(district?.id),
+                    })) ?? []
+                  }
+                />
+              )}
+            />
 
-            <CustomLabel
-              inputNode={
-                <>
-                  <Controller
-                    name="divisionId"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomSelect
-                        {...field}
-                        options={[defaultNumberOption, ...divisionOptions]}
-                        closeMenuOnSelect={true}
-                        // Convert between react-select and raw value
-                        value={
-                          divisionOptions.find(
-                            (option) => option.value === String(field.value)
-                          )
-                            ? [
-                                divisionOptions.find(
-                                  (option) =>
-                                    option.value === String(field.value)
-                                )!,
-                              ]
-                            : []
-                        }
-                        onChangeSingle={(selectedOption) => {
-                          const singleOption =
-                            selectedOption as SingleValue<OptionType>;
-                          field.onChange(
-                            singleOption ? Number(singleOption.value) : 0
-                          );
-                        }}
-                      />
-                    )}
-                  />
-                  <ErrorMessage>{errors.divisionId?.message}</ErrorMessage>
-                </>
-              }
-            >
-              Division
-            </CustomLabel>
+            <Controller
+              name="tehsilId"
+              control={control}
+              render={({ field }) => (
+                <CustomSearchDropdown
+                  label="Tehsil"
+                  name="tehsilId"
+                  placeholder="Select Tehsil"
+                  disabled={!selectedDistrictId}
+                  error={errors.tehsilId?.message}
+                  value={String(field.value)}
+                  onChange={(val) => field.onChange(Number(val))}
+                  options={
+                    selectedTehsilData?.map((tehsil) => ({
+                      label: tehsil?.name,
+                      value: String(tehsil?.id),
+                    })) ?? []
+                  }
+                />
+              )}
+            />
 
-            <CustomLabel
-              inputNode={
-                <>
-                  <Controller
-                    name="districtId"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomSelect
-                        {...field}
-                        options={[defaultNumberOption, ...districtOptions]}
-                        closeMenuOnSelect={true}
-                        // Convert between react-select and raw value
-                        value={
-                          districtOptions.find(
-                            (option) => option.value === String(field.value)
-                          )
-                            ? [
-                                districtOptions.find(
-                                  (option) =>
-                                    option.value === String(field.value)
-                                )!,
-                              ]
-                            : []
-                        }
-                        onChangeSingle={(selectedOption) => {
-                          field.onChange(
-                            selectedOption ? Number(selectedOption.value) : null
-                          );
-                        }}
-                      />
-                    )}
-                  />
-                  <ErrorMessage>{errors.districtId?.message}</ErrorMessage>
-                </>
-              }
-            >
-              District
-            </CustomLabel>
+            <CustomTextField
+              label="House No."
+              placeholder="Enter House No."
+              error={errors.houseNo?.message}
+              {...register("houseNo")}
+            />
 
-            <CustomLabel
-              inputNode={
-                <>
-                  <Controller
-                    name="tehsilId"
-                    control={control}
-                    render={({ field }) => (
-                      <CustomSelect
-                        {...field}
-                        options={[defaultNumberOption, ...thesilOptions]}
-                        closeMenuOnSelect={true}
-                        // Convert between react-select and raw value
-                        value={
-                          thesilOptions.find(
-                            (option) => option.value === String(field.value)
-                          )
-                            ? [
-                                thesilOptions.find(
-                                  (option) =>
-                                    option.value === String(field.value)
-                                )!,
-                              ]
-                            : []
-                        }
-                        onChangeSingle={(selectedOption) => {
-                          field.onChange(
-                            selectedOption ? Number(selectedOption.value) : null
-                          );
-                        }}
-                      />
-                    )}
-                  />
-                  <ErrorMessage>{errors.tehsilId?.message}</ErrorMessage>
-                </>
-              }
-            >
-              Tehsil
-            </CustomLabel>
+            <CustomTextField
+              label="Street #"
+              placeholder="Enter Street No"
+              error={errors.streetNo?.message}
+              {...register("streetNo")}
+            />
 
-            <CustomLabel
-              inputNode={
-                <>
-                  <CustomRadixInput
-                    placeholder="Enter House No."
-                    {...register("houseNo")}
-                  />
-                  <ErrorMessage>{errors.houseNo?.message}</ErrorMessage>
-                </>
-              }
-            >
-              House No.
-            </CustomLabel>
-
-            <CustomLabel
-              inputNode={
-                <>
-                  <CustomRadixInput
-                    placeholder="Enter Street No."
-                    {...register("streetNo")}
-                  />
-                  <ErrorMessage>{errors.streetNo?.message}</ErrorMessage>
-                </>
-              }
-            >
-              Street No.
-            </CustomLabel>
-
-            <CustomLabel
-              inputNode={
-                <>
-                  <CustomRadixInput
-                    placeholder="Enter Land Mark"
-                    {...register("landMark")}
-                  />
-                  <ErrorMessage>{errors.landMark?.message}</ErrorMessage>
-                </>
-              }
-            >
-              Land Mark
-            </CustomLabel>
+            <CustomTextField
+              label="Land Mark"
+              placeholder="Enter Land Mark"
+              error={errors.landMark?.message}
+              {...register("landMark")}
+            />
           </div>
 
           <Flex gap="3" mt="4" justify="between">
             <Dialog.Close>
               <Button
                 onClick={() => reset()}
-                className="w-[187px]! h-[41px]! text-gray-800! py-[0.688em]! px-[1em]! font-bold! bg-[#EFF0F2]! rounded-[5px]! border border-[rgba(239,240,242,0.4)]!"
+                className="w-[187px]! h-[41px]! text-gray-800! py-[0.688em]! px-[1em]! font-bold! bg-[#EFF0F2]! rounded-[5px]! border border-[rgba(239,240,242,0.4)]! cursor-pointer!"
               >
                 Cancel
               </Button>

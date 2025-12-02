@@ -96,6 +96,9 @@ const CustomComplaintPage = async () => {
       };
     }
   );
+
+  console.log("ladjsajdaddj");
+
   return (
     <div>
       <CustomComplaintComponent

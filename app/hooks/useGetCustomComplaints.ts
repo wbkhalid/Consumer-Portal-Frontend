@@ -1,11 +1,14 @@
+import { ADMIN_DASHBOARD_API } from "../APIs";
 import useData from "./useData";
 
 interface Props {
-  status?: number | string;
   divisionId?: number | string;
   districtId?: number | string;
   tehsilId?: number | string;
   refresh?: boolean;
+  year?: string;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface SectionsDetails {
@@ -13,7 +16,7 @@ export interface SectionsDetails {
   description: string;
 }
 
-export interface ManageComplainsData {
+export interface ManageCustomComplainsData {
   id: number;
   shopName: string;
   phoneNumber: string;
@@ -28,18 +31,19 @@ export interface ManageComplainsData {
   remarks: string | null;
   hearingDate: string | null;
   assigneeRemarks: string | null;
-  assignedTo: string | null;
   listAudio: string[];
   listOfImage: string[];
   createdAt: string;
 }
 
-const useGetAllComplains = ({
+const useGetCustomComplaints = ({
   refresh = false,
   divisionId,
   districtId,
   tehsilId,
-  status,
+  year,
+  startDate,
+  endDate,
 }: Props = {}) => {
   const params = new URLSearchParams();
 
@@ -49,17 +53,21 @@ const useGetAllComplains = ({
     params.append("districtId", String(districtId));
   if (tehsilId !== undefined && tehsilId !== "" && tehsilId !== "0")
     params.append("tehsilId", String(tehsilId));
-  if (status !== undefined && status !== "" && status !== "0")
-    params.append("status", String(status));
+  if (year !== undefined && year !== "" && year !== "0")
+    params.append("year", String(year));
+  if (startDate !== undefined && startDate !== "" && startDate !== "0")
+    params.append("startDate", String(startDate));
+  if (endDate !== undefined && endDate !== "" && endDate !== "0")
+    params.append("endDate", String(endDate));
 
   const queryString = params.toString();
 
-  return useData<ManageComplainsData>({
+  return useData<ManageCustomComplainsData>({
     refresh,
-    endpoint: `/api/AdminDashboard/ComplaintsList${
+    endpoint: `${ADMIN_DASHBOARD_API}/custom-complaints${
       queryString ? `?${queryString}` : ""
     }`,
   });
 };
 
-export default useGetAllComplains;
+export default useGetCustomComplaints;

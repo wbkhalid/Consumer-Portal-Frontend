@@ -5,25 +5,24 @@ import ComplaintForm from "./ComplaintForm";
 import RegisterForm from "./RegisterForm";
 
 interface Props {
-  divisionOptions: OptionType[];
   sectionCategoryOptions: OptionType[];
   sectionOptions: OptionType[];
   complaintCategoryOptions: OptionType[];
 }
 
 const Forms = ({
-  divisionOptions,
   sectionCategoryOptions,
   sectionOptions,
   complaintCategoryOptions,
 }: Props) => {
   const [openComplaintForm, setOpenComplaintForm] = useState(false);
+  const [userId, setUserId] = useState("");
 
   return (
     <>
       <RegisterForm
-        divisionOptions={divisionOptions}
         setOpenComplaintForm={setOpenComplaintForm}
+        setUserId={setUserId}
       />
 
       <ComplaintForm

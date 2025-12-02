@@ -1,25 +1,8 @@
 // import { TIME_SLOT_API } from "@/app/APIs";
 // import { TimeSlot } from "@/app/hooks/useTimeSolt";
-import {
-  COMPLAINT_CATEGORY_API,
-  LOOKUP_API,
-  SECTION_CATEGORY_API,
-} from "../../../APIs";
+import { COMPLAINT_CATEGORY_API, SECTION_CATEGORY_API } from "../../../APIs";
 import { OptionType } from "../../../components/Form/CustomSelect";
 import Forms from "./Forms";
-
-interface DivisionLookup {
-  id: number;
-  provinceId: number;
-  name: string;
-  shortName: string;
-}
-
-interface DivisionLookupResponse {
-  responseCode: number;
-  responseMessage: string;
-  data: DivisionLookup[];
-}
 
 interface SectionCategory {
   id: number;
@@ -45,22 +28,6 @@ interface ComplaintCategory {
 }
 
 const CustomComplaintReportPage = async () => {
-  const res2 = await fetch(
-    process.env.BACKEND_API + LOOKUP_API + "/divisions?countaryId=1",
-    {
-      cache: "no-store",
-    }
-  );
-  const response2: DivisionLookupResponse = await res2.json();
-  const divisionsData: DivisionLookup[] = response2.data;
-
-  const divisionOptions: OptionType[] = divisionsData.map((division) => {
-    return {
-      value: String(division.id),
-      label: division.name,
-    };
-  });
-
   const res3 = await fetch(process.env.BACKEND_API + SECTION_CATEGORY_API, {
     cache: "no-store",
   });
@@ -108,7 +75,6 @@ const CustomComplaintReportPage = async () => {
           Custom Complaint Reports
         </h2>
         <Forms
-          divisionOptions={divisionOptions}
           sectionCategoryOptions={sectionCategoryOptions}
           sectionOptions={sectionOptions}
           complaintCategoryOptions={complaintCategoryOptions}
