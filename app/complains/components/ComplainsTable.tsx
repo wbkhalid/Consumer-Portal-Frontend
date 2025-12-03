@@ -14,8 +14,6 @@ interface ComplainsTableProps {
   rowsData: ManageComplainsData[];
 }
 
-const PAGE_SIZE = 10;
-
 const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -25,6 +23,7 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const [pageSize, setPageSize] = useState(10);
 
   const headers = [
     { label: "Id", sortable: "id" },
@@ -81,11 +80,11 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
   }, [rowsData, sortConfig]);
 
   // Pagination
-  const totalPages = Math.ceil(sortedData.length / PAGE_SIZE);
+  const totalPages = Math.ceil(sortedData.length / pageSize);
   const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
-    return sortedData.slice(startIndex, startIndex + PAGE_SIZE);
-  }, [sortedData, currentPage]);
+    const startIndex = (currentPage - 1) * pageSize;
+    return sortedData.slice(startIndex, startIndex + pageSize);
+  }, [sortedData, currentPage, pageSize]);
 
   return (
     <div className="relative">
@@ -207,6 +206,8 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
         />
       </div>
 

@@ -16,8 +16,6 @@ interface StaffTableProps {
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PAGE_SIZE = 10;
-
 const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -25,7 +23,7 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
   } | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [pageSize, setPageSize] = useState(10);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -34,7 +32,7 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
     { label: "Name", key: "fullName" },
     { label: "Role", key: "roles" },
     { label: "Phone #" },
-    { label: "CNIC" },
+    // { label: "CNIC" },
     { label: "Division", key: "division" },
     { label: "District", key: "district" },
     { label: "Tehsil", key: "tehsil" },
@@ -78,11 +76,11 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
   }, [rowsData, sortConfig]);
 
   const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
-    return sortedData.slice(startIndex, startIndex + PAGE_SIZE);
-  }, [sortedData, currentPage]);
+    const startIndex = (currentPage - 1) * pageSize;
+    return sortedData.slice(startIndex, startIndex + pageSize);
+  }, [sortedData, currentPage, pageSize]);
 
-  const totalPages = Math.ceil(rowsData.length / PAGE_SIZE);
+  const totalPages = Math.ceil(rowsData.length / pageSize);
 
   // 🗑 Delete Handler
   const handleDelete = async () => {
@@ -102,7 +100,7 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
   return (
     <div className="relative">
       <div className="h-[calc(100vh-120px)] overflow-y-auto scrollbar-hide relative">
-        <table className="min-w-full text-sm">
+        <table className="min-w-full text-sm mb-10!">
           <thead className="sticky top-0 z-10 bg-white">
             <tr className="font-semibold">
               {headers.map((header) => (
@@ -127,14 +125,14 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
                 } hover:bg-gray-100`}
               >
                 <TableBodyCell>
-                  {(currentPage - 1) * PAGE_SIZE + index + 1}
+                  {(currentPage - 1) * pageSize + index + 1}
                 </TableBodyCell>
                 <TableBodyCell>{item.fullName}</TableBodyCell>
                 <TableBodyCell>
                   {item.roles?.map((role) => role).join(", ")}
                 </TableBodyCell>
                 <TableBodyCell>{item.phoneNumber}</TableBodyCell>
-                <TableBodyCell>{item.cnic}</TableBodyCell>
+                {/* <TableBodyCell>{item.cnic}</TableBodyCell> */}
                 <TableBodyCell>{item.division}</TableBodyCell>
                 <TableBodyCell>{item.district}</TableBodyCell>
                 <TableBodyCell>{item.tehsil}</TableBodyCell>
@@ -159,6 +157,8 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
         />
       </div>
 

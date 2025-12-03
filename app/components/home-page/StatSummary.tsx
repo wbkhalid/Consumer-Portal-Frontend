@@ -1,6 +1,10 @@
 "use client";
 import CustomStatCard from "./CustomStatCard";
-import { IoDocumentTextOutline, IoTimeOutline } from "react-icons/io5";
+import {
+  IoCheckmarkDone,
+  IoDocumentTextOutline,
+  IoTimeOutline,
+} from "react-icons/io5";
 import { ComplainDashboardType } from "../../page";
 import Link from "next/link";
 import ProceedingDialog from "./ProceedingDialog";
@@ -200,11 +204,24 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         superEscalationData={superEscalationData ?? []}
       /> */}
 
-      <DecidedonMeritDialog
+      {/* <DecidedonMeritDialog
         onMeritComplaint={data?.decidedOnMeritComplaints ?? 0}
         decidedOnMeritData={decidedOnMeritData ?? []}
-      />
+      /> */}
 
+      <Link
+        href={`/decided-on-merit${
+          params.toString() ? `?${params.toString()}` : ""
+        }`}
+      >
+        <CustomStatCard
+          title="Decided on Merit"
+          value={data?.decidedOnMeritComplaints ?? 0}
+          icon={<IoCheckmarkDone className="text-white text-lg" />}
+          iconBg="bg-[#028b02]"
+          percentage={4.5}
+        />
+      </Link>
       <ExParteDialog
         exParteComplaint={data?.exparteComplaints ?? 0}
         exParteData={exParteData ?? []}
@@ -229,13 +246,19 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         percentage={4.5}
       />
 
-      <CustomStatCard
-        title="Total Fine"
-        value={0}
-        icon={<BsCashStack className="text-white text-lg" />}
-        iconBg="bg-[#EAB308]"
-        percentage={4.5}
-      />
+      <Link
+        href={`/fined-complaints${
+          params.toString() ? `?${params.toString()}` : ""
+        }`}
+      >
+        <CustomStatCard
+          title="Total Fine"
+          value={data?.totalFinesCollected.toLocaleString()}
+          icon={<BsCashStack className="text-white text-lg" />}
+          iconBg="bg-[#EAB308]"
+          percentage={4.5}
+        />
+      </Link>
       <Link href={`/users`}>
         <CustomStatCard
           title="Downloads"

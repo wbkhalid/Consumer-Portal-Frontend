@@ -19,7 +19,7 @@ interface PendingTableProps {
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PAGE_SIZE = 10;
+// const PAGE_SIZE = 10;
 
 const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
   const [sortConfig, setSortConfig] = useState<{
@@ -34,6 +34,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
   const [selectedStaff, setSelectedStaff] = useState("");
   const [loading, setLoading] = useState(false);
   const userId = Cookies.get("userId");
+  const [pageSize, setPageSize] = useState(10);
   const { divisionId, districtId, tehsilId } = useRegionFilters();
 
   const { data: staffData } = useGetAllStaff({
@@ -93,11 +94,12 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     });
   }, [rowsData, sortConfig]);
 
-  const totalPages = Math.ceil(sortedData.length / PAGE_SIZE);
+  const totalPages = Math.ceil(sortedData.length / pageSize);
+
   const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
-    return sortedData.slice(startIndex, startIndex + PAGE_SIZE);
-  }, [sortedData, currentPage]);
+    const startIndex = (currentPage - 1) * pageSize;
+    return sortedData.slice(startIndex, startIndex + pageSize);
+  }, [sortedData, currentPage, pageSize]);
 
   const handleAssignComplaint = async () => {
     if (!selectedComplaint) return;
@@ -258,6 +260,8 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
           />
         </div>
       </div>

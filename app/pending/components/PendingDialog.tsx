@@ -6,6 +6,7 @@ import Image from "next/image";
 import { formatDate } from "../../utils/utils";
 import CustomTextArea from "../../components/CustomTextArea";
 import CustomSearchDropdown from "../../components/CustomSearchDropdown";
+import { getMediaUrl } from "../../utils/mediaUrl";
 
 interface PendingDialogType {
   selectedComplaint: ManageComplainsData | null;
@@ -113,7 +114,7 @@ const PendingDialog = ({
 
                 <div className="border-b border-gray-200! my-2!" />
                 <div className="flex gap-2">
-                  {/* Audio Section */}
+                  {/* ✅ Updated: Audio Section with dynamic URL */}
                   <div className="flex flex-col gap-1! flex-1">
                     <p className="text-xs text-[#555555]">Audio Files</p>
                     {selectedComplaint?.listAudio &&
@@ -125,8 +126,9 @@ const PendingDialog = ({
                             controls
                             className="w-full sm:w-60 rounded-md border border-(--primary)"
                           >
+                            {/* ✅ Using getMediaUrl instead of hardcoded IP */}
                             <source
-                              src={`http://103.226.216.18:151${audioUrl}`}
+                              src={getMediaUrl(audioUrl)}
                               type="audio/mpeg"
                             />
                             Your browser does not support the audio element.
@@ -140,7 +142,7 @@ const PendingDialog = ({
                     )}
                   </div>
 
-                  {/* Images Section */}
+                  {/* ✅ Updated: Images Section with dynamic URL */}
                   <div className="flex flex-col gap-1 flex-1">
                     <p className="text-xs text-[#555555]">Images</p>
                     {selectedComplaint?.listOfImage &&
@@ -151,11 +153,13 @@ const PendingDialog = ({
                             key={index}
                             className="relative w-16 h-16 rounded-md overflow-hidden border border-gray-200"
                           >
+                            {/* ✅ Using getMediaUrl for list images */}
                             <Image
-                              src={imgUrl}
+                              src={getMediaUrl(imgUrl)}
                               alt={`Complaint image ${index + 1}`}
                               fill
                               className="object-fit"
+                              unoptimized // Add this if still having issues
                             />
                           </div>
                         ))}

@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@radix-ui/themes";
 import CustomComplaintTable from "./CustomComplaintTable";
 import Forms from "../list/Forms";
 import { OptionType } from "../../../components/Form/CustomSelect";
@@ -33,8 +32,8 @@ const CustomComplaintComponent = ({
     divisionId,
     districtId,
     tehsilId,
-    section: selectedSection,
-    sectionCategory: selectedCategory,
+    section: selectedSection === "all" ? "" : selectedSection,
+    sectionCategory: selectedCategory === "all" ? "" : selectedCategory,
   });
   const { data: sectionCategoryData } = useGetSectionCategory();
   const { data: sectionData } = useGetAllSections();
@@ -53,20 +52,29 @@ const CustomComplaintComponent = ({
         </div>
         <div className="flex items-center gap-1">
           <CustomSelect
+            placeholder="Select Section"
             value={selectedSection}
             onChange={(val) => setSelectedSection(val as string)}
-            options={sectionData?.map((section) => ({
-              label: `${section?.name}-${section.description}`,
-              value: section?.id,
-            }))}
+            options={[
+              { label: "All", value: "all" }, // <-- FIXED
+              ...sectionData?.map((section) => ({
+                label: `${section?.name}-${section.description}`,
+                value: section?.id.toString(),
+              })),
+            ]}
           />
+
           <CustomSelect
+            placeholder="Select Category"
             value={selectedCategory}
             onChange={(val) => setSelectedCategory(val as string)}
-            options={sectionCategoryData?.map((category) => ({
-              label: category?.name,
-              value: category?.id,
-            }))}
+            options={[
+              { label: "All", value: "all" }, // <-- FIXED
+              ...sectionCategoryData?.map((category) => ({
+                label: category?.name,
+                value: category?.id.toString(),
+              })),
+            ]}
           />
 
           <CustomDateRangePicker />

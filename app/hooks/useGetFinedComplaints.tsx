@@ -2,46 +2,27 @@ import { ADMIN_DASHBOARD_API } from "../APIs";
 import useData from "./useData";
 
 interface Props {
-  status?: number | string;
   divisionId?: number | string;
   districtId?: number | string;
   tehsilId?: number | string;
   refresh?: boolean;
 }
 
-export interface SectionsDetails {
-  name: string;
-  description: string;
-}
-
-export interface ManageComplainsData {
-  id: number;
+export interface ManageFinedComplaintsData {
+  complaintId: number;
   shopName: string;
   phoneNumber: string;
-  complaintType: string;
-  categoryName: string;
   address: string;
-  billBoardImage: string;
-  sectionCategoryName: string;
-  sectionsDetails: SectionsDetails[];
-  entryType: number;
+  finedAmount: number;
   status: number;
-  fineAmount: number;
-  remarks: string | null;
-  hearingDate: string | null;
-  assigneeRemarks: string | null;
-  assignedTo: string | null;
-  listAudio: string[];
-  listOfImage: string[];
-  createdAt: string;
+  finedDate: string;
 }
 
-const useGetAllComplains = ({
+const useGetFinedComplaints = ({
   refresh = false,
   divisionId,
   districtId,
   tehsilId,
-  status,
 }: Props = {}) => {
   const params = new URLSearchParams();
 
@@ -51,17 +32,15 @@ const useGetAllComplains = ({
     params.append("districtId", String(districtId));
   if (tehsilId !== undefined && tehsilId !== "" && tehsilId !== "0")
     params.append("tehsilId", String(tehsilId));
-  if (status !== undefined && status !== "" && status !== "0")
-    params.append("status", String(status));
 
   const queryString = params.toString();
 
-  return useData<ManageComplainsData>({
+  return useData<ManageFinedComplaintsData>({
     refresh,
-    endpoint: `${ADMIN_DASHBOARD_API}/ComplaintsList${
+    endpoint: `${ADMIN_DASHBOARD_API}/fined-complaints${
       queryString ? `?${queryString}` : ""
     }`,
   });
 };
 
-export default useGetAllComplains;
+export default useGetFinedComplaints;

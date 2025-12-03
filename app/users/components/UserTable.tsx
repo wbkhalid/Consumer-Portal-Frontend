@@ -8,15 +8,13 @@ interface UserTableProps {
   rowsData: ManageUsersData[];
 }
 
-const PAGE_SIZE = 20;
-
 const UserTable = ({ rowsData }: UserTableProps) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const totalPages = Math.ceil(rowsData?.length / pageSize);
 
-  const totalPages = Math.ceil(rowsData?.length / PAGE_SIZE);
-
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
   const paginationData = rowsData?.slice(startIndex, endIndex);
 
   return (
@@ -58,6 +56,8 @@ const UserTable = ({ rowsData }: UserTableProps) => {
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
         />
       </div>
     </div>

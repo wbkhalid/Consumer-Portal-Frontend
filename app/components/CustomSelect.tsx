@@ -3,7 +3,7 @@ import { Box, Text, Select } from "@radix-ui/themes";
 
 type Option = {
   label: string;
-  value: string | number;
+  value: string | number | undefined;
 };
 
 type CustomSelectProps = {
@@ -61,7 +61,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
           placeholder={placeholder}
           disabled={disabled}
           {...rest}
-          className={`w-full text-xs! max-w-[150px]! ${
+          className={`w-full text-xs! min-w-[100px] max-w-[150px]! ${
             isRegister ? "rounded-full!" : "rounded-lg!"
           } hover:border-(--priamry)!   text-white ${className}`}
         />

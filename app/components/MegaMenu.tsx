@@ -72,30 +72,30 @@ const MegaMenu = () => {
   ];
 
   const otherReports = [
-    {
-      label: "Defective Product Report",
-      description: "View complaints related to defective or damaged products.",
-      icon: <FiBox className="text-white" size={22} />,
-      route: "/others-report/defective-product-report",
-    },
-    {
-      label: "Faulty Service Report",
-      description: "Track complaints about poor or unsatisfactory services.",
-      icon: <FiAlertTriangle className="text-white" size={22} />,
-      route: "/others-report/faulty-service-report",
-    },
-    {
-      label: "City Wise Faulty Service Report",
-      description: "Analyze faulty service complaints distributed by city.",
-      icon: <FiGlobe className="text-white" size={22} />,
-      route: "/others-report/city-wise-faulty-service-report",
-    },
-    {
-      label: "City Wise Defective Product Report",
-      description: "Analyze defective product complaints grouped by city.",
-      icon: <FiBarChart2 className="text-white" size={22} />,
-      route: "/others-report/city-wise-defective-product-report",
-    },
+    // {
+    //   label: "Defective Product Report",
+    //   description: "View complaints related to defective or damaged products.",
+    //   icon: <FiBox className="text-white" size={22} />,
+    //   route: "/others-report/defective-product-report",
+    // },
+    // {
+    //   label: "Faulty Service Report",
+    //   description: "Track complaints about poor or unsatisfactory services.",
+    //   icon: <FiAlertTriangle className="text-white" size={22} />,
+    //   route: "/others-report/faulty-service-report",
+    // },
+    // {
+    //   label: "City Wise Faulty Service Report",
+    //   description: "Analyze faulty service complaints distributed by city.",
+    //   icon: <FiGlobe className="text-white" size={22} />,
+    //   route: "/others-report/city-wise-faulty-service-report",
+    // },
+    // {
+    //   label: "City Wise Defective Product Report",
+    //   description: "Analyze defective product complaints grouped by city.",
+    //   icon: <FiBarChart2 className="text-white" size={22} />,
+    //   route: "/others-report/city-wise-defective-product-report",
+    // },
     {
       label: "Complaint Institution Report",
       description: "View complaint distribution by responsible institutions.",
@@ -110,19 +110,19 @@ const MegaMenu = () => {
       icon: <FiCheckCircle className="text-white" size={22} />,
       route: "/others-report/complaint-reports/decided-complaint-report/list",
     },
-    {
-      label: "Online Business Report",
-      description:
-        "Monitor complaints filed against online businesses or stores.",
-      icon: <FiShoppingCart className="text-white" size={22} />,
-      route: "/others-report/online-business-report",
-    },
-    {
-      label: "Brand Wise Report",
-      description: "Evaluate complaint frequency by brand or company.",
-      icon: <FiFileText className="text-white" size={22} />,
-      route: "/others-report/brand-report",
-    },
+    // {
+    //   label: "Online Business Report",
+    //   description:
+    //     "Monitor complaints filed against online businesses or stores.",
+    //   icon: <FiShoppingCart className="text-white" size={22} />,
+    //   route: "/others-report/online-business-report",
+    // },
+    // {
+    //   label: "Brand Wise Report",
+    //   description: "Evaluate complaint frequency by brand or company.",
+    //   icon: <FiFileText className="text-white" size={22} />,
+    //   route: "/others-report/brand-report",
+    // },
     {
       label: "Aging Report",
       description: "Check pending complaints based on their age and duration.",
@@ -136,13 +136,13 @@ const MegaMenu = () => {
       icon: <FiTrendingUp className="text-white" size={22} />,
       route: "/others-report/complaint-reports/fine-imposed-report/list",
     },
-    {
-      label: "Ratio Report",
-      description:
-        "Compare resolved versus pending complaints in percentage form.",
-      icon: <FiPercent className="text-white" size={22} />,
-      route: "/others-report/ratio-report",
-    },
+    // {
+    //   label: "Ratio Report",
+    //   description:
+    //     "Compare resolved versus pending complaints in percentage form.",
+    //   icon: <FiPercent className="text-white" size={22} />,
+    //   route: "/others-report/ratio-report",
+    // },
     {
       label: "Frequency Report",
       description:

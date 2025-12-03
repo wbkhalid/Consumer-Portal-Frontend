@@ -19,8 +19,6 @@ interface SuperEscalationTableProps {
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PAGE_SIZE = 10;
-
 const SuperEscalationTable = ({
   rowsData,
   setRefresh,
@@ -43,6 +41,7 @@ const SuperEscalationTable = ({
   const [videoUrl, setVideoUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [fineAmount, setFineAmount] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
 
   const headers = [
     { label: "Id", sortable: "id" },
@@ -99,11 +98,11 @@ const SuperEscalationTable = ({
     });
   }, [rowsData, sortConfig]);
 
-  const totalPages = Math.ceil(sortedData.length / PAGE_SIZE);
+  const totalPages = Math.ceil(sortedData.length / pageSize);
   const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
-    return sortedData.slice(startIndex, startIndex + PAGE_SIZE);
-  }, [sortedData, currentPage]);
+    const startIndex = (currentPage - 1) * pageSize;
+    return sortedData.slice(startIndex, startIndex + pageSize);
+  }, [sortedData, currentPage, pageSize]);
 
   const handleHearingComplaint = async () => {
     if (!selectedComplaint) return;
@@ -319,6 +318,8 @@ const SuperEscalationTable = ({
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
           />
         </div>
       </div>
