@@ -13,8 +13,8 @@ const nextConfig: NextConfig = {
         destination: `${backendUrl}/api/:path*`,
       },
       {
-        source: "/upload/:path*",
-        destination: `${backendUrl}/upload/:path*`,
+        source: "/Upload/:path*",
+        destination: `${backendUrl}/Upload/:path*`,
       },
     ];
   },
@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
         protocol: url.protocol.replace(":", "") as "http" | "https",
         hostname: url.hostname,
         port: url.port || undefined,
-        pathname: "/upload/**",
+        pathname: "/Upload/**",
       } satisfies import("next/dist/shared/lib/image-config").RemotePattern,
     ],
   },

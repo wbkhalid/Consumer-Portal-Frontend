@@ -11,6 +11,7 @@ interface Props {
   endDate?: string;
   section?: string;
   sectionCategory?: string;
+  assignedTo?: string;
 }
 
 export interface SectionsDetails {
@@ -48,6 +49,7 @@ const useGetCustomComplaints = ({
   endDate,
   section,
   sectionCategory,
+  assignedTo,
 }: Props = {}) => {
   const params = new URLSearchParams();
 
@@ -65,6 +67,8 @@ const useGetCustomComplaints = ({
     params.append("endDate", String(endDate));
   if (section !== undefined && section !== "" && section !== "0")
     params.append("section", String(section));
+  if (assignedTo !== undefined && assignedTo !== "" && assignedTo !== "0")
+    params.append("assignedTo", String(assignedTo));
   if (
     sectionCategory !== undefined &&
     sectionCategory !== "" &&

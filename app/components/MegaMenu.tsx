@@ -67,6 +67,51 @@ const MegaMenu = () => {
           icon: <FiFlag className="text-white" size={22} />,
           route: "/authority-reports/complaint-reports/appeals-report/list",
         },
+
+        {
+          label: "Frequency Report",
+          description:
+            "Identify users or brands with frequent complaint occurrences.",
+          icon: <FiPieChart className="text-white" size={22} />,
+          route: "/others-report/complaint-reports/frequency-report/list",
+        },
+        // {
+        //   label: "Section Report",
+        //   description:
+        //     "Break down complaints by legal or departmental sections.",
+        //   icon: <FiDatabase className="text-white" size={22} />,
+        //   route: "/others-report/section-complaint",
+        // },
+        {
+          label: "Complaint Institution Report",
+          description:
+            "View complaint distribution by responsible institutions.",
+          icon: <FiLayers className="text-white" size={22} />,
+          route:
+            "/others-report/complaint-reports/complaint-institution-report/list",
+        },
+        {
+          label: "Decided Complaint Report",
+          description:
+            "See a list of complaints that have been resolved or closed.",
+          icon: <FiCheckCircle className="text-white" size={22} />,
+          route:
+            "/others-report/complaint-reports/decided-complaint-report/list",
+        },
+        {
+          label: "Aging Report",
+          description:
+            "Check pending complaints based on their age and duration.",
+          icon: <FiClock className="text-white" size={22} />,
+          route: "/others-report/complaint-reports/aging-report/list",
+        },
+        {
+          label: "Fine Imposed Report",
+          description:
+            "Track fines imposed on businesses after complaint resolution.",
+          icon: <FiTrendingUp className="text-white" size={22} />,
+          route: "/others-report/complaint-reports/fine-imposed-report/list",
+        },
       ],
     },
   ];
@@ -195,7 +240,7 @@ const MegaMenu = () => {
               ))}
 
               {/* ➕ Other Reports Button */}
-              <div
+              {/* <div
                 onClick={() => setOpen(true)}
                 className="cursor-pointer transition-all duration-150 p-2! bg-white hover:bg-gray-50 rounded-lg flex items-center"
               >
@@ -217,7 +262,7 @@ const MegaMenu = () => {
                     </Text>
                   </Box>
                 </Flex>
-              </div>
+              </div> */}
             </div>
           </Box>
         ))}

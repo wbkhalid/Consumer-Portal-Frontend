@@ -21,17 +21,20 @@ const CustomDateRangeFilter = () => {
 
   const handleSelect = (ranges: RangeKeyDict) => {
     const { selection } = ranges;
-    const start = selection.startDate
-      ? format(selection.startDate, "yyyy-MM-dd")
+
+    const isValidDate = (d: any) => d instanceof Date && !isNaN(d.getTime());
+
+    const start = isValidDate(selection.startDate)
+      ? format(selection.startDate!, "yyyy-MM-dd")
       : "";
-    const end = selection.endDate
-      ? format(selection.endDate, "yyyy-MM-dd")
+
+    const end = isValidDate(selection.endDate)
+      ? format(selection.endDate!, "yyyy-MM-dd")
       : "";
 
     // Copy existing params
     const params = new URLSearchParams(searchParams.toString());
 
-    // Update only date params
     if (start) params.set("startDate", start);
     else params.delete("startDate");
 
@@ -39,6 +42,7 @@ const CustomDateRangeFilter = () => {
     else params.delete("endDate");
 
     router.push(`?${params.toString()}`);
+
     setState([selection]);
   };
 
@@ -67,11 +71,14 @@ const CustomDateRangeFilter = () => {
         rangeColors={["var(--accent-9)"]}
         ranges={state}
         onChange={handleSelect}
-        moveRangeOnFirstSelection={false}
+        moveRangeOnFirstSelection={true}
         maxDate={new Date()}
         dateDisplayFormat="dd/MM/yyyy"
         direction="horizontal"
         months={2}
+        startDatePlaceholder={"Start Date"}
+        endDatePlaceholder={"End Date"}
+        // retainEndDateOnFirstSelection={true}
       />
 
       {/* <Button

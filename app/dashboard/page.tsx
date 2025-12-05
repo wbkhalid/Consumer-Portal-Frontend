@@ -53,7 +53,7 @@ export interface ComplainDashboardType {
   escalatedComplaints: number;
   superEscalatedComplaints: number;
   decidedOnMeritComplaints: number;
-  exparteComplaints: number;
+  exParteComplaints: number;
   withdrawnComplaints: number;
   nonProsecutedComplaints: number;
   avgResolutionTime: number;

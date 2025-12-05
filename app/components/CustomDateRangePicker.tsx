@@ -7,7 +7,7 @@ import CustomDateRangeFilter from "./CustomDateRangeFilter";
 const CustomDateRangePicker = () => {
   return (
     <div
-      className={`text-sm! w-full! rounded-lg! py-1! px-2! text-(--primary) border border-[#D5D7DA]`}
+      className={`text-sm! w-full! rounded-lg! py-1! px-2! text-[#828282] border border-[#D5D7DA]`}
     >
       <Dialog.Root>
         <Dialog.Trigger>
@@ -18,10 +18,10 @@ const CustomDateRangePicker = () => {
             gap="2"
           >
             <Box>
-              <LuCalendarRange size={16} className="text-[#80889E]" />
+              <LuCalendarRange size={16} />
             </Box>
-            <Text as="p" className="font-semibold text-[#414651]">
-              Pick Date
+            <Text as="p" className="text-sm">
+              Pick Date Range
             </Text>
           </Flex>
         </Dialog.Trigger>
