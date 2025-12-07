@@ -10,7 +10,7 @@ const AgingReportPage = async () => {
   const res = await fetch(
     process.env.BACKEND_API + COMPLAINT_REPORT_API + "/aging-report",
     {
-      cache: "no-store",
+      next: { revalidate: 10 },
     }
   );
 
@@ -25,7 +25,7 @@ const AgingReportPage = async () => {
         <div className="flex items-center gap-1">
           <p className="text-(--primary) font-semibold">Aging Report</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-            {data.length} Records
+            {data?.length} Records
           </p>
         </div>
       </div>

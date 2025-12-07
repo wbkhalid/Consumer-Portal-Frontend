@@ -1,34 +1,46 @@
 "use client";
 
+import CustomTableHeaderCell from "../../../../components/table/CustomTableHeaderCell";
 import TableBodyCell from "../../../../components/table/TableBodyCell";
 import TableHeaderCell from "../../../../components/table/TableHeaderCell";
 import { AppealReport } from "./page";
 
-const AppealsReportTable = ({
-  appealsReportData,
-}: {
-  appealsReportData: AppealReport[];
-}) => {
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+export interface Query {
+  year?: string;
+  startDate?: string;
+  endDate?: string;
+  page?: string;
+  pageSize?: string;
+  search?: string;
+  orderBy?: keyof AppealReport;
+  order?: "asc" | "desc";
+}
 
-  const totalAppeals = appealsReportData.reduce(
+interface Props {
+  data: AppealReport[];
+  currentPage: number;
+  pageSize: number;
+  searchParams: Query;
+}
+
+const AppealsReportTable = ({
+  data,
+  currentPage,
+  pageSize,
+  searchParams,
+}: Props) => {
+  const totalAppeals = data.reduce(
     (sum, item) => sum + (item.numberOfAppeals || 0),
     0
   );
-  const headers = ["Sr #", "Name of District", "Appeals"];
+  const columns: {
+    label: string;
+    value: keyof AppealReport;
+    className?: string;
+  }[] = [
+    { label: "Name of District", value: "districtName" },
+    { label: "Appeals", value: "numberOfAppeals" },
+  ];
 
   return (
     <div className="relative">
@@ -37,30 +49,37 @@ const AppealsReportTable = ({
           {/* ===== Table Header ===== */}
           <thead className="sticky top-0 z-10">
             <tr className="font-semibold bg-white text-center">
-              {headers.map((header) => (
-                <TableHeaderCell key={header} label={header} />
+              <CustomTableHeaderCell label="Sr #" />
+
+              {columns.map((column) => (
+                <CustomTableHeaderCell
+                  key={column.value}
+                  columnValue={column.value}
+                  label={column.label}
+                  searchParams={searchParams}
+                />
               ))}
             </tr>
           </thead>
 
           {/* ===== Table Body ===== */}
           <tbody>
-            {appealsReportData.map((d, index) => (
-              <tr
-                key={index}
-                className={`text-center transition-colors duration-150 ${
-                  index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                } hover:bg-gray-100`}
-              >
-                <TableBodyCell>{index + 1}</TableBodyCell>
-                <TableBodyCell className="whitespace-nowrap">
-                  {d.districtName}
-                </TableBodyCell>
-                <TableBodyCell className="whitespace-nowrap">
-                  {d.numberOfAppeals}
-                </TableBodyCell>
-              </tr>
-            ))}
+            {data?.map((d, index) => {
+              const serial = (currentPage - 1) * pageSize + index + 1;
+
+              return (
+                <tr
+                  key={serial}
+                  className={`transition-colors duration-150 ${
+                    index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
+                  } hover:bg-gray-100`}
+                >
+                  <TableBodyCell>{serial}</TableBodyCell>
+                  <TableBodyCell>{d.districtName}</TableBodyCell>
+                  <TableBodyCell>{d.numberOfAppeals}</TableBodyCell>
+                </tr>
+              );
+            })}
 
             {/* ===== TOTAL ROW ===== */}
             <tr className="font-semibold bg-[#f1f1f1] text-center sticky bottom-0">
