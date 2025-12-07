@@ -1,3 +1,4 @@
+import { ADMIN_DASHBOARD_API } from "../APIs";
 import useData from "./useData";
 
 interface Props {
@@ -6,6 +7,8 @@ interface Props {
   districtId?: number | string;
   tehsilId?: number | string;
   refresh?: boolean;
+  startDate?: string;
+  endDate?: string;
 }
 
 export interface SectionsDetails {
@@ -25,6 +28,7 @@ export interface ManageComplainsData {
   sectionsDetails: SectionsDetails[];
   entryType: number;
   status: number;
+  fineAmount: number;
   remarks: string | null;
   hearingDate: string | null;
   assigneeRemarks: string | null;
@@ -40,6 +44,8 @@ const useGetAllComplains = ({
   districtId,
   tehsilId,
   status,
+  startDate,
+  endDate,
 }: Props = {}) => {
   const params = new URLSearchParams();
 
@@ -51,12 +57,16 @@ const useGetAllComplains = ({
     params.append("tehsilId", String(tehsilId));
   if (status !== undefined && status !== "" && status !== "0")
     params.append("status", String(status));
+  if (startDate !== undefined && startDate !== "" && startDate !== "0")
+    params.append("startDate", String(startDate));
+  if (endDate !== undefined && endDate !== "" && endDate !== "0")
+    params.append("endDate", String(endDate));
 
   const queryString = params.toString();
 
   return useData<ManageComplainsData>({
     refresh,
-    endpoint: `/api/AdminDashboard/ComplaintsList${
+    endpoint: `${ADMIN_DASHBOARD_API}/ComplaintsList${
       queryString ? `?${queryString}` : ""
     }`,
   });

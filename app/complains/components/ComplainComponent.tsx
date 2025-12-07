@@ -7,8 +7,12 @@ import useGetAllComplains from "../../hooks/useGetAllComplains";
 import ComplainsTable from "./ComplainsTable";
 import Forms from "./list/Forms";
 import { OptionType } from "../../components/Form/CustomSelect";
-import { useSearchParams } from "next/navigation";
-import Cookies from "js-cookie";
+import CustomSelect from "../../components/CustomSelect";
+import useGetSectionCategory from "../../hooks/useGetSectionCategory";
+import useGetAllSections from "../../hooks/useGetAllSections";
+import { useRegionFilters } from "../../hooks/useRegionFilters";
+import useGetAllDistricts from "../../hooks/useGetAllDistricts";
+import CustomDateRangePicker from "../../components/CustomDateRangePicker";
 
 interface Props {
   divisionOptions: OptionType[];
@@ -23,29 +27,24 @@ const ComplainComponent = ({
   sectionOptions,
   complaintCategoryOptions,
 }: Props) => {
-  const searchParams = useSearchParams();
-  const params = new URLSearchParams();
+  const { divisionId, districtId, tehsilId, startDate, endDate } =
+    useRegionFilters();
 
-  const isValid = (v: string | undefined | null): v is string =>
-    v !== null && v !== undefined && v !== "" && v !== "0";
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  // const [startYear, setStartYear] = useState("");
+  // const [endYear, setEndYear] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const divisionId = isValid(Cookies.get("divisionId"))
-    ? Cookies.get("divisionId")
-    : searchParams.get("divisionId");
-
-  const districtId = isValid(Cookies.get("districtId"))
-    ? Cookies.get("districtId")
-    : searchParams.get("districtId");
-
-  const tehsilId = isValid(Cookies.get("tehsilId"))
-    ? Cookies.get("tehsilId")
-    : searchParams.get("tehsilId");
   const { data: complainData } = useGetAllComplains({
+    startDate,
+    endDate,
     divisionId: divisionId || "",
-    districtId: districtId || "",
+    districtId:
+      selectedDistrict !== "all" ? selectedDistrict : districtId || "",
     tehsilId: tehsilId || "",
   });
-  const [searchTerm, setSearchTerm] = useState("");
+  const { data: districtData } = useGetAllDistricts();
+  // const years = Array.from({ length: 30 }, (_, i) => 2000 + i);
 
   const filteredData = useMemo(() => {
     if (!complainData) return [];
@@ -72,7 +71,43 @@ const ComplainComponent = ({
 
         {/* Search + Button */}
         <div className="flex items-center gap-2">
-          {/* ✅ Radix TextField with search icon */}
+          <CustomSelect
+            placeholder="Select District"
+            value={selectedDistrict}
+            onChange={(val) => setSelectedDistrict(val as string)}
+            options={[
+              { label: "All", value: "all" },
+              ...districtData?.map((district) => ({
+                label: `${district?.name}`,
+                value: district?.id.toString(),
+              })),
+            ]}
+          />
+          {/* 
+          <CustomSelect
+            placeholder="Start Year"
+            value={startYear}
+            onChange={(val) => setStartYear(val as string)}
+            options={years.map((y) => ({
+              label: y.toString(),
+              value: y.toString(),
+            }))}
+          />
+
+          <CustomSelect
+            placeholder="End Year"
+            value={endYear}
+            onChange={(val) => setEndYear(val as string)}
+            disabled={!startYear}
+            options={years
+              .filter((y) => !startYear || y >= Number(startYear))
+              .map((y) => ({
+                label: y.toString(),
+                value: y.toString(),
+              }))}
+          /> */}
+
+          <CustomDateRangePicker />
           <TextField.Root
             placeholder="Search"
             value={searchTerm}

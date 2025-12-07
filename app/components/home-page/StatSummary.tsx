@@ -1,6 +1,11 @@
 "use client";
 import CustomStatCard from "./CustomStatCard";
-import { IoDocumentTextOutline, IoTimeOutline } from "react-icons/io5";
+import {
+  IoCheckmarkDone,
+  IoCloseCircleOutline,
+  IoDocumentTextOutline,
+  IoTimeOutline,
+} from "react-icons/io5";
 import { ComplainDashboardType } from "../../page";
 import Link from "next/link";
 import ProceedingDialog from "./ProceedingDialog";
@@ -19,9 +24,10 @@ import {
   TbCloudDownload,
   TbSettingsExclamation,
 } from "react-icons/tb";
-import { MdOutlineRecordVoiceOver } from "react-icons/md";
+import { MdOutlineFlagCircle, MdOutlineRecordVoiceOver } from "react-icons/md";
 import { GoClock } from "react-icons/go";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
+import { BiError } from "react-icons/bi";
 
 const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
   // const isValid = (v: string | undefined | null): v is string =>
@@ -200,25 +206,74 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         superEscalationData={superEscalationData ?? []}
       /> */}
 
-      <DecidedonMeritDialog
+      {/* <DecidedonMeritDialog
         onMeritComplaint={data?.decidedOnMeritComplaints ?? 0}
         decidedOnMeritData={decidedOnMeritData ?? []}
-      />
+      /> */}
 
-      <ExParteDialog
+      <Link
+        href={`/decided-on-merit${
+          params.toString() ? `?${params.toString()}` : ""
+        }`}
+      >
+        <CustomStatCard
+          title="Decided on Merit"
+          value={data?.decidedOnMeritComplaints ?? 0}
+          icon={<IoCheckmarkDone className="text-white text-lg" />}
+          iconBg="bg-[#028b02]"
+          percentage={4.5}
+        />
+      </Link>
+      <Link
+        href={`/ex-parte${params.toString() ? `?${params.toString()}` : ""}`}
+      >
+        <CustomStatCard
+          title="Ex-Parte"
+          value={data?.exParteComplaints ?? 0}
+          icon={<MdOutlineFlagCircle className="text-white text-lg" />}
+          iconBg="bg-[#9333EA]"
+          percentage={4.5}
+        />
+      </Link>
+      {/* <ExParteDialog
         exParteComplaint={data?.exparteComplaints ?? 0}
         exParteData={exParteData ?? []}
-      />
+      /> */}
 
-      <WithdrawDialog
+      <Link
+        href={`/withdraw${params.toString() ? `?${params.toString()}` : ""}`}
+      >
+        <CustomStatCard
+          title="Withdraw"
+          value={data?.withdrawnComplaints ?? 0}
+          icon={<IoCloseCircleOutline className="text-white text-lg" />}
+          iconBg="bg-[#6B7280]"
+          percentage={4.5}
+        />
+      </Link>
+      {/* <WithdrawDialog
         withdrawComplaint={data?.withdrawnComplaints ?? 0}
         withDrawData={withDrawData ?? []}
-      />
+      /> */}
 
-      <NonProsecutionDialog
+      <Link
+        href={`/non-prosecution${
+          params.toString() ? `?${params.toString()}` : ""
+        }`}
+      >
+        <CustomStatCard
+          title="Non Prosecution"
+          value={data?.nonProsecutedComplaints ?? 0}
+          icon={<BiError className="text-white text-lg" />}
+          iconBg="bg-[#EAB308]"
+          percentage={4.5}
+        />
+      </Link>
+
+      {/* <NonProsecutionDialog
         nonProsectionComplaint={data?.nonProsecutedComplaints ?? 0}
         nonProsecutionData={nonProsecutionData ?? []}
-      />
+      /> */}
 
       {/* Static bottom cards */}
       <CustomStatCard
@@ -229,13 +284,19 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         percentage={4.5}
       />
 
-      <CustomStatCard
-        title="Total Fine"
-        value={0}
-        icon={<BsCashStack className="text-white text-lg" />}
-        iconBg="bg-[#EAB308]"
-        percentage={4.5}
-      />
+      <Link
+        href={`/fined-complaints${
+          params.toString() ? `?${params.toString()}` : ""
+        }`}
+      >
+        <CustomStatCard
+          title="Total Fine"
+          value={data?.totalFinesCollected.toLocaleString()}
+          icon={<BsCashStack className="text-white text-lg" />}
+          iconBg="bg-[#EAB308]"
+          percentage={4.5}
+        />
+      </Link>
       <Link href={`/users`}>
         <CustomStatCard
           title="Downloads"

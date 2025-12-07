@@ -1,19 +1,31 @@
 import { Button } from "@radix-ui/themes";
 import React from "react";
 import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
+import CustomSelect from "../CustomSelect";
 
 interface PaginationControlsProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  pageSize: number;
+  setPageSize: (size: number) => void;
 }
 
 const PaginationControls: React.FC<PaginationControlsProps> = ({
   currentPage,
   totalPages,
   onPageChange,
+  pageSize,
+  setPageSize,
 }) => {
   if (totalPages === 0) return null;
+
+  const pageSizeOptions = [
+    { label: "10", value: 10 },
+    { label: "20", value: 20 },
+    { label: "50", value: 50 },
+    { label: "100", value: 100 },
+  ];
 
   // Generate page numbers with ellipsis logic
   const generatePageNumbers = () => {
@@ -54,20 +66,17 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
 
   return (
     <div className="flex justify-between items-center gap-1 px-1!">
+      <CustomSelect
+        placeholder="Select"
+        options={pageSizeOptions}
+        value={String(pageSize)}
+        onChange={(val) => {
+          if (!val) return;
+          setPageSize(Number(val));
+          onPageChange(1);
+        }}
+      />
       {/* Previous */}
-      <Button
-        type="button"
-        variant="outline"
-        disabled={currentPage === 1}
-        onClick={() => onPageChange(currentPage - 1)}
-        className={`text-[#414651]! outline! outline-[#D5D7DA]! shadow-none! ${
-          currentPage === 1 ? "cursor-not-allowed!" : "cursor-pointer!"
-        }  !text-[12px]! px-3! py-1! hover:bg-[#F5F7FA]`}
-        style={{ outlineWidth: "1px" }}
-      >
-        <FaArrowLeft size={12} />
-        Previous
-      </Button>
 
       {/* Numbered Buttons */}
       <div>
@@ -92,19 +101,37 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
       </div>
 
       {/* Next */}
-      <Button
-        type="button"
-        variant="outline"
-        disabled={currentPage === totalPages}
-        onClick={() => onPageChange(currentPage + 1)}
-        className={`text-[#414651]! outline! outline-[#D5D7DA]! shadow-none! ${
-          currentPage === totalPages ? "cursor-not-allowed!" : "cursor-pointer!"
-        } text-[12px]! px-3! py-1! hover:bg-[#F5F7FA]`}
-        style={{ outlineWidth: "1px" }}
-      >
-        Next
-        <FaArrowRight size={12} />
-      </Button>
+
+      <div className="flex gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          disabled={currentPage === 1}
+          onClick={() => onPageChange(currentPage - 1)}
+          className={`text-[#414651]! outline! outline-[#D5D7DA]! shadow-none! ${
+            currentPage === 1 ? "cursor-not-allowed!" : "cursor-pointer!"
+          }  !text-[12px]! px-3! py-1! hover:bg-[#F5F7FA]`}
+          style={{ outlineWidth: "1px" }}
+        >
+          <FaArrowLeft size={12} />
+          Previous
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={currentPage === totalPages}
+          onClick={() => onPageChange(currentPage + 1)}
+          className={`text-[#414651]! outline! outline-[#D5D7DA]! shadow-none! ${
+            currentPage === totalPages
+              ? "cursor-not-allowed!"
+              : "cursor-pointer!"
+          } text-[12px]! px-3! py-1! hover:bg-[#F5F7FA]`}
+          style={{ outlineWidth: "1px" }}
+        >
+          Next
+          <FaArrowRight size={12} />
+        </Button>
+      </div>
     </div>
   );
 };

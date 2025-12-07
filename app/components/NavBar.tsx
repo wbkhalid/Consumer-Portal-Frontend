@@ -86,7 +86,7 @@ const NavBar = () => {
 
           <Flex align="center" className="gap-3!">
             <Heading size="3" className="text-white">
-              Directorate Consumer Protection Council
+              Directorate of Consumer Protection Council
             </Heading>
             <Popover.Root>
               <Popover.Trigger>

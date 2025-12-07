@@ -5,7 +5,6 @@ import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { formatDate } from "../../utils/utils";
 import { useMemo, useState } from "react";
 import PaginationControls from "../../components/table/PaginationControls";
-import { FaEye } from "react-icons/fa";
 import PendingDialog from "./PendingDialog";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
@@ -19,7 +18,7 @@ interface PendingTableProps {
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PAGE_SIZE = 10;
+// const PAGE_SIZE = 10;
 
 const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
   const [sortConfig, setSortConfig] = useState<{
@@ -34,6 +33,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
   const [selectedStaff, setSelectedStaff] = useState("");
   const [loading, setLoading] = useState(false);
   const userId = Cookies.get("userId");
+  const [pageSize, setPageSize] = useState(10);
   const { divisionId, districtId, tehsilId } = useRegionFilters();
 
   const { data: staffData } = useGetAllStaff({
@@ -55,7 +55,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     { label: "Remarks" },
     { label: "Audio Attach" },
     { label: "Files" },
-    { label: "View" },
+    // { label: "View" },
   ];
 
   const handleSort = (key: string) => {
@@ -93,11 +93,12 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     });
   }, [rowsData, sortConfig]);
 
-  const totalPages = Math.ceil(sortedData.length / PAGE_SIZE);
+  const totalPages = Math.ceil(sortedData.length / pageSize);
+
   const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
-    return sortedData.slice(startIndex, startIndex + PAGE_SIZE);
-  }, [sortedData, currentPage]);
+    const startIndex = (currentPage - 1) * pageSize;
+    return sortedData.slice(startIndex, startIndex + pageSize);
+  }, [sortedData, currentPage, pageSize]);
 
   const handleAssignComplaint = async () => {
     if (!selectedComplaint) return;
@@ -170,86 +171,127 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
             </thead>
 
             <tbody>
-              {paginatedData?.map((item, index) => (
-                <tr
-                  key={index}
-                  className={`transition-colors duration-150 ${
-                    index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                  } hover:bg-gray-100`}
-                >
-                  <TableBodyCell>{item?.id}</TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {formatDate(item?.createdAt)}
-                  </TableBodyCell>
+              {paginatedData?.map((item, index) => {
+                const images = item?.listOfImage?.filter((url) =>
+                  url.match(/\.(jpg|jpeg|png|gif|webp)$/i)
+                );
 
-                  <TableBodyCell>{item?.shopName}</TableBodyCell>
-                  <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
-                  <TableBodyCell>{item?.complaintType}</TableBodyCell>
-                  <TableBodyCell>{item?.categoryName}</TableBodyCell>
-                  <TableBodyCell>{item?.sectionCategoryName}</TableBodyCell>
-                  <TableBodyCell>
-                    {item?.sectionsDetails?.map((s) => s?.name).join(", ")}
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    {item?.sectionsDetails
-                      ?.map((s) => s?.description)
-                      .join(", ")}
-                  </TableBodyCell>
+                console.log("images", images);
 
-                  <TableBodyCell className="min-w-[200px]">
-                    {item?.remarks
-                      ? item?.remarks?.slice(0, 50) +
-                        (item?.remarks?.length > 50 ? "..." : "")
-                      : ""}
-                  </TableBodyCell>
+                const videos = item?.listOfImage?.filter((url) =>
+                  url.match(/\.(mp4|mov|avi|mkv)$/i)
+                );
 
-                  <TableBodyCell>
-                    {!item?.listAudio || item?.listAudio?.length === 0 ? (
-                      <div className="bg-[#efcdcd] rounded-full px-2! py-0.5! w-fit text-(--error)">
-                        No
-                      </div>
-                    ) : (
-                      <div className="bg-[#c8d3dd] rounded-full px-2! py-0.5! w-fit text-(--primary)">
-                        Yes
-                      </div>
-                    )}
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    {!item?.listOfImage || item?.listOfImage?.length === 0 ? (
-                      <div className="bg-[#efcdcd] rounded-full px-2! py-0.5! w-fit text-(--error)">
-                        No
-                      </div>
-                    ) : (
-                      <div className="flex gap-1">
-                        {item?.listOfImage?.map((imgUrl, i) => (
-                          <div
-                            key={i}
-                            className="relative w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]"
-                          >
-                            <Image
-                              src={imgUrl}
-                              alt={`attachment-${i}`}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </TableBodyCell>
+                return (
+                  <tr
+                    key={index}
+                    className={`transition-colors cursor-pointer duration-150 ${
+                      index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
+                    } hover:bg-gray-100`}
+                    onClick={() => {
+                      setSelectedComplaint(item);
+                      setIsDialogOpen(true);
+                    }}
+                  >
+                    <TableBodyCell>{item?.id}</TableBodyCell>
+                    <TableBodyCell className="whitespace-nowrap">
+                      {formatDate(item?.createdAt)}
+                    </TableBodyCell>
 
-                  <TableBodyCell>
-                    <FaEye
-                      className="text-lg text-(--primary) cursor-pointer"
-                      onClick={() => {
-                        setSelectedComplaint(item);
-                        isDialogOpen;
-                        setIsDialogOpen(true);
-                      }}
-                    />
-                  </TableBodyCell>
-                </tr>
-              ))}
+                    <TableBodyCell>{item?.shopName}</TableBodyCell>
+                    <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
+                    <TableBodyCell>{item?.complaintType}</TableBodyCell>
+                    <TableBodyCell>{item?.categoryName}</TableBodyCell>
+                    <TableBodyCell>{item?.sectionCategoryName}</TableBodyCell>
+                    <TableBodyCell>
+                      {item?.sectionsDetails?.map((s) => s?.name).join(", ")}
+                    </TableBodyCell>
+                    <TableBodyCell>
+                      {item?.sectionsDetails
+                        ?.map((s) => s?.description)
+                        .join(", ")}
+                    </TableBodyCell>
+
+                    <TableBodyCell className="min-w-[200px]">
+                      {item?.remarks
+                        ? item?.remarks?.slice(0, 50) +
+                          (item?.remarks?.length > 50 ? "..." : "")
+                        : ""}
+                    </TableBodyCell>
+
+                    <TableBodyCell>
+                      {!item?.listAudio || item?.listAudio?.length === 0 ? (
+                        <div className="bg-[#efcdcd] rounded-full px-2! py-0.5! w-fit text-(--error)">
+                          No
+                        </div>
+                      ) : (
+                        <div className="bg-[#c8d3dd] rounded-full px-2! py-0.5! w-fit text-(--primary)">
+                          Yes
+                        </div>
+                      )}
+                    </TableBodyCell>
+                    <TableBodyCell>
+                      {!item?.listOfImage || item?.listOfImage.length === 0 ? (
+                        <div className="bg-[#efcdcd] rounded-full px-2! py-0.5! w-fit text-(--error)">
+                          No
+                        </div>
+                      ) : (
+                        <div className="flex gap-1">
+                          {/* Images */}
+                          {images.map((imgUrl, i) => (
+                            <>
+                              {/* <div
+                                key={i}
+                                className="relative w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]"
+                              >
+                                <Image
+                                  src={imgUrl}
+                                  alt={imgUrl}
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div> */}
+                              <div
+                                key={i}
+                                className=" w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]"
+                              >
+                                <img
+                                  src={imgUrl}
+                                  alt={imgUrl}
+                                  className="object-cover w-full h-full"
+                                />
+                              </div>
+                            </>
+                          ))}
+
+                          {videos.map((videoUrl, i) => (
+                            <div
+                              key={i}
+                              className="relative w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]"
+                            >
+                              <video
+                                key={`vid-${i}`}
+                                src={videoUrl}
+                                className="w-6 h-6 rounded-sm border border-[#e2e8f0] object-cover"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </TableBodyCell>
+
+                    {/* <TableBodyCell>
+                      <FaEye
+                        className="text-lg text-(--primary) cursor-pointer"
+                        onClick={() => {
+                          setSelectedComplaint(item);
+                          setIsDialogOpen(true);
+                        }}
+                      />
+                    </TableBodyCell> */}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -258,6 +300,8 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
           />
         </div>
       </div>

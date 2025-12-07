@@ -1,45 +1,24 @@
 import TableBodyCell from "../../components/table/TableBodyCell";
 import TableHeaderCell from "../../components/table/TableHeaderCell";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
-import { formatDate, getDaysOld, toLocal } from "../../utils/utils";
+import { formatDate, getDaysOld } from "../../utils/utils";
 import { useMemo, useState } from "react";
 import PaginationControls from "../../components/table/PaginationControls";
-import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import apiClient from "../../services/api-client";
-import { COMPLAINT_API } from "../../APIs";
-import { FaRegPenToSquare } from "react-icons/fa6";
-import { MdOutlineFileDownload } from "react-icons/md";
-import { format, parseISO } from "date-fns";
-import { generateComplaintPDF } from "../../utils/generateComplainPdf";
-import ProceedingDialog from "./ProceedingDialog";
 
-interface ProceedingTableProps {
+interface NonProsecutionTableProps {
   rowsData: ManageComplainsData[];
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PAGE_SIZE = 10;
-
-const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
+const NonProsecutionTable = ({
+  rowsData,
+  setRefresh,
+}: NonProsecutionTableProps) => {
   const [sortConfig, setSortConfig] = useState<{
     key: string;
     direction: "asc" | "desc";
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedComplaint, setSelectedComplaint] =
-    useState<ManageComplainsData | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const userId = Cookies.get("userId");
-  const [dialogStep, setDialogStep] = useState<1 | 2>(1);
-  const [hearingDate, setHearingDate] = useState<Date | null>(null);
-  const [isResolved, setIsResolved] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState<number | null>(null);
-  const [submittionRemarks, setSubmittionRemarks] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [videoUrl, setVideoUrl] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [fineAmount, setFineAmount] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
   const headers = [
@@ -55,11 +34,6 @@ const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
     { label: "Section Description", sortable: "sectionDescription" },
     { label: "Remarks" },
     { label: "Assignee Remarks" },
-    { label: "Hearing Date" },
-    { label: "Hearing Time" },
-    { label: "Generate Report" },
-    { label: "Deatils" },
-    { label: "Proceeding" },
   ];
 
   const handleSort = (key: string) => {
@@ -102,90 +76,6 @@ const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
     const startIndex = (currentPage - 1) * pageSize;
     return sortedData.slice(startIndex, startIndex + pageSize);
   }, [sortedData, currentPage, pageSize]);
-
-  const handleHearingComplaint = async () => {
-    if (!selectedComplaint) return;
-    // --- Validation ---
-    if (isResolved) {
-      if (!selectedStatus) {
-        toast.warning("Please select a status before submitting.");
-        return;
-      }
-      if (!submittionRemarks.trim()) {
-        toast.warning("Please enter remarks for the resolved complaint.");
-        return;
-      }
-      if (!imageUrl) {
-        toast.warning("Please Uplaod document");
-        return;
-      }
-    } else {
-      if (!hearingDate) {
-        toast.warning("Please select a hearing date before assigning.");
-        return;
-      }
-    }
-
-    try {
-      setLoading(true);
-
-      const payload = {
-        complaintId: selectedComplaint?.id,
-        status: isResolved ? selectedStatus : 1,
-        updatedBy: userId,
-        assignedTo: selectedComplaint?.assignedTo,
-        hearingDate: isResolved ? selectedComplaint?.hearingDate : hearingDate,
-        verdict: 0,
-        fineAmount: fineAmount,
-        assigneeRemarks: selectedComplaint?.assigneeRemarks,
-        closingRemarks: isResolved ? submittionRemarks : "",
-        isClosed: isResolved ? true : false,
-        complaintDecisionFiles: isResolved
-          ? [
-              {
-                filePath: imageUrl,
-                fileType: 0,
-              },
-              {
-                filePath: videoUrl,
-                fileType: 1,
-              },
-            ]
-          : null,
-      };
-
-      console.log("📤 Sending payload:", payload);
-
-      const response = await apiClient.post(
-        COMPLAINT_API + "/update-status",
-        payload
-      );
-
-      if (response.status === 200) {
-        if (isResolved) {
-          toast.success("Complaint Status successfully.");
-        } else {
-          toast.success("Assign Hearing Date successfully.");
-        }
-        // router.refresh();
-        setRefresh((prev) => !prev);
-        setIsDialogOpen(false);
-      }
-    } catch (error) {
-      console.error("Error Hearing Date:", error);
-      toast.error("Something went wrong while assign Date.");
-    } finally {
-      setLoading(false);
-      setSelectedComplaint(null);
-      setHearingDate(null);
-      setIsDialogOpen(false);
-      setImageUrl("");
-      setVideoUrl("");
-      setSelectedStatus(null);
-      setSubmittionRemarks("");
-      setFineAmount(0);
-    }
-  };
 
   return (
     <>
@@ -245,6 +135,7 @@ const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
                       ?.map((section) => section?.description)
                       .join(", ")}
                   </TableBodyCell>
+
                   <TableBodyCell>
                     {item?.remarks
                       ? item?.remarks?.slice(0, 50) +
@@ -256,56 +147,6 @@ const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
                       ? item?.assigneeRemarks?.slice(0, 50) +
                         (item?.assigneeRemarks?.length > 50 ? "..." : "")
                       : ""}
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    {item?.hearingDate
-                      ? format(toLocal(item.hearingDate), "dd-MM-yyyy")
-                      : "--"}
-                  </TableBodyCell>
-
-                  <TableBodyCell>
-                    {item?.hearingDate
-                      ? format(toLocal(item.hearingDate), "hh:mm a")
-                      : "--"}
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    <MdOutlineFileDownload
-                      onClick={() => generateComplaintPDF(item)}
-                      className="text-(--primary) w-5 h-5 cursor-pointer!"
-                    />
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    <FaRegPenToSquare
-                      onClick={() => {
-                        setSelectedComplaint(item);
-                        if (item?.hearingDate) {
-                          const d = parseISO(item.hearingDate);
-                          const localDate = new Date(
-                            d.getTime() - d.getTimezoneOffset() * 60000
-                          );
-                          setHearingDate(localDate);
-                        } else {
-                          setHearingDate(null);
-                        }
-                        setIsDialogOpen(true);
-                        setDialogStep(1);
-                        setIsResolved(false);
-                      }}
-                      className="text-(--primary) w-4 h-4 cursor-pointer!"
-                    />
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    <div
-                      className="bg-(--primary) rounded-full py-1! px-2! text-[10px] text-white! whitespace-nowrap cursor-pointer"
-                      onClick={() => {
-                        setSelectedComplaint(item);
-                        setDialogStep(2);
-                        setIsResolved(true);
-                        setIsDialogOpen(true);
-                      }}
-                    >
-                      Update Status
-                    </div>
                   </TableBodyCell>
                 </tr>
               ))}
@@ -323,7 +164,7 @@ const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
         </div>
       </div>
 
-      <ProceedingDialog
+      {/* <EscalationDialog
         isDialogOpen={isDialogOpen}
         setIsDialogOpen={setIsDialogOpen}
         selectedComplaint={selectedComplaint}
@@ -347,9 +188,9 @@ const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
         handleHearingComplaint={handleHearingComplaint}
         fineAmount={fineAmount}
         setFineAmount={setFineAmount}
-      />
+      /> */}
     </>
   );
 };
 
-export default ProceedingTable;
+export default NonProsecutionTable;
