@@ -57,8 +57,12 @@ const YearFilter = () => {
           value={yearOptions.find((opt) => opt.value === selectedYear || null)}
           onChangeSingle={handleYearChange}
         /> */}
-      <Select.Root value={selectedYear} onValueChange={handleYearChange}>
-        <Select.Trigger />
+      <Select.Root
+        size="3"
+        value={selectedYear}
+        onValueChange={handleYearChange}
+      >
+        <Select.Trigger className="shadow-[0px_0px_0px_1.5px_#EFF0F2]! focus:shadow-[0px_0px_0px_1.5px_#0C8CE9]! text-[#545861]! font-medium! text-[0.875rem]! h-full! py-[9px]! px-3!" />
         <Select.Content>
           <Select.Group>
             {[defaultOption, ...yearOptions].map((d, i) => (

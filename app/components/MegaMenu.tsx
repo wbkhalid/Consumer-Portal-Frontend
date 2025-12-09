@@ -112,6 +112,13 @@ const MegaMenu = () => {
           icon: <FiTrendingUp className="text-white" size={22} />,
           route: "/others-report/complaint-reports/fine-imposed-report/list",
         },
+        {
+          label: "Section Report",
+          description:
+            "Break down complaints by legal or departmental sections.",
+          icon: <FiDatabase className="text-white" size={22} />,
+          route: "/others-report/complaint-reports/section-report/list",
+        },
       ],
     },
   ];
@@ -199,7 +206,7 @@ const MegaMenu = () => {
       label: "Section Report",
       description: "Break down complaints by legal or departmental sections.",
       icon: <FiDatabase className="text-white" size={22} />,
-      route: "/others-report/section-complaint",
+      route: "/others-report/complaint-reports/section-report/list",
     },
   ];
 

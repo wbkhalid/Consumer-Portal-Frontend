@@ -49,7 +49,7 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
       pageNumbers.push(
         <button
           key="ellipsis-start"
-          className={`px-3! py-1! rounded-md text-sm font-medium transition-colors duration-150`}
+          className={`px-4! py-1! rounded-md text-sm font-medium transition-colors duration-150`}
           disabled
         >
           <HiOutlineDotsHorizontal />
@@ -61,7 +61,7 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
       pageNumbers.push(
         <button
           key={i}
-          className={`px-3! py-1! rounded-md text-sm font-medium duration-150 transition-colors ${
+          className={`px-4! py-1! rounded-md text-sm font-medium duration-150 transition-colors ${
             i === currentPage
               ? "bg-(--primary) text-white"
               : "bg-white text-gray-700 hover:bg-gray-100"
@@ -77,7 +77,7 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
       pageNumbers.push(
         <button
           key="ellipsis-end"
-          className={`px-3! py-1! rounded-md text-sm font-medium transition-colors duration-150`}
+          className={`px-4! py-1! rounded-md text-sm font-medium transition-colors duration-150`}
           disabled
         >
           <HiOutlineDotsHorizontal />
@@ -89,55 +89,56 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
   };
 
   return (
-    <div className="flex gap-2 items-center p-3 justify-between">
-      <p className="text-sm">
-        Page {currentPage} of {pageCount}
-      </p>
-      <div className="flex gap-2 flex-wrap">
-        <button
-          className={`px-3! py-1! rounded-md text-sm font-medium transition-colors duration-150 ${
-            currentPage !== 1 && "hover:bg-zinc-400"
-          } transition-colors`}
-          disabled={currentPage === 1}
-          onClick={() => changePage(1)}
-        >
-          <RxDoubleArrowLeft className="text-black" />
-        </button>
-        <button
-          className={`px-3! py-1! rounded-md text-sm font-medium transition-colors duration-150 ${
-            currentPage !== 1 && "hover:bg-zinc-400"
-          } transition-colors`}
-          disabled={currentPage === 1}
-          onClick={() => changePage(currentPage - 1)}
-        >
-          <BiChevronLeft className="text-black" />
-        </button>
-        {renderPageNumbers()}
-        <button
-          className={`px-3! py-1! rounded-md text-sm font-medium transition-colors duration-150 ${
-            currentPage !== pageCount && "hover:bg-zinc-400"
-          } transition-colors`}
-          disabled={currentPage === pageCount}
-          onClick={() => changePage(currentPage + 1)}
-        >
-          <BiChevronRight className="text-black" />
-        </button>
-        <button
-          className={`px-3! py-1! rounded-md text-sm font-medium transition-colors duration-150 ${
-            currentPage !== pageCount && "hover:bg-zinc-400"
-          } transition-colors`}
-          disabled={currentPage === pageCount}
-          onClick={() => changePage(pageCount)}
-        >
-          <RxDoubleArrowRight className="text-black" />
-        </button>
-      </div>
-      <div>
-        <PageSizeFilter />
-      </div>
-      {/* <div>
+    <div className="absolute bottom-0 w-full">
+      <div className="flex gap-2! items-center! p-3! justify-between">
+        <p className="text-sm">
+          Page {currentPage} of {pageCount}
+        </p>
+        <div className="flex gap-2 flex-wrap">
+          <button
+            className={`px-4! py-1! rounded-md text-sm font-medium transition-colors duration-150 ${
+              currentPage !== 1 && "hover:bg-zinc-400"
+            } transition-colors`}
+            disabled={currentPage === 1}
+            onClick={() => changePage(1)}
+          >
+            <RxDoubleArrowLeft className="text-black" />
+          </button>
+          <button
+            className={`px-4! py-1! rounded-md text-sm font-medium transition-colors duration-150 ${
+              currentPage !== 1 && "hover:bg-zinc-400"
+            } transition-colors`}
+            disabled={currentPage === 1}
+            onClick={() => changePage(currentPage - 1)}
+          >
+            <BiChevronLeft className="text-black" />
+          </button>
+          {renderPageNumbers()}
+          <button
+            className={`px-4! py-1! rounded-md text-sm font-medium transition-colors duration-150 ${
+              currentPage !== pageCount && "hover:bg-zinc-400"
+            } transition-colors`}
+            disabled={currentPage === pageCount}
+            onClick={() => changePage(currentPage + 1)}
+          >
+            <BiChevronRight className="text-black" />
+          </button>
+          <button
+            className={`px-4! py-1! rounded-md text-sm font-medium transition-colors duration-150 ${
+              currentPage !== pageCount && "hover:bg-zinc-400"
+            } transition-colors`}
+            disabled={currentPage === pageCount}
+            onClick={() => changePage(pageCount)}
+          >
+            <RxDoubleArrowRight className="text-black" />
+          </button>
+        </div>
+        <div>
+          <PageSizeFilter />
+        </div>
+        {/* <div>
         <select
-          className="px-3! py-1! rounded-md text-sm font-medium transition-colors duration-150 hover:bg-zinc-400 transition-colors"
+          className="px-4! py-1! rounded-md text-sm font-medium transition-colors duration-150 hover:bg-zinc-400 transition-colors"
           style={{
             color: "#fff",
             border: "1px solid #445E84",
@@ -155,6 +156,7 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
           ))}
         </select>
       </div> */}
+      </div>
     </div>
   );
 };

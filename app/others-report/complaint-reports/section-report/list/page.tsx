@@ -1,30 +1,43 @@
-import { sort } from "fast-sort";
-import { COMPLAINT_REPORT_API } from "../../../../APIs";
-import List, { Query } from "./List";
-import YearFilter from "../../../../components/Filters/YearFilter";
-import { Suspense } from "react";
 import { Spinner } from "@radix-ui/themes";
-import SearchFilter from "../../../../components/Filters/SearchFilter";
+import { sort } from "fast-sort";
+import { Suspense } from "react";
+import { COMPLAINT_REPORT_API, SECTION_API } from "../../../../APIs";
 import DatesFilter from "../../../../components/Filters/DatesFilter";
+import SearchFilter from "../../../../components/Filters/SearchFilter";
+import SectionFilter from "../../../../components/Filters/SectionFilter";
+import YearFilter from "../../../../components/Filters/YearFilter";
+import { OptionType } from "../../../../components/Form/CustomSelect";
 import ErrorMessage from "../../../../components/Form/ErrorMessage";
 import Pagination from "../../../../components/Form/Pagination";
-import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
+import { ManageSectionCategoryData } from "../../../../hooks/useGetSectionCategory";
 import { APIResponse } from "../../../../services/api-client";
+import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
+import List, { Query } from "./List";
+import SectionCategoryFilter from "../../../../components/Filters/SectionCategoryFilter";
 
-export interface FineImposed {
+export interface SectionReport {
   districtName: string;
-  complaints: number;
-  fineImposed: number;
+  complaintCount: number;
 }
 
 interface Props {
   searchParams: Promise<Query>;
 }
 
-const FineImposedPage = async ({ searchParams }: Props) => {
+const SectionReportPage = async ({ searchParams }: Props) => {
   const query = await searchParams;
-  const { year, startDate, endDate, page, pageSize, search, orderBy, order } =
-    query;
+  const {
+    year,
+    startDate,
+    endDate,
+    page,
+    pageSize,
+    search,
+    orderBy,
+    order,
+    section,
+    sectionCategory,
+  } = query;
 
   const myPage = parseInt(page || "1") || 1;
   let myPageSize: number;
@@ -35,7 +48,7 @@ const FineImposedPage = async ({ searchParams }: Props) => {
   const selectedYear = year || DEFAULT_YEAR;
 
   const baseURL =
-    process.env.BACKEND_API + COMPLAINT_REPORT_API + "/fine-imposed-report";
+    process.env.BACKEND_API + COMPLAINT_REPORT_API + "/section-report";
 
   const params = new URLSearchParams();
 
@@ -43,6 +56,8 @@ const FineImposedPage = async ({ searchParams }: Props) => {
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
+  if (section) params.set("section", section);
+  if (sectionCategory) params.set("sectionCategory", sectionCategory);
 
   const finalAPI = `${baseURL}?${params.toString()}`;
   console.log("finalAPI call", finalAPI);
@@ -50,8 +65,8 @@ const FineImposedPage = async ({ searchParams }: Props) => {
     next: { revalidate: 10 },
   });
 
-  const response: APIResponse<FineImposed[]> = await res.json();
-  let data: FineImposed[] = response.data;
+  const response: APIResponse<SectionReport[]> = await res.json();
+  let data: SectionReport[] = response.data;
 
   // **Apply Search Filter**
   if (search) {
@@ -59,8 +74,7 @@ const FineImposedPage = async ({ searchParams }: Props) => {
     data = data.filter(
       (d) =>
         d.districtName.toLowerCase().includes(lowerSearch) ||
-        d.complaints.toString().includes(lowerSearch) ||
-        d.fineImposed.toString().includes(lowerSearch)
+        d.complaintCount.toString().includes(lowerSearch)
     );
   }
 
@@ -82,13 +96,15 @@ const FineImposedPage = async ({ searchParams }: Props) => {
       {/* Header Section */}
       <div className="flex justify-between items-center px-2! py-2!">
         <div className="flex items-center gap-1">
-          <p className="text-(--primary) font-semibold">Fine Imposed Report</p>
+          <p className="text-(--primary) font-semibold">Section Report</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {paginatedData?.length} Records
           </p>
         </div>
         <div className="flex items-center justify-end gap-1">
           <Suspense fallback={<Spinner />}>
+            <SectionFilter />
+            <SectionCategoryFilter />
             <YearFilter />
             <DatesFilter />
             <SearchFilter />
@@ -118,6 +134,7 @@ const FineImposedPage = async ({ searchParams }: Props) => {
             // No records found
             <p className="px-2!">No records found.</p>
           )}
+
           <Suspense fallback={<Spinner />}>
             <Pagination
               pageSize={myPageSize}
@@ -131,4 +148,4 @@ const FineImposedPage = async ({ searchParams }: Props) => {
   );
 };
 
-export default FineImposedPage;
+export default SectionReportPage;

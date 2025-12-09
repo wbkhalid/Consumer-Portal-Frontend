@@ -19,7 +19,7 @@ interface Props {
 }
 
 const AppealsReportPage = async ({ searchParams }: Props) => {
-  const query = await searchParams; // 👈 fix
+  const query = await searchParams;
   const { year, startDate, endDate, page, pageSize, search, orderBy, order } =
     query;
 
@@ -49,6 +49,7 @@ const AppealsReportPage = async ({ searchParams }: Props) => {
 
   const response = await res.json();
   let data: AppealReport[] = response.data;
+
   // **Apply Search Filter**
   if (search) {
     const lowerSearch = search.toLowerCase();
@@ -83,27 +84,31 @@ const AppealsReportPage = async ({ searchParams }: Props) => {
           </p>
         </div>
         <div className="flex items-center justify-end gap-1">
-          <YearFilter />
           <Suspense fallback={<Spinner />}>
+            <YearFilter />
+            <DatesFilter />
             <SearchFilter />
           </Suspense>
-          <DatesFilter />
         </div>
       </div>
-      {/* Table */}
-      <AppealsReportTable
-        data={paginatedData}
-        currentPage={myPage}
-        pageSize={myPageSize}
-        searchParams={query}
-      />
-      <Suspense fallback={<Spinner />}>
-        <Pagination
-          pageSize={myPageSize}
-          currentPage={myPage}
-          itemCount={totalCount}
-        />
-      </Suspense>
+      <div className="relative">
+        <div className="h-[calc(100vh-140px)] overflow-y-auto scrollbar-hide relative">
+          {/* Table */}
+          <AppealsReportTable
+            data={paginatedData}
+            currentPage={myPage}
+            pageSize={myPageSize}
+            searchParams={query}
+          />
+          <Suspense fallback={<Spinner />}>
+            <Pagination
+              pageSize={myPageSize}
+              currentPage={myPage}
+              itemCount={totalCount}
+            />
+          </Suspense>
+        </div>
+      </div>
     </div>
   );
 };

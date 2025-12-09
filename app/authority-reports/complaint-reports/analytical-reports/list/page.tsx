@@ -99,27 +99,31 @@ const AnalyticalReportsPage = async ({ searchParams }: Props) => {
           </div>
         </div>
         <div className="flex items-center justify-end gap-1">
-          <YearFilter />
           <Suspense fallback={<Spinner />}>
+            <YearFilter />
+            <DatesFilter />
             <SearchFilter />
           </Suspense>
-          <DatesFilter />
         </div>
       </div>
-      {/* Table */}
-      <AnalyticalReportsTable
-        data={paginatedData}
-        currentPage={myPage}
-        pageSize={myPageSize}
-        searchParams={query}
-      />
-      <Suspense fallback={<Spinner />}>
-        <Pagination
-          pageSize={myPageSize}
-          currentPage={myPage}
-          itemCount={totalCount}
-        />
-      </Suspense>
+      <div className="relative">
+        <div className="h-[calc(100vh-140px)] overflow-y-auto scrollbar-hide relative">
+          {/* Table */}
+          <AnalyticalReportsTable
+            data={paginatedData}
+            currentPage={myPage}
+            pageSize={myPageSize}
+            searchParams={query}
+          />
+          <Suspense fallback={<Spinner />}>
+            <Pagination
+              pageSize={myPageSize}
+              currentPage={myPage}
+              itemCount={totalCount}
+            />
+          </Suspense>
+        </div>
+      </div>
     </div>
   );
 };

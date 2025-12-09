@@ -1,14 +1,16 @@
 "use client";
-import TableHeaderCell from "../../../../components/table/TableHeaderCell";
-import TableBodyCell from "../../../../components/table/TableBodyCell";
-import { DecidedComplaint } from "./page";
-import { BaseQuery } from "../../../../utils/utils";
 import CustomTableHeaderCell from "../../../../components/table/CustomTableHeaderCell";
+import TableBodyCell from "../../../../components/table/TableBodyCell";
+import { BaseQuery } from "../../../../utils/utils";
+import { SectionReport } from "./page";
 
-export type Query = BaseQuery<DecidedComplaint>;
+export interface Query extends BaseQuery<SectionReport> {
+  section?: string;
+  sectionCategory?: string;
+}
 
 interface Props {
-  data: DecidedComplaint[];
+  data: SectionReport[];
   currentPage: number;
   pageSize: number;
   searchParams: Query;
@@ -17,20 +19,17 @@ interface Props {
 const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
   // Calculate totals dynamically
   const totalComplaints = data.reduce(
-    (sum, item) => sum + (item.totalComplaints || 0),
+    (sum, item) => sum + (item.complaintCount || 0),
     0
   );
 
-  const totalAvgDays = data.reduce((sum, item) => sum + (item.avgDays || 0), 0);
-
   const columns: {
     label: string;
-    value: keyof DecidedComplaint;
+    value: keyof SectionReport;
     className?: string;
   }[] = [
     { label: "District", value: "districtName" },
-    { label: "Total Complaints", value: "totalComplaints" },
-    { label: "Avg Days", value: "avgDays" },
+    { label: "Complains", value: "complaintCount" },
   ];
 
   return (
@@ -63,18 +62,17 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
             >
               <TableBodyCell>{serial}</TableBodyCell>
               <TableBodyCell>{d.districtName}</TableBodyCell>
-              <TableBodyCell>{d.totalComplaints}</TableBodyCell>
-              <TableBodyCell>{d.avgDays}</TableBodyCell>
+              <TableBodyCell>{d.complaintCount}</TableBodyCell>
             </tr>
           );
         })}
+
         {/* ✅ Total Row */}
         <tr className="font-semibold bg-[#f1f1f1] text-[#013769] sticky bottom-0">
           <TableBodyCell colSpan={2} className="text-center">
             Total
           </TableBodyCell>
           <TableBodyCell>{totalComplaints}</TableBodyCell>
-          <TableBodyCell>{totalAvgDays}</TableBodyCell>
         </tr>
       </tbody>
     </table>

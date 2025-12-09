@@ -3,7 +3,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toLocalDateString } from "../../utils/utils";
-import { Button } from "@radix-ui/themes";
 import CustomCalendar from "../Form/CustomCalender";
 
 const DatesFilter = () => {
@@ -17,18 +16,21 @@ const DatesFilter = () => {
   const [endDate, setEndDate] = useState(initialEnd);
 
   const handleFilterChange = useCallback(
-    (startDate: string, endDate: string) => {
+    (start: string, end: string) => {
       const params = new URLSearchParams(searchParams.toString());
 
-      if (startDate) params.set("startDate", startDate);
-      if (endDate) params.set("endDate", endDate);
+      if (start) params.set("startDate", start);
+      else params.delete("startDate");
+
+      if (end) params.set("endDate", end);
+      else params.delete("endDate");
 
       router.push(`?${params.toString()}`);
     },
-    [router]
+    [router, searchParams]
   );
 
-  // Sync state when URL changes (important for back/forward navigation)
+  // Keep state synced with URL
   useEffect(() => {
     setStartDate(initialStart);
     setEndDate(initialEnd);
@@ -36,32 +38,29 @@ const DatesFilter = () => {
 
   return (
     <>
+      {/* Start Date */}
       <CustomCalendar
         value={startDate}
         placeHolder="Select Start Date"
         maxDate={new Date()}
         onChange={(date) => {
-          const local = toLocalDateString(date);
-          setStartDate(local);
+          const formatted = toLocalDateString(date);
+          setStartDate(formatted);
+          handleFilterChange(formatted, endDate); // 🔥 auto-trigger
         }}
       />
 
+      {/* End Date */}
       <CustomCalendar
         value={endDate}
         placeHolder="Select End Date"
         maxDate={new Date()}
         onChange={(date) => {
-          const local = toLocalDateString(date);
-          setEndDate(local);
+          const formatted = toLocalDateString(date);
+          setEndDate(formatted);
+          handleFilterChange(startDate, formatted); // 🔥 auto-trigger
         }}
       />
-
-      <Button
-        className="bg-(--primary)! cursor-pointer! rounded-full!"
-        onClick={() => handleFilterChange(startDate, endDate)}
-      >
-        Filter
-      </Button>
     </>
   );
 };

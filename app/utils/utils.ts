@@ -1,4 +1,3 @@
-import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { FILE_UPLOAD_API } from "../APIs";
 import apiClient from "../services/api-client";
@@ -172,3 +171,14 @@ export const toLocalDateString = (date: Date | string | null): string => {
 
   return `${year}-${month}-${day}`;
 };
+
+export interface BaseQuery<T> {
+  year?: string;
+  startDate?: string;
+  endDate?: string;
+  page?: string;
+  pageSize?: string;
+  search?: string;
+  orderBy?: keyof T; // 👈 Dynamic based on type you pass
+  order?: "asc" | "desc";
+}

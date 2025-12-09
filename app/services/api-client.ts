@@ -5,6 +5,12 @@ export interface ErrorResponse {
   responseMessage: string;
 }
 
+export interface APIResponse<T> {
+  responseCode: number;
+  responseMessage: string;
+  data: T;
+}
+
 export default axios.create({
   withCredentials: true,
   headers: {

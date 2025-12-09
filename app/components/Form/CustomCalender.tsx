@@ -1,5 +1,5 @@
 import { Popover, TextField } from "@radix-ui/themes";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useRef, useState } from "react";
 import { Calendar, CalendarProps } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
@@ -15,9 +15,9 @@ interface Props extends Omit<CalendarProps, "date" | "onChange"> {
 
 const CustomCalendar = forwardRef<HTMLDivElement, Props>(
   ({ value, onChange, placeHolder = "Select", ...rest }, ref) => {
-    const [showCalendar, setShowCalendar] = useState(false);
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const popupRef = useRef<HTMLDivElement | null>(null);
+
+    const [isOpen, setOpen] = useState(false);
 
     // ✅ FIX: Handle undefined in parseValue
     const parseValue = (val: string | Date | null | undefined): Date | null => {
@@ -34,26 +34,14 @@ const CustomCalendar = forwardRef<HTMLDivElement, Props>(
 
     const selectedDate = parseValue(value);
 
-    // Close on outside click
-    useEffect(() => {
-      const handleClickOutside = (e: MouseEvent) => {
-        if (
-          popupRef.current &&
-          !popupRef.current.contains(e.target as Node) &&
-          !inputRef.current?.contains(e.target as Node)
-        ) {
-          setShowCalendar(false);
-        }
-      };
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
+    const handleClose = () => {
+      setOpen(false);
+      console.log("close");
+    };
 
     return (
       <>
-        <Popover.Root>
+        <Popover.Root open={isOpen} onOpenChange={setOpen}>
           <Popover.Trigger>
             <CustomRadixInput
               ref={inputRef}
@@ -61,11 +49,10 @@ const CustomCalendar = forwardRef<HTMLDivElement, Props>(
               readOnly
               placeholder={placeHolder}
               value={selectedDate ? getFormattedDate(selectedDate) : ""}
-              onClick={() => setShowCalendar(!showCalendar)}
             >
               <TextField.Slot
+                className="rounded-tr-[0.438rem]! rounded-br-[0.438rem]! bg-white/80!"
                 side="right"
-                onClick={() => setShowCalendar(!showCalendar)}
               >
                 <MdOutlineDateRange style={{ color: "#545861" }} />
               </TextField.Slot>
@@ -76,7 +63,7 @@ const CustomCalendar = forwardRef<HTMLDivElement, Props>(
               date={selectedDate || new Date()}
               onChange={(date) => {
                 onChange(date);
-                setShowCalendar(false);
+                handleClose();
               }}
               {...rest}
             />
