@@ -14,12 +14,7 @@ interface Props {
   searchParams: Query;
 }
 
-const AppealsReportTable = ({
-  data,
-  currentPage,
-  pageSize,
-  searchParams,
-}: Props) => {
+const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
   const totalAppeals = data.reduce(
     (sum, item) => sum + (item.numberOfAppeals || 0),
     0
@@ -83,4 +78,4 @@ const AppealsReportTable = ({
   );
 };
 
-export default AppealsReportTable;
+export default List;

@@ -103,10 +103,7 @@ const FrequencyReportPage = async ({ searchParams }: Props) => {
           {response?.responseCode !== 200 ? (
             // API error
             <div className="px-2!">
-              <ErrorMessage>
-                Response ({response?.responseCode}) -{" "}
-                {response?.responseMessage}
-              </ErrorMessage>
+              <ErrorMessage>{response?.responseMessage}</ErrorMessage>
             </div>
           ) : paginatedData && paginatedData.length > 0 ? (
             // Normal table data

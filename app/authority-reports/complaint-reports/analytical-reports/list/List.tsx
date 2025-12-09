@@ -15,12 +15,7 @@ interface Props {
   searchParams: Query;
 }
 
-const AnalyticalReportTable = ({
-  data,
-  currentPage,
-  pageSize,
-  searchParams,
-}: Props) => {
+const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
   const months = [
     "January",
     "February",
@@ -111,7 +106,7 @@ const AnalyticalReportTable = ({
           ))}
           {columns.map((column) => (
             <CustomTableHeaderCell
-            key={column.value}
+              key={column.value}
               rowSpan={2}
               label={column.label}
               searchParams={searchParams}
@@ -192,4 +187,4 @@ const AnalyticalReportTable = ({
   );
 };
 
-export default AnalyticalReportTable;
+export default List;

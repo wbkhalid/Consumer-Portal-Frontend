@@ -68,14 +68,14 @@ const ComplaintInstitutionPage = async ({ searchParams }: Props) => {
   }
 
   // **Pagination Logic**
-  const totalCount = data.length;
+  const totalCount = data?.length;
 
   if (orderBy && order) {
     data = sort(data)[order]((item) => item[orderBy]);
   }
 
   // Apply pagination using slice()
-  const paginatedData = data.slice(
+  const paginatedData = data?.slice(
     (myPage - 1) * myPageSize,
     myPage * myPageSize
   );
@@ -106,10 +106,7 @@ const ComplaintInstitutionPage = async ({ searchParams }: Props) => {
           {response?.responseCode !== 200 ? (
             // API error
             <div className="px-2!">
-              <ErrorMessage>
-                Response ({response?.responseCode}) -{" "}
-                {response?.responseMessage}
-              </ErrorMessage>
+              <ErrorMessage>{response?.responseMessage}</ErrorMessage>
             </div>
           ) : paginatedData && paginatedData.length > 0 ? (
             // Normal table data

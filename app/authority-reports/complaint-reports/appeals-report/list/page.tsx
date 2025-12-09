@@ -1,13 +1,15 @@
 import { sort } from "fast-sort";
 import { COMPLAINT_REPORT_API } from "../../../../APIs";
 import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
-import AppealsReportTable, { Query } from "./AppealsReportTable";
+import AppealsReportTable, { Query } from "./List";
 import { Suspense } from "react";
 import Spinner from "../../../../components/Spinner";
 import Pagination from "../../../../components/Form/Pagination";
 import YearFilter from "../../../../components/Filters/YearFilter";
 import SearchFilter from "../../../../components/Filters/SearchFilter";
 import DatesFilter from "../../../../components/Filters/DatesFilter";
+import ErrorMessage from "../../../../components/Form/ErrorMessage";
+import List from "./List";
 
 export interface AppealReport {
   districtName: string;
@@ -61,14 +63,14 @@ const AppealsReportPage = async ({ searchParams }: Props) => {
   }
 
   // **Pagination Logic**
-  const totalCount = data.length;
+  const totalCount = data?.length;
 
   if (orderBy && order) {
     data = sort(data)[order]((item) => item[orderBy]);
   }
 
   // Apply pagination using slice()
-  const paginatedData = data.slice(
+  const paginatedData = data?.slice(
     (myPage - 1) * myPageSize,
     myPage * myPageSize
   );
@@ -80,7 +82,7 @@ const AppealsReportPage = async ({ searchParams }: Props) => {
         <div className="flex items-center gap-1">
           <p className="text-(--primary) font-semibold">Appeals Report</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-            {paginatedData.length} Records
+            {paginatedData?.length} Records
           </p>
         </div>
         <div className="flex items-center justify-end gap-1">
@@ -94,12 +96,23 @@ const AppealsReportPage = async ({ searchParams }: Props) => {
       <div className="relative">
         <div className="h-[calc(100vh-140px)] overflow-y-auto scrollbar-hide relative">
           {/* Table */}
-          <AppealsReportTable
-            data={paginatedData}
-            currentPage={myPage}
-            pageSize={myPageSize}
-            searchParams={query}
-          />
+          {response?.responseCode !== 200 ? (
+            // API error
+            <div className="px-2!">
+              <ErrorMessage>{response?.responseMessage}</ErrorMessage>
+            </div>
+          ) : paginatedData && paginatedData.length > 0 ? (
+            // Normal table data
+            <List
+              data={paginatedData}
+              currentPage={myPage}
+              pageSize={myPageSize}
+              searchParams={query}
+            />
+          ) : (
+            // No records found
+            <p className="px-2!">No records found.</p>
+          )}
           <Suspense fallback={<Spinner />}>
             <Pagination
               pageSize={myPageSize}

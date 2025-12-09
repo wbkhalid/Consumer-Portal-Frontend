@@ -1,14 +1,12 @@
-import { sort } from "fast-sort";
-import { COMPLAINT_REPORT_API } from "../../../../APIs";
-import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
-import List, { Query } from "./List";
-import { Suspense } from "react";
 import { Spinner } from "@radix-ui/themes";
-import YearFilter from "../../../../components/Filters/YearFilter";
+import { sort } from "fast-sort";
+import { Suspense } from "react";
+import { COMPLAINT_REPORT_API } from "../../../../APIs";
 import SearchFilter from "../../../../components/Filters/SearchFilter";
-import DatesFilter from "../../../../components/Filters/DatesFilter";
 import ErrorMessage from "../../../../components/Form/ErrorMessage";
 import Pagination from "../../../../components/Form/Pagination";
+import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
+import List, { Query } from "./List";
 
 export interface AgingReport {
   dayRange: string;
@@ -90,8 +88,6 @@ const AgingReportPage = async ({ searchParams }: Props) => {
         </div>
         <div className="flex items-center justify-end gap-1">
           <Suspense fallback={<Spinner />}>
-            <YearFilter />
-            <DatesFilter />
             <SearchFilter />
           </Suspense>
         </div>
@@ -102,10 +98,7 @@ const AgingReportPage = async ({ searchParams }: Props) => {
           {response?.responseCode !== 200 ? (
             // API error
             <div className="px-2!">
-              <ErrorMessage>
-                Response ({response?.responseCode}) -{" "}
-                {response?.responseMessage}
-              </ErrorMessage>
+              <ErrorMessage>{response?.responseMessage}</ErrorMessage>
             </div>
           ) : paginatedData && paginatedData.length > 0 ? (
             // Normal table data

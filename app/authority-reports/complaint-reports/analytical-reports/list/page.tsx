@@ -6,8 +6,10 @@ import YearFilter from "../../../../components/Filters/YearFilter";
 import Pagination from "../../../../components/Form/Pagination";
 import Spinner from "../../../../components/Spinner";
 import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
-import AnalyticalReportsTable, { Query } from "./AnalyticalReportsTable";
+import AnalyticalReportsTable, { Query } from "./List";
 import { sort } from "fast-sort";
+import ErrorMessage from "../../../../components/Form/ErrorMessage";
+import List from "./List";
 
 export interface AnalyticalReport {
   districtName: string;
@@ -109,12 +111,23 @@ const AnalyticalReportsPage = async ({ searchParams }: Props) => {
       <div className="relative">
         <div className="h-[calc(100vh-140px)] overflow-y-auto scrollbar-hide relative">
           {/* Table */}
-          <AnalyticalReportsTable
-            data={paginatedData}
-            currentPage={myPage}
-            pageSize={myPageSize}
-            searchParams={query}
-          />
+          {response?.responseCode !== 200 ? (
+            // API error
+            <div className="px-2!">
+              <ErrorMessage>{response?.responseMessage}</ErrorMessage>
+            </div>
+          ) : paginatedData && paginatedData.length > 0 ? (
+            // Normal table data
+            <List
+              data={paginatedData}
+              currentPage={myPage}
+              pageSize={myPageSize}
+              searchParams={query}
+            />
+          ) : (
+            // No records found
+            <p className="px-2!">No records found.</p>
+          )}
           <Suspense fallback={<Spinner />}>
             <Pagination
               pageSize={myPageSize}

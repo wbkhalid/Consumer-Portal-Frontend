@@ -56,8 +56,8 @@ const SectionReportPage = async ({ searchParams }: Props) => {
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
-  if (section) params.set("section", section);
-  if (sectionCategory) params.set("sectionCategory", sectionCategory);
+  if (section) params.set("sectionId", section);
+  if (sectionCategory) params.set("sectionCategoryId", sectionCategory);
 
   const finalAPI = `${baseURL}?${params.toString()}`;
   console.log("finalAPI call", finalAPI);
@@ -117,10 +117,7 @@ const SectionReportPage = async ({ searchParams }: Props) => {
           {response?.responseCode !== 200 ? (
             // API error
             <div className="px-2!">
-              <ErrorMessage>
-                Response ({response?.responseCode}) -{" "}
-                {response?.responseMessage}
-              </ErrorMessage>
+              <ErrorMessage>{response?.responseMessage}</ErrorMessage>
             </div>
           ) : paginatedData && paginatedData.length > 0 ? (
             // Normal table data
