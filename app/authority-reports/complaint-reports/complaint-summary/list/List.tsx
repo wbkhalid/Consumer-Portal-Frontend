@@ -1,56 +1,30 @@
+"use client";
 import CustomTableHeaderCell from "../../../../components/table/CustomTableHeaderCell";
 import TableBodyCell from "../../../../components/table/TableBodyCell";
-import { BaseQuery } from "../../../../utils/utils";
+import { BaseQuery, Column } from "../../../../utils/utils";
 import { ComplaintSummary } from "./page";
 
 export type Query = BaseQuery<ComplaintSummary>;
 
 interface Props {
   data: ComplaintSummary[];
+  paginatedData: ComplaintSummary[];
   currentPage: number;
   pageSize: number;
   searchParams: Query;
 }
+
 const ComplaintSummaryTable = ({
   data,
+  paginatedData,
   currentPage,
   pageSize,
   searchParams,
 }: Props) => {
-  const totalFiled = data.reduce(
-    (sum, item) => sum + (item.complaintsFiled || 0),
-    0
-  );
+  const { totalFiled, totalDisposal, totalPending, totalPercentage } =
+    calculateTotals(data);
 
-  const totalDisposal = data.reduce(
-    (sum, item) => sum + (item.disposal || 0),
-    0
-  );
-
-  const totalPending = data?.reduce(
-    (sum, item) => sum + (item.pendingComplaints || 0),
-    0
-  );
-
-  const totalPercentage =
-    data && data.length > 0
-      ? (
-          data.reduce((sum, item) => sum + (item.percentageDisposal || 0), 0) /
-          data.length
-        ).toFixed(2)
-      : 0;
-
-  const columns: {
-    label: string;
-    value: keyof ComplaintSummary;
-    className?: string;
-  }[] = [
-    { label: "Name of District", value: "districtName" },
-    { label: "Complaints Filed", value: "complaintsFiled" },
-    { label: "Disposal", value: "disposal" },
-    { label: "Percentage of Disposal (%)", value: "percentageDisposal" },
-    { label: "Pending Complaints", value: "pendingComplaints" },
-  ];
+  const columns = getColumns();
 
   return (
     <table className="min-w-full text-sm">
@@ -70,7 +44,7 @@ const ComplaintSummaryTable = ({
       </thead>
 
       <tbody>
-        {data?.map((d, index) => {
+        {paginatedData?.map((d, index) => {
           const serial = (currentPage - 1) * pageSize + index + 1;
 
           return (
@@ -106,3 +80,40 @@ const ComplaintSummaryTable = ({
 };
 
 export default ComplaintSummaryTable;
+
+// strongly typed column list
+export const getColumns = (): Column<ComplaintSummary>[] => [
+  { label: "Name of District", value: "districtName" },
+  { label: "Complaints Filed", value: "complaintsFiled" },
+  { label: "Disposal", value: "disposal" },
+  { label: "Percentage of Disposal (%)", value: "percentageDisposal" },
+  { label: "Pending Complaints", value: "pendingComplaints" },
+];
+
+export const calculateTotals = (data: ComplaintSummary[]) => {
+  const totalFiled = data.reduce(
+    (sum, item) => sum + (item.complaintsFiled || 0),
+    0
+  );
+  const totalDisposal = data.reduce(
+    (sum, item) => sum + (item.disposal || 0),
+    0
+  );
+  const totalPending = data.reduce(
+    (sum, item) => sum + (item.pendingComplaints || 0),
+    0
+  );
+
+  const totalPercentage =
+    data.length > 0
+      ? data.reduce((sum, item) => sum + (item.percentageDisposal || 0), 0) /
+        data.length
+      : 0;
+
+  return {
+    totalFiled,
+    totalDisposal,
+    totalPending,
+    totalPercentage: Number(totalPercentage.toFixed(2)),
+  };
+};

@@ -10,12 +10,10 @@ export type Query = BaseQuery<AnalyticalReport>;
 
 interface Props {
   data: AnalyticalReport[];
-  currentPage: number;
-  pageSize: number;
   searchParams: Query;
 }
 
-const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
+const List = ({ data, searchParams }: Props) => {
   const months = [
     "January",
     "February",
@@ -104,7 +102,7 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
               className="border-l border-[#E9EAEB] whitespace-normal!"
             />
           ))}
-          {columns.map((column) => (
+          {columns.slice(1).map((column) => (
             <CustomTableHeaderCell
               key={column.value}
               rowSpan={2}
@@ -134,7 +132,7 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
       {/* ===== Table Body ===== */}
       <tbody>
         {data.map((d, index) => {
-          const serial = (currentPage - 1) * pageSize + index + 1;
+          const serial = index + 1;
 
           return (
             <tr

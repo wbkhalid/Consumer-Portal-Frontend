@@ -1,15 +1,13 @@
+import { sort } from "fast-sort";
 import { Suspense } from "react";
 import { COMPLAINT_REPORT_API } from "../../../../APIs";
 import DatesFilter from "../../../../components/Filters/DatesFilter";
 import SearchFilter from "../../../../components/Filters/SearchFilter";
 import YearFilter from "../../../../components/Filters/YearFilter";
-import Pagination from "../../../../components/Form/Pagination";
-import Spinner from "../../../../components/Spinner";
-import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
-import AnalyticalReportsTable, { Query } from "./List";
-import { sort } from "fast-sort";
 import ErrorMessage from "../../../../components/Form/ErrorMessage";
-import List from "./List";
+import Spinner from "../../../../components/Spinner";
+import { DEFAULT_YEAR } from "../../../../utils/utils";
+import List, { Query } from "./List";
 
 export interface AnalyticalReport {
   districtName: string;
@@ -32,14 +30,7 @@ interface Props {
 
 const AnalyticalReportsPage = async ({ searchParams }: Props) => {
   const query = await searchParams; // 👈 fix
-  const { year, startDate, endDate, page, pageSize, search, orderBy, order } =
-    query;
-
-  const myPage = parseInt(page || "1") || 1;
-  let myPageSize: number;
-
-  if (pageSize == undefined) myPageSize = DEFAULT_PAGE_SIZE;
-  else myPageSize = Number(pageSize);
+  const { year, startDate, endDate, search, orderBy, order } = query;
 
   const selectedYear = year || DEFAULT_YEAR;
   const baseURL =
@@ -77,17 +68,6 @@ const AnalyticalReportsPage = async ({ searchParams }: Props) => {
     data = sort(data)[order]((item) => item[orderBy]);
   }
 
-  // **Pagination Logic**
-  const totalCount = data.length;
-
-  // Apply pagination using slice()
-  const paginatedData = data.slice(
-    (myPage - 1) * myPageSize,
-    myPage * myPageSize
-  );
-
-  console.log("response data", data);
-
   return (
     <div className="border border-[#e2e8f0] rounded-lg py-1! overflow-hidden max-h-[calc(100vh-10px)]">
       {/* Header Section */}
@@ -96,7 +76,7 @@ const AnalyticalReportsPage = async ({ searchParams }: Props) => {
           <div className="flex items-center gap-1">
             <p className="text-(--primary) font-semibold">Analytical Report</p>
             <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-              {paginatedData?.length} Records
+              {data?.length} Records
             </p>
           </div>
         </div>
@@ -116,25 +96,13 @@ const AnalyticalReportsPage = async ({ searchParams }: Props) => {
             <div className="px-2!">
               <ErrorMessage>{response?.responseMessage}</ErrorMessage>
             </div>
-          ) : paginatedData && paginatedData.length > 0 ? (
+          ) : data && data.length > 0 ? (
             // Normal table data
-            <List
-              data={paginatedData}
-              currentPage={myPage}
-              pageSize={myPageSize}
-              searchParams={query}
-            />
+            <List data={data} searchParams={query} />
           ) : (
             // No records found
             <p className="px-2!">No records found.</p>
           )}
-          <Suspense fallback={<Spinner />}>
-            <Pagination
-              pageSize={myPageSize}
-              currentPage={myPage}
-              itemCount={totalCount}
-            />
-          </Suspense>
         </div>
       </div>
     </div>

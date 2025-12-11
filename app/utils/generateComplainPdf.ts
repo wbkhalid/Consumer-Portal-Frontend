@@ -93,7 +93,7 @@ export const generateComplaintPDF = (item: ManageComplainsData) => {
         </div>
 
         <div class="main-heading">
-          از دفتر اتھارٹی با تحت — پنجاب کنزیومر پروٹیکشن ایکٹ 2005
+          از دفتر اتھارٹی با تحت پنجاب کنزیومر پروٹیکشن ایکٹ 2005
         </div>
 
         <div class="section">

@@ -4,10 +4,10 @@ import { Suspense } from "react";
 import { COMPLAINT_REPORT_API } from "../../../../APIs";
 import DatesFilter from "../../../../components/Filters/DatesFilter";
 import SearchFilter from "../../../../components/Filters/SearchFilter";
-import YearFilter from "../../../../components/Filters/YearFilter";
 import Pagination from "../../../../components/Form/Pagination";
-import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
-import ComplaintSummaryTable, { Query } from "./ComplaintSummaryTable";
+import { DEFAULT_PAGE_SIZE, exportDataToExcel } from "../../../../utils/utils";
+import DownloadWrapper from "./DownloadWrapper";
+import List, { Query } from "./List";
 
 export interface ComplaintSummary {
   districtName: string;
@@ -23,8 +23,7 @@ interface Props {
 
 const ComplaintSummaryPage = async ({ searchParams }: Props) => {
   const query = await searchParams; // 👈 fix
-  const { year, startDate, endDate, page, pageSize, search, orderBy, order } =
-    query;
+  const { startDate, endDate, page, pageSize, search, orderBy, order } = query;
 
   const myPage = parseInt(page || "1") || 1;
   let myPageSize: number;
@@ -36,13 +35,10 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
   console.log(pageSize, pageSize);
   console.log(search, search);
 
-  const selectedYear = year || DEFAULT_YEAR;
   const baseURL =
     process.env.BACKEND_API + COMPLAINT_REPORT_API + "/complaint-summary";
 
   const params = new URLSearchParams();
-
-  params.set("year", year || selectedYear.toString()); // always required
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
@@ -80,6 +76,7 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
     (myPage - 1) * myPageSize,
     myPage * myPageSize
   );
+
   console.log("data", data);
   console.log("paginatedData", paginatedData);
 
@@ -101,7 +98,7 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
         </div>
         <div className="flex items-center justify-end gap-1">
           <Suspense fallback={<Spinner />}>
-            <YearFilter />
+            <DownloadWrapper data={data} />
             <DatesFilter />
             <SearchFilter />
           </Suspense>
@@ -110,8 +107,9 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
       <div className="relative">
         <div className="h-[calc(100vh-140px)] overflow-y-auto scrollbar-hide relative">
           {/* Table */}
-          <ComplaintSummaryTable
-            data={paginatedData}
+          <List
+            data={data}
+            paginatedData={paginatedData}
             currentPage={myPage}
             pageSize={myPageSize}
             searchParams={query}
