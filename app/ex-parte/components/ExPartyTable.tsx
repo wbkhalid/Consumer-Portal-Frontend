@@ -4,6 +4,8 @@ import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { formatDate, getDaysOld } from "../../utils/utils";
 import { useMemo, useState } from "react";
 import PaginationControls from "../../components/table/PaginationControls";
+import { Dialog } from "@radix-ui/themes";
+import ExParteDialog from "./ExParteDialog";
 
 interface ExParteTableProps {
   rowsData: ManageComplainsData[];
@@ -17,6 +19,9 @@ const ExParteTable = ({ rowsData, setRefresh }: ExParteTableProps) => {
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedComplaint, setSelectedComplaint] =
+    useState<ManageComplainsData | null>(null);
 
   const headers = [
     { label: "Id", sortable: "id" },
@@ -77,78 +82,84 @@ const ExParteTable = ({ rowsData, setRefresh }: ExParteTableProps) => {
   return (
     <>
       <div className="relative">
-        <div className="h-[calc(100vh-120px)] overflow-y-auto scrollbar-hide relative">
-          <table className="min-w-full text-sm mb-10!">
-            <thead className="sticky top-0 z-10">
-              <tr className="font-semibold bg-white">
-                {headers?.map((header) => (
-                  <TableHeaderCell
-                    key={header?.label}
-                    label={header?.label}
-                    sortable={header?.sortable}
-                    onSort={
-                      header.sortable
-                        ? () => handleSort(header.sortable!)
-                        : undefined
-                    }
-                  />
-                ))}
-              </tr>
-            </thead>
-
-            <tbody>
-              {paginatedData?.map((item, index) => (
-                <tr
-                  key={index}
-                  className={`transition-colors duration-150 ${
-                    index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                  } hover:bg-gray-100`}
-                >
-                  <TableBodyCell>{item?.id}</TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {formatDate(item?.createdAt)}
-                  </TableBodyCell>
-                  <TableBodyCell>{getDaysOld(item?.createdAt)}</TableBodyCell>
-                  <TableBodyCell>{item?.shopName}</TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.phoneNumber}
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.complaintType}
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.categoryName}
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.sectionCategoryName}
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    {item?.sectionsDetails
-                      ?.map((section) => section?.name)
-                      .join(", ")}
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    {item?.sectionsDetails
-                      ?.map((section) => section?.description)
-                      .join(", ")}
-                  </TableBodyCell>
-
-                  <TableBodyCell>
-                    {item?.remarks
-                      ? item?.remarks?.slice(0, 50) +
-                        (item?.remarks?.length > 50 ? "..." : "")
-                      : ""}
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    {item?.assigneeRemarks
-                      ? item?.assigneeRemarks?.slice(0, 50) +
-                        (item?.assigneeRemarks?.length > 50 ? "..." : "")
-                      : ""}
-                  </TableBodyCell>
+        <div className="h-[calc(100vh-120px)] overflow-auto">
+          <div className="overflow-scroll mb-10!">
+            <table className="min-w-full text-sm mb-10!">
+              <thead className="sticky top-0 z-10">
+                <tr className="font-semibold bg-white">
+                  {headers?.map((header) => (
+                    <TableHeaderCell
+                      key={header?.label}
+                      label={header?.label}
+                      sortable={header?.sortable}
+                      onSort={
+                        header.sortable
+                          ? () => handleSort(header.sortable!)
+                          : undefined
+                      }
+                    />
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {paginatedData?.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={`transition-colors duration-150 cursor-pointer! ${
+                      index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
+                    } hover:bg-gray-100`}
+                    onClick={() => {
+                      setSelectedComplaint(item);
+                      setOpenDialog(true);
+                    }}
+                  >
+                    <TableBodyCell>{item?.id}</TableBodyCell>
+                    <TableBodyCell className="whitespace-nowrap">
+                      {formatDate(item?.createdAt)}
+                    </TableBodyCell>
+                    <TableBodyCell>{getDaysOld(item?.createdAt)}</TableBodyCell>
+                    <TableBodyCell>{item?.shopName}</TableBodyCell>
+                    <TableBodyCell className="whitespace-nowrap">
+                      {item?.phoneNumber}
+                    </TableBodyCell>
+                    <TableBodyCell className="whitespace-nowrap">
+                      {item?.complaintType}
+                    </TableBodyCell>
+                    <TableBodyCell className="whitespace-nowrap">
+                      {item?.categoryName}
+                    </TableBodyCell>
+                    <TableBodyCell className="whitespace-nowrap">
+                      {item?.sectionCategoryName}
+                    </TableBodyCell>
+                    <TableBodyCell>
+                      {item?.sectionsDetails
+                        ?.map((section) => section?.name)
+                        .join(", ")}
+                    </TableBodyCell>
+                    <TableBodyCell>
+                      {item?.sectionsDetails
+                        ?.map((section) => section?.description)
+                        .join(", ")}
+                    </TableBodyCell>
+
+                    <TableBodyCell>
+                      {item?.remarks
+                        ? item?.remarks?.slice(0, 50) +
+                          (item?.remarks?.length > 50 ? "..." : "")
+                        : ""}
+                    </TableBodyCell>
+                    <TableBodyCell>
+                      {item?.assigneeRemarks
+                        ? item?.assigneeRemarks?.slice(0, 50) +
+                          (item?.assigneeRemarks?.length > 50 ? "..." : "")
+                        : ""}
+                    </TableBodyCell>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
         <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
           <PaginationControls
@@ -161,31 +172,11 @@ const ExParteTable = ({ rowsData, setRefresh }: ExParteTableProps) => {
         </div>
       </div>
 
-      {/* <EscalationDialog
-        isDialogOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
-        selectedComplaint={selectedComplaint}
-        setSelectedComplaint={setSelectedComplaint}
-        dialogStep={dialogStep}
-        setDialogStep={setDialogStep}
-        hearingDate={hearingDate}
-        setHearingDate={setHearingDate}
-        isResolved={isResolved}
-        setIsResolved={setIsResolved}
-        selectedStatus={selectedStatus}
-        setSelectedStatus={setSelectedStatus}
-        submittionRemarks={submittionRemarks}
-        setSubmittionRemarks={setSubmittionRemarks}
-        imageUrl={imageUrl}
-        setImageUrl={setImageUrl}
-        videoUrl={videoUrl}
-        setVideoUrl={setVideoUrl}
-        loading={loading}
-        setLoading={setLoading}
-        handleHearingComplaint={handleHearingComplaint}
-        fineAmount={fineAmount}
-        setFineAmount={setFineAmount}
-      /> */}
+      <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
+        <Dialog.Content className="px-0 lg:max-w-[700px]!">
+          <ExParteDialog selectedComplaint={selectedComplaint} />
+        </Dialog.Content>
+      </Dialog.Root>
     </>
   );
 };

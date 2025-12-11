@@ -86,136 +86,138 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
 
   return (
     <div className="relative">
-      <div className="h-[calc(100vh-120px)] overflow-x-auto relative">
-        <table className="min-w-full text-sm mb-10!">
-          <thead className="sticky top-0 z-10 bg-white">
-            <tr className="font-semibold">
-              {headers?.map((header) => (
-                <TableHeaderCell
-                  key={header?.label}
-                  label={header?.label}
-                  sortable={header?.sortable}
-                  onSort={
-                    header.sortable
-                      ? () => handleSort(header.sortable!)
-                      : undefined
-                  }
-                />
-              ))}
-            </tr>
-          </thead>
+      <div className="h-[calc(100vh-120px)] overflow-auto">
+        <div className="overflow-scroll mb-10!">
+          <table className="min-w-full text-sm">
+            <thead className="sticky top-0 z-10 bg-white">
+              <tr className="font-semibold">
+                {headers?.map((header) => (
+                  <TableHeaderCell
+                    key={header?.label}
+                    label={header?.label}
+                    sortable={header?.sortable}
+                    onSort={
+                      header.sortable
+                        ? () => handleSort(header.sortable!)
+                        : undefined
+                    }
+                  />
+                ))}
+              </tr>
+            </thead>
 
-          <tbody>
-            {paginatedData?.map((item, index) => {
-              const images = item?.listOfImage?.filter((url) =>
-                url.match(/\.(jpg|jpeg|png|gif|webp)$/i)
-              );
+            <tbody>
+              {paginatedData?.map((item, index) => {
+                const images = item?.listOfImage?.filter((url) =>
+                  url.match(/\.(jpg|jpeg|png|gif|webp)$/i)
+                );
 
-              const videos = item?.listOfImage?.filter((url) =>
-                url.match(/\.(mp4|mov|avi|mkv)$/i)
-              );
+                const videos = item?.listOfImage?.filter((url) =>
+                  url.match(/\.(mp4|mov|avi|mkv)$/i)
+                );
 
-              return (
-                <tr
-                  key={item?.id}
-                  className={`transition-colors duration-150 cursor-pointer ${
-                    index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                  } hover:bg-gray-100`}
-                  onClick={() => {
-                    setSelectedComplaint(item);
-                    setOpenDialog(true);
-                  }}
-                >
-                  <TableBodyCell>{item?.id}</TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {formatDate(item?.createdAt)}
-                  </TableBodyCell>
-                  <TableBodyCell>{item?.shopName}</TableBodyCell>
-                  <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
-                  <TableBodyCell>{item?.complaintType}</TableBodyCell>
-                  <TableBodyCell>{item?.categoryName}</TableBodyCell>
-                  <TableBodyCell>{item?.sectionCategoryName}</TableBodyCell>
-                  <TableBodyCell>
-                    {item?.sectionsDetails?.map((s) => s?.name).join(", ")}
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    {item?.sectionsDetails
-                      ?.map((s) => s?.description)
-                      .join(", ")}
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {statusData?.find((s) => s?.id === item?.status)?.label ||
-                      "-"}
-                  </TableBodyCell>
-                  <TableBodyCell className="min-w-[200px]">
-                    {item?.remarks
-                      ? item?.remarks?.slice(0, 50) +
-                        (item?.remarks?.length > 50 ? "..." : "")
-                      : ""}
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    {item?.entryType === 0 ? (
-                      <div className="bg-[#c8d3dd] rounded-full px-2! py-0.5! w-fit text-(--primary)">
-                        Online
-                      </div>
-                    ) : (
-                      <div className="bg-[#faefbb] rounded-full px-2! py-0.5! w-fit text-(--warning)">
-                        Manual
-                      </div>
-                    )}
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    {!item?.listAudio || item?.listAudio?.length === 0 ? (
-                      <div className="bg-[#efcdcd] rounded-full px-2! py-0.5! w-fit text-(--error)">
-                        No
-                      </div>
-                    ) : (
-                      <div className="bg-[#c8d3dd] rounded-full px-2! py-0.5! w-fit text-(--primary)">
-                        Yes
-                      </div>
-                    )}
-                  </TableBodyCell>
-                  <TableBodyCell>
-                    {!item?.listOfImage || item?.listOfImage.length === 0 ? (
-                      <div className="bg-[#efcdcd] rounded-full px-2! py-0.5! w-fit text-(--error)">
-                        No
-                      </div>
-                    ) : (
-                      <div className="flex gap-1">
-                        {images.map((imgUrl, i) => (
-                          <div className="w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]">
-                            <img
+                return (
+                  <tr
+                    key={item?.id}
+                    className={`transition-colors duration-150 cursor-pointer ${
+                      index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
+                    } hover:bg-gray-100`}
+                    onClick={() => {
+                      setSelectedComplaint(item);
+                      setOpenDialog(true);
+                    }}
+                  >
+                    <TableBodyCell>{item?.id}</TableBodyCell>
+                    <TableBodyCell className="whitespace-nowrap">
+                      {formatDate(item?.createdAt)}
+                    </TableBodyCell>
+                    <TableBodyCell>{item?.shopName}</TableBodyCell>
+                    <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
+                    <TableBodyCell>{item?.complaintType}</TableBodyCell>
+                    <TableBodyCell>{item?.categoryName}</TableBodyCell>
+                    <TableBodyCell>{item?.sectionCategoryName}</TableBodyCell>
+                    <TableBodyCell>
+                      {item?.sectionsDetails?.map((s) => s?.name).join(", ")}
+                    </TableBodyCell>
+                    <TableBodyCell>
+                      {item?.sectionsDetails
+                        ?.map((s) => s?.description)
+                        .join(", ")}
+                    </TableBodyCell>
+                    <TableBodyCell className="whitespace-nowrap">
+                      {statusData?.find((s) => s?.id === item?.status)?.label ||
+                        "-"}
+                    </TableBodyCell>
+                    <TableBodyCell className="min-w-[200px]">
+                      {item?.remarks
+                        ? item?.remarks?.slice(0, 50) +
+                          (item?.remarks?.length > 50 ? "..." : "")
+                        : ""}
+                    </TableBodyCell>
+                    <TableBodyCell>
+                      {item?.entryType === 0 ? (
+                        <div className="bg-[#c8d3dd] rounded-full px-2! py-0.5! w-fit text-(--primary)">
+                          Online
+                        </div>
+                      ) : (
+                        <div className="bg-[#faefbb] rounded-full px-2! py-0.5! w-fit text-(--warning)">
+                          Manual
+                        </div>
+                      )}
+                    </TableBodyCell>
+                    <TableBodyCell>
+                      {!item?.listAudio || item?.listAudio?.length === 0 ? (
+                        <div className="bg-[#efcdcd] rounded-full px-2! py-0.5! w-fit text-(--error)">
+                          No
+                        </div>
+                      ) : (
+                        <div className="bg-[#c8d3dd] rounded-full px-2! py-0.5! w-fit text-(--primary)">
+                          Yes
+                        </div>
+                      )}
+                    </TableBodyCell>
+                    <TableBodyCell>
+                      {!item?.listOfImage || item?.listOfImage.length === 0 ? (
+                        <div className="bg-[#efcdcd] rounded-full px-2! py-0.5! w-fit text-(--error)">
+                          No
+                        </div>
+                      ) : (
+                        <div className="flex gap-1">
+                          {images.map((imgUrl, i) => (
+                            <div className="w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]">
+                              <img
+                                key={i}
+                                src={imgUrl}
+                                alt={imgUrl}
+                                className="object-cover w-full h-full"
+                              />
+                            </div>
+                          ))}
+
+                          {videos.map((videoUrl, i) => (
+                            <div
                               key={i}
-                              src={imgUrl}
-                              alt={imgUrl}
-                              className="object-cover w-full h-full"
-                            />
-                          </div>
-                        ))}
-
-                        {videos.map((videoUrl, i) => (
-                          <div
-                            key={i}
-                            className="relative w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]"
-                          >
-                            <video
-                              key={`vid-${i}`}
-                              src={videoUrl}
-                              className="w-6 h-6 rounded-sm border border-[#e2e8f0] object-cover"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </TableBodyCell>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                              className="relative w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]"
+                            >
+                              <video
+                                key={`vid-${i}`}
+                                src={videoUrl}
+                                className="w-6 h-6 rounded-sm border border-[#e2e8f0] object-cover"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </TableBodyCell>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
+      <div className="absolute bottom-0 py-1! w-full bg-white  border-t border-[#e2e8f0]">
         <PaginationControls
           currentPage={currentPage}
           totalPages={totalPages}

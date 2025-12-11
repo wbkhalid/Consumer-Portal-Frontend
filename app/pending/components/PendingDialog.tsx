@@ -248,7 +248,7 @@ const PendingDialog = ({
                     onChange={(val) => setSelectedStaff(val)}
                     options={
                       staffData?.map((status) => ({
-                        label: status?.roles[0],
+                        label: status?.fullName,
                         value: status?.userId,
                       })) ?? []
                     }

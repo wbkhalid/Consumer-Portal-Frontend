@@ -8,7 +8,7 @@ import CustomDateRangePicker from "../../../components/CustomDateRangePicker";
 import { useRegionFilters } from "../../../hooks/useRegionFilters";
 import CustomSelect from "../../../components/CustomSelect";
 import useGetSectionCategory from "../../../hooks/useGetSectionCategory";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import useGetAllSections from "../../../hooks/useGetAllSections";
 import useGetAllDistricts from "../../../hooks/useGetAllDistricts";
 import useGetAllStaff from "../../../hooks/useGetAllStaff";
@@ -27,8 +27,6 @@ const CustomComplaintComponent = ({
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
-  const [startYear, setStartYear] = useState("");
-  const [endYear, setEndYear] = useState("");
   const [selectedAssignee, setSelectedAssignee] = useState("");
   const { divisionId, districtId, tehsilId, startDate, endDate } =
     useRegionFilters();
@@ -37,7 +35,8 @@ const CustomComplaintComponent = ({
     startDate,
     endDate,
     divisionId,
-    districtId: selectedDistrict ? selectedDistrict : districtId,
+    districtId:
+      selectedDistrict === "all" ? "" : selectedDistrict || districtId,
     tehsilId,
     section: selectedSection === "all" ? "" : selectedSection,
     sectionCategory: selectedCategory === "all" ? "" : selectedCategory,
@@ -48,6 +47,25 @@ const CustomComplaintComponent = ({
   const { data: districtData } = useGetAllDistricts();
   const { data: staffData } = useGetAllStaff({ divisionId, districtId });
   const years = Array.from({ length: 30 }, (_, i) => 2000 + i);
+
+  const uniqueSectionOptions = useMemo(() => {
+    if (!sectionData) return [];
+
+    const seenNames = new Set<string>();
+    const uniqueSections: { label: string; value: string }[] = [];
+
+    sectionData.forEach((section) => {
+      if (!seenNames.has(section.name)) {
+        seenNames.add(section.name);
+        uniqueSections.push({
+          label: section?.name,
+          value: section?.id,
+        });
+      }
+    });
+
+    return uniqueSections;
+  }, [sectionData]);
 
   return (
     <div className="border border-[#e2e8f0] rounded-lg py-1! overflow-hidden max-h-[calc(100vh-10px)]">
@@ -90,13 +108,7 @@ const CustomComplaintComponent = ({
             placeholder="Select Section"
             value={selectedSection}
             onChange={(val) => setSelectedSection(val as string)}
-            options={[
-              { label: "All", value: "all" },
-              ...sectionData?.map((section) => ({
-                label: `${section?.name}-${section.description}`,
-                value: section?.id.toString(),
-              })),
-            ]}
+            options={[{ label: "All", value: "all" }, ...uniqueSectionOptions]}
           />
 
           <CustomSelect
@@ -112,28 +124,6 @@ const CustomComplaintComponent = ({
             ]}
           />
 
-          {/* <CustomSelect
-            placeholder="Start Year"
-            value={startYear}
-            onChange={(val) => setStartYear(val as string)}
-            options={years.map((y) => ({
-              label: y.toString(),
-              value: y.toString(),
-            }))}
-          />
-
-          <CustomSelect
-            placeholder="End Year"
-            value={endYear}
-            onChange={(val) => setEndYear(val as string)}
-            disabled={!startYear}
-            options={years
-              .filter((y) => !startYear || y >= Number(startYear))
-              .map((y) => ({
-                label: y.toString(),
-                value: y.toString(),
-              }))}
-          /> */}
           <CustomDateRangePicker />
 
           <Forms

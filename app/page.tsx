@@ -154,7 +154,7 @@ const DashboardPage = async ({ searchParams }: PageProps) => {
       <div className="col-span-12 lg:col-span-4 xl:col-span-3">
         <FilterDataComponent />
         <ComplainStatusChart data={complainDashboardData?.statusStats} />
-        <ComplainMap data={complainDashboardData?.complaintsList} />
+        {/* <ComplainMap data={complainDashboardData?.complaintsList} /> */}
       </div>
     </div>
   );

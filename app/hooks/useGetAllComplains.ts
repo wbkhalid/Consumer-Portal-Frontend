@@ -32,6 +32,7 @@ export interface ManageComplainsData {
   remarks: string | null;
   hearingDate: string | null;
   assigneeRemarks: string | null;
+  closingRemarks: string | null;
   assignedTo: string | null;
   listAudio: string[];
   listOfImage: string[];
