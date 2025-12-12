@@ -5,7 +5,7 @@ import { COMPLAINT_REPORT_API } from "../../../../APIs";
 import DatesFilter from "../../../../components/Filters/DatesFilter";
 import SearchFilter from "../../../../components/Filters/SearchFilter";
 import Pagination from "../../../../components/Form/Pagination";
-import { DEFAULT_PAGE_SIZE, exportDataToExcel } from "../../../../utils/utils";
+import { DEFAULT_PAGE_SIZE } from "../../../../utils/utils";
 import DownloadWrapper from "./DownloadWrapper";
 import List, { Query } from "./List";
 
@@ -84,45 +84,42 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
   console.log("start:", (myPage - 1) * myPageSize);
   console.log("end:", myPage * myPageSize);
 
+  const fileName = "Complaint Summary Report";
+
   return (
-    <div className="border border-[#e2e8f0] rounded-lg py-1! overflow-hidden max-h-[calc(100vh-10px)]">
+    <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
       {/* Header Section */}
       <div className="flex justify-between items-center px-2! py-2!">
         <div className="flex items-center gap-1">
-          <p className="text-(--primary) font-semibold">
-            Complaint Summary Report
-          </p>
+          <p className="text-(--primary) font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {paginatedData.length} Records
           </p>
         </div>
-        <div className="flex items-center justify-end gap-1">
+        <div className="flex items-center justify-end gap-2">
           <Suspense fallback={<Spinner />}>
-            <DownloadWrapper data={data} />
             <DatesFilter />
             <SearchFilter />
+            <DownloadWrapper fileName={fileName} data={data} />
           </Suspense>
         </div>
       </div>
-      <div className="relative">
-        <div className="h-[calc(100vh-140px)] overflow-y-auto scrollbar-hide relative">
-          {/* Table */}
-          <List
-            data={data}
-            paginatedData={paginatedData}
-            currentPage={myPage}
-            pageSize={myPageSize}
-            searchParams={query}
-          />
-          <Suspense fallback={<Spinner />}>
-            <Pagination
-              pageSize={myPageSize}
-              currentPage={myPage}
-              itemCount={totalCount}
-            />
-          </Suspense>
-        </div>
-      </div>
+
+      {/* Table */}
+      <List
+        data={data}
+        paginatedData={paginatedData}
+        currentPage={myPage}
+        pageSize={myPageSize}
+        searchParams={query}
+      />
+      <Suspense fallback={<Spinner />}>
+        <Pagination
+          pageSize={myPageSize}
+          currentPage={myPage}
+          itemCount={totalCount}
+        />
+      </Suspense>
     </div>
   );
 };

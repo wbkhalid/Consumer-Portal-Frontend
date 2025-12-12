@@ -16,7 +16,7 @@ const NonProsecutionComponent = () => {
     tehsilId: tehsilId || "",
   });
   return (
-    <div className="border border-[#e2e8f0] rounded-lg py-1! overflow-hidden max-h-[calc(100vh-10px)]">
+    <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
       <div className="flex justify-between items-center px-4! py-2!">
         <div className="flex items-center gap-1">
           <p className="text-[#181D27] font-semibold">Non Prosecution</p>

@@ -1,15 +1,15 @@
 import { sort } from "fast-sort";
-import { COMPLAINT_REPORT_API } from "../../../../APIs";
-import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
-import AppealsReportTable, { Query } from "./List";
 import { Suspense } from "react";
-import Spinner from "../../../../components/Spinner";
-import Pagination from "../../../../components/Form/Pagination";
-import YearFilter from "../../../../components/Filters/YearFilter";
-import SearchFilter from "../../../../components/Filters/SearchFilter";
+import { COMPLAINT_REPORT_API } from "../../../../APIs";
 import DatesFilter from "../../../../components/Filters/DatesFilter";
+import SearchFilter from "../../../../components/Filters/SearchFilter";
+import YearFilter from "../../../../components/Filters/YearFilter";
 import ErrorMessage from "../../../../components/Form/ErrorMessage";
-import List from "./List";
+import Pagination from "../../../../components/Form/Pagination";
+import Spinner from "../../../../components/Spinner";
+import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
+import List, { Query } from "./List";
+import DownloadWrapper from "./DownloadWrapper";
 
 export interface AppealReport {
   districtName: string;
@@ -75,53 +75,51 @@ const AppealsReportPage = async ({ searchParams }: Props) => {
     myPage * myPageSize
   );
 
+  const fileName = "Appeals Report";
   return (
-    <div className="border border-[#e2e8f0] rounded-lg py-1! overflow-hidden max-h-[calc(100vh-10px)]">
+    <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
       {/* Header Section */}
       <div className="flex justify-between items-center px-2! py-2!">
         <div className="flex items-center gap-1">
-          <p className="text-(--primary) font-semibold">Appeals Report</p>
+          <p className="text-(--primary) font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {paginatedData?.length} Records
           </p>
         </div>
-        <div className="flex items-center justify-end gap-1">
+        <div className="flex items-center justify-end gap-2">
           <Suspense fallback={<Spinner />}>
             <YearFilter />
             <DatesFilter />
             <SearchFilter />
+            <DownloadWrapper data={data} fileName={fileName} />
           </Suspense>
         </div>
       </div>
-      <div className="relative">
-        <div className="h-[calc(100vh-140px)] overflow-y-auto scrollbar-hide relative">
-          {/* Table */}
-          {response?.responseCode !== 200 ? (
-            // API error
-            <div className="px-2!">
-              <ErrorMessage>{response?.responseMessage}</ErrorMessage>
-            </div>
-          ) : paginatedData && paginatedData.length > 0 ? (
-            // Normal table data
-            <List
-              data={paginatedData}
-              currentPage={myPage}
-              pageSize={myPageSize}
-              searchParams={query}
-            />
-          ) : (
-            // No records found
-            <p className="px-2!">No records found.</p>
-          )}
-          <Suspense fallback={<Spinner />}>
-            <Pagination
-              pageSize={myPageSize}
-              currentPage={myPage}
-              itemCount={totalCount}
-            />
-          </Suspense>
+      {/* Table */}
+      {response?.responseCode !== 200 ? (
+        // API error
+        <div className="px-2!">
+          <ErrorMessage>{response?.responseMessage}</ErrorMessage>
         </div>
-      </div>
+      ) : paginatedData && paginatedData.length > 0 ? (
+        // Normal table data
+        <List
+          data={paginatedData}
+          currentPage={myPage}
+          pageSize={myPageSize}
+          searchParams={query}
+        />
+      ) : (
+        // No records found
+        <p className="px-2!">No records found.</p>
+      )}
+      <Suspense fallback={<Spinner />}>
+        <Pagination
+          pageSize={myPageSize}
+          currentPage={myPage}
+          itemCount={totalCount}
+        />
+      </Suspense>
     </div>
   );
 };

@@ -8,6 +8,7 @@ import ErrorMessage from "../../../../components/Form/ErrorMessage";
 import Spinner from "../../../../components/Spinner";
 import { DEFAULT_YEAR } from "../../../../utils/utils";
 import List, { Query } from "./List";
+import DownloadWrapper from "./DownloadWrapper";
 
 export interface AnalyticalReport {
   districtName: string;
@@ -68,23 +69,26 @@ const AnalyticalReportsPage = async ({ searchParams }: Props) => {
     data = sort(data)[order]((item) => item[orderBy]);
   }
 
+  const fileName = "Analytical Report";
+
   return (
-    <div className="border border-[#e2e8f0] rounded-lg py-1! overflow-hidden max-h-[calc(100vh-10px)]">
+    <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
       {/* Header Section */}
       <div className="flex justify-between items-center px-2! py-2!">
         <div className="flex items-center justify-between gap-1">
           <div className="flex items-center gap-1">
-            <p className="text-(--primary) font-semibold">Analytical Report</p>
+            <p className="text-(--primary) font-semibold">{fileName}</p>
             <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
               {data?.length} Records
             </p>
           </div>
         </div>
-        <div className="flex items-center justify-end gap-1">
+        <div className="flex items-center justify-end gap-2">
           <Suspense fallback={<Spinner />}>
             <YearFilter />
             <DatesFilter />
             <SearchFilter />
+            <DownloadWrapper data={data} fileName={fileName} />
           </Suspense>
         </div>
       </div>

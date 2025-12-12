@@ -210,3 +210,31 @@ export type Column<T> = {
   value: keyof T;
   className?: string;
 };
+
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
+// Generic PDF export method
+export const exportDataToPDF = (
+  headers: string[],
+  rows: any[],
+  filename: string,
+  orientation: "portrait" | "landscape" = "portrait"
+) => {
+  const doc = new jsPDF({ orientation });
+
+  // Title (optional)
+  doc.setFontSize(14);
+  doc.text(filename.replace(".pdf", ""), 14, 15);
+
+  // Table
+  autoTable(doc, {
+    startY: 25,
+    head: [headers],
+    body: rows.map((row) => headers.map((h) => row[h])),
+    styles: { fontSize: 10 },
+    headStyles: { fillColor: [19, 66, 115] }, // nice dark-blue header
+  });
+
+  doc.save(filename);
+};

@@ -5,6 +5,8 @@ import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RxDoubleArrowLeft, RxDoubleArrowRight } from "react-icons/rx";
 import PageSizeFilter from "./PageSizeFilter";
+import { Button } from "@radix-ui/themes";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 interface Props {
   itemCount: number;
@@ -16,24 +18,13 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pageCount = Math.ceil(itemCount / pageSize);
-  if (pageCount <= 1) return null;
+  // if (pageCount <= 1) return null;
 
   const changePage = (page: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", page.toString());
     router.push("?" + params.toString(), { scroll: true });
   };
-
-  // const changePageSize = (size: number) => {
-  //   const params = new URLSearchParams(searchParams);
-  //   params.set("pageSize", size.toString());
-  //   params.set("page", "1"); // Reset to first page on size change
-  //   router.push("?" + params.toString(), { scroll: false });
-  // };
-
-  // useEffect(() => {
-  //   changePageSize(10);
-  // }, [router]);
 
   const handlePageChange = (pageNumber: number) => {
     changePage(pageNumber);
@@ -89,13 +80,13 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
   };
 
   return (
-    <div className="absolute bottom-0 w-full">
-      <div className="flex gap-2! items-center! p-3! justify-between">
-        <p className="text-sm">
-          Page {currentPage} of {pageCount}
-        </p>
+    <div className="w-full">
+      <div className="flex gap-2! items-center! py-1! px-1! justify-between">
+        <div>
+          <PageSizeFilter />
+        </div>
         <div className="flex gap-2 flex-wrap">
-          <button
+          {/* <button
             className={`px-4! py-1! rounded-md text-sm font-medium transition-colors duration-150 ${
               currentPage !== 1 && "hover:bg-zinc-400"
             } transition-colors`}
@@ -103,8 +94,8 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
             onClick={() => changePage(1)}
           >
             <RxDoubleArrowLeft className="text-black" />
-          </button>
-          <button
+          </button> */}
+          {/* <button
             className={`px-4! py-1! rounded-md text-sm font-medium transition-colors duration-150 ${
               currentPage !== 1 && "hover:bg-zinc-400"
             } transition-colors`}
@@ -112,9 +103,9 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
             onClick={() => changePage(currentPage - 1)}
           >
             <BiChevronLeft className="text-black" />
-          </button>
+          </button> */}
           {renderPageNumbers()}
-          <button
+          {/* <button
             className={`px-4! py-1! rounded-md text-sm font-medium transition-colors duration-150 ${
               currentPage !== pageCount && "hover:bg-zinc-400"
             } transition-colors`}
@@ -122,8 +113,8 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
             onClick={() => changePage(currentPage + 1)}
           >
             <BiChevronRight className="text-black" />
-          </button>
-          <button
+          </button> */}
+          {/* <button
             className={`px-4! py-1! rounded-md text-sm font-medium transition-colors duration-150 ${
               currentPage !== pageCount && "hover:bg-zinc-400"
             } transition-colors`}
@@ -131,31 +122,37 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
             onClick={() => changePage(pageCount)}
           >
             <RxDoubleArrowRight className="text-black" />
-          </button>
+          </button> */}
         </div>
-        <div>
-          <PageSizeFilter />
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            disabled={currentPage === 1}
+            onClick={() => changePage(currentPage - 1)}
+            className={`text-[#414651]! outline! outline-[#D5D7DA]! shadow-none! ${
+              currentPage !== 1 && "hover:bg-[#F5F7FA]"
+            } !text-[12px]! px-3! py-1! transition-colors`}
+            style={{ outlineWidth: "1px" }}
+          >
+            <FaArrowLeft size={12} />
+            Previous
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            disabled={currentPage === pageCount}
+            onClick={() => changePage(currentPage + 1)}
+            className={`text-[#414651]! outline! outline-[#D5D7DA]! shadow-none! ${
+              currentPage !== pageCount && "hover:bg-[#F5F7FA]"
+            } !text-[12px]! px-3! py-1! transition-colors`}
+            style={{ outlineWidth: "1px" }}
+          >
+            Next
+            <FaArrowRight size={12} />
+          </Button>
         </div>
-        {/* <div>
-        <select
-          className="px-4! py-1! rounded-md text-sm font-medium transition-colors duration-150 hover:bg-zinc-400 transition-colors"
-          style={{
-            color: "#fff",
-            border: "1px solid #445E84",
-            outline: "none",
-          }}
-          aria-label="Rows per page"
-          name="rowPerPage"
-          value={pageSize}
-          onChange={(e) => changePageSize(Number(e.target.value))}
-        >
-          {[10, 20, 30, 40, 50].map((num) => (
-            <option key={num} value={num}>
-              &nbsp;{num}
-            </option>
-          ))}
-        </select>
-      </div> */}
       </div>
     </div>
   );

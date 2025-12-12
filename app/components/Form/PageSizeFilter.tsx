@@ -1,6 +1,6 @@
 import { GroupBase, SingleValue, StylesConfig } from "react-select";
 import CustomSelect, { OptionType } from "./CustomSelect";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export const defaultOption = { value: "10", label: "Select" };
@@ -13,7 +13,7 @@ const rowCountOptions: OptionType[] = [10, 20, 30, 40, 50].map((d) => {
 });
 
 const PageSizeFilter = () => {
-  const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<OptionType>();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -23,31 +23,32 @@ const PageSizeFilter = () => {
     router.push("?" + params.toString(), { scroll: true });
   };
 
+  useEffect(() => {
+    handlePageSizeChange(Number(rowCountOptions[0].value));
+    setSelectedOptions(rowCountOptions[0]);
+  }, []);
+
   return (
-    <>
-      <CustomSelect
-        menuPlacement="top"
-        isClearable={false}
-        options={[defaultOption, ...rowCountOptions]}
-        isSearchable={false}
-        closeMenuOnSelect={true}
-        singleSelectStyles={paginationSelectStyles}
-        value={selectedOptions}
-        onChangeSingle={(
-          newValue: SingleValue<{ value: string; label: string }>
-        ) => {
-          if (newValue) {
-            handlePageSizeChange(Number(newValue.value));
-            setSelectedOptions([
-              {
-                label: newValue.label,
-                value: newValue.value,
-              },
-            ]);
-          }
-        }}
-      />
-    </>
+    <CustomSelect
+      menuPlacement="top"
+      isClearable={false}
+      options={rowCountOptions}
+      isSearchable={false}
+      closeMenuOnSelect={true}
+      singleSelectStyles={paginationSelectStyles}
+      value={selectedOptions}
+      onChangeSingle={(
+        newValue: SingleValue<{ value: string; label: string }>
+      ) => {
+        if (newValue) {
+          handlePageSizeChange(Number(newValue.value));
+          setSelectedOptions({
+            label: newValue.label,
+            value: newValue.value,
+          });
+        }
+      }}
+    />
   );
 };
 

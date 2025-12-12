@@ -14,7 +14,7 @@ interface Props {
   searchParams: Query;
 }
 
-const ComplaintSummaryTable = ({
+const List = ({
   data,
   paginatedData,
   currentPage,
@@ -27,59 +27,63 @@ const ComplaintSummaryTable = ({
   const columns = getColumns();
 
   return (
-    <table className="min-w-full text-sm">
-      <thead className="sticky top-0 z-10">
-        <tr className="font-semibold bg-white">
-          <CustomTableHeaderCell label="Sr #" />
+    <div className="relative">
+      <div className="h-[calc(100vh-175px)] overflow-y-auto scrollbar-hide relative">
+        <table className="min-w-full text-sm">
+          <thead className="sticky top-0 z-10">
+            <tr className="font-semibold bg-white">
+              <CustomTableHeaderCell label="Sr #" />
 
-          {columns.map((column) => (
-            <CustomTableHeaderCell
-              key={column.value}
-              columnValue={column.value}
-              label={column.label}
-              searchParams={searchParams}
-            />
-          ))}
-        </tr>
-      </thead>
-
-      <tbody>
-        {paginatedData?.map((d, index) => {
-          const serial = (currentPage - 1) * pageSize + index + 1;
-
-          return (
-            <tr
-              key={serial}
-              className={`transition-colors duration-150 ${
-                index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-              } hover:bg-gray-100`}
-            >
-              <TableBodyCell>{serial}</TableBodyCell>
-              <TableBodyCell>{d.districtName}</TableBodyCell>
-              <TableBodyCell>{d.complaintsFiled}</TableBodyCell>
-              <TableBodyCell>{d.disposal}</TableBodyCell>
-              <TableBodyCell>{d.percentageDisposal}%</TableBodyCell>
-              <TableBodyCell>{d.pendingComplaints}</TableBodyCell>
+              {columns.map((column) => (
+                <CustomTableHeaderCell
+                  key={column.value}
+                  columnValue={column.value}
+                  label={column.label}
+                  searchParams={searchParams}
+                />
+              ))}
             </tr>
-          );
-        })}
+          </thead>
 
-        {/* ✅ Total Row */}
-        <tr className="font-semibold bg-[#f1f1f1] text-[#013769] sticky bottom-0">
-          <TableBodyCell colSpan={2} className="text-center">
-            Total
-          </TableBodyCell>
-          <TableBodyCell>{totalFiled}</TableBodyCell>
-          <TableBodyCell>{totalDisposal}</TableBodyCell>
-          <TableBodyCell>{totalPercentage}%</TableBodyCell>
-          <TableBodyCell>{totalPending}</TableBodyCell>
-        </tr>
-      </tbody>
-    </table>
+          <tbody>
+            {paginatedData?.map((d, index) => {
+              const serial = (currentPage - 1) * pageSize + index + 1;
+
+              return (
+                <tr
+                  key={serial}
+                  className={`transition-colors duration-150 ${
+                    index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
+                  } hover:bg-gray-100`}
+                >
+                  <TableBodyCell>{serial}</TableBodyCell>
+                  <TableBodyCell>{d.districtName}</TableBodyCell>
+                  <TableBodyCell>{d.complaintsFiled}</TableBodyCell>
+                  <TableBodyCell>{d.disposal}</TableBodyCell>
+                  <TableBodyCell>{d.percentageDisposal}%</TableBodyCell>
+                  <TableBodyCell>{d.pendingComplaints}</TableBodyCell>
+                </tr>
+              );
+            })}
+
+            {/* ✅ Total Row */}
+            <tr className="font-semibold bg-[#f1f1f1] text-[#013769] sticky bottom-0">
+              <TableBodyCell colSpan={2} className="text-center">
+                Total
+              </TableBodyCell>
+              <TableBodyCell>{totalFiled}</TableBodyCell>
+              <TableBodyCell>{totalDisposal}</TableBodyCell>
+              <TableBodyCell>{totalPercentage}%</TableBodyCell>
+              <TableBodyCell>{totalPending}</TableBodyCell>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 
-export default ComplaintSummaryTable;
+export default List;
 
 // strongly typed column list
 export const getColumns = (): Column<ComplaintSummary>[] => [
