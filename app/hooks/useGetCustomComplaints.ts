@@ -12,6 +12,8 @@ interface Props {
   section?: string;
   sectionCategory?: string;
   assignedTo?: string;
+  minFineAmount?: number;
+  maxFineAmount?: number;
 }
 
 export interface SectionsDetails {
@@ -50,6 +52,8 @@ const useGetCustomComplaints = ({
   section,
   sectionCategory,
   assignedTo,
+  minFineAmount,
+  maxFineAmount,
 }: Props = {}) => {
   const params = new URLSearchParams();
 
@@ -69,6 +73,12 @@ const useGetCustomComplaints = ({
     params.append("section", String(section));
   if (assignedTo !== undefined && assignedTo !== "" && assignedTo !== "0")
     params.append("assignedTo", String(assignedTo));
+  if (minFineAmount !== undefined)
+    params.append("minFineAmount", String(minFineAmount));
+
+  if (maxFineAmount !== undefined)
+    params.append("maxFineAmount", String(maxFineAmount));
+
   if (
     sectionCategory !== undefined &&
     sectionCategory !== "" &&
