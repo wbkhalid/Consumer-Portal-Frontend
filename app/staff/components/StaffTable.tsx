@@ -30,7 +30,7 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
   const headers = [
     { label: "Id" },
     { label: "Name", key: "fullName" },
-    { label: "Role", key: "roles" },
+    { label: "Authority", key: "roles" },
     { label: "Phone #" },
     // { label: "CNIC" },
     { label: "Division", key: "division" },

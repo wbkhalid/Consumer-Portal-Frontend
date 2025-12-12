@@ -4,7 +4,6 @@ import CustomComplaintTable from "./CustomComplaintTable";
 import Forms from "../list/Forms";
 import { OptionType } from "../../../components/Form/CustomSelect";
 import useGetCustomComplaints from "../../../hooks/useGetCustomComplaints";
-import CustomDateRangePicker from "../../../components/CustomDateRangePicker";
 import { useRegionFilters } from "../../../hooks/useRegionFilters";
 import CustomSelect from "../../../components/CustomSelect";
 import useGetSectionCategory from "../../../hooks/useGetSectionCategory";
@@ -12,6 +11,9 @@ import { useMemo, useState } from "react";
 import useGetAllSections from "../../../hooks/useGetAllSections";
 import useGetAllDistricts from "../../../hooks/useGetAllDistricts";
 import useGetAllStaff from "../../../hooks/useGetAllStaff";
+import DatePicker from "../../../components/DatePicker";
+import FineFilter from "./FineFilter";
+import { Button } from "@radix-ui/themes";
 
 interface Props {
   sectionCategoryOptions: OptionType[];
@@ -28,12 +30,18 @@ const CustomComplaintComponent = ({
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
   const [selectedAssignee, setSelectedAssignee] = useState("");
-  const { divisionId, districtId, tehsilId, startDate, endDate } =
-    useRegionFilters();
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [minFine, setMinFine] = useState<number | undefined>(undefined);
+  const [maxFine, setMaxFine] = useState<number | undefined>(undefined);
+
+  const { divisionId, districtId, tehsilId } = useRegionFilters();
   const { data: customComplaintData } = useGetCustomComplaints({
     // startDate: startYear ? `${startYear}-01-01` : "",
-    startDate,
-    endDate,
+    startDate: startDate ? startDate.toISOString() : undefined,
+    endDate: endDate ? endDate.toISOString() : undefined,
+    minFineAmount: minFine,
+    maxFineAmount: maxFine,
     divisionId,
     districtId:
       selectedDistrict === "all" ? "" : selectedDistrict || districtId,
@@ -46,7 +54,6 @@ const CustomComplaintComponent = ({
   const { data: sectionData } = useGetAllSections();
   const { data: districtData } = useGetAllDistricts();
   const { data: staffData } = useGetAllStaff({ divisionId, districtId });
-  const years = Array.from({ length: 30 }, (_, i) => 2000 + i);
 
   const uniqueSectionOptions = useMemo(() => {
     if (!sectionData) return [];
@@ -79,59 +86,98 @@ const CustomComplaintComponent = ({
             {customComplaintData?.length.toLocaleString()} Records
           </p>
         </div>
-        <div className="flex items-center gap-1">
-          <CustomSelect
-            placeholder="Select Assignee"
-            value={selectedAssignee}
-            onChange={(val) => setSelectedAssignee(val as string)}
-            options={[
-              { label: "All", value: "all" },
-              ...staffData?.map((staff) => ({
-                label: `${staff?.fullName}`,
-                value: staff?.userId,
-              })),
-            ]}
-          />
-          <CustomSelect
-            placeholder="Select District"
-            value={selectedDistrict}
-            onChange={(val) => setSelectedDistrict(val as string)}
-            options={[
-              { label: "All", value: "all" },
-              ...districtData?.map((district) => ({
-                label: `${district?.name}`,
-                value: district?.id.toString(),
-              })),
-            ]}
-          />
-          <CustomSelect
-            placeholder="Select Section"
-            value={selectedSection}
-            onChange={(val) => setSelectedSection(val as string)}
-            options={[{ label: "All", value: "all" }, ...uniqueSectionOptions]}
-          />
+        <Forms
+          sectionCategoryOptions={sectionCategoryOptions}
+          sectionOptions={sectionOptions}
+          complaintCategoryOptions={complaintCategoryOptions}
+        />
+      </div>
+      <div className="flex justify-end items-center gap-2 mb-2!">
+        <CustomSelect
+          placeholder="Select Authority"
+          value={selectedAssignee}
+          onChange={(val) => setSelectedAssignee(val as string)}
+          options={[
+            { label: "All", value: "all" },
+            ...staffData?.map((staff) => ({
+              label: `${staff?.fullName}`,
+              value: staff?.userId,
+            })),
+          ]}
+        />
+        <CustomSelect
+          placeholder="Select District"
+          value={selectedDistrict}
+          onChange={(val) => setSelectedDistrict(val as string)}
+          options={[
+            { label: "All", value: "all" },
+            ...districtData?.map((district) => ({
+              label: `${district?.name}`,
+              value: district?.id.toString(),
+            })),
+          ]}
+        />
+        <CustomSelect
+          placeholder="Select Section"
+          value={selectedSection}
+          onChange={(val) => setSelectedSection(val as string)}
+          options={[{ label: "All", value: "all" }, ...uniqueSectionOptions]}
+        />
 
-          <CustomSelect
-            placeholder="Select Category"
-            value={selectedCategory}
-            onChange={(val) => setSelectedCategory(val as string)}
-            options={[
-              { label: "All", value: "all" },
-              ...sectionCategoryData?.map((category) => ({
-                label: category?.name,
-                value: category?.id.toString(),
-              })),
-            ]}
-          />
+        <CustomSelect
+          placeholder="Select Category"
+          value={selectedCategory}
+          onChange={(val) => setSelectedCategory(val as string)}
+          options={[
+            { label: "All", value: "all" },
+            ...sectionCategoryData?.map((category) => ({
+              label: category?.name,
+              value: category?.id.toString(),
+            })),
+          ]}
+        />
 
-          <CustomDateRangePicker />
+        {/* <CustomDateRangePicker /> */}
+        <DatePicker
+          placeholder="Start Date"
+          initialDate={startDate}
+          onSelectDate={(d) => {
+            setStartDate(d);
+          }}
+        />
 
-          <Forms
-            sectionCategoryOptions={sectionCategoryOptions}
-            sectionOptions={sectionOptions}
-            complaintCategoryOptions={complaintCategoryOptions}
-          />
-        </div>
+        <DatePicker
+          placeholder="End Date"
+          initialDate={endDate}
+          onSelectDate={(d) => {
+            setEndDate(d);
+          }}
+        />
+        <FineFilter
+          minFine={minFine}
+          maxFine={maxFine}
+          onChange={(min: number | undefined, max: number | undefined) => {
+            setMinFine(min);
+            setMaxFine(max);
+          }}
+        />
+        <Button
+          size="2"
+          variant="soft"
+          className="text-sm! cursor-pointer! font-bold!"
+          onClick={() => {
+            setSelectedDistrict("");
+            setSelectedCategory("");
+            setSelectedSection("");
+            setSelectedAssignee("");
+            setStartDate(null);
+            setEndDate(null);
+            setMinFine(undefined);
+            setMaxFine(undefined);
+          }}
+        >
+          Clear Filters
+        </Button>
       </div>
       <CustomComplaintTable rowsData={customComplaintData} />
     </div>

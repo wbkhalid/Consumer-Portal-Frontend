@@ -225,9 +225,9 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
             control={control}
             render={({ field }) => (
               <CustomSearchDropdown
-                label="Role"
+                label="Authority"
                 name="roleName"
-                placeholder="Select Role"
+                placeholder="Select Authority"
                 error={errors.roleName?.message}
                 value={String(field.value)}
                 onChange={(val) => field.onChange(val)}
