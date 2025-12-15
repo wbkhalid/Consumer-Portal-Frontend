@@ -11,28 +11,27 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Marker, MarkerClusterer } from "@googlemaps/markerclusterer";
 import { ComplaintsListType } from "../page";
-import Link from "next/link";
 import { formatDate } from "../../utils/utils";
 
 const DashboardMap = ({ data }: { data: ComplaintsListType[] }) => {
-  const dashboardDropdownItems = [
-    {
-      label: "CPC",
-      link: "https://cpc.punjabpak.com/dashboard",
-    },
-    {
-      label: "Market Grading",
-      link: "https://pricemonitoring.pfa.gop.pk/MandiGrading/GradingDashboard?Pamra=Pamra",
-    },
-    {
-      label: "Premises",
-      link: "https://pricemonitoring.pfa.gop.pk/AgencyPremises/PremisesDashboard?Pamra=Pamra",
-    },
-    {
-      label: "Mandi",
-      link: "https://pricemonitoring.pfa.gop.pk/PamraMarket/MandiDashboard?Pamra=Pamra",
-    },
-  ];
+  // const dashboardDropdownItems = [
+  //   {
+  //     label: "CPC",
+  //     link: "https://cpc.punjabpak.com/dashboard",
+  //   },
+  //   {
+  //     label: "Market Grading",
+  //     link: "https://pricemonitoring.pfa.gop.pk/MandiGrading/GradingDashboard?Pamra=Pamra",
+  //   },
+  //   {
+  //     label: "Premises",
+  //     link: "https://pricemonitoring.pfa.gop.pk/AgencyPremises/PremisesDashboard?Pamra=Pamra",
+  //   },
+  //   {
+  //     label: "Mandi",
+  //     link: "https://pricemonitoring.pfa.gop.pk/PamraMarket/MandiDashboard?Pamra=Pamra",
+  //   },
+  // ];
   return (
     <div className="relative w-full h-full">
       <div className="relative w-full h-full overflow-hidden">
