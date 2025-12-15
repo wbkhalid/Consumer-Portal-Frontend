@@ -9,9 +9,9 @@
   --warning: #e8bd0f;
   --success: #028b02;
   --error: #aa3c31;
-  --dashboard-primary: #0a929e;
-  --dashboard-primary-bg: #8ed1da;
-  --dashboard-border: #1c4f51;
+  --dashboard-primary: #31694e;
+  --dashboard-primary-bg: #254e3a;
+  --dashboard-border: #bbc863;
 }
 
 @theme inline {
