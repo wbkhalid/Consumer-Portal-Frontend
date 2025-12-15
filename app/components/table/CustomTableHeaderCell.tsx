@@ -30,9 +30,7 @@ const CustomTableHeaderCell = ({
         rowSpan={rowSpan}
         className={`px-4! py-2! whitespace-nowrap text-[#535862] border-b border-b-[#E9EAEB] ${className} `}
       >
-        <div
-          className={`flex items-center justify-center gap-1 text-xs ${alignmentClass}`}
-        >
+        <div className={`flex  items-center gap-1 text-xs ${alignmentClass}`}>
           {label}
         </div>
       </th>
@@ -57,7 +55,7 @@ const CustomTableHeaderCell = ({
             order: nextOrder,
           },
         }}
-        className={`flex items-center justify-center gap-1 text-xs ${alignmentClass}`}
+        className={`flex items-center gap-1 text-xs ${alignmentClass}`}
       >
         {label}
         {isActive && (

@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import CustomTableHeaderCell from "../../../../components/table/CustomTableHeaderCell";
 import TableBodyCell from "../../../../components/table/TableBodyCell";
 import { BaseQuery, Column } from "../../../../utils/utils";
@@ -21,6 +22,7 @@ const List = ({
   pageSize,
   searchParams,
 }: Props) => {
+  const router = useRouter();
   const { totalFiled, totalDisposal, totalPending, totalPercentage } =
     calculateTotals(data);
 
@@ -52,9 +54,16 @@ const List = ({
               return (
                 <tr
                   key={serial}
-                  className={`transition-colors duration-150 ${
+                  className={`transition-colors duration-150  cursor-pointer!${
                     index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
                   } hover:bg-gray-100`}
+                  onClick={() =>
+                    router.push(
+                      `/authority-reports/complaint-reports/complaint-summary/${encodeURIComponent(
+                        d?.districtName
+                      )}`
+                    )
+                  }
                 >
                   <TableBodyCell>{serial}</TableBodyCell>
                   <TableBodyCell>{d.districtName}</TableBodyCell>

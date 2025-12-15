@@ -49,7 +49,14 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
     next: { revalidate: 10 },
   });
 
-  let data: ComplaintSummary[] = await res.json();
+  const response = await res.json();
+
+  console.log(response, "full response");
+
+  // Extract only data array
+  let data: ComplaintSummary[] = response.data;
+
+  console.log(data, "only data");
 
   // **Apply Search Filter**
   if (search) {
