@@ -49,6 +49,17 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+      {/* <Link
+        href={`/complaints${params.toString() ? `?${params.toString()}` : ""}`}
+      >
+        <CustomStatCard
+          title="Total Complaints123"
+          value={data?.totalComplaints}
+          icon={<IoDocumentTextOutline className="text-white text-lg" />}
+          iconBg="bg-[#013769]"
+          percentage={8.5}
+        />
+      </Link> */}
       <Link
         href={`/complains${params.toString() ? `?${params.toString()}` : ""}`}
       >
