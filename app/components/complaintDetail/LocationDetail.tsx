@@ -1,6 +1,11 @@
 import Link from "next/link";
+import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 
-const LocationDetail = () => {
+const LocationDetail = ({
+  complaint,
+}: {
+  complaint: ManageComplainsData | null;
+}) => {
   const lat = 31.52;
   const lng = 74.35;
 
@@ -11,7 +16,7 @@ const LocationDetail = () => {
       <div className="flex justify-between items-center mt-2!">
         <div className="flex flex-col gap-0.5">
           <p className="text-[#555555] text-sm">Phone No</p>
-          <p className="text-[#000000] text-sm">03182377283</p>
+          <p className="text-[#000000] text-sm">{complaint?.phoneNumber}</p>
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[#555555] text-sm">Division</p>
@@ -33,7 +38,7 @@ const LocationDetail = () => {
 
       <div className="bg-[rgba(29,28,29,0.13)] h-px w-full my-2!" />
       <p className="text-[#555555] text-sm mb-1!">Map</p>
-      <div className="w-full h-[250px] rounded-lg overflow-hidden border border-[#CBD5E1] ">
+      <div className="w-full h-[200px] rounded-lg overflow-hidden border border-[#CBD5E1] ">
         <iframe
           src={mapSrc}
           width="100%"
@@ -48,7 +53,7 @@ const LocationDetail = () => {
         href={mapLink}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-(--primary) mb-2! font-medium text-sm underline cursor-pointer"
+        className="text-(--primary) font-medium text-sm hover:underline cursor-pointer pb-2!"
       >
         Open in Google maps
       </Link>

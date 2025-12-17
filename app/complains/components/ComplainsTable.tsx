@@ -228,7 +228,7 @@ const ComplainsTable = ({ rowsData }: ComplainsTableProps) => {
       </div>
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
-        <Dialog.Content className="px-0 lg:max-w-[700px]!">
+        <Dialog.Content className="p-0! lg:max-w-[700px]! overflow-hidden!">
           <ComplaintDialog selectedComplaint={selectedComplaint} />
         </Dialog.Content>
       </Dialog.Root>

@@ -44,12 +44,22 @@ const LoginComponent = () => {
 
       // Save cookies client-side
       Cookies.set("token", token, { expires: new Date(expiration) });
-      Cookies.set("role", role);
-      Cookies.set("divisionId", userProfile?.divisionId ?? 0);
-      Cookies.set("districtId", userProfile?.districtId ?? 0);
-      Cookies.set("tehsilId", userProfile?.tehsilId ?? 0);
-      Cookies.set("userId", userProfile?.userId ?? "");
-      Cookies.set("fullName", userProfile?.fullName ?? "");
+      Cookies.set("role", role, { expires: new Date(expiration) });
+      Cookies.set("divisionId", userProfile?.divisionId ?? 0, {
+        expires: new Date(expiration),
+      });
+      Cookies.set("districtId", userProfile?.districtId ?? 0, {
+        expires: new Date(expiration),
+      });
+      Cookies.set("tehsilId", userProfile?.tehsilId ?? 0, {
+        expires: new Date(expiration),
+      });
+      Cookies.set("userId", userProfile?.userId ?? "", {
+        expires: new Date(expiration),
+      });
+      Cookies.set("fullName", userProfile?.fullName ?? "", {
+        expires: new Date(expiration),
+      });
 
       toast.success("Login successful!");
       router.push("/");

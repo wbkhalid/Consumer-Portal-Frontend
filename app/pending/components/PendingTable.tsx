@@ -1,4 +1,3 @@
-import Image from "next/image";
 import TableBodyCell from "../../components/table/TableBodyCell";
 import TableHeaderCell from "../../components/table/TableHeaderCell";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
@@ -6,19 +5,14 @@ import { formatDate } from "../../utils/utils";
 import { useMemo, useState } from "react";
 import PaginationControls from "../../components/table/PaginationControls";
 import PendingDialog from "./PendingDialog";
-import Cookies from "js-cookie";
-import { toast } from "react-toastify";
-import apiClient from "../../services/api-client";
-import { COMPLAINT_API } from "../../APIs";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
+import { Dialog } from "@radix-ui/themes";
 
 interface PendingTableProps {
   rowsData: ManageComplainsData[];
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
-// const PAGE_SIZE = 10;
 
 const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
   const [sortConfig, setSortConfig] = useState<{
@@ -28,11 +22,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [remarks, setRemarks] = useState("");
-  const [selectedStaff, setSelectedStaff] = useState("");
-  const [loading, setLoading] = useState(false);
-  const userId = Cookies.get("userId");
+  const [openDialog, setOpenDialog] = useState(false);
   const [pageSize, setPageSize] = useState(10);
   const { divisionId, districtId, tehsilId } = useRegionFilters();
 
@@ -57,7 +47,6 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     { label: "Remarks" },
     { label: "Audio Attach" },
     { label: "Files" },
-    // { label: "View" },
   ];
 
   const handleSort = (key: string) => {
@@ -102,54 +91,6 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     return sortedData.slice(startIndex, startIndex + pageSize);
   }, [sortedData, currentPage, pageSize]);
 
-  const handleAssignComplaint = async () => {
-    if (!selectedComplaint) return;
-
-    if (!remarks || !selectedStaff) {
-      toast.warning("Please add remarks and select Assignee");
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      const payload = {
-        complaintId: selectedComplaint?.id,
-        status: 1,
-        updatedBy: userId,
-        assignedTo: selectedStaff,
-        hearingDate: null,
-        verdict: 0,
-        assigneeRemarks: remarks,
-      };
-
-      console.log("📤 Sending payload:", payload);
-
-      const response = await apiClient.post(
-        COMPLAINT_API + "/update-status",
-        payload
-      );
-      console.log(response, "response");
-
-      if (response.status === 200) {
-        toast.success(
-          response?.data?.message || "Complaint assigned successfully."
-        );
-        setRefresh((prev) => !prev);
-        setIsDialogOpen(false);
-      }
-    } catch (error) {
-      console.error("Error assigning complaint:", error);
-      toast.error("Something went wrong while assigning.");
-    } finally {
-      setLoading(false);
-      setSelectedComplaint(null);
-      setIsDialogOpen(false);
-      setRemarks("");
-      setSelectedStaff("");
-    }
-  };
-
   return (
     <>
       <div className="relative">
@@ -193,7 +134,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
                       } hover:bg-gray-100`}
                       onClick={() => {
                         setSelectedComplaint(item);
-                        setIsDialogOpen(true);
+                        setOpenDialog(true);
                       }}
                     >
                       <TableBodyCell>{item?.id}</TableBodyCell>
@@ -241,20 +182,8 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
                           </div>
                         ) : (
                           <div className="flex gap-1">
-                            {/* Images */}
                             {images.map((imgUrl, i) => (
                               <>
-                                {/* <div
-                                key={i}
-                                className="relative w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]"
-                              >
-                                <Image
-                                  src={imgUrl}
-                                  alt={imgUrl}
-                                  fill
-                                  className="object-cover"
-                                />
-                              </div> */}
                                 <div
                                   key={i}
                                   className=" w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]"
@@ -283,16 +212,6 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
                           </div>
                         )}
                       </TableBodyCell>
-
-                      {/* <TableBodyCell>
-                      <FaEye
-                        className="text-lg text-(--primary) cursor-pointer"
-                        onClick={() => {
-                          setSelectedComplaint(item);
-                          setIsDialogOpen(true);
-                        }}
-                      />
-                    </TableBodyCell> */}
                     </tr>
                   );
                 })}
@@ -310,11 +229,26 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
           />
         </div>
       </div>
-      <PendingDialog
+
+      <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
+        <Dialog.Content className="p-0! lg:max-w-[700px]!">
+          <PendingDialog
+            selectedComplaint={selectedComplaint}
+            onClose={() => {
+              setSelectedComplaint(null);
+            }}
+            onSuccess={() => {
+              setRefresh((prev) => !prev);
+            }}
+          />
+        </Dialog.Content>
+      </Dialog.Root>
+
+      {/* <PendingDialog
         selectedComplaint={selectedComplaint}
         setSelectedComplaint={setSelectedComplaint}
-        isDialogOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
         remarks={remarks}
         setRemarks={setRemarks}
         selectedStaff={selectedStaff}
@@ -323,7 +257,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
         setLoading={setLoading}
         handleAssignComplaint={handleAssignComplaint}
         staffData={staffData}
-      />
+      /> */}
     </>
   );
 };

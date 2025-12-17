@@ -1,36 +1,39 @@
 "use client";
 
-import clsx from "clsx";
 import { CiShop } from "react-icons/ci";
+
+export interface StepItem {
+  id: number;
+  label: string;
+  icon?: React.ReactNode;
+}
 
 interface StepperProps {
   step: number;
   setStep: (step: number) => void;
+  steps: StepItem[];
 }
 
-const steps = [
-  { id: 1, label: "Shop Info" },
-  { id: 2, label: "Complaint Details" },
-  { id: 3, label: "Evidence and Media" },
-  { id: 4, label: "Assign" },
-];
-
-const Stepper = ({ step, setStep }: StepperProps) => {
+const Stepper = ({ step, setStep, steps }: StepperProps) => {
   return (
-    <div className="flex items-center gap-2  px-3! py-2!">
-      {steps.map((item, index) => {
+    <div className="flex items-center gap-4 px-3! py-2!">
+      {steps.map((item) => {
         const isActive = item.id === step;
 
         return (
-          <div key={item.id} className="flex items-center gap-1">
+          <div key={item.id} className="flex items-center gap-2 relative">
             <div
-              className={`flex gap-1 items-center cursor-pointer  ${
-                isActive ? "text-(--primary)" : "text-[#606060]"
-              } `}
-              onClick={() => setStep(item?.id)}
+              onClick={() => setStep(item.id)}
+              className={`flex items-center gap-1 cursor-pointer text-sm font-medium
+                ${isActive ? "text-(--primary)" : ""}
+              `}
             >
-              <CiShop /> <p className="text-sm font-medium ">{item?.label}</p>
+              {item.icon || <CiShop />}
+              {item.label}
             </div>
+            {isActive && (
+              <span className="absolute left-0 -bottom-2 w-full h-0.5 bg-(--primary) rounded-full" />
+            )}
           </div>
         );
       })}
