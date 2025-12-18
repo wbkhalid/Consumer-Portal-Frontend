@@ -16,6 +16,11 @@ export interface SectionsDetails {
   description: string;
 }
 
+export interface DecisionFilePaths {
+  filePath: string;
+  fileType: number;
+}
+
 export interface ManageComplainsData {
   id: number;
   shopName: string;
@@ -37,6 +42,7 @@ export interface ManageComplainsData {
   listAudio: string[];
   listOfImage: string[];
   createdAt: string;
+  decisionFilePaths: DecisionFilePaths[];
 }
 
 const useGetAllComplains = ({

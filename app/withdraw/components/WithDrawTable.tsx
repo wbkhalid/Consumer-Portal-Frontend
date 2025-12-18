@@ -84,7 +84,7 @@ const WithDrawTable = ({ rowsData, setRefresh }: WithDrawTableProps) => {
       <div className="relative">
         <div className="h-[calc(100vh-120px)] overflow-auto">
           <div className="overflow-scroll mb-10!">
-            <table className="min-w-full text-sm mb-10!">
+            <table className="min-w-full text-sm">
               <thead className="sticky top-0 z-10">
                 <tr className="font-semibold bg-white">
                   {headers?.map((header) => (
@@ -106,7 +106,7 @@ const WithDrawTable = ({ rowsData, setRefresh }: WithDrawTableProps) => {
                 {paginatedData?.map((item, index) => (
                   <tr
                     key={index}
-                    className={`transition-colors duration-150 ${
+                    className={`transition-colors duration-150 cursor-pointer ${
                       index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
                     } hover:bg-gray-100`}
                     onClick={() => {
@@ -161,19 +161,21 @@ const WithDrawTable = ({ rowsData, setRefresh }: WithDrawTableProps) => {
             </table>
           </div>
         </div>
-        <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
-          <PaginationControls
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-          />
-        </div>
+        {paginatedData?.length >= pageSize && (
+          <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+            />
+          </div>
+        )}
       </div>
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
-        <Dialog.Content className="px-0 lg:max-w-[700px]!">
+        <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]!">
           <WithDrawDialog selectedComplaint={selectedComplaint} />
         </Dialog.Content>
       </Dialog.Root>

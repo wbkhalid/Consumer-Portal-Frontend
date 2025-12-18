@@ -12,8 +12,10 @@ import { FaRegPenToSquare } from "react-icons/fa6";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { format, parseISO } from "date-fns";
 import { generateComplaintPDF } from "../../utils/generateComplainPdf";
-import EscalationDialog from "./EscalationDialog";
+import EscalationDialog from "./SuperEscalationDialog";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
+import { Dialog } from "@radix-ui/themes";
+import SuperEscalationDialog from "./SuperEscalationDialog";
 
 interface SuperEscalationTableProps {
   rowsData: ManageComplainsData[];
@@ -31,7 +33,7 @@ const SuperEscalationTable = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const userId = Cookies.get("userId");
   const [dialogStep, setDialogStep] = useState<1 | 2>(1);
   const [hearingDate, setHearingDate] = useState<Date | null>(null);
@@ -173,7 +175,7 @@ const SuperEscalationTable = ({
         }
         // router.refresh();
         setRefresh((prev) => !prev);
-        setIsDialogOpen(false);
+        setOpenDialog(false);
       }
     } catch (error) {
       console.error("Error Hearing Date:", error);
@@ -182,7 +184,7 @@ const SuperEscalationTable = ({
       setLoading(false);
       setSelectedComplaint(null);
       setHearingDate(null);
-      setIsDialogOpen(false);
+      setOpenDialog(false);
       setImageUrl("");
       setVideoUrl("");
       setSelectedStatus(null);
@@ -196,7 +198,7 @@ const SuperEscalationTable = ({
       <div className="relative">
         <div className="h-[calc(100vh-120px)] overflow-auto">
           <div className="overflow-scroll mb-10!">
-            <table className="min-w-full text-sm mb-10!">
+            <table className="min-w-full text-sm">
               <thead className="sticky top-0 z-10">
                 <tr className="font-semibold bg-white">
                   {headers?.map((header) => (
@@ -218,9 +220,13 @@ const SuperEscalationTable = ({
                 {paginatedData?.map((item, index) => (
                   <tr
                     key={index}
-                    className={`transition-colors duration-150 ${
+                    className={`transition-colors duration-150 cursor-pointer ${
                       index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
                     } hover:bg-gray-100`}
+                    onClick={() => {
+                      setSelectedComplaint(item);
+                      setOpenDialog(true);
+                    }}
                   >
                     <TableBodyCell>{item?.id}</TableBodyCell>
                     <TableBodyCell className="whitespace-nowrap">
@@ -296,7 +302,7 @@ const SuperEscalationTable = ({
                           } else {
                             setHearingDate(null);
                           }
-                          setIsDialogOpen(true);
+                          setOpenDialog(true);
                           setDialogStep(1);
                           setIsResolved(false);
                         }}
@@ -310,7 +316,7 @@ const SuperEscalationTable = ({
                           setSelectedComplaint(item);
                           setDialogStep(2);
                           setIsResolved(true);
-                          setIsDialogOpen(true);
+                          setOpenDialog(true);
                         }}
                       >
                         Update Status
@@ -322,20 +328,39 @@ const SuperEscalationTable = ({
             </table>
           </div>
         </div>
-        <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
-          <PaginationControls
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-          />
-        </div>
+        {paginatedData?.length >= pageSize && (
+          <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              pageSize={pageSize}
+              setPageSize={setPageSize}
+            />
+          </div>
+        )}
       </div>
 
-      <EscalationDialog
+      <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
+        <Dialog.Content
+          className="p-0! lg:max-w-[800px]! max-h-[80vh]! overflow-hidden!"
+          onInteractOutside={(e) => e.preventDefault()}
+        >
+          <SuperEscalationDialog
+            selectedComplaint={selectedComplaint}
+            onClose={() => {
+              setSelectedComplaint(null);
+            }}
+            onSuccess={() => {
+              setRefresh((prev) => !prev);
+            }}
+          />
+        </Dialog.Content>
+      </Dialog.Root>
+
+      {/* <EscalationDialog
         isDialogOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
+        setOpenDialog={setOpenDialog}
         selectedComplaint={selectedComplaint}
         setSelectedComplaint={setSelectedComplaint}
         dialogStep={dialogStep}
@@ -357,7 +382,7 @@ const SuperEscalationTable = ({
         handleHearingComplaint={handleHearingComplaint}
         fineAmount={fineAmount}
         setFineAmount={setFineAmount}
-      />
+      /> */}
     </>
   );
 };

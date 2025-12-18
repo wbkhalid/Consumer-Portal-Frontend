@@ -232,7 +232,7 @@ const RedHotTable = ({ rowsData, setRefresh }: RedHotTableProps) => {
         </div>
       </div>
       <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <Dialog.Content className="px-0 lg:max-w-[700px]!">
+        <Dialog.Content className="p-0! lg:max-w-[700px]!">
           <RedHotDialog selectedComplaint={selectedComplaint} />
         </Dialog.Content>
       </Dialog.Root>

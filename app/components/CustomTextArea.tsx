@@ -31,7 +31,7 @@ const CustomTextArea: React.FC<CustomTextAreaProps> = ({
         <Text
           as="label"
           htmlFor={name}
-          className="block mb-1 text-[#2A2A2B] font-semibold text-xs"
+          className="block mb-1! text-[#2A2A2B] font-semibold text-xs"
         >
           {label}
         </Text>

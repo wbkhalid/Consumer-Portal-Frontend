@@ -12,8 +12,8 @@ const LocationDetail = ({
   const mapSrc = `https://www.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
   const mapLink = `https://www.google.com/maps?q=${lat},${lng}&z=15`;
   return (
-    <div className="px-5!">
-      <div className="flex justify-between items-center mt-2!">
+    <div className="px-5! py-3!">
+      <div className="flex justify-between items-center">
         <div className="flex flex-col gap-0.5">
           <p className="text-[#555555] text-sm">Phone No</p>
           <p className="text-[#000000] text-sm">{complaint?.phoneNumber}</p>
