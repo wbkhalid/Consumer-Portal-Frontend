@@ -4,17 +4,19 @@ import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { formatDate } from "../../utils/utils";
 import { useMemo, useState } from "react";
 import PaginationControls from "../../components/table/PaginationControls";
-import PendingDialog from "./PendingDialog";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
 import { Dialog } from "@radix-ui/themes";
+import RedHotDialog from "./RedHotDialog";
 
-interface PendingTableProps {
+interface RedHotTableProps {
   rowsData: ManageComplainsData[];
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
+// const PAGE_SIZE = 10;
+
+const RedHotTable = ({ rowsData, setRefresh }: RedHotTableProps) => {
   const [sortConfig, setSortConfig] = useState<{
     key: string;
     direction: "asc" | "desc";
@@ -22,7 +24,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pageSize, setPageSize] = useState(10);
   const { divisionId, districtId, tehsilId } = useRegionFilters();
 
@@ -47,6 +49,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     { label: "Remarks" },
     { label: "Audio Attach" },
     { label: "Files" },
+    // { label: "View" },
   ];
 
   const handleSort = (key: string) => {
@@ -95,8 +98,8 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     <>
       <div className="relative">
         <div className="h-[calc(100vh-120px)] overflow-auto">
-          <div className="overflow-scroll mb-5!">
-            <table className="min-w-full text-sm">
+          <div className="overflow-scroll mb-10!">
+            <table className="min-w-full text-sm mb-10!">
               <thead className="sticky top-0 z-10">
                 <tr className="font-semibold bg-white">
                   {headers?.map((header) => (
@@ -134,7 +137,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
                       } hover:bg-gray-100`}
                       onClick={() => {
                         setSelectedComplaint(item);
-                        setOpenDialog(true);
+                        setIsDialogOpen(true);
                       }}
                     >
                       <TableBodyCell>{item?.id}</TableBodyCell>
@@ -182,19 +185,18 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
                           </div>
                         ) : (
                           <div className="flex gap-1">
+                            {/* Images */}
                             {images.map((imgUrl, i) => (
-                              <>
-                                <div
-                                  key={i}
-                                  className=" w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]"
-                                >
-                                  <img
-                                    src={imgUrl}
-                                    alt={imgUrl}
-                                    className="object-cover w-full h-full"
-                                  />
-                                </div>
-                              </>
+                              <div
+                                key={i}
+                                className=" w-6 h-6 rounded-sm overflow-hidden border border-[#e2e8f0]"
+                              >
+                                <img
+                                  src={imgUrl}
+                                  alt={imgUrl}
+                                  className="object-cover w-full h-full"
+                                />
+                              </div>
                             ))}
 
                             {videos.map((videoUrl, i) => (
@@ -219,50 +221,23 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
             </table>
           </div>
         </div>
-
-        {paginatedData?.length >= pageSize && (
-          <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
-            <PaginationControls
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              pageSize={pageSize}
-              setPageSize={setPageSize}
-            />
-          </div>
-        )}
-      </div>
-
-      <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
-        <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]! overflow-hidden!">
-          <PendingDialog
-            selectedComplaint={selectedComplaint}
-            onClose={() => {
-              setSelectedComplaint(null);
-            }}
-            onSuccess={() => {
-              setRefresh((prev) => !prev);
-            }}
+        <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
           />
+        </div>
+      </div>
+      <Dialog.Root open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog.Content className="p-0! lg:max-w-[700px]!">
+          <RedHotDialog selectedComplaint={selectedComplaint} />
         </Dialog.Content>
       </Dialog.Root>
-
-      {/* <PendingDialog
-        selectedComplaint={selectedComplaint}
-        setSelectedComplaint={setSelectedComplaint}
-        openDialog={openDialog}
-        setOpenDialog={setOpenDialog}
-        remarks={remarks}
-        setRemarks={setRemarks}
-        selectedStaff={selectedStaff}
-        setSelectedStaff={setSelectedStaff}
-        loading={loading}
-        setLoading={setLoading}
-        handleAssignComplaint={handleAssignComplaint}
-        staffData={staffData}
-      /> */}
     </>
   );
 };
 
-export default PendingTable;
+export default RedHotTable;

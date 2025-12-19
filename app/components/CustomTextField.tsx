@@ -36,7 +36,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   ...rest
 }) => {
   return (
-    <Box>
+    <Box className="w-full">
       {label && (
         <Text
           as="label"

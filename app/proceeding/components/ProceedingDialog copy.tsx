@@ -1,7 +1,11 @@
 import { Button, Dialog } from "@radix-ui/themes";
+
+import { BsArrowUpRightSquare } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { useRef, useState } from "react";
+import { RxCross1 } from "react-icons/rx";
+import { FaRegPenToSquare } from "react-icons/fa6";
 import Image from "next/image";
 import {
   decionsVideos,
@@ -9,9 +13,14 @@ import {
   formatDate,
   uploadFile,
 } from "../../utils/utils";
+import apiClient from "../../services/api-client";
+import { COMPLAINT_API } from "../../APIs";
 import { toast } from "react-toastify";
 import { format, parseISO } from "date-fns";
-import { MdUploadFile } from "react-icons/md";
+
+import { MdOutlineFileDownload, MdUploadFile } from "react-icons/md";
+import { generateComplaintPDF } from "../../utils/generateComplainPdf";
+import Cookies from "js-cookie";
 import CustomSearchDropdown, {
   Option,
 } from "../../components/CustomSearchDropdown";
@@ -19,7 +28,7 @@ import CustomTextField from "../../components/CustomTextField";
 import CustomTextArea from "../../components/CustomTextArea";
 import FullScreenMediaModal from "../../complains/components/FullScreenMediaModal";
 
-interface EscalationDialogProps {
+interface ProceedingDialogProps {
   isDialogOpen: boolean;
   setIsDialogOpen: (value: boolean) => void;
   selectedComplaint: ManageComplainsData | null;
@@ -45,15 +54,16 @@ interface EscalationDialogProps {
   fineAmount: number;
 }
 
-const EscalationDialog = ({
+const ProceedingDialog = ({
   isDialogOpen,
+  setIsDialogOpen,
   selectedComplaint,
   setSelectedComplaint,
   dialogStep,
-  setIsDialogOpen,
   setDialogStep,
   hearingDate,
   setHearingDate,
+  isResolved,
   setIsResolved,
   selectedStatus,
   setSelectedStatus,
@@ -64,10 +74,11 @@ const EscalationDialog = ({
   videoUrl,
   setVideoUrl,
   loading,
+  setLoading,
   handleHearingComplaint,
   setFineAmount,
   fineAmount,
-}: EscalationDialogProps) => {
+}: ProceedingDialogProps) => {
   const router = useRouter();
 
   const [mediaModal, setMediaModal] = useState<{
@@ -75,10 +86,8 @@ const EscalationDialog = ({
     type: "image" | "video" | null;
     url: string | null;
   }>({ open: false, type: null, url: null });
-
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
-
   const images = selectedComplaint?.listOfImage?.filter((url) =>
     url.match(/\.(jpg|jpeg|png|gif|webp)$/i)
   );
@@ -172,13 +181,13 @@ const EscalationDialog = ({
               <div className="flex justify-between items-center">
                 <div className="flex gap-2 items-center">
                   {/* <div className="relative w-10 h-10 rounded-md overflow-hidden border border-gray-200">
-                    <Image
-                      src={selectedComplaint?.billBoardImage}
-                      alt={`Complaint image`}
-                      fill
-                      className="object-fit"
-                    />
-                  </div> */}
+                  <Image
+                    src={selectedComplaint?.billBoardImage}
+                    alt={`Complaint image`}
+                    fill
+                    className="object-fit"
+                  />
+                </div> */}
 
                   <div
                     className=" w-10 h-10 rounded-md overflow-hidden border border-gray-200"
@@ -311,33 +320,6 @@ const EscalationDialog = ({
                     </div>
 
                     {/* Images Section */}
-                    {/* <div className="flex flex-col gap-1 flex-1">
-                      <p className="text-xs text-[#555555]">Images</p>
-                      {selectedComplaint?.listOfImage &&
-                      selectedComplaint.listOfImage.length > 0 ? (
-                        <div className="flex flex-wrap gap-3">
-                          {selectedComplaint.listOfImage.map(
-                            (imgUrl, index) => (
-                              <div
-                                key={index}
-                                className="relative w-16 h-16 rounded-md overflow-hidden border border-gray-200"
-                              >
-                                <Image
-                                  src={imgUrl}
-                                  alt={`Complaint image ${index + 1}`}
-                                  fill
-                                  className="object-fit"
-                                />
-                              </div>
-                            )
-                          )}
-                        </div>
-                      ) : (
-                        <p className="text-xs text-gray-400 italic">
-                          No images available.
-                        </p>
-                      )}
-                    </div> */}
                     <div className="flex-1">
                       <p className="text-xs text-[#555555] mb-1!">Media</p>
                       {selectedComplaint.listOfImage?.length ? (
@@ -430,7 +412,6 @@ const EscalationDialog = ({
                       className="object-fit"
                     />
                   </div> */}
-
                   <div
                     className=" w-10 h-10 rounded-md overflow-hidden border border-gray-200"
                     onClick={() =>
@@ -589,6 +570,7 @@ const EscalationDialog = ({
                         </p>
                       )}
                     </div> */}
+
                     <div className="flex-1">
                       <p className="text-xs text-[#555555] mb-1!">Media</p>
                       {selectedComplaint.listOfImage?.length ? (
@@ -760,4 +742,4 @@ const EscalationDialog = ({
   );
 };
 
-export default EscalationDialog;
+export default ProceedingDialog;

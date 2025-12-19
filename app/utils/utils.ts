@@ -1,4 +1,4 @@
-import { format, parseISO } from "date-fns";
+import { format, parseISO, isValid } from "date-fns";
 import { FILE_UPLOAD_API } from "../APIs";
 import apiClient from "../services/api-client";
 
@@ -19,10 +19,23 @@ export const LongFormatDate = (dateStr: string | null): string => {
   if (!dateStr) return "N/A";
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
     month: "short",
+    day: "2-digit",
     year: "numeric",
   });
+};
+
+export const formatTimeOnly = (dateString?: string | null): string => {
+  if (!dateString) return "-";
+
+  try {
+    const date = parseISO(dateString);
+    if (!isValid(date)) return "-";
+
+    return format(date, "hh:mm a"); // ✅ 12:09 PM
+  } catch {
+    return "-";
+  }
 };
 
 export const toLocal = (dateString: string) => {

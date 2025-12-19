@@ -9,8 +9,14 @@ import {
 import { ComplainDashboardType } from "../../page";
 import Link from "next/link";
 import DashboardStatCard from "./DashboardStatCard";
-import { TbArrowForward } from "react-icons/tb";
-import { BsExclamationSquare, BsExclamationTriangle } from "react-icons/bs";
+import { TbArrowForward, TbCloudDownload } from "react-icons/tb";
+import {
+  BsCashStack,
+  BsExclamationSquare,
+  BsExclamationTriangle,
+} from "react-icons/bs";
+import { MdOutlineRecordVoiceOver } from "react-icons/md";
+import { CgDanger } from "react-icons/cg";
 
 const DashboardStatSummary = ({ data }: { data: ComplainDashboardType }) => {
   return (
@@ -79,6 +85,41 @@ const DashboardStatSummary = ({ data }: { data: ComplainDashboardType }) => {
         value={data?.nonProsecutedComplaints}
         icon={<IoBanOutline className="text-white text-lg" />}
         iconBg="bg-[#E5C95F]"
+        percentage={8.5}
+      />
+      <DashboardStatCard
+        title="Avg Resolution Time"
+        value={`${data?.avgResolutionTime.toFixed(2)}h`}
+        icon={<IoTimeOutline className="text-white text-lg" />}
+        iconBg="bg-[#EAB308]"
+        percentage={8.5}
+      />
+      <DashboardStatCard
+        title="Total Fine"
+        value={data?.totalFinesCollected.toLocaleString()}
+        icon={<BsCashStack className="text-white text-lg" />}
+        iconBg="bg-[#EAB308]"
+        percentage={8.5}
+      />
+      <DashboardStatCard
+        title="Downloads"
+        value={data?.appDownloadsCount}
+        icon={<TbCloudDownload className="text-white text-lg" />}
+        iconBg="bg-[#028b02]"
+        percentage={8.5}
+      />
+      <DashboardStatCard
+        title="Appeals"
+        value={data?.appealsCount}
+        icon={<MdOutlineRecordVoiceOver className="text-white text-lg" />}
+        iconBg="bg-[#028b02]"
+        percentage={8.5}
+      />
+      <DashboardStatCard
+        title="Exceeded 21 Days"
+        value={data?.redHotComplaintsCount}
+        icon={<CgDanger className="text-white text-lg" />}
+        iconBg="bg-[#af0404]"
         percentage={8.5}
       />
     </div>

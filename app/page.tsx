@@ -56,6 +56,7 @@ export interface ComplainDashboardType {
   exParteComplaints: number;
   withdrawnComplaints: number;
   nonProsecutedComplaints: number;
+  redHotComplaintsCount: number;
   avgResolutionTime: number;
   appDownloadsCount: number;
   appealsCount: number;

@@ -6,16 +6,9 @@ import {
   IoDocumentTextOutline,
   IoTimeOutline,
 } from "react-icons/io5";
+import { CgDanger } from "react-icons/cg";
 import { ComplainDashboardType } from "../../page";
 import Link from "next/link";
-import ProceedingDialog from "./ProceedingDialog";
-import PendingDialog from "./PendingDialog";
-import NonProsecutionDialog from "./NonProsecutionDialog";
-import WithdrawDialog from "./WithdrawDialog";
-import ExParteDialog from "./ExParteDialog";
-import DecidedonMeritDialog from "./DecidedonMeritDialog";
-import SuperEscalationDialog from "./SuperEscalationDialog";
-import EscalationDialog from "./EscalationDialog";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
 import { useState } from "react";
 import { BsArrowUpRightSquare, BsCashStack } from "react-icons/bs";
@@ -54,72 +47,19 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
   if (districtId) params.set("districtId", districtId);
   if (tehsilId) params.set("tehsilId", tehsilId);
 
-  // const { data: pendingData } = useGetAllComplains({
-  //   status: 0,
-  //   refresh,
-  //   divisionId: divisionId || "",
-  //   districtId: districtId || "",
-  //   tehsilId: tehsilId || "",
-  // });
-
-  const { data: proceedingData } = useGetAllComplains({
-    status: 1,
-    refresh,
-    divisionId: divisionId || "",
-    districtId: districtId || "",
-    tehsilId: tehsilId || "",
-  });
-
-  const { data: escalationData } = useGetAllComplains({
-    status: 2,
-    refresh,
-    divisionId: divisionId || "",
-    districtId: districtId || "",
-    tehsilId: tehsilId || "",
-  });
-
-  const { data: superEscalationData } = useGetAllComplains({
-    status: 3,
-    refresh,
-    divisionId: divisionId || "",
-    districtId: districtId || "",
-    tehsilId: tehsilId || "",
-  });
-
-  const { data: decidedOnMeritData } = useGetAllComplains({
-    status: 4,
-    refresh,
-    divisionId: divisionId || "",
-    districtId: districtId || "",
-    tehsilId: tehsilId || "",
-  });
-
-  const { data: exParteData } = useGetAllComplains({
-    status: 5,
-    refresh,
-    divisionId: divisionId || "",
-    districtId: districtId || "",
-    tehsilId: tehsilId || "",
-  });
-
-  const { data: withDrawData } = useGetAllComplains({
-    status: 6,
-    refresh,
-    divisionId: divisionId || "",
-    districtId: districtId || "",
-    tehsilId: tehsilId || "",
-  });
-
-  const { data: nonProsecutionData } = useGetAllComplains({
-    status: 7,
-    refresh,
-    divisionId: divisionId || "",
-    districtId: districtId || "",
-    tehsilId: tehsilId || "",
-  });
-
   return (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+      {/* <Link
+        href={`/complaints${params.toString() ? `?${params.toString()}` : ""}`}
+      >
+        <CustomStatCard
+          title="Total Complaints123"
+          value={data?.totalComplaints}
+          icon={<IoDocumentTextOutline className="text-white text-lg" />}
+          iconBg="bg-[#013769]"
+          percentage={8.5}
+        />
+      </Link> */}
       <Link
         href={`/complains${params.toString() ? `?${params.toString()}` : ""}`}
       >
@@ -315,6 +255,19 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
           value={data?.appealsCount}
           icon={<MdOutlineRecordVoiceOver className="text-white text-lg" />}
           iconBg="bg-[#028b02]"
+          percentage={4.5}
+        />
+      </Link>
+      <Link
+        href={`/red-hot-complaints${
+          params.toString() ? `?${params.toString()}` : ""
+        }`}
+      >
+        <CustomStatCard
+          title="Exceeded 21 Days"
+          value={data?.redHotComplaintsCount}
+          icon={<CgDanger className="text-white text-lg" />}
+          iconBg="bg-[#af0404]"
           percentage={4.5}
         />
       </Link>

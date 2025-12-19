@@ -8,8 +8,8 @@ import ComplainsTable from "./ComplainsTable";
 import Forms from "./list/Forms";
 import { OptionType } from "../../components/Form/CustomSelect";
 import CustomSelect from "../../components/CustomSelect";
-import useGetSectionCategory from "../../hooks/useGetSectionCategory";
-import useGetAllSections from "../../hooks/useGetAllSections";
+// import useGetSectionCategory from "../../hooks/useGetSectionCategory";
+// import useGetAllSections from "../../hooks/useGetAllSections";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
 import useGetAllDistricts from "../../hooks/useGetAllDistricts";
 import CustomDateRangePicker from "../../components/CustomDateRangePicker";
@@ -63,7 +63,7 @@ const ComplainComponent = ({
       <div className="flex justify-between items-center px-4! py-2! border-b border-[#e2e8f0]">
         {/* Title */}
         <div className="flex items-center gap-1">
-          <p className="text-(--primary) font-semibold">Complains</p>
+          <p className="text-(--primary) font-semibold">Complaints</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {filteredData?.length?.toLocaleString()} Records
           </p>
