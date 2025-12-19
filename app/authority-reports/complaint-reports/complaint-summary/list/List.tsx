@@ -1,9 +1,10 @@
 "use client";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import CustomTableHeaderCell from "../../../../components/table/CustomTableHeaderCell";
 import TableBodyCell from "../../../../components/table/TableBodyCell";
 import { BaseQuery, Column } from "../../../../utils/utils";
 import { ComplaintSummary } from "./page";
+import { useRouter } from "next/navigation";
 
 export type Query = BaseQuery<ComplaintSummary>;
 
@@ -22,11 +23,11 @@ const List = ({
   pageSize,
   searchParams,
 }: Props) => {
-  const router = useRouter();
   const { totalFiled, totalDisposal, totalPending, totalPercentage } =
     calculateTotals(data);
 
   const columns = getColumns();
+  const router = useRouter();
 
   return (
     <div className="relative">
@@ -36,9 +37,9 @@ const List = ({
             <tr className="font-semibold bg-white">
               <CustomTableHeaderCell label="Sr #" />
 
-              {columns.map((column) => (
+              {columns.map((column, i) => (
                 <CustomTableHeaderCell
-                  key={column.value}
+                  key={i}
                   columnValue={column.value}
                   label={column.label}
                   searchParams={searchParams}
@@ -54,14 +55,14 @@ const List = ({
               return (
                 <tr
                   key={serial}
-                  className={`transition-colors duration-150  cursor-pointer!${
+                  className={`transition-colors duration-150 cursor-pointer! ${
                     index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
                   } hover:bg-gray-100`}
                   onClick={() =>
                     router.push(
                       `/authority-reports/complaint-reports/complaint-summary/${encodeURIComponent(
                         d?.districtName
-                      )}`
+                      )}/list`
                     )
                   }
                 >

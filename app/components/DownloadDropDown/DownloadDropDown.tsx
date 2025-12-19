@@ -43,12 +43,19 @@ const DownloadDropDown = ({
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <Button className="h-full! rounded-[0.438rem]! py-[9.5px]! outline-0!">
-          <HugeiconsIcon icon={CloudDownloadIcon} /> Download
-          <DropdownMenu.TriggerIcon />
-        </Button>
+        {styleVarient === 1 ? (
+          <Button className="h-full! rounded-[0.438rem]! py-[9.5px]! outline-0!">
+            <HugeiconsIcon icon={CloudDownloadIcon} /> Download
+            <DropdownMenu.TriggerIcon />
+          </Button>
+        ) : (
+          <Button size="2" className="rounded-[0.438rem]! outline-0!">
+            <HugeiconsIcon icon={CloudDownloadIcon} /> Download
+            <DropdownMenu.TriggerIcon />
+          </Button>
+        )}
       </DropdownMenu.Trigger>
-      <DropdownMenu.Content>
+      <DropdownMenu.Content size={styleVarient === 1 ? "2" : "1"}>
         {onClickPdf && (
           <DropdownMenu.Item onClick={onClickPdf}>
             <PiFilePdfThin /> PDF

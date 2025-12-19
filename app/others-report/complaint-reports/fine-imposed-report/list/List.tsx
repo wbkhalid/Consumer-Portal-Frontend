@@ -1,9 +1,8 @@
 "use client";
-import TableHeaderCell from "../../../../components/table/TableHeaderCell";
-import TableBodyCell from "../../../../components/table/TableBodyCell";
-import { FineImposed } from "./page";
-import { BaseQuery } from "../../../../utils/utils";
 import CustomTableHeaderCell from "../../../../components/table/CustomTableHeaderCell";
+import TableBodyCell from "../../../../components/table/TableBodyCell";
+import { BaseQuery, Column } from "../../../../utils/utils";
+import { FineImposed } from "./page";
 
 export type Query = BaseQuery<FineImposed>;
 
@@ -15,26 +14,9 @@ interface Props {
 }
 
 const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
-  // Calculate totals dynamically
-  const totalComplaints = data.reduce(
-    (sum, item) => sum + (item.complaints || 0),
-    0
-  );
+  const { totalComplaints, totalFineImposed } = calculateTotals(data);
 
-  const totalFineImposed = data.reduce(
-    (sum, item) => sum + (item.fineImposed || 0),
-    0
-  );
-
-  const columns: {
-    label: string;
-    value: keyof FineImposed;
-    className?: string;
-  }[] = [
-    { label: "District", value: "districtName" },
-    { label: "Complaints", value: "complaints" },
-    { label: "Fine Imposed", value: "fineImposed" },
-  ];
+  const columns = getColumns();
 
   return (
     <div className="relative">
@@ -89,3 +71,28 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
 };
 
 export default List;
+
+// strongly typed column list
+export const getColumns = (): Column<FineImposed>[] => [
+  { label: "Name of District", value: "districtName" },
+  { label: "Complaints", value: "complaints" },
+  { label: "Fine Imposed", value: "fineImposed" },
+];
+
+export const calculateTotals = (data: FineImposed[]) => {
+  // Calculate totals dynamically
+  const totalComplaints = data.reduce(
+    (sum, item) => sum + (item.complaints || 0),
+    0
+  );
+
+  const totalFineImposed = data.reduce(
+    (sum, item) => sum + (item.fineImposed || 0),
+    0
+  );
+
+  return {
+    totalComplaints,
+    totalFineImposed,
+  };
+};

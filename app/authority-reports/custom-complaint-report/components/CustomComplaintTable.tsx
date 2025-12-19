@@ -9,17 +9,7 @@ interface CustomComplaintProp {
 }
 
 const CustomComplaintTable = ({ rowsData }: CustomComplaintProp) => {
-  const headers = [
-    "Complaint #",
-    "Shop Name",
-    "Phone #",
-    "Complaint Date",
-    "Address",
-    "Complaint Type",
-    "Section Category",
-    "Nature of Complaint",
-    "Sections",
-  ];
+  const headers = getColumns();
 
   return (
     <div className="relative">
@@ -69,3 +59,16 @@ const CustomComplaintTable = ({ rowsData }: CustomComplaintProp) => {
 };
 
 export default CustomComplaintTable;
+
+// strongly typed column list
+export const getColumns = (): string[] => [
+  "Complaint #",
+  "Shop Name",
+  "Phone #",
+  "Complaint Date",
+  "Address",
+  "Complaint Type",
+  "Section Category",
+  "Nature of Complaint",
+  "Sections",
+];

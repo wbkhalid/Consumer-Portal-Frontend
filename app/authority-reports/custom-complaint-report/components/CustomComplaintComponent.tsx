@@ -14,6 +14,7 @@ import useGetAllStaff from "../../../hooks/useGetAllStaff";
 import DatePicker from "../../../components/DatePicker";
 import FineFilter from "./FineFilter";
 import { Button } from "@radix-ui/themes";
+import DownloadWrapper from "./DownloadWrapper";
 
 interface Props {
   sectionCategoryOptions: OptionType[];
@@ -74,14 +75,13 @@ const CustomComplaintComponent = ({
     return uniqueSections;
   }, [sectionData]);
 
+  const fileName = "Custom Complaint Report";
   return (
     <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
       {/* Header Section */}
       <div className="flex justify-between items-center px-2! py-2!">
         <div className="flex items-center gap-1">
-          <p className="text-(--primary) font-semibold">
-            Custom Complaint Report
-          </p>
+          <p className="text-(--primary) font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {customComplaintData?.length.toLocaleString()} Records
           </p>
@@ -178,6 +178,7 @@ const CustomComplaintComponent = ({
         >
           Clear Filters
         </Button>
+        <DownloadWrapper fileName={fileName} data={customComplaintData} />
       </div>
       <CustomComplaintTable rowsData={customComplaintData} />
     </div>

@@ -9,6 +9,7 @@ import SearchFilter from "../../../../components/Filters/SearchFilter";
 import DatesFilter from "../../../../components/Filters/DatesFilter";
 import Pagination from "../../../../components/Form/Pagination";
 import ErrorMessage from "../../../../components/Form/ErrorMessage";
+import DownloadWrapper from "./DownloadWrapper";
 
 export interface ComplaintInstitution {
   districtName: string;
@@ -80,14 +81,14 @@ const ComplaintInstitutionPage = async ({ searchParams }: Props) => {
     myPage * myPageSize
   );
 
+  const fileName = "Complaint Institution Report";
+
   return (
     <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
       {/* Header Section */}
       <div className="flex justify-between items-center px-2! py-2!">
         <div className="flex items-center gap-1">
-          <p className="text-(--primary) font-semibold">
-            Complaint Institution Report
-          </p>
+          <p className="text-(--primary) font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {paginatedData?.length} Records
           </p>
@@ -97,38 +98,36 @@ const ComplaintInstitutionPage = async ({ searchParams }: Props) => {
             <YearFilter />
             <DatesFilter />
             <SearchFilter />
+            <DownloadWrapper fileName={fileName} data={data} />
           </Suspense>
         </div>
       </div>
-      <div className="relative">
-        <div className="h-[calc(100vh-140px)] overflow-y-auto scrollbar-hide relative">
-          {/* Table */}
-          {response?.responseCode !== 200 ? (
-            // API error
-            <div className="px-2!">
-              <ErrorMessage>{response?.responseMessage}</ErrorMessage>
-            </div>
-          ) : paginatedData && paginatedData.length > 0 ? (
-            // Normal table data
-            <List
-              data={paginatedData}
-              currentPage={myPage}
-              pageSize={myPageSize}
-              searchParams={query}
-            />
-          ) : (
-            // No records found
-            <p className="px-2!">No records found.</p>
-          )}
-          <Suspense fallback={<Spinner />}>
-            <Pagination
-              pageSize={myPageSize}
-              currentPage={myPage}
-              itemCount={totalCount}
-            />
-          </Suspense>
+
+      {/* Table */}
+      {response?.responseCode !== 200 ? (
+        // API error
+        <div className="px-2!">
+          <ErrorMessage>{response?.responseMessage}</ErrorMessage>
         </div>
-      </div>
+      ) : paginatedData && paginatedData.length > 0 ? (
+        // Normal table data
+        <List
+          data={paginatedData}
+          currentPage={myPage}
+          pageSize={myPageSize}
+          searchParams={query}
+        />
+      ) : (
+        // No records found
+        <p className="px-2!">No records found.</p>
+      )}
+      <Suspense fallback={<Spinner />}>
+        <Pagination
+          pageSize={myPageSize}
+          currentPage={myPage}
+          itemCount={totalCount}
+        />
+      </Suspense>
     </div>
   );
 };

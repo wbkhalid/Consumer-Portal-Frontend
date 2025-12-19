@@ -207,8 +207,9 @@ export const exportDataToExcel = (
 
 export type Column<T> = {
   label: string;
-  value: keyof T;
+  value?: keyof T;
   className?: string;
+  render?: (row: T) => React.ReactNode;
 };
 
 import jsPDF from "jspdf";

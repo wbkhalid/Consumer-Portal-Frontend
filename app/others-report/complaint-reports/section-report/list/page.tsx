@@ -14,6 +14,7 @@ import { APIResponse } from "../../../../services/api-client";
 import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
 import List, { Query } from "./List";
 import SectionCategoryFilter from "../../../../components/Filters/SectionCategoryFilter";
+import DownloadWrapper from "./DownloadWrapper";
 
 export interface SectionReport {
   districtName: string;
@@ -91,12 +92,14 @@ const SectionReportPage = async ({ searchParams }: Props) => {
     myPage * myPageSize
   );
 
+  const fileName = "Section Report";
+
   return (
     <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
       {/* Header Section */}
       <div className="flex justify-between items-center px-2! py-2!">
         <div className="flex items-center gap-1">
-          <p className="text-(--primary) font-semibold">Section Report</p>
+          <p className="text-(--primary) font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {paginatedData?.length} Records
           </p>
@@ -108,39 +111,36 @@ const SectionReportPage = async ({ searchParams }: Props) => {
             <YearFilter />
             <DatesFilter />
             <SearchFilter />
+            <DownloadWrapper fileName={fileName} data={data} />
           </Suspense>
         </div>
       </div>
-      <div className="relative">
-        <div className="h-[calc(100vh-140px)] overflow-y-auto scrollbar-hide relative">
-          {/* Table */}
-          {response?.responseCode !== 200 ? (
-            // API error
-            <div className="px-2!">
-              <ErrorMessage>{response?.responseMessage}</ErrorMessage>
-            </div>
-          ) : paginatedData && paginatedData.length > 0 ? (
-            // Normal table data
-            <List
-              data={paginatedData}
-              currentPage={myPage}
-              pageSize={myPageSize}
-              searchParams={query}
-            />
-          ) : (
-            // No records found
-            <p className="px-2!">No records found.</p>
-          )}
+      {/* Table */}
+      {response?.responseCode !== 200 ? (
+        // API error
+        <div className="px-2!">
+          <ErrorMessage>{response?.responseMessage}</ErrorMessage>
+        </div>
+      ) : paginatedData && paginatedData.length > 0 ? (
+        // Normal table data
+        <List
+          data={paginatedData}
+          currentPage={myPage}
+          pageSize={myPageSize}
+          searchParams={query}
+        />
+      ) : (
+        // No records found
+        <p className="px-2!">No records found.</p>
+      )}
 
-          <Suspense fallback={<Spinner />}>
-            <Pagination
-              pageSize={myPageSize}
-              currentPage={myPage}
-              itemCount={totalCount}
-            />
-          </Suspense>
-        </div>
-      </div>
+      <Suspense fallback={<Spinner />}>
+        <Pagination
+          pageSize={myPageSize}
+          currentPage={myPage}
+          itemCount={totalCount}
+        />
+      </Suspense>
     </div>
   );
 };

@@ -1,63 +1,26 @@
 import { Spinner } from "@radix-ui/themes";
 import { sort } from "fast-sort";
 import { Suspense } from "react";
-import { COMPLAINT_REPORT_API } from "../../../../APIs";
-import DatesFilter from "../../../../components/Filters/DatesFilter";
-import SearchFilter from "../../../../components/Filters/SearchFilter";
-import Pagination from "../../../../components/Form/Pagination";
-import { DEFAULT_PAGE_SIZE } from "../../../../utils/utils";
+import { COMPLAINT_REPORT_API } from "../../../../../APIs";
+import DatesFilter from "../../../../../components/Filters/DatesFilter";
+import SearchFilter from "../../../../../components/Filters/SearchFilter";
+import Pagination from "../../../../../components/Form/Pagination";
+import { DEFAULT_PAGE_SIZE } from "../../../../../utils/utils";
 import DownloadWrapper from "./DownloadWrapper";
 import List, { Query } from "./List";
-
-export interface Complains {
-  id: number;
-  shopName: string;
-  phoneNumber: string;
-  address: string;
-  billBoardImage: string;
-  complaintType: string;
-  categoryName: string;
-  sectionCategoryName: string;
-  sectionsDetails: {
-    name: string;
-    description: string;
-  }[];
-  entryType: number;
-  status: number;
-  createdAt: string;
-  updatedAt: string;
-  assignedTo: string;
-  hearingDate: string;
-  remarks: string;
-  assigneeRemarks: string;
-  assigneeStatus: number;
-  closingRemarks: string;
-  closedDate: string;
-  finedAmount: number;
-  listAudio: string[];
-  listOfImage: string[];
-  listOfVideo: string[];
-  decisionFilePaths: {
-    filePath: string;
-    fileType: number;
-  }[];
-}
-
-export interface ComplaintSummary {
-  districtName: string;
-  complaintsFiled: number;
-  disposal: number;
-  pendingComplaints: number;
-  percentageDisposal: number;
-  complaints: Complains[];
-}
+import { Complains, ComplaintSummary } from "../../list/page";
 
 interface Props {
+  params: Promise<{
+    districtName: string;
+  }>;
   searchParams: Promise<Query>;
 }
 
-const ComplaintSummaryPage = async ({ searchParams }: Props) => {
+const DistrictComplaintPage = async ({ searchParams, params }: Props) => {
+  const { districtName } = await params;
   const query = await searchParams; // 👈 fix
+
   const { startDate, endDate, page, pageSize, search, orderBy, order } = query;
 
   const myPage = parseInt(page || "1") || 1;
@@ -73,13 +36,14 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
   const baseURL =
     process.env.BACKEND_API + COMPLAINT_REPORT_API + "/complaint-summary";
 
-  const params = new URLSearchParams();
+  const urlParams = new URLSearchParams();
 
-  if (startDate) params.set("startDate", startDate);
-  if (endDate) params.set("endDate", endDate);
+  if (startDate) urlParams.set("startDate", startDate);
+  if (endDate) urlParams.set("endDate", endDate);
 
-  const finalAPI = `${baseURL}?${params.toString()}`;
+  const finalAPI = `${baseURL}?${urlParams.toString()}`;
   console.log("finalAPI call", finalAPI);
+
   const res = await fetch(finalAPI, {
     next: { revalidate: 10 },
   });
@@ -89,20 +53,27 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
   console.log(response, "full response");
 
   // Extract only data array
-  let data: ComplaintSummary[] = response.data;
+  let complaintSummary: ComplaintSummary[] = response.data;
 
-  console.log(data, "only data");
+  // Find selected district
+  const selectedDistrict = complaintSummary.find(
+    (d) => d.districtName === districtName
+  );
+
+  // Extract only complaints
+  let data: Complains[] = selectedDistrict?.complaints ?? [];
 
   // **Apply Search Filter**
   if (search) {
     const lowerSearch = search.toLowerCase();
+
     data = data.filter(
-      (d) =>
-        d.districtName.toLowerCase().includes(lowerSearch) ||
-        d.complaintsFiled.toString().includes(lowerSearch) ||
-        d.disposal.toString().includes(lowerSearch) ||
-        d.percentageDisposal.toString().includes(lowerSearch) ||
-        d.pendingComplaints.toString().includes(lowerSearch)
+      (c) =>
+        c.shopName?.toLowerCase().includes(lowerSearch) ||
+        c.phoneNumber?.includes(lowerSearch) ||
+        c.categoryName?.toLowerCase().includes(lowerSearch) ||
+        c.complaintType?.toLowerCase().includes(lowerSearch) ||
+        c.status?.toString().includes(lowerSearch)
     );
   }
 
@@ -119,14 +90,7 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
     myPage * myPageSize
   );
 
-  console.log("data", data);
-  console.log("paginatedData", paginatedData);
-
-  console.log("length:", data.length);
-  console.log("start:", (myPage - 1) * myPageSize);
-  console.log("end:", myPage * myPageSize);
-
-  const fileName = "Complaint Summary Report";
+  const fileName = `${districtName} Complains`;
 
   return (
     <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
@@ -166,4 +130,4 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
   );
 };
 
-export default ComplaintSummaryPage;
+export default DistrictComplaintPage;
