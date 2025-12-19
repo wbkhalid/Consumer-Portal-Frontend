@@ -1,4 +1,11 @@
+import { HugeiconsIcon } from "@hugeicons/react";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
+import {
+  Album02Icon,
+  Image02Icon,
+  MusicNote03Icon,
+  VideoReplayIcon,
+} from "@hugeicons/core-free-icons";
 
 interface MediaDetailsProps {
   complaint: ManageComplainsData | null;
@@ -26,7 +33,8 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
         <div className="flex justify-center items-center gap-11 my-2.5!">
           <div className="flex flex-col items-center">
             <div className="h-10 w-10 rounded-full bg-[#155DFC] flex justify-center items-center">
-              <img src="/images/complaint-image.png" alt="feature Image" />
+              {/* <img src="/images/complaint-image.png" alt="feature Image" /> */}
+              <HugeiconsIcon icon={Image02Icon} color="#ffffff" />
             </div>
             <p className="text-[#4A5565] font-medium text-sm">
               Feature Image :{complaint?.billBoardImage.length ? 1 : 0}
@@ -34,7 +42,8 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
           </div>
           <div className="flex flex-col items-center">
             <div className="h-10 w-10 rounded-full bg-[#9810FA] flex justify-center items-center">
-              <img src="/images/complaint-music.png" alt="Audio Files" />
+              {/* <img src="/images/complaint-music.png" alt="Audio Files" /> */}
+              <HugeiconsIcon icon={MusicNote03Icon} color="#ffffff" />
             </div>
             <p className="text-[#4A5565] font-medium text-sm">
               Audio Files :{complaint?.listAudio?.length}
@@ -42,7 +51,8 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
           </div>
           <div className="flex flex-col items-center">
             <div className="h-10 w-10 rounded-full bg-[#028B02] flex justify-center items-center">
-              <img src="/images/complaint-album.png" alt="Album" />
+              {/* <img src="/images/complaint-album.png" alt="Album" /> */}
+              <HugeiconsIcon icon={Album02Icon} color="#ffffff" />
             </div>
             <p className="text-[#4A5565] font-medium text-sm">
               Photos :{images?.length}
@@ -50,7 +60,8 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
           </div>
           <div className="flex flex-col items-center">
             <div className="h-10 w-10 rounded-full bg-[#BD0000] flex justify-center items-center">
-              <img src="/images/complaint-video.png" alt="feature Image" />
+              {/* <img src="/images/complaint-video.png" alt="feature Image" /> */}
+              <HugeiconsIcon icon={VideoReplayIcon} color="#ffffff" />
             </div>
             <p className="text-[#4A5565] font-medium text-sm">
               Videos :{videos?.length}
