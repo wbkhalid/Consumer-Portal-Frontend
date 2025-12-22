@@ -107,7 +107,7 @@ const FinedComplaintTable = ({
                     index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
                   } hover:bg-gray-100`}
                 >
-                  <TableBodyCell>{item?.complaintId}</TableBodyCell>
+                  <TableBodyCell>{item?.id}</TableBodyCell>
 
                   <TableBodyCell className="whitespace-nowrap">
                     {item?.shopName}

@@ -9,7 +9,7 @@ interface Props {
 }
 
 export interface ManageFinedComplaintsData {
-  complaintId: number;
+  id: number;
   shopName: string;
   phoneNumber: string;
   address: string;

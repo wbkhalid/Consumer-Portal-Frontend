@@ -6,18 +6,21 @@ import "react-date-range/dist/theme/default.css";
 import { Popover } from "@radix-ui/themes";
 import { format } from "date-fns";
 import { CiCalendar } from "react-icons/ci";
-import { Placeholder } from "react-select/animated";
 
 interface DatePickerProps {
   placeholder?: string;
   onSelectDate?: (date: Date) => void;
   initialDate?: Date | null;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 const DatePicker = ({
   onSelectDate,
   initialDate,
   placeholder,
+  minDate,
+  maxDate,
 }: DatePickerProps) => {
   const [date, setDate] = useState<Date | null>(initialDate || null);
   const [open, setOpen] = useState(false);
@@ -50,6 +53,8 @@ const DatePicker = ({
           date={date || new Date()}
           onChange={handleSelect}
           color="#2563eb"
+          minDate={minDate}
+          maxDate={maxDate}
         />
       </Popover.Content>
     </Popover.Root>

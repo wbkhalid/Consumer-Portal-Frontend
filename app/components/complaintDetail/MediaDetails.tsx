@@ -37,7 +37,7 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
               <HugeiconsIcon icon={Image02Icon} color="#ffffff" />
             </div>
             <p className="text-[#4A5565] font-medium text-sm">
-              Feature Image :{complaint?.billBoardImage.length ? 1 : 0}
+              Feature Image :{complaint?.billBoardImage?.length ? 1 : 0}
             </p>
           </div>
           <div className="flex flex-col items-center">
@@ -160,7 +160,7 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
       <div>
         <p className="text-sm text-[#555555] font-medium">Audio</p>
         {complaint?.listAudio?.length ? (
-          complaint?.listAudio.map((url, i) => (
+          complaint?.listAudio?.map((url, i) => (
             <audio key={i} controls className="w-full mb-2! rounded">
               <source src={`${url}`} type="audio/mpeg" />
             </audio>

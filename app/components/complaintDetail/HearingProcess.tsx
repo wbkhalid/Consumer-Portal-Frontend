@@ -35,7 +35,7 @@ const HearingProcess = ({
     <>
       {hearingStep === 0 ? (
         <div className="px-5! py-2.5!">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-2.5!">
             <p className="text-[#555555] text-sm">Schedule New Hearing</p>
             <Button
               className="rounded-full! text-xs! font-medium! cursor-pointer!"
@@ -52,7 +52,7 @@ const HearingProcess = ({
                 No hearings scheduled yet
               </p>
               <Button
-                className="text-xs! font-medium! cursor-pointer!"
+                className="text-xs! font-medium! cursor-pointer! leading-0! max-h-4!"
                 onClick={() => setHearingStep(1)}
               >
                 <HugeiconsIcon icon={Add01Icon} size={18} /> Schedule First
@@ -125,7 +125,7 @@ const HearingProcess = ({
         </div>
       ) : (
         <div className="px-5! py-2.5!">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center my-2!">
             <p className="text-[#555555] text-sm">Schedule New Hearing</p>
             <div
               className="rounded-full! text-xs! font-medium! cursor-pointer! border border-[#E2E8F0] px-2! py-0.5!"
@@ -219,7 +219,7 @@ const HearingProcess = ({
             </Button>
           </div>
 
-          <p className="text-[#555555] text-sm mt-2!">Attendees</p>
+          <p className="text-[#555555] text-sm my-2!">Attendees</p>
           <div className="flex gap-3">
             <CustomSearchDropdown
               label="Complainant"
@@ -249,8 +249,7 @@ const HearingProcess = ({
           </div>
           <div className="flex justify-between items-center mt-5! mb-3!">
             <Dialog.Close>
-              <div className="flex gap-0.5 justify-center items-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
-                <RxCross2 />
+              <div className="text-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
                 <p> Close</p>
               </div>
             </Dialog.Close>

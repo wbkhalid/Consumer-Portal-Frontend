@@ -103,7 +103,7 @@ const MegaMenu = () => {
           description:
             "Check pending complaints based on their age and duration.",
           icon: <FiClock className="text-white" size={22} />,
-          route: "/others-report/complaint-reports/aging-report/list",
+          route: "/others-report/complaint-reports/aging-report",
         },
         {
           label: "Fine Imposed Report",

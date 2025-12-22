@@ -96,16 +96,17 @@ const AssignDetails = ({
           })) ?? []
         }
       />
-      <CustomTextArea
-        label="Assignee Remarks"
-        placeholder="Remarks"
-        value={remarks}
-        onChange={(e) => setRemarks(e.target.value)}
-      />
+      <div className="mt-2!">
+        <CustomTextArea
+          label="Assignee Remarks"
+          placeholder="Remarks"
+          value={remarks}
+          onChange={(e) => setRemarks(e.target.value)}
+        />
+      </div>
       <div className="flex justify-between items-center mt-5!">
         <Dialog.Close>
-          <div className="flex gap-0.5 justify-center items-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
-            <RxCross2 />
+          <div className="border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]! text-center">
             <p> Close</p>
           </div>
         </Dialog.Close>

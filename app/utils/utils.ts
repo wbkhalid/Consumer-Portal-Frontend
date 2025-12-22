@@ -1,6 +1,7 @@
 import { format, parseISO, isValid } from "date-fns";
 import { FILE_UPLOAD_API } from "../APIs";
 import apiClient from "../services/api-client";
+import { subDays } from "date-fns";
 
 export const DecisionPhotos = "decisionphoto";
 export const decionsVideos = "decisionvideo";
@@ -92,6 +93,48 @@ export const statusData = [
   { id: 6, label: "Withdraw" },
   { id: 7, label: "Non-Prosecution" },
 ];
+
+export const getDateRange = (rangeLabel: string) => {
+  const today = new Date();
+
+  switch (rangeLabel) {
+    case "1-30":
+      return {
+        minDate: subDays(today, 30),
+        maxDate: today,
+      };
+
+    case "31-60":
+      return {
+        minDate: subDays(today, 60),
+        maxDate: subDays(today, 31),
+      };
+
+    case "61-120":
+      return {
+        minDate: subDays(today, 120),
+        maxDate: subDays(today, 61),
+      };
+
+    case "121-180":
+      return {
+        minDate: subDays(today, 180),
+        maxDate: subDays(today, 121),
+      };
+
+    case "181+":
+      return {
+        minDate: subDays(today, 10000), // bohot pehle
+        maxDate: subDays(today, 181),
+      };
+
+    default:
+      return {
+        minDate: undefined,
+        maxDate: undefined,
+      };
+  }
+};
 
 export const DEFAULT_PAGE_SIZE = 10;
 export const DEFAULT_YEAR = new Date().getFullYear();

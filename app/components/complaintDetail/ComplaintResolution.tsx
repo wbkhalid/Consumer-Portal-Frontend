@@ -176,7 +176,7 @@ const ComplaintResolution = ({
           <div
             className={`flex-1 ${
               selectedStatus === status?.value
-                ? "bg-[#cce8cc] border border-[#028B02]"
+                ? "bg-[#cce8cc] border border-[#028B02] text-[#028B02]"
                 : "bg-[#F9FAFB] border border-[#E5E7EB]"
             }  rounded-[5px] p-2.5! text-center cursor-pointer`}
             key={status?.value}
@@ -246,7 +246,7 @@ const ComplaintResolution = ({
           onChange={handleVideoChange}
         />
       </div>
-      <div className="flex justify-between items-center mt-2! mb-2!">
+      <div className="flex justify-between items-center my-3!">
         {/* <Button
           variant="outline"
           className="text-(--primary)! outline! outline-(--primary)! shadow-none! cursor-pointer! hover:text-white! hover:bg-(--primary)! text-[12px]!"
@@ -261,8 +261,7 @@ const ComplaintResolution = ({
           Cancel
         </Button> */}
         <Dialog.Close>
-          <div className="flex gap-0.5 justify-center items-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
-            <RxCross2 />
+          <div className="text-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
             <p> Close</p>
           </div>
         </Dialog.Close>
