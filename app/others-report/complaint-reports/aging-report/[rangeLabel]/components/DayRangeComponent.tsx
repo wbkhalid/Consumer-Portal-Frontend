@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import DatePicker from "../../../../../components/DatePicker";
-import { ManageComplainsData } from "../../../../../hooks/useGetAllComplains";
 import { AgingReportDailyBreakdown } from "../../page";
 import DayRangeTable from "./DayRangeTable";
 import { format, parseISO } from "date-fns";
