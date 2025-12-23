@@ -2,6 +2,7 @@
 // import { TimeSlot } from "@/app/hooks/useTimeSolt";
 import { COMPLAINT_CATEGORY_API, SECTION_CATEGORY_API } from "../../../APIs";
 import { OptionType } from "../../../components/Form/CustomSelect";
+import CustomComplaintDialog from "../components/CustomComplaintDialog";
 import Forms from "./Forms";
 
 interface SectionCategory {
@@ -74,6 +75,7 @@ const CustomComplaintReportPage = async () => {
         <h2 className="text-2xl font-semibold text-gray-800">
           Custom Complaint Reports
         </h2>
+
         <Forms
           sectionCategoryOptions={sectionCategoryOptions}
           sectionOptions={sectionOptions}

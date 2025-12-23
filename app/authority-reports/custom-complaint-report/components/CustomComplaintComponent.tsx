@@ -15,6 +15,9 @@ import DatePicker from "../../../components/DatePicker";
 import FineFilter from "./FineFilter";
 import { Button } from "@radix-ui/themes";
 import DownloadWrapper from "./DownloadWrapper";
+import useSearchRegisterUser from "../../../hooks/useSearchRegisterUser";
+import CustomComplaintDialog from "./CustomComplaintDialog";
+import DateFilter from "../../../components/DateFilter";
 
 interface Props {
   sectionCategoryOptions: OptionType[];
@@ -37,6 +40,7 @@ const CustomComplaintComponent = ({
   const [maxFine, setMaxFine] = useState<number | undefined>(undefined);
 
   const { divisionId, districtId, tehsilId } = useRegionFilters();
+
   const { data: customComplaintData } = useGetCustomComplaints({
     // startDate: startYear ? `${startYear}-01-01` : "",
     startDate: startDate ? startDate.toISOString() : undefined,
@@ -86,11 +90,13 @@ const CustomComplaintComponent = ({
             {customComplaintData?.length.toLocaleString()} Records
           </p>
         </div>
-        <Forms
+        {/* <Forms
           sectionCategoryOptions={sectionCategoryOptions}
           sectionOptions={sectionOptions}
           complaintCategoryOptions={complaintCategoryOptions}
-        />
+        /> */}
+
+        <CustomComplaintDialog />
       </div>
       <div className="flex justify-end items-center gap-2 mb-2!">
         <CustomSelect
@@ -138,7 +144,7 @@ const CustomComplaintComponent = ({
         />
 
         {/* <CustomDateRangePicker /> */}
-        <DatePicker
+        {/* <DatePicker
           placeholder="Start Date"
           initialDate={startDate}
           onSelectDate={(d) => {
@@ -152,7 +158,8 @@ const CustomComplaintComponent = ({
           onSelectDate={(d) => {
             setEndDate(d);
           }}
-        />
+        /> */}
+        <DateFilter />
         <FineFilter
           minFine={minFine}
           maxFine={maxFine}
