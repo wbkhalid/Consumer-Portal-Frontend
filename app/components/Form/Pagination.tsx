@@ -81,7 +81,7 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
 
   return (
     <div className="w-full">
-      <div className="flex gap-2! items-center! py-1! px-1! justify-between">
+      <div className="flex gap-2! items-center! py-1! px-1! justify-between flex-wrap">
         <div>
           <PageSizeFilter />
         </div>
@@ -124,7 +124,7 @@ const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
             <RxDoubleArrowRight className="text-black" />
           </button> */}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <Button
             type="button"
             variant="outline"

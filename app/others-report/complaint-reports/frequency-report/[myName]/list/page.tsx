@@ -7,22 +7,28 @@ import { COMPLAINT_REPORT_API } from "../../../../../APIs";
 import DatesFilter from "../../../../../components/Filters/DatesFilter";
 import SearchFilter from "../../../../../components/Filters/SearchFilter";
 import Pagination from "../../../../../components/Form/Pagination";
-import { DEFAULT_PAGE_SIZE } from "../../../../../utils/utils";
-import { Complains, ComplaintSummary } from "../../list/page";
+import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../../utils/utils";
 import List, { Query } from "./List";
+import { Complains } from "../../../../../authority-reports/complaint-reports/complaint-summary/list/page";
+import { APIResponse } from "../../../../../services/api-client";
+import { FrequencyReport } from "../../list/page";
+import YearFilter from "../../../../../components/Filters/YearFilter";
 
 interface Props {
   params: Promise<{
-    districtName: string;
+    myName: string;
   }>;
   searchParams: Promise<Query>;
 }
 
-const DistrictComplaintPage = async ({ searchParams, params }: Props) => {
-  const { districtName } = await params;
+const FrequencyComplaintPage = async ({ searchParams, params }: Props) => {
+  const { myName } = await params;
   const query = await searchParams; // 👈 fix
 
-  const { startDate, endDate, page, pageSize, search, orderBy, order } = query;
+  const decodedParam = decodeURIComponent(myName as string);
+
+  const { year, startDate, endDate, page, pageSize, search, orderBy, order } =
+    query;
 
   const myPage = parseInt(page || "1") || 1;
   let myPageSize: number;
@@ -30,39 +36,40 @@ const DistrictComplaintPage = async ({ searchParams, params }: Props) => {
   if (pageSize == undefined) myPageSize = DEFAULT_PAGE_SIZE;
   else myPageSize = Number(pageSize);
 
+  const selectedYear = year || DEFAULT_YEAR;
+
   console.log(page, page);
   console.log(pageSize, pageSize);
   console.log(search, search);
 
   const baseURL =
-    process.env.BACKEND_API + COMPLAINT_REPORT_API + "/complaint-summary";
+    process.env.BACKEND_API + COMPLAINT_REPORT_API + "/frequency-report";
 
   const urlParams = new URLSearchParams();
+
+  urlParams.set("year", year || selectedYear.toString()); // always required
 
   if (startDate) urlParams.set("startDate", startDate);
   if (endDate) urlParams.set("endDate", endDate);
 
-  const finalAPI = `${baseURL}?${urlParams.toString()}`;
+  const finalAPI = `${baseURL}?${params.toString()}`;
   console.log("finalAPI call", finalAPI);
-
   const res = await fetch(finalAPI, {
     next: { revalidate: 10 },
   });
 
-  const response = await res.json();
+  const response: APIResponse<FrequencyReport[]> = await res.json();
 
   console.log(response, "full response");
 
   // Extract only data array
-  let complaintSummary: ComplaintSummary[] = response.data;
+  let complaintSummary: FrequencyReport[] = response.data;
 
-  // Find selected district
-  const selectedDistrict = complaintSummary.find(
-    (d) => d.districtName === districtName
-  );
+  // Find selected name
+  const selectedName = complaintSummary.find((d) => d.name === decodedParam);
 
   // Extract only complaints
-  let data: Complains[] = selectedDistrict?.complaints ?? [];
+  let data: Complains[] = selectedName?.complaints ?? [];
 
   // **Apply Search Filter**
   if (search) {
@@ -91,7 +98,7 @@ const DistrictComplaintPage = async ({ searchParams, params }: Props) => {
     myPage * myPageSize
   );
 
-  const fileName = `${districtName} Complains`;
+  const fileName = `${decodedParam} Complains`;
 
   return (
     <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
@@ -103,12 +110,12 @@ const DistrictComplaintPage = async ({ searchParams, params }: Props) => {
         <LuChevronRight className="text-(--primary)" />
         <Link
           className="text-(--primary) font-medium hover:underline"
-          href="/authority-reports/complaint-reports/complaint-summary/list"
+          href="/others-report/complaint-reports/frequency-report/list"
         >
-          Complaint Summary Report
+          Frequency Report
         </Link>
         <LuChevronRight className="text-(--primary)" />
-        <span className="text-(--primary)">{districtName}</span>
+        <span className="text-(--primary)">{decodedParam}</span>
       </div>
       <div className="flex justify-between items-center px-2! py-2! flex-wrap gap-2">
         <div className="flex items-center gap-1 flex-wrap">
@@ -119,6 +126,7 @@ const DistrictComplaintPage = async ({ searchParams, params }: Props) => {
         </div>
         <div className="flex items-center justify-end gap-2 flex-wrap">
           <Suspense fallback={<Spinner />}>
+            <YearFilter />
             <DatesFilter />
             <SearchFilter />
           </Suspense>
@@ -144,4 +152,4 @@ const DistrictComplaintPage = async ({ searchParams, params }: Props) => {
   );
 };
 
-export default DistrictComplaintPage;
+export default FrequencyComplaintPage;

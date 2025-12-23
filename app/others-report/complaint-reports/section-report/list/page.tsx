@@ -1,20 +1,18 @@
 import { Spinner } from "@radix-ui/themes";
 import { sort } from "fast-sort";
 import { Suspense } from "react";
-import { COMPLAINT_REPORT_API, SECTION_API } from "../../../../APIs";
+import { COMPLAINT_REPORT_API } from "../../../../APIs";
 import DatesFilter from "../../../../components/Filters/DatesFilter";
 import SearchFilter from "../../../../components/Filters/SearchFilter";
+import SectionCategoryFilter from "../../../../components/Filters/SectionCategoryFilter";
 import SectionFilter from "../../../../components/Filters/SectionFilter";
 import YearFilter from "../../../../components/Filters/YearFilter";
-import { OptionType } from "../../../../components/Form/CustomSelect";
 import ErrorMessage from "../../../../components/Form/ErrorMessage";
 import Pagination from "../../../../components/Form/Pagination";
-import { ManageSectionCategoryData } from "../../../../hooks/useGetSectionCategory";
 import { APIResponse } from "../../../../services/api-client";
 import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
-import List, { Query } from "./List";
-import SectionCategoryFilter from "../../../../components/Filters/SectionCategoryFilter";
 import DownloadWrapper from "./DownloadWrapper";
+import List, { Query } from "./List";
 
 export interface SectionReport {
   districtName: string;
@@ -54,10 +52,18 @@ const SectionReportPage = async ({ searchParams }: Props) => {
   const params = new URLSearchParams();
 
   params.set("year", year || selectedYear.toString()); // always required
+  console.log("selected section", section);
+  const sectionIds = section?.split(","); // ["4", "5", "6"]
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
-  if (section) params.set("sectionId", section);
+
+  if (sectionIds?.length) {
+    sectionIds.forEach((id) => {
+      params.append("sectionIds", id);
+    });
+  }
+
   if (sectionCategory) params.set("sectionCategoryId", sectionCategory);
 
   const finalAPI = `${baseURL}?${params.toString()}`;
@@ -97,14 +103,14 @@ const SectionReportPage = async ({ searchParams }: Props) => {
   return (
     <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
       {/* Header Section */}
-      <div className="flex justify-between items-center px-2! py-2!">
-        <div className="flex items-center gap-1">
+      <div className="flex justify-between items-center px-2! py-2! flex-wrap gap-2">
+        <div className="flex items-center gap-1 flex-wrap">
           <p className="text-(--primary) font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-            {paginatedData?.length} Records
+            {paginatedData.length} Records
           </p>
         </div>
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-2 flex-wrap">
           <Suspense fallback={<Spinner />}>
             <SectionFilter />
             <SectionCategoryFilter />

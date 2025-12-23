@@ -147,7 +147,7 @@ const DecidedonMeritTable = ({
                         .join(", ")}
                     </TableBodyCell>
                     <TableBodyCell>
-                      {item?.fineAmount?.toLocaleString() ?? 0}
+                      {item?.finedAmount?.toLocaleString() ?? 0}
                     </TableBodyCell>
                     <TableBodyCell>
                       {item?.remarks

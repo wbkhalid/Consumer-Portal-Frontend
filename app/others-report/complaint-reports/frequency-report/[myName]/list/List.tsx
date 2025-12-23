@@ -3,10 +3,10 @@ import Image from "next/image";
 import CustomTableHeaderCell from "../../../../../components/table/CustomTableHeaderCell";
 import TableBodyCell from "../../../../../components/table/TableBodyCell";
 import { BaseQuery, Column } from "../../../../../utils/utils";
-import { Complains } from "../../list/page";
 import { Dialog } from "@radix-ui/themes";
 import { useState } from "react";
 import ComplaintDialog from "../../../../../complains/components/ComplaintDialog";
+import { Complains } from "../../../../../authority-reports/complaint-reports/complaint-summary/list/page";
 
 export type Query = BaseQuery<Complains>;
 

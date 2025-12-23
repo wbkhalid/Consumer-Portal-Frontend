@@ -1,7 +1,8 @@
-import { GroupBase, SingleValue, StylesConfig } from "react-select";
-import CustomSelect, { OptionType } from "./CustomSelect";
-import { useEffect, useState } from "react";
+import { Select } from "@radix-ui/themes";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { GroupBase, StylesConfig } from "react-select";
+import { OptionType } from "./CustomSelect";
 
 export const defaultOption = { value: "10", label: "Select" };
 
@@ -13,42 +14,62 @@ const rowCountOptions: OptionType[] = [10, 20, 30, 40, 50].map((d) => {
 });
 
 const PageSizeFilter = () => {
-  const [selectedOptions, setSelectedOptions] = useState<OptionType>();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [pageSize, setPageSize] = useState<string>("10");
 
-  const handlePageSizeChange = (count: number) => {
+  const handlePageSizeChange = (value: string) => {
+    setPageSize(value);
+
     const params = new URLSearchParams(searchParams);
-    params.set("pageSize", count.toString());
+    params.set("pageSize", value);
+
     router.push("?" + params.toString(), { scroll: true });
   };
 
   useEffect(() => {
-    handlePageSizeChange(Number(rowCountOptions[0].value));
-    setSelectedOptions(rowCountOptions[0]);
+    handlePageSizeChange("10");
   }, []);
 
   return (
-    <CustomSelect
-      menuPlacement="top"
-      isClearable={false}
-      options={rowCountOptions}
-      isSearchable={false}
-      closeMenuOnSelect={true}
-      singleSelectStyles={paginationSelectStyles}
-      value={selectedOptions}
-      onChangeSingle={(
-        newValue: SingleValue<{ value: string; label: string }>
-      ) => {
-        if (newValue) {
-          handlePageSizeChange(Number(newValue.value));
-          setSelectedOptions({
-            label: newValue.label,
-            value: newValue.value,
-          });
-        }
-      }}
-    />
+    <>
+      <Select.Root value={pageSize} onValueChange={handlePageSizeChange}>
+        <Select.Trigger
+          className={`w-full text-xs! min-w-[100px] max-w-[150px]! rounded-full! hover:border-(--priamry)!  text-white `}
+        />
+        <Select.Content className="w-[93%] ml-[6%] overflow-auto">
+          {rowCountOptions.map((opt) => (
+            <Select.Item
+              key={opt.value}
+              value={opt.value}
+              className="text-xs! py-0.5! leading-none! truncate whitespace-nowrap"
+            >
+              {opt.label}
+            </Select.Item>
+          ))}
+        </Select.Content>
+      </Select.Root>
+      {/* <CustomSelect
+            menuPlacement="top"
+            isClearable={false}
+            options={rowCountOptions}
+            isSearchable={false}
+            closeMenuOnSelect={true}
+            singleSelectStyles={paginationSelectStyles}
+            value={selectedOption}
+            onChangeSingle={(
+              newValue: SingleValue<{ value: string; label: string }>
+            ) => {
+              if (newValue) {
+                handlePageSizeChange(newValue.value);
+                setSelectedOption({
+                  label: newValue.label,
+                  value: newValue.value,
+                });
+              }
+            }}
+          /> */}
+    </>
   );
 };
 

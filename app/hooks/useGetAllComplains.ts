@@ -33,7 +33,7 @@ export interface ManageComplainsData {
   sectionsDetails: SectionsDetails[];
   entryType: number;
   status: number;
-  fineAmount: number;
+  finedAmount: number;
   remarks: string | null;
   hearingDate: string | null;
   assigneeRemarks: string | null;

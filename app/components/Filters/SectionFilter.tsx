@@ -12,17 +12,42 @@ const SectionFilter = () => {
   const { data } = useGetAllSections();
   const [sectionOptions, setsectionOptions] = useState<OptionType[]>();
   console.log("section data", data);
+
+  // useEffect(() => {
+  //   if (data) {
+  //     const sectionOptions: OptionType[] = data.map((d) => {
+  //       return {
+  //         value: String(d.id),
+  //         label: d.name,
+  //       };
+  //     });
+  //     if (sectionOptions) setsectionOptions(sectionOptions);
+  //   }
+  // }, [data]);
+
   useEffect(() => {
-    if (data) {
-      const sectionOptions: OptionType[] = data.map((d) => {
-        return {
-          value: String(d.id),
-          label: d.name,
-        };
-      });
-      if (sectionOptions) setsectionOptions(sectionOptions);
-    }
+    if (!data) return;
+
+    const grouped = data.reduce<Record<string, number[]>>((acc, item) => {
+      if (!acc[item.name]) {
+        acc[item.name] = [];
+      }
+      acc[item.name].push(Number(item.id));
+      return acc;
+    }, {});
+
+    const sectionOptions: OptionType[] = Object.entries(grouped).map(
+      ([name, ids]) => ({
+        label: name,
+        value: ids.toString(), // number[]
+      })
+    );
+
+    console.log("sectionOptions", sectionOptions);
+
+    if (sectionOptions) setsectionOptions(sectionOptions);
   }, [data]);
+
   const router = useRouter();
   const searchParams = useSearchParams();
 

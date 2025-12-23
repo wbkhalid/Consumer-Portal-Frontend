@@ -110,7 +110,7 @@ const MegaMenu = () => {
           description:
             "Track fines imposed on businesses after complaint resolution.",
           icon: <FiTrendingUp className="text-white" size={22} />,
-          route: "/others-report/complaint-reports/fine-imposed-report/list",
+          route: "/others-report/complaint-reports/fine-imposed-report",
         },
         {
           label: "Section Report",

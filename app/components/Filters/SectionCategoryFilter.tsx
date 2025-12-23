@@ -13,6 +13,7 @@ const SectionCategoryFilter = () => {
   const [sectionCategoryOptions, setsectionCategoryOptions] =
     useState<OptionType[]>();
   console.log("section category data", data);
+
   useEffect(() => {
     if (data) {
       const sectionCategoryOptions: OptionType[] = data.map((d) => {
@@ -21,10 +22,13 @@ const SectionCategoryFilter = () => {
           label: d.name,
         };
       });
+
+      console.log("sectionCategoryOptions", sectionCategoryOptions);
       if (sectionCategoryOptions)
         setsectionCategoryOptions(sectionCategoryOptions);
     }
   }, [data]);
+
   const router = useRouter();
   const searchParams = useSearchParams();
 

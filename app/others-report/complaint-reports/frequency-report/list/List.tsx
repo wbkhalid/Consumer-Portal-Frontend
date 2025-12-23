@@ -1,9 +1,9 @@
 "use client";
-import TableHeaderCell from "../../../../components/table/TableHeaderCell";
 import TableBodyCell from "../../../../components/table/TableBodyCell";
 import { FrequencyReport } from "./page";
 import { BaseQuery, Column } from "../../../../utils/utils";
 import CustomTableHeaderCell from "../../../../components/table/CustomTableHeaderCell";
+import { useRouter } from "next/navigation";
 
 export type Query = BaseQuery<FrequencyReport>;
 
@@ -18,6 +18,7 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
   const { totalComplaints } = calculateTotals(data);
 
   const columns = getColumns();
+  const router = useRouter();
 
   return (
     <div className="relative">
@@ -45,9 +46,16 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
               return (
                 <tr
                   key={serial}
-                  className={`transition-colors duration-150 ${
+                  className={`transition-colors duration-150 cursor-pointer! ${
                     index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
                   } hover:bg-gray-100`}
+                  onClick={() =>
+                    router.push(
+                      `/others-report/complaint-reports/frequency-report/${encodeURIComponent(
+                        d?.name
+                      )}/list`
+                    )
+                  }
                 >
                   <TableBodyCell>{serial}</TableBodyCell>
                   <TableBodyCell>{d.name}</TableBodyCell>
