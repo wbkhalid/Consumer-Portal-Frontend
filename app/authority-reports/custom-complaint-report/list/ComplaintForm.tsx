@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Dialog, Flex, Heading, IconButton } from "@radix-ui/themes";
+import { Button, Dialog, Flex, IconButton } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -50,7 +50,6 @@ const complaintSchema = z.object({
     .default("24d47330-7604-4048-81cf-bfb3cd6772b5"),
 });
 
-// Input type (what the form needs)
 type ComplaintInput = z.input<typeof complaintSchema>;
 
 interface ComplainResponse {
@@ -63,11 +62,6 @@ interface Props {
   complaintCategoryOptions: OptionType[];
   openComplaintForm: boolean;
 }
-
-const entryTypeOptions: OptionType[] = [
-  { label: "Online", value: "0" },
-  { label: "Manual", value: "1" },
-];
 
 const ComplaintForm = ({
   sectionCategoryOptions,

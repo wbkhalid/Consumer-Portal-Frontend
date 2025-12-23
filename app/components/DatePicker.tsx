@@ -8,25 +8,25 @@ import { format } from "date-fns";
 import { CiCalendar } from "react-icons/ci";
 
 interface DatePickerProps {
-  placeholder?: string;
+  value?: Date | null;
   onSelectDate?: (date: Date) => void;
-  initialDate?: Date | null;
+  placeholder?: string;
   minDate?: Date;
   maxDate?: Date;
+  disabled?: boolean;
 }
 
 const DatePicker = ({
+  value,
   onSelectDate,
-  initialDate,
   placeholder,
   minDate,
   maxDate,
+  disabled,
 }: DatePickerProps) => {
-  const [date, setDate] = useState<Date | null>(initialDate || null);
   const [open, setOpen] = useState(false);
 
   const handleSelect = (selectedDate: Date) => {
-    setDate(selectedDate);
     onSelectDate?.(selectedDate);
     setOpen(false);
   };
@@ -35,28 +35,35 @@ const DatePicker = ({
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger>
         <div
-          className="flex gap-1 items-center cursor-pointer bg-white border-[1.2px] border-[#cccccd] px-3! py-1.5! rounded-md min-w-[100px] justify-center"
-          onClick={() => setOpen(true)}
+          className={`flex gap-1 items-center justify-center min-w-[100px] px-3! py-1.5! rounded-md! border-[1.2px]
+          ${
+            disabled
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "bg-white border-[#cccccd] cursor-pointer"
+          }`}
+          onClick={() => !disabled && setOpen(true)}
         >
-          <CiCalendar className="text-lg text-gray-600" />
-          <span className="text-xs text-gray-700">
-            {date ? format(date, "dd-MM-yyyy") : placeholder || "Select Date"}
+          <CiCalendar className="text-lg" />
+          <span className="text-xs">
+            {value ? format(value, "dd-MM-yyyy") : placeholder || "Select Date"}
           </span>
         </div>
       </Popover.Trigger>
 
-      <Popover.Content
-        className="p-0! shadow-md rounded-lg bg-white"
-        sideOffset={5}
-      >
-        <Calendar
-          date={date || new Date()}
-          onChange={handleSelect}
-          color="#2563eb"
-          minDate={minDate}
-          maxDate={maxDate}
-        />
-      </Popover.Content>
+      {!disabled && (
+        <Popover.Content
+          className="p-0! shadow-md rounded-lg! bg-white"
+          sideOffset={5}
+        >
+          <Calendar
+            date={value || new Date()}
+            onChange={handleSelect}
+            color="#2563eb"
+            minDate={minDate}
+            maxDate={maxDate}
+          />
+        </Popover.Content>
+      )}
     </Popover.Root>
   );
 };

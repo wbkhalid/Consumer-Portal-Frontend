@@ -78,7 +78,7 @@ const ComplaintDetailsDialog = ({
             </div>
           )}
 
-          {showDatePicker && (
+          {/* {showDatePicker && (
             <div className="w-fit">
               <DatePicker
                 initialDate={
@@ -89,7 +89,7 @@ const ComplaintDetailsDialog = ({
                 onSelectDate={onSelectDate}
               />
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
