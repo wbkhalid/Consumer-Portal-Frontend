@@ -38,8 +38,8 @@ const NavBar = () => {
   const fullName = Cookies.get("fullName");
 
   const handleLogout = () => {
-    Cookies.remove("token"); // token delete
-    router.push("/login"); // login page redirect
+    Cookies.remove("token");
+    router.push("/login");
   };
   useEffect(() => {
     const handleChange = () => {
@@ -88,29 +88,31 @@ const NavBar = () => {
             <Heading size="3" className="text-white">
               Directorate of Consumer Protection Council
             </Heading>
-            <Popover.Root>
-              <Popover.Trigger>
-                <IconButton
-                  className={` ${
-                    currentPath === "/dashboard"
-                      ? "bg-(--dashboard-primary-bg)!"
-                      : "bg-white/10!"
-                  } w-5! h-5! cursor-pointer!`}
-                  radius="full"
-                >
-                  <GoChevronRight className=" text-white" />
-                </IconButton>
-              </Popover.Trigger>
+            {currentPath !== "/dashboard" && (
+              <Popover.Root>
+                <Popover.Trigger>
+                  <IconButton
+                    className={` ${
+                      currentPath === "/dashboard"
+                        ? "bg-(--dashboard-primary-bg)!"
+                        : "bg-white/10!"
+                    } w-5! h-5! cursor-pointer!`}
+                    radius="full"
+                  >
+                    <GoChevronRight className=" text-white" />
+                  </IconButton>
+                </Popover.Trigger>
 
-              <Popover.Content
-                side="bottom"
-                align="start"
-                alignOffset={-250}
-                className="min-w-[500px]! md:min-w-[700px]! lg:min-w-[1000px]! rounded-xl shadow-xl bg-white"
-              >
-                <MegaMenu />
-              </Popover.Content>
-            </Popover.Root>
+                <Popover.Content
+                  side="bottom"
+                  align="start"
+                  alignOffset={-250}
+                  className="min-w-[500px]! md:min-w-[700px]! lg:min-w-[1000px]! rounded-xl shadow-xl bg-white"
+                >
+                  <MegaMenu />
+                </Popover.Content>
+              </Popover.Root>
+            )}
           </Flex>
         </div>
 

@@ -17,6 +17,11 @@ export interface Complains {
   billBoardImage: string;
   complaintType: string;
   categoryName: string;
+  division: string;
+  district: string;
+  tehsil: string;
+  latitude: number;
+  longitude: number;
   sectionCategoryName: string;
   sectionsDetails: {
     name: string;

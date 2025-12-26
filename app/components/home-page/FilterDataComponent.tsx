@@ -116,7 +116,7 @@ const FilterDataComponent = () => {
             ]}
             value={selectedDivision ?? ""}
             onChange={(val) => {
-              setSelectedDivision(val);
+              setSelectedDivision(val ? String(val) : null);
               setSelectedDistrict(null);
               setSelectedTehsil(null);
             }}
@@ -135,7 +135,7 @@ const FilterDataComponent = () => {
             ]}
             value={selectedDistrict ?? ""}
             onChange={(val) => {
-              setSelectedDistrict(val);
+              setSelectedDistrict(val ? String(val) : null);
               setSelectedTehsil(null);
             }}
           />
@@ -152,7 +152,7 @@ const FilterDataComponent = () => {
               })) ?? []),
             ]}
             value={selectedTehsil ?? ""}
-            onChange={(val) => setSelectedTehsil(val)}
+            onChange={(val) => setSelectedTehsil(val ? String(val) : null)}
           />
         )}
 

@@ -7,6 +7,8 @@ const CustomComplaintDialog = () => {
   const [step, setStep] = useState(1);
   const [userId, setUserId] = useState("");
 
+  console.log(userId, "usertqiqiq");
+
   return (
     <Dialog.Root>
       <Dialog.Trigger>
@@ -24,7 +26,7 @@ const CustomComplaintDialog = () => {
         {step === 1 && (
           <RegisterationForm setUserId={setUserId} setStep={setStep} />
         )}
-        {step === 2 && <ComplaintForm />}
+        {step === 2 && <ComplaintForm userId={userId} />}
       </Dialog.Content>
     </Dialog.Root>
   );

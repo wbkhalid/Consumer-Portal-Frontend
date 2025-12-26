@@ -93,7 +93,7 @@ const RegisterationForm = ({ setUserId, setStep }: Props) => {
     try {
       const response = await apiClient.post(`${AUTH_API}/login`, payload);
       if (response?.data?.responseCode === 200) {
-        setUserId(response?.data?.userProfile?.userId);
+        setUserId(response?.data?.data?.userProfile?.userId);
         router.refresh();
         setShowUserPopup(false);
         setStep(2);

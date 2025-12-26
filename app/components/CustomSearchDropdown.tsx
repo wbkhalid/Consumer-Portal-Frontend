@@ -21,8 +21,8 @@ type CustomSearchDropdownProps = {
   name?: string;
   placeholder?: string;
   options: Option[];
-  value?: string | number | null;
-  onChange?: (value: string) => void;
+  value?: string | number | string[] | null;
+  onChange?: (value: string | number | string[]) => void;
   className?: string;
   error?: string;
   fontSize?: string;
@@ -31,6 +31,7 @@ type CustomSearchDropdownProps = {
   iconPlacement?: "none" | "menu" | "value" | "both";
   isClearable?: boolean;
   isRegister?: boolean;
+  isMultiple?: boolean;
 };
 
 const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
@@ -48,9 +49,16 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
   iconPlacement = "none",
   isClearable = true,
   isRegister = false,
+  isMultiple = false,
 }) => {
-  const selectedOption =
-    options?.find((opt) => String(opt.value) === String(value ?? "")) || null;
+  const selectedOption = isMultiple
+    ? options.filter((opt) =>
+        (value as string[] | undefined)?.includes(opt.value)
+      )
+    : options.find((opt) => String(opt.value) === String(value ?? "")) || null;
+
+  // const selectedOption =
+  //   options?.find((opt) => String(opt.value) === String(value ?? "")) || null;
 
   // SingleValue with icon (for selected area/control)
   const SingleValueWithIcon: React.FC<SingleValueProps<Option, false>> = (
@@ -75,17 +83,16 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
     );
   };
 
-  // --- Strongly typed custom components ---
   const selectComponents: Partial<
-    SelectProps<Option, false, GroupBase<Option>>["components"]
+    SelectProps<Option, typeof isMultiple, GroupBase<Option>>["components"]
   > = {
     IndicatorSeparator: () => null,
     ClearIndicator: () => null,
   };
 
-  if (iconPlacement === "value" || iconPlacement === "both") {
-    selectComponents.SingleValue = SingleValueWithIcon;
-  }
+  // if (iconPlacement === "value" || iconPlacement === "both") {
+  //   selectComponents.SingleValue = SingleValueWithIcon;
+  // }
 
   const wantMenuIcons = iconPlacement === "menu" || iconPlacement === "both";
   const wantValueIcons = iconPlacement === "value" || iconPlacement === "both";
@@ -104,14 +111,21 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
         </Text>
       )}
 
-      <Select<Option, false>
+      <Select<Option, typeof isMultiple>
         id={name}
         instanceId={name}
         placeholder={placeholder}
         options={options}
         isDisabled={disabled}
+        isMulti={isMultiple}
         value={selectedOption}
-        onChange={(selected) => onChange?.(selected?.value || "")}
+        onChange={(selected) => {
+          if (isMultiple) {
+            onChange?.((selected as Option[]).map((opt) => opt.value));
+          } else {
+            onChange?.((selected as Option)?.value || "");
+          }
+        }}
         isClearable={isClearable}
         onInputChange={(inputValue, { action }) => {
           if (action === "input-change") onInputChange?.(inputValue);
@@ -158,8 +172,29 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
             borderRadius: isRegister ? 999 : 8,
             height: 40,
             minHeight: 40,
+            overflow: "hidden",
+            // overflowY:'auto',
             padding: "0 0.25rem",
             "&:hover": { borderColor: "var(--primary)" },
+          }),
+          valueContainer: (base) => ({
+            ...base,
+            maxHeight: 32, // 🔑 chips height
+            overflowY: "auto", // 🔑 scroll inside
+            flexWrap: "wrap",
+            paddingTop: 2,
+            paddingBottom: 2,
+          }),
+
+          multiValue: (base) => ({
+            ...base,
+            maxWidth: "100%",
+          }),
+
+          multiValueLabel: (base) => ({
+            ...base,
+            fontSize,
+            whiteSpace: "nowrap",
           }),
           menuPortal: (base) => ({
             ...base,

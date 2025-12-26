@@ -28,6 +28,11 @@ export interface ManageComplainsData {
   complaintType: string;
   categoryName: string;
   address: string;
+  division: string;
+  district: string;
+  tehsil: string;
+  latitude: number;
+  longitude: number;
   billBoardImage: string;
   sectionCategoryName: string;
   sectionsDetails: SectionsDetails[];

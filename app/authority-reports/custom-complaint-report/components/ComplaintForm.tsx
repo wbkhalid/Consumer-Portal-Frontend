@@ -1,34 +1,40 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Dialog, Flex, IconButton } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { IoClose } from "react-icons/io5";
-import { SingleValue } from "react-select";
+import { IoClose, IoLocationSharp } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import { COMPLAINT_API } from "../../../APIs";
-import CustomLabel from "../../../components/Form/CustomLabel";
-import CustomRadixInput from "../../../components/Form/CustomRadixInput";
-import CustomSelect, {
-  defaultNumberOption,
-  OptionType,
-} from "../../../components/Form/CustomSelect";
-import ErrorMessage from "../../../components/Form/ErrorMessage";
-import SubmitButton from "../../../components/Form/SubmitButton";
 import apiClient, { AxiosError } from "../../../services/api-client";
 import CustomTextField from "../../../components/CustomTextField";
 import CustomSearchDropdown from "../../../components/CustomSearchDropdown";
 import useGetSelectedDivision from "../../../hooks/useGetSelectedDivision";
 import useGetSelectedDistrict from "../../../hooks/useGetSelectedDistrict";
 import useGetSelectedTehsil from "../../../hooks/useGetSelectedTehsil";
+import useGetSectionCategory from "../../../hooks/useGetSectionCategory";
+import useGetAllComplaintCategory from "../../../hooks/useGetAllComplaintCategory";
+import CustomTextArea from "../../../components/CustomTextArea";
+import useGetAllSections from "../../../hooks/useGetAllSections";
+import AddressPickerModal from "../../../components/AddressPickerModal";
+
+interface Props {
+  userId: string;
+}
+
+interface LocationData {
+  lat: number;
+  lng: number;
+  address: string;
+}
 
 const complaintSchema = z.object({
   shopName: z.string().min(1, { message: "Please add Shop Name!" }),
   phoneNo: z.string().min(1, { message: "Please add Phone No.!" }),
-  address: z.string().min(1, { message: "Please add Address!" }),
-  latitude: z.number().optional().default(0),
-  longitude: z.number().optional().default(0),
+  address: z.string().min(1, { message: "Please select an address!" }),
+  latitude: z.number().default(0),
+  longitude: z.number().default(0),
   locationName: z.string().optional().default(""),
   DivisionId: z
     .number()
@@ -57,17 +63,23 @@ const complaintSchema = z.object({
     .default(0),
   entryType: z.number().default(1),
   remarks: z.string().default("").optional(),
-  userId: z.string().min(1, { message: "Please add User Id!" }),
+  userId: z.string(),
 });
 
 type ComplaintInput = z.input<typeof complaintSchema>;
 
-const ComplaintForm = () => {
+const ComplaintForm = ({ userId }: Props) => {
+  const router = useRouter();
+
+  // State for AddressPickerModal
+  const [mapModalOpen, setMapModalOpen] = useState(false);
+
   const {
     register,
     handleSubmit,
     reset,
     control,
+    setValue,
     watch,
     formState: { errors },
   } = useForm<ComplaintInput>({
@@ -92,134 +104,291 @@ const ComplaintForm = () => {
     },
   });
 
+  // Watch location values for display
+  const watchedAddress = watch("address");
+  const watchedLat = watch("latitude");
+  const watchedLng = watch("longitude");
+
   const selectedDivisionId = watch("DivisionId");
   const selectedDistrictId = watch("DistrictId");
 
-  const { data: selectedDivisionData } = useGetSelectedDivision({
-    id: 1,
-  });
-
+  const { data: selectedDivisionData } = useGetSelectedDivision({ id: 1 });
   const { data: selectedDistrictData } = useGetSelectedDistrict({
     id: selectedDivisionId,
   });
   const { data: selectedTehsilData } = useGetSelectedTehsil({
     id: selectedDistrictId,
   });
+  const { data: sectionCategoryData } = useGetSectionCategory();
+  const { data: complaintCategoryData } = useGetAllComplaintCategory();
+  const { data: sectionData } = useGetAllSections();
+
+  const handleLocationSelect = (location: {
+    lat: number;
+    lng: number;
+    address: string;
+  }) => {
+    setValue("latitude", location.lat, { shouldValidate: true });
+    setValue("longitude", location.lng, { shouldValidate: true });
+    setValue("address", location.address, { shouldValidate: true });
+  };
 
   const onSubmit = async (formData: ComplaintInput) => {
-    // console.log(errors);
-    // let complaintSectionParams: string = "";
-    // if (
-    //   formData.complaintSectionId &&
-    //   formData.complaintSectionId?.length > 0
-    // ) {
-    //   // Build multiple ComplaintSectionId params
-    //   complaintSectionParams = formData.complaintSectionId
-    //     .map((id) => `ComplaintSectionId=${id}`)
-    //     .join("&");
-    // }
-    // try {
-    //   const response: ComplainResponse = await apiClient.post(
-    //     `${COMPLAINT_API}/submit-complaint?ShopName=${formData.shopName}&PhoneNo=${formData.phoneNo}&Address=${formData.address}&Latitude=${formData.latitude}&Longitude=${formData.longitude}&LocationName=${formData.locationName}&ComplaintCategoryId=${formData.complaintCategoryId}&ProductTypeId=${formData.productTypeId}&${complaintSectionParams}&EntryType=${formData.entryType}&UserId=${formData.userId}`
-    //   );
-    //   console.log("Response:", response);
-    //   router.refresh();
-    //   toast.success(response.data.message || "Complain Submitted Successfully");
-    //   handleClose();
-    //   console.log("response", response);
-    // } catch (err) {
-    //   console.log("err", err);
-    //   const axiosError = err as AxiosError<{ error: string }>;
-    //   console.error(
-    //     "Submission error:",
-    //     axiosError.response?.data?.error || axiosError.message
-    //   );
-    //   toast.error(axiosError.response?.data?.error || axiosError.message);
-    // }
+    try {
+      const fd = new FormData();
+
+      fd.append("shopName", formData.shopName);
+      fd.append("phoneNo", formData.phoneNo);
+      fd.append("address", formData.address);
+      fd.append("latitude", String(formData.latitude ?? 0));
+      fd.append("longitude", String(formData.longitude ?? 0));
+      fd.append("locationName", formData.locationName ?? "");
+      fd.append("DivisionId", String(formData.DivisionId));
+      fd.append("DistrictId", String(formData.DistrictId));
+      fd.append("TehsilId", String(formData.TehsilId));
+      fd.append("complaintCategoryId", String(formData.complaintCategoryId));
+      fd.append("complaintTypeId", String(formData.complaintTypeId));
+      fd.append("productTypeId", String(formData.productTypeId ?? 1));
+      fd.append("entryType", String(formData.entryType));
+      fd.append("remarks", formData.remarks ?? "");
+      fd.append("userId", userId);
+      formData?.complaintSectionId?.forEach((id) => {
+        fd.append("complaintSectionId", String(id));
+      });
+
+      const response = await apiClient.post(
+        `${COMPLAINT_API}/submit-complaint`,
+        fd,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Response:", response);
+      toast.success("Complaint submitted successfully!");
+      router.refresh();
+      reset();
+    } catch (error) {
+      const err = error as AxiosError<any>;
+      toast.error(err?.response?.data?.message || "Something went wrong");
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-3">
-        <CustomTextField
-          label="Shop Name"
-          placeholder="Enter Shop Name"
-          error={errors.shopName?.message}
-          {...register("shopName")}
-        />
-        <CustomTextField
-          label="Shop Phone #"
-          placeholder="03XXXXXXXXX"
-          error={errors.phoneNo?.message}
-          {...register("phoneNo")}
-        />
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-3">
+          <CustomTextField
+            label="Shop Name"
+            placeholder="Enter Shop Name"
+            error={errors.shopName?.message}
+            {...register("shopName")}
+          />
+          <CustomTextField
+            label="Shop Phone #"
+            placeholder="03XXXXXXXXX"
+            error={errors.phoneNo?.message}
+            {...register("phoneNo")}
+          />
 
-        <Controller
-          name="DivisionId"
-          control={control}
-          render={({ field }) => (
-            <CustomSearchDropdown
-              label="Division"
-              name="DivisionId"
-              placeholder="Select Division"
-              error={errors.DivisionId?.message}
-              value={String(field.value)}
-              onChange={(val) => field.onChange(Number(val))}
-              options={
-                selectedDivisionData?.map((division) => ({
-                  label: division?.name,
-                  value: String(division?.id),
-                })) ?? []
-              }
-            />
-          )}
-        />
+          <Dialog.Root open={mapModalOpen} onOpenChange={setMapModalOpen}>
+            <Dialog.Trigger>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium">Location</label>
+                <div
+                  className="h-10 flex items-center gap-2 border rounded-lg px-3 cursor-pointer"
+                  onClick={() => setMapModalOpen(true)}
+                >
+                  <IoLocationSharp />
+                  {watch("address") ? "Change Address" : "Select Address"}
+                </div>
+                {errors.address && (
+                  <span className="text-xs text-red-500">
+                    {errors.address.message}
+                  </span>
+                )}
+              </div>
+            </Dialog.Trigger>
 
-        <Controller
-          name="DistrictId"
-          control={control}
-          render={({ field }) => (
-            <CustomSearchDropdown
-              label="District"
-              name="DistrictId"
-              placeholder="Select District"
-              disabled={!selectedDivisionId}
-              error={errors.DistrictId?.message}
-              value={String(field.value)}
-              onChange={(val) => field.onChange(Number(val))}
-              options={
-                selectedDistrictData?.map((district) => ({
-                  label: district?.name,
-                  value: String(district?.id),
-                })) ?? []
-              }
-            />
-          )}
-        />
+            <Dialog.Content className="max-w-[500px] p-3 rounded-lg">
+              <AddressPickerModal
+                open={mapModalOpen}
+                onOpenChange={setMapModalOpen}
+                onSelectLocation={handleLocationSelect}
+                // initialLocation={
+                //   watch("latitude") && watch("longitude")
+                //     ? { lat: watch("latitude"), lng: watch("longitude") }
+                //     : null
+                // }
+              />
+            </Dialog.Content>
+          </Dialog.Root>
 
-        <Controller
-          name="TehsilId"
-          control={control}
-          render={({ field }) => (
-            <CustomSearchDropdown
-              label="Tehsil"
-              name="TehsilId"
-              placeholder="Select Tehsil"
-              disabled={!selectedDistrictId}
-              error={errors.TehsilId?.message}
-              value={String(field.value)}
-              onChange={(val) => field.onChange(Number(val))}
-              options={
-                selectedTehsilData?.map((tehsil) => ({
-                  label: tehsil?.name,
-                  value: String(tehsil?.id),
-                })) ?? []
-              }
-            />
+          {/* Display Selected Address */}
+          {watchedAddress && (
+            <div className="col-span-full p-3 bg-gray-50 rounded-md border">
+              <p className="text-sm text-gray-600">Selected Location:</p>
+              <p className="font-medium text-sm">{watchedAddress}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Coordinates: {watchedLat?.toFixed(6)}, {watchedLng?.toFixed(6)}
+              </p>
+            </div>
           )}
-        />
-      </div>
-    </form>
+
+          <Controller
+            name="DivisionId"
+            control={control}
+            render={({ field }) => (
+              <CustomSearchDropdown
+                label="Division"
+                name="DivisionId"
+                placeholder="Select Division"
+                error={errors.DivisionId?.message}
+                value={String(field.value)}
+                onChange={(val) => field.onChange(Number(val))}
+                options={
+                  selectedDivisionData?.map((division) => ({
+                    label: division?.name,
+                    value: String(division?.id),
+                  })) ?? []
+                }
+              />
+            )}
+          />
+
+          <Controller
+            name="DistrictId"
+            control={control}
+            render={({ field }) => (
+              <CustomSearchDropdown
+                label="District"
+                name="DistrictId"
+                placeholder="Select District"
+                disabled={!selectedDivisionId}
+                error={errors.DistrictId?.message}
+                value={String(field.value)}
+                onChange={(val) => field.onChange(Number(val))}
+                options={
+                  selectedDistrictData?.map((district) => ({
+                    label: district?.name,
+                    value: String(district?.id),
+                  })) ?? []
+                }
+              />
+            )}
+          />
+
+          <Controller
+            name="TehsilId"
+            control={control}
+            render={({ field }) => (
+              <CustomSearchDropdown
+                label="Tehsil"
+                name="TehsilId"
+                placeholder="Select Tehsil"
+                disabled={!selectedDistrictId}
+                error={errors.TehsilId?.message}
+                value={String(field.value)}
+                onChange={(val) => field.onChange(Number(val))}
+                options={
+                  selectedTehsilData?.map((tehsil) => ({
+                    label: tehsil?.name,
+                    value: String(tehsil?.id),
+                  })) ?? []
+                }
+              />
+            )}
+          />
+
+          <Controller
+            name="complaintTypeId"
+            control={control}
+            render={({ field }) => (
+              <CustomSearchDropdown
+                label="Nature of Complaint"
+                name="complaintTypeId"
+                placeholder="Select Nature of Complaint"
+                error={errors.complaintTypeId?.message}
+                value={String(field.value)}
+                onChange={(val) => field.onChange(Number(val))}
+                options={
+                  sectionCategoryData?.map((category) => ({
+                    label: category?.name,
+                    value: category?.id.toString(),
+                  })) ?? []
+                }
+              />
+            )}
+          />
+
+          <Controller
+            name="complaintCategoryId"
+            control={control}
+            render={({ field }) => (
+              <CustomSearchDropdown
+                label="Complaint Category"
+                name="complaintCategoryId"
+                placeholder="Select Complaint Category"
+                error={errors.complaintCategoryId?.message}
+                value={String(field.value)}
+                onChange={(val) => field.onChange(Number(val))}
+                options={
+                  complaintCategoryData?.map((category) => ({
+                    label: category?.name,
+                    value: category?.id.toString(),
+                  })) ?? []
+                }
+              />
+            )}
+          />
+
+          <Controller
+            name="complaintSectionId"
+            control={control}
+            defaultValue={[]}
+            render={({ field }) => (
+              <CustomSearchDropdown
+                label="Complaint Sections"
+                isMultiple
+                value={field?.value?.map(String)}
+                onChange={(val) =>
+                  field.onChange((val as string[]).map(Number))
+                }
+                options={sectionData.map((sec) => ({
+                  label: sec.description,
+                  value: String(sec.id),
+                }))}
+                error={errors.complaintSectionId?.message}
+              />
+            )}
+          />
+
+          <div className="col-span-full">
+            <CustomTextArea
+              label="Remarks"
+              placeholder="Remarks"
+              {...register("remarks")}
+            />
+          </div>
+        </div>
+
+        <Flex gap="3" mt="4" justify="between">
+          <Dialog.Close>
+            <Button
+              type="button"
+              onClick={() => reset()}
+              className="w-[187px]! h-[41px]! text-gray-800! py-[0.688em]! px-[1em]! font-bold! bg-[#EFF0F2]! rounded-[5px]! border border-[rgba(239,240,242,0.4)]! cursor-pointer!"
+            >
+              Cancel
+            </Button>
+          </Dialog.Close>
+          <Button type="submit">Submit Complaint</Button>
+        </Flex>
+      </form>
+
+      {/* Address Picker Modal */}
+    </>
   );
 };
 

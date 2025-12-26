@@ -245,7 +245,9 @@ const PendingDialog = ({
                     label="Select Assignee"
                     placeholder="Select Assignee"
                     value={selectedStaff}
-                    onChange={(val) => setSelectedStaff(val)}
+                    onChange={(val) =>
+                      setSelectedStaff(val != null ? String(val) : "")
+                    }
                     options={
                       staffData?.map((status) => ({
                         label: status?.fullName,

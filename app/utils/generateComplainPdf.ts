@@ -3,9 +3,22 @@ import { ManageComplainsData } from "../hooks/useGetAllComplains";
 import { formatDate, toLocal } from "./utils";
 
 export const generateComplaintPDF = (item: ManageComplainsData) => {
-  const printWindow = window.open("", "_blank");
+  const iframe = document.createElement("iframe");
 
-  printWindow!.document.write(`
+  iframe.style.position = "fixed";
+  iframe.style.right = "0";
+  iframe.style.bottom = "0";
+  iframe.style.width = "0";
+  iframe.style.height = "0";
+  iframe.style.border = "0";
+
+  document.body.appendChild(iframe);
+
+  const doc = iframe.contentWindow!.document;
+
+  doc.open();
+
+  doc.write(`
     <html dir="rtl" lang="ur">
       <head>
         <title>Notice Print</title>
@@ -176,6 +189,13 @@ export const generateComplaintPDF = (item: ManageComplainsData) => {
     </html>
   `);
 
-  printWindow!.document.close();
-  printWindow!.print();
+  doc.close();
+
+  iframe.contentWindow!.focus();
+  iframe.contentWindow!.print();
+
+  // print ke baad iframe remove
+  setTimeout(() => {
+    document.body.removeChild(iframe);
+  }, 1000);
 };

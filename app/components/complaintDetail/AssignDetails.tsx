@@ -50,6 +50,18 @@ const AssignDetails = ({
         hearingDate: null,
         verdict: 0,
         assigneeRemarks: remarks,
+        closingRemarks: "",
+        isClosed: false,
+        complaintDecisionFiles: [
+          {
+            filePath: "",
+            fileType: 0,
+          },
+          {
+            filePath: "",
+            fileType: 1,
+          },
+        ],
       };
 
       console.log("📤 Sending payload:", payload);
@@ -88,14 +100,15 @@ const AssignDetails = ({
         label="Select Assignee"
         placeholder="Select Assignee"
         value={selectedStaff}
-        onChange={(val) => setSelectedStaff(val)}
+        onChange={(val) => setSelectedStaff(val as string)}
         options={
           staffData?.map((status) => ({
-            label: status?.fullName,
-            value: status?.userId,
+            label: status.fullName,
+            value: String(status.userId),
           })) ?? []
         }
       />
+
       <div className="mt-2!">
         <CustomTextArea
           label="Assignee Remarks"

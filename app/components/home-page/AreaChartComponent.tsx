@@ -277,7 +277,6 @@ const AreachartComponent = ({ data }: { data: DailyAvergeType[] }) => {
             }
           />
 
-          {/* Areas */}
           <Area
             type="monotone"
             dataKey="pendingCount"
@@ -289,7 +288,7 @@ const AreachartComponent = ({ data }: { data: DailyAvergeType[] }) => {
           />
           <Area
             type="monotone"
-            dataKey="proceedingCount"
+            dataKey="inProceedingCount"
             stroke={STATUS_COLORS.Proceeding}
             fill="url(#colorProceeding)"
             name="Proceeding"
@@ -298,7 +297,7 @@ const AreachartComponent = ({ data }: { data: DailyAvergeType[] }) => {
           />
           <Area
             type="monotone"
-            dataKey="escalationCount"
+            dataKey="escalatedCount"
             stroke={STATUS_COLORS.Escalation}
             fill="url(#colorEscalation)"
             name="Escalation"
@@ -307,7 +306,7 @@ const AreachartComponent = ({ data }: { data: DailyAvergeType[] }) => {
           />
           <Area
             type="monotone"
-            dataKey="superEscalationCount"
+            dataKey="superEscalatedCount"
             stroke={STATUS_COLORS.SuperEscalation}
             fill="url(#colorSuperEscalation)"
             name="Super Escalation"
@@ -333,7 +332,7 @@ const AreachartComponent = ({ data }: { data: DailyAvergeType[] }) => {
           />
           <Area
             type="monotone"
-            dataKey="exparteCount"
+            dataKey="expartyCount"
             stroke={STATUS_COLORS.Exparte}
             fill="url(#colorExparte)"
             name="Ex-Parte"
@@ -342,7 +341,7 @@ const AreachartComponent = ({ data }: { data: DailyAvergeType[] }) => {
           />
           <Area
             type="monotone"
-            dataKey="withdrawCount"
+            dataKey="withdrawnCount"
             stroke={STATUS_COLORS.Withdraw}
             fill="url(#colorWithdraw)"
             name="Withdraw"

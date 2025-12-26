@@ -9,8 +9,8 @@ const LocationDetail = ({
   const lat = 31.52;
   const lng = 74.35;
 
-  const mapSrc = `https://www.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
-  const mapLink = `https://www.google.com/maps?q=${lat},${lng}&z=15`;
+  const mapSrc = `https://www.google.com/maps?q=${complaint?.latitude},${complaint?.longitude}&z=15&output=embed`;
+  const mapLink = `https://www.google.com/maps?q=${complaint?.latitude},${complaint?.longitude}&z=15`;
   return (
     <div className="px-5! py-3!">
       <div className="flex justify-between items-center">
@@ -20,19 +20,21 @@ const LocationDetail = ({
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[#555555] text-sm">Division</p>
-          <p className="text-[#000000] text-sm">Sargodha</p>
+          <p className="text-[#000000] text-sm">{complaint?.division}</p>
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[#555555] text-sm">District</p>
-          <p className="text-[#000000] text-sm">Sargodha</p>
+          <p className="text-[#000000] text-sm">{complaint?.district}</p>
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[#555555] text-sm">Tehsil</p>
-          <p className="text-[#000000] text-sm">Sargodha</p>
+          <p className="text-[#000000] text-sm">{complaint?.tehsil}</p>
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[#555555] text-sm">Lat Lon</p>
-          <p className="text-[#000000] text-sm">31.52-74.35</p>
+          <p className="text-[#000000] text-sm">{`${complaint?.latitude.toFixed(
+            2
+          )}-${complaint?.longitude.toFixed(2)}`}</p>
         </div>
       </div>
 

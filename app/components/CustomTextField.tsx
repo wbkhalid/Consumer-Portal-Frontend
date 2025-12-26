@@ -16,6 +16,7 @@ type CustomTextFieldProps = {
   isRegister?: boolean;
   endAdornment?: React.ReactNode;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
 };
 
 const CustomTextField: React.FC<CustomTextFieldProps> = ({
@@ -33,6 +34,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
   endAdornment,
   isRegister = false,
   onBlur,
+  onClick,
   ...rest
 }) => {
   return (
@@ -56,6 +58,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
         size={size}
         placeholder={placeholder}
         value={value}
+        onClick={onClick}
         onChange={onChange}
         required={required}
         readOnly={readOnly}
