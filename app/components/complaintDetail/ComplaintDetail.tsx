@@ -1,10 +1,11 @@
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
+import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 import { formatDate } from "../../utils/utils";
 
 const ComplaintDetail = ({
   complaint,
 }: {
-  complaint: ManageComplainsData | null;
+  complaint: ManageComplainsData | ManageCustomComplainsData | null;
 }) => {
   return (
     <div className="px-5!">

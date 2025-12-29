@@ -5,6 +5,8 @@ import { ManageCustomComplainsData } from "../../../hooks/useGetCustomComplaints
 import { formatDate, statusData } from "../../../utils/utils";
 import PaginationControls from "../../../components/table/PaginationControls";
 import { useMemo, useState } from "react";
+import ComplaintDialog from "../../../complains/components/ComplaintDialog";
+import { Dialog } from "@radix-ui/themes";
 
 interface CustomComplaintProp {
   rowsData: ManageCustomComplainsData[];
@@ -17,6 +19,9 @@ const CustomComplaintTable = ({ rowsData }: CustomComplaintProp) => {
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [selectedComplaint, setSelectedComplaint] =
+    useState<ManageCustomComplainsData | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const headers = [
     { label: "Id", sortable: "id" },
@@ -103,6 +108,10 @@ const CustomComplaintTable = ({ rowsData }: CustomComplaintProp) => {
                     className={`transition-colors duration-150 cursor-pointer ${
                       index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
                     } hover:bg-gray-100`}
+                    onClick={() => {
+                      setSelectedComplaint(item);
+                      setOpenDialog(true);
+                    }}
                   >
                     <TableBodyCell>{item?.id}</TableBodyCell>
                     <TableBodyCell className="whitespace-nowrap">
@@ -148,6 +157,11 @@ const CustomComplaintTable = ({ rowsData }: CustomComplaintProp) => {
           setPageSize={setPageSize}
         />
       </div>
+      <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
+        <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]! overflow-hidden!">
+          <ComplaintDialog selectedComplaint={selectedComplaint} />
+        </Dialog.Content>
+      </Dialog.Root>
     </div>
   );
 };

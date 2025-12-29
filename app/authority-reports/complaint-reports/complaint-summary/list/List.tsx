@@ -10,19 +10,12 @@ export type Query = BaseQuery<ComplaintSummary>;
 
 interface Props {
   data: ComplaintSummary[];
-  paginatedData: ComplaintSummary[];
-  currentPage: number;
-  pageSize: number;
-  searchParams: Query;
+  // currentPage: number;
+  // pageSize: number;
+  // searchParams: Query;
 }
 
-const List = ({
-  data,
-  paginatedData,
-  currentPage,
-  pageSize,
-  searchParams,
-}: Props) => {
+const List = ({ data }: Props) => {
   const { totalFiled, totalDisposal, totalPending, totalPercentage } =
     calculateTotals(data);
 
@@ -31,7 +24,7 @@ const List = ({
 
   return (
     <div className="relative">
-      <div className="h-[calc(100vh-175px)] overflow-y-auto scrollbar-hide relative">
+      <div className="h-[calc(100vh-130px)] overflow-y-auto relative">
         <table className="min-w-full text-sm">
           <thead className="sticky top-0 z-10">
             <tr className="font-semibold bg-white">
@@ -42,19 +35,19 @@ const List = ({
                   key={i}
                   columnValue={column.value}
                   label={column.label}
-                  searchParams={searchParams}
+                  // searchParams={searchParams}
                 />
               ))}
             </tr>
           </thead>
 
           <tbody>
-            {paginatedData?.map((d, index) => {
-              const serial = (currentPage - 1) * pageSize + index + 1;
+            {data?.map((d, index) => {
+              // const serial = (currentPage - 1) * pageSize + index + 1;
 
               return (
                 <tr
-                  key={serial}
+                  key={index + 1}
                   className={`transition-colors duration-150 cursor-pointer! ${
                     index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
                   } hover:bg-gray-100`}
@@ -66,7 +59,7 @@ const List = ({
                     )
                   }
                 >
-                  <TableBodyCell>{serial}</TableBodyCell>
+                  <TableBodyCell>{index + 1}</TableBodyCell>
                   <TableBodyCell>{d.districtName}</TableBodyCell>
                   <TableBodyCell>{d.complaintsFiled}</TableBodyCell>
                   <TableBodyCell>{d.disposal}</TableBodyCell>

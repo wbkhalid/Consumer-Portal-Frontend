@@ -33,7 +33,7 @@ interface LocationData {
 
 const complaintSchema = z.object({
   shopName: z.string().min(1, { message: "Please add Shop Name!" }),
-  phoneNo: z.string().min(1, { message: "Please add Phone No.!" }),
+  phoneNo: z.string(),
   address: z.string().min(1, { message: "Please select an address!" }),
   latitude: z.number().default(0),
   longitude: z.number().default(0),

@@ -95,7 +95,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     <>
       <div className="relative">
         <div className="h-[calc(100vh-120px)] overflow-auto">
-          <div className="overflow-scroll mb-5!">
+          <div className="overflow-scroll mb-10!">
             <table className="min-w-full text-sm">
               <thead className="sticky top-0 z-10">
                 <tr className="font-semibold bg-white">

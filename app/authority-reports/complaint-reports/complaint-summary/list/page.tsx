@@ -63,17 +63,17 @@ interface Props {
 
 const ComplaintSummaryPage = async ({ searchParams }: Props) => {
   const query = await searchParams; // 👈 fix
-  const { startDate, endDate, page, pageSize, search, orderBy, order } = query;
+  const { startDate, endDate, search, orderBy, order } = query;
 
-  const myPage = parseInt(page || "1") || 1;
-  let myPageSize: number;
+  // const myPage = parseInt(page || "1") || 1;
+  // let myPageSize: number;
 
-  if (pageSize == undefined) myPageSize = DEFAULT_PAGE_SIZE;
-  else myPageSize = Number(pageSize);
+  // if (pageSize == undefined) myPageSize = DEFAULT_PAGE_SIZE;
+  // else myPageSize = Number(pageSize);
 
-  console.log(page, page);
-  console.log(pageSize, pageSize);
-  console.log(search, search);
+  // console.log(page, page);
+  // console.log(pageSize, pageSize);
+  // console.log(search, search);
 
   const baseURL =
     process.env.BACKEND_API + COMPLAINT_REPORT_API + "/complaint-summary";
@@ -112,24 +112,24 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
   }
 
   // **Pagination Logic**
-  const totalCount = data.length;
+  // const totalCount = data?.length;
 
   if (orderBy && order) {
     data = sort(data)[order]((item) => item[orderBy]);
   }
 
   // Apply pagination using slice()
-  const paginatedData = data.slice(
-    (myPage - 1) * myPageSize,
-    myPage * myPageSize
-  );
+  // const paginatedData = data?.slice(
+  //   (myPage - 1) * myPageSize,
+  //   myPage * myPageSize
+  // );
 
   console.log("data", data);
-  console.log("paginatedData", paginatedData);
+  // console.log("paginatedData", paginatedData);
 
-  console.log("length:", data.length);
-  console.log("start:", (myPage - 1) * myPageSize);
-  console.log("end:", myPage * myPageSize);
+  console.log("length:", data?.length);
+  // console.log("start:", (myPage - 1) * myPageSize);
+  // console.log("end:", myPage * myPageSize);
 
   const fileName = "Complaint Summary Report";
 
@@ -140,7 +140,7 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
         <div className="flex items-center gap-1 flex-wrap">
           <p className="text-(--primary) font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-            {paginatedData.length} Records
+            {data?.length} Records
           </p>
         </div>
         <div className="flex items-center justify-end gap-2 flex-wrap">
@@ -155,18 +155,17 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
       {/* Table */}
       <List
         data={data}
-        paginatedData={paginatedData}
-        currentPage={myPage}
-        pageSize={myPageSize}
-        searchParams={query}
+        // currentPage={myPage}
+        // pageSize={myPageSize}
+        // searchParams={query}
       />
-      <Suspense fallback={<Spinner />}>
+      {/* <Suspense fallback={<Spinner />}>
         <Pagination
           pageSize={myPageSize}
           currentPage={myPage}
           itemCount={totalCount}
         />
-      </Suspense>
+      </Suspense> */}
     </div>
   );
 };

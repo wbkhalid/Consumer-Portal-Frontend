@@ -9,7 +9,7 @@ interface Props {
   year?: string;
   startDate?: string;
   endDate?: string;
-  section?: string;
+  section?: string | string[];
   sectionCategory?: string;
   assignedTo?: string;
   minFineAmount?: number;
@@ -28,6 +28,11 @@ export interface ManageCustomComplainsData {
   complaintType: string;
   categoryName: string;
   address: string;
+  division: string;
+  district: string;
+  tehsil: string;
+  latitude: number;
+  longitude: number;
   billBoardImage: string;
   sectionCategoryName: string;
   sectionsDetails: SectionsDetails[];
@@ -69,8 +74,18 @@ const useGetCustomComplaints = ({
     params.append("startDate", String(startDate));
   if (endDate !== undefined && endDate !== "" && endDate !== "0")
     params.append("endDate", String(endDate));
-  if (section !== undefined && section !== "" && section !== "0")
-    params.append("section", String(section));
+  if (section) {
+    if (Array.isArray(section)) {
+      section.forEach((s) => {
+        if (s && s !== "0") {
+          params.append("section", s);
+        }
+      });
+    } else {
+      params.append("section", section);
+    }
+  }
+
   if (assignedTo !== undefined && assignedTo !== "" && assignedTo !== "0")
     params.append("assignedTo", String(assignedTo));
   if (minFineAmount !== undefined)

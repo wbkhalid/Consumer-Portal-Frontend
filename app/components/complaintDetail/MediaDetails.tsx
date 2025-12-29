@@ -6,9 +6,10 @@ import {
   MusicNote03Icon,
   VideoReplayIcon,
 } from "@hugeicons/core-free-icons";
+import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 
 interface MediaDetailsProps {
-  complaint: ManageComplainsData | null;
+  complaint: ManageComplainsData | ManageCustomComplainsData | null;
   setMediaModal: React.Dispatch<
     React.SetStateAction<{
       open: boolean;

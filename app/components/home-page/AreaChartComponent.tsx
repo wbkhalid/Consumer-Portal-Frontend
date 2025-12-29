@@ -110,7 +110,7 @@ const AreachartComponent = ({ data }: { data: DailyAvergeType[] }) => {
       <ResponsiveContainer width="100%" height={290}>
         <AreaChart
           data={data}
-          margin={{ top: 10, right: 10, left: -30, bottom: 0 }}
+          margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
         >
           {/* Gradients */}
           <defs>

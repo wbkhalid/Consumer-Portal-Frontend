@@ -23,7 +23,7 @@ export const DETAIL_STEPS = [
   },
   {
     id: 3,
-    label: "Evidence and Media",
+    label: "Evidence",
     iconImage: Album02Icon,
   },
 ];
@@ -36,7 +36,7 @@ export const PROCEEDING_STEPS = [
   ...DETAIL_STEPS,
   { id: 4, label: "Remarks and history", iconImage: UserMultipleIcon },
   { id: 5, label: "Hearing Process", iconImage: Calendar02Icon },
-  { id: 6, label: "Resolution", iconImage: FileValidationIcon },
+  { id: 6, label: "Order", iconImage: FileValidationIcon },
 ];
 
 export const RESOLVED_STEPS = [

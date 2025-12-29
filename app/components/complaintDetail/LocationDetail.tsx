@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
+import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 
 const LocationDetail = ({
   complaint,
 }: {
-  complaint: ManageComplainsData | null;
+  complaint: ManageComplainsData | ManageCustomComplainsData | null;
 }) => {
   const lat = 31.52;
   const lng = 74.35;
@@ -32,9 +33,9 @@ const LocationDetail = ({
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="text-[#555555] text-sm">Lat Lon</p>
-          <p className="text-[#000000] text-sm">{`${complaint?.latitude.toFixed(
+          <p className="text-[#000000] text-sm">{`${complaint?.latitude?.toFixed(
             2
-          )}-${complaint?.longitude.toFixed(2)}`}</p>
+          )}-${complaint?.longitude?.toFixed(2)}`}</p>
         </div>
       </div>
 

@@ -1,11 +1,12 @@
 import { Dialog } from "@radix-ui/themes";
 import { RxCross2 } from "react-icons/rx";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
+import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 
 const DetailHeader = ({
   complaint,
 }: {
-  complaint: ManageComplainsData | null;
+  complaint: ManageComplainsData | ManageCustomComplainsData | null;
 }) => {
   return (
     <div className="flex justify-between items-center px-5! py-2.5!">

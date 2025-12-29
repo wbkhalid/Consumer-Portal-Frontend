@@ -9,11 +9,12 @@ import ComplaintDetail from "../../components/complaintDetail/ComplaintDetail";
 import MediaDetails from "../../components/complaintDetail/MediaDetails";
 import { DETAIL_STEPS } from "../../components/complaintDetail/StepperOptions";
 import FullScreenMediaModal from "./FullScreenMediaModal";
+import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 
 const ComplaintDialog = ({
   selectedComplaint,
 }: {
-  selectedComplaint: ManageComplainsData | null;
+  selectedComplaint: ManageComplainsData | null | ManageCustomComplainsData;
 }) => {
   const [step, setStep] = useState(1);
   const [mediaModal, setMediaModal] = useState<{
