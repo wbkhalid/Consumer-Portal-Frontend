@@ -5,37 +5,22 @@ import { TextField } from "@radix-ui/themes";
 import { FiSearch } from "react-icons/fi";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
 import ComplainsTable from "./ComplainsTable";
-import Forms from "./list/Forms";
-import { OptionType } from "../../components/Form/CustomSelect";
 import CustomSelect from "../../components/CustomSelect";
-// import useGetSectionCategory from "../../hooks/useGetSectionCategory";
-// import useGetAllSections from "../../hooks/useGetAllSections";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
 import useGetAllDistricts from "../../hooks/useGetAllDistricts";
 import CustomDateRangePicker from "../../components/CustomDateRangePicker";
+import CustomComplaintDialog from "../../authority-reports/custom-complaint-report/components/CustomComplaintDialog";
 
-interface Props {
-  divisionOptions: OptionType[];
-  sectionCategoryOptions: OptionType[];
-  sectionOptions: OptionType[];
-  complaintCategoryOptions: OptionType[];
-}
-
-const ComplainComponent = ({
-  divisionOptions,
-  sectionCategoryOptions,
-  sectionOptions,
-  complaintCategoryOptions,
-}: Props) => {
+const ComplainComponent = () => {
   const { divisionId, districtId, tehsilId, startDate, endDate } =
     useRegionFilters();
 
   const [selectedDistrict, setSelectedDistrict] = useState("");
-  // const [startYear, setStartYear] = useState("");
-  // const [endYear, setEndYear] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [refresh, setRefresh] = useState(false);
 
   const { data: complainData } = useGetAllComplains({
+    refresh,
     startDate,
     endDate,
     divisionId: divisionId || "",
@@ -122,12 +107,7 @@ const ComplainComponent = ({
           {/* <Button className="rounded-full! cursor-pointer! bg-(--primary)">
             Manual Complaint
           </Button> */}
-          <Forms
-            divisionOptions={divisionOptions}
-            sectionCategoryOptions={sectionCategoryOptions}
-            sectionOptions={sectionOptions}
-            complaintCategoryOptions={complaintCategoryOptions}
-          />
+          <CustomComplaintDialog setRefresh={setRefresh} />
         </div>
       </div>
 

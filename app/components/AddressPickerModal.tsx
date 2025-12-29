@@ -1,14 +1,10 @@
 "use client";
-
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from "use-places-autocomplete";
-import * as Dialog from "@radix-ui/react-dialog";
-import { Button, IconButton } from "@radix-ui/themes";
-import { IoClose } from "react-icons/io5";
 import {
   Combobox,
   ComboboxInput,
@@ -17,8 +13,8 @@ import {
   ComboboxOption,
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
-
-type LatLng = { lat: number; lng: number };
+import { IoClose } from "react-icons/io5";
+import { Button } from "@radix-ui/themes";
 
 interface LocationData {
   lat: number;
@@ -26,117 +22,132 @@ interface LocationData {
   address: string;
 }
 
-interface AddressPickerModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onSelectLocation: (location: LocationData) => void;
-  initialLocation?: LatLng | null;
+interface Props {
+  onSelect: (location: LocationData) => void;
+  onClose: () => void;
 }
 
-interface PlacesAutocompleteProps {
-  setSelected: React.Dispatch<React.SetStateAction<LatLng | null>>;
-  setAddress: React.Dispatch<React.SetStateAction<string>>;
-}
+type LatLngLiteral = google.maps.LatLngLiteral;
 
-export default function AddressPickerModal({
-  onOpenChange,
-  onSelectLocation,
-  initialLocation,
-}: {
-  open: boolean;
-  onOpenChange: (v: boolean) => void;
-  onSelectLocation: (v: { lat: number; lng: number; address: string }) => void;
-  initialLocation?: LatLng | null;
-}) {
-  const [selected, setSelected] = useState<LatLng | null>(null);
-  const [address, setAddress] = useState("");
-
+export default function AddressPickerModal({ onSelect, onClose }: Props) {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API!,
     libraries: ["places"],
   });
 
-  // 🔥 Sync initial location
-  useEffect(() => {
-    if (initialLocation) {
-      setSelected(initialLocation);
-    }
-  }, [initialLocation]);
+  const [center, setCenter] = useState<LatLngLiteral>({
+    lat: 31.5204,
+    lng: 74.3587,
+  });
 
-  const center = useMemo(
-    () => selected ?? { lat: 31.5204, lng: 74.3587 },
-    [selected]
+  const [marker, setMarker] = useState<LatLngLiteral | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(
+    null
   );
+
+  if (!isLoaded) return null;
 
   const handleMapClick = async (e: google.maps.MapMouseEvent) => {
     if (!e.latLng) return;
 
-    const lat = e.latLng.lat();
-    const lng = e.latLng.lng();
-    setSelected({ lat, lng });
+    const pos = {
+      lat: e.latLng.lat(),
+      lng: e.latLng.lng(),
+    };
 
-    const geocoder = new google.maps.Geocoder();
-    const res = await geocoder.geocode({ location: { lat, lng } });
+    setMarker(pos);
+    setCenter(pos);
 
-    if (res.results[0]) {
-      setAddress(res.results[0].formatted_address);
-    }
-  };
+    const results = await getGeocode({ location: pos });
 
-  const confirm = () => {
-    if (!selected || !address) return;
-
-    onSelectLocation({
-      lat: selected.lat,
-      lng: selected.lng,
-      address,
+    setSelectedLocation({
+      lat: pos.lat,
+      lng: pos.lng,
+      address: results[0]?.formatted_address || `${pos.lat}, ${pos.lng}`,
     });
-    onOpenChange(false);
   };
-
-  if (!isLoaded) return null;
 
   return (
     <>
-      <PlacesAutocomplete setSelected={setSelected} setAddress={setAddress} />
+      {/* HEADER */}
+      <div className="flex justify-between items-center p-2!">
+        <p className="font-semibold text-sm">Select Location</p>
+        <IoClose className="cursor-pointer" onClick={onClose} />
+      </div>
 
+      {/* SEARCH */}
+      <div className="p-2!">
+        <PlacesAutocomplete
+          onSelect={(loc) => {
+            setCenter({ lat: loc.lat, lng: loc.lng });
+            setMarker({ lat: loc.lat, lng: loc.lng });
+            setSelectedLocation(loc);
+          }}
+        />
+      </div>
+
+      {/* MAP */}
       <GoogleMap
         center={center}
-        zoom={selected ? 15 : 10}
-        mapContainerStyle={{ height: 300, width: "100%" }}
+        zoom={14}
         onClick={handleMapClick}
+        mapContainerStyle={{ height: 300, width: "100%" }}
+        options={{
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullscreenControl: false,
+        }}
       >
-        {selected && <Marker position={selected} />}
+        {marker && <Marker position={marker} />}
       </GoogleMap>
 
-      <Button
-        className="mt-3 w-full"
-        onClick={confirm}
-        disabled={!selected || !address}
-      >
-        Confirm Location
-      </Button>
+      {/* FOOTER */}
+      <div className="flex justify-between p-2!">
+        <Button variant="soft" onClick={onClose} className="cursor-pointer!">
+          Close
+        </Button>
+
+        <Button
+          className="cursor-pointer!"
+          disabled={!selectedLocation}
+          onClick={() => {
+            if (!selectedLocation) return;
+            onSelect(selectedLocation);
+            onClose();
+          }}
+        >
+          Confirm Location
+        </Button>
+      </div>
     </>
   );
 }
 
-const PlacesAutocomplete = ({ setSelected, setAddress }: any) => {
+const PlacesAutocomplete = ({
+  onSelect,
+}: {
+  onSelect: (loc: LocationData) => void;
+}) => {
   const {
     ready,
     value,
     setValue,
     suggestions: { status, data },
     clearSuggestions,
-  } = usePlacesAutocomplete();
+  } = usePlacesAutocomplete({ debounce: 300 });
 
   const handleSelect = async (address: string) => {
     setValue(address, false);
     clearSuggestions();
-    setAddress(address);
 
     const results = await getGeocode({ address });
     const { lat, lng } = await getLatLng(results[0]);
-    setSelected({ lat, lng });
+
+    onSelect({
+      lat,
+      lng,
+      address: results[0]?.formatted_address || address,
+    });
   };
 
   return (
@@ -145,9 +156,11 @@ const PlacesAutocomplete = ({ setSelected, setAddress }: any) => {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         disabled={!ready}
-        placeholder="Search address..."
+        placeholder="Search address"
+        className="w-full border px-2! py-1! rounded-md"
       />
-      <ComboboxPopover>
+
+      <ComboboxPopover portal={false}>
         <ComboboxList>
           {status === "OK" &&
             data.map(({ place_id, description }) => (

@@ -1,9 +1,10 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Dialog, Flex, IconButton } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { IoClose, IoLocationSharp } from "react-icons/io5";
+import { IoLocationSharp } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import { COMPLAINT_API } from "../../../APIs";
@@ -21,6 +22,7 @@ import AddressPickerModal from "../../../components/AddressPickerModal";
 
 interface Props {
   userId: string;
+  onSuccess: () => void;
 }
 
 interface LocationData {
@@ -68,11 +70,11 @@ const complaintSchema = z.object({
 
 type ComplaintInput = z.input<typeof complaintSchema>;
 
-const ComplaintForm = ({ userId }: Props) => {
+const ComplaintForm = ({ userId, onSuccess }: Props) => {
   const router = useRouter();
 
-  // State for AddressPickerModal
   const [mapModalOpen, setMapModalOpen] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState("");
 
   const {
     register,
@@ -81,7 +83,7 @@ const ComplaintForm = ({ userId }: Props) => {
     control,
     setValue,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ComplaintInput>({
     resolver: zodResolver(complaintSchema),
     defaultValues: {
@@ -104,11 +106,6 @@ const ComplaintForm = ({ userId }: Props) => {
     },
   });
 
-  // Watch location values for display
-  const watchedAddress = watch("address");
-  const watchedLat = watch("latitude");
-  const watchedLng = watch("longitude");
-
   const selectedDivisionId = watch("DivisionId");
   const selectedDistrictId = watch("DistrictId");
 
@@ -123,14 +120,14 @@ const ComplaintForm = ({ userId }: Props) => {
   const { data: complaintCategoryData } = useGetAllComplaintCategory();
   const { data: sectionData } = useGetAllSections();
 
-  const handleLocationSelect = (location: {
-    lat: number;
-    lng: number;
-    address: string;
-  }) => {
-    setValue("latitude", location.lat, { shouldValidate: true });
-    setValue("longitude", location.lng, { shouldValidate: true });
-    setValue("address", location.address, { shouldValidate: true });
+  const handleLocationSelect = (location: LocationData) => {
+    console.log(location, "location");
+
+    setValue("address", location.address);
+    setValue("latitude", location.lat);
+    setValue("longitude", location.lng);
+    setValue("locationName", location.address);
+    setSelectedAddress(location.address);
   };
 
   const onSubmit = async (formData: ComplaintInput) => {
@@ -167,8 +164,8 @@ const ComplaintForm = ({ userId }: Props) => {
       );
       console.log("Response:", response);
       toast.success("Complaint submitted successfully!");
-      router.refresh();
       reset();
+      onSuccess();
     } catch (error) {
       const err = error as AxiosError<any>;
       toast.error(err?.response?.data?.message || "Something went wrong");
@@ -197,44 +194,29 @@ const ComplaintForm = ({ userId }: Props) => {
               <div className="flex flex-col gap-1">
                 <label className="text-sm font-medium">Location</label>
                 <div
-                  className="h-10 flex items-center gap-2 border rounded-lg px-3 cursor-pointer"
+                  className="h-10 flex items-center gap-2 border rounded-lg px-2! cursor-pointer"
                   onClick={() => setMapModalOpen(true)}
                 >
-                  <IoLocationSharp />
-                  {watch("address") ? "Change Address" : "Select Address"}
-                </div>
-                {errors.address && (
-                  <span className="text-xs text-red-500">
-                    {errors.address.message}
+                  {/* <IoLocationSharp className="w-10 h-10" /> */}
+                  <span className="truncate text-sm">
+                    {selectedAddress || "Select Address"}
                   </span>
-                )}
+                </div>
               </div>
             </Dialog.Trigger>
 
-            <Dialog.Content className="max-w-[500px] p-3 rounded-lg">
+            <Dialog.Content
+              className="max-w-[500px] p-0! rounded-lg!"
+              onInteractOutside={(event) => {
+                event.preventDefault();
+              }}
+            >
               <AddressPickerModal
-                open={mapModalOpen}
-                onOpenChange={setMapModalOpen}
-                onSelectLocation={handleLocationSelect}
-                // initialLocation={
-                //   watch("latitude") && watch("longitude")
-                //     ? { lat: watch("latitude"), lng: watch("longitude") }
-                //     : null
-                // }
+                onSelect={handleLocationSelect}
+                onClose={() => setMapModalOpen(false)}
               />
             </Dialog.Content>
           </Dialog.Root>
-
-          {/* Display Selected Address */}
-          {watchedAddress && (
-            <div className="col-span-full p-3 bg-gray-50 rounded-md border">
-              <p className="text-sm text-gray-600">Selected Location:</p>
-              <p className="font-medium text-sm">{watchedAddress}</p>
-              <p className="text-xs text-gray-500 mt-1">
-                Coordinates: {watchedLat?.toFixed(6)}, {watchedLng?.toFixed(6)}
-              </p>
-            </div>
-          )}
 
           <Controller
             name="DivisionId"
@@ -323,27 +305,6 @@ const ComplaintForm = ({ userId }: Props) => {
           />
 
           <Controller
-            name="complaintCategoryId"
-            control={control}
-            render={({ field }) => (
-              <CustomSearchDropdown
-                label="Complaint Category"
-                name="complaintCategoryId"
-                placeholder="Select Complaint Category"
-                error={errors.complaintCategoryId?.message}
-                value={String(field.value)}
-                onChange={(val) => field.onChange(Number(val))}
-                options={
-                  complaintCategoryData?.map((category) => ({
-                    label: category?.name,
-                    value: category?.id.toString(),
-                  })) ?? []
-                }
-              />
-            )}
-          />
-
-          <Controller
             name="complaintSectionId"
             control={control}
             defaultValue={[]}
@@ -360,6 +321,27 @@ const ComplaintForm = ({ userId }: Props) => {
                   value: String(sec.id),
                 }))}
                 error={errors.complaintSectionId?.message}
+              />
+            )}
+          />
+
+          <Controller
+            name="complaintCategoryId"
+            control={control}
+            render={({ field }) => (
+              <CustomSearchDropdown
+                label="Complaint Category"
+                name="complaintCategoryId"
+                placeholder="Select Complaint Category"
+                error={errors.complaintCategoryId?.message}
+                value={String(field.value)}
+                onChange={(val) => field.onChange(Number(val))}
+                options={
+                  complaintCategoryData?.map((category) => ({
+                    label: category?.name,
+                    value: category?.id.toString(),
+                  })) ?? []
+                }
               />
             )}
           />
@@ -383,11 +365,11 @@ const ComplaintForm = ({ userId }: Props) => {
               Cancel
             </Button>
           </Dialog.Close>
-          <Button type="submit">Submit Complaint</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Submitting..." : "Submit Complaint"}
+          </Button>
         </Flex>
       </form>
-
-      {/* Address Picker Modal */}
     </>
   );
 };

@@ -1,8 +1,6 @@
 "use client";
 
 import CustomComplaintTable from "./CustomComplaintTable";
-import Forms from "../list/Forms";
-import { OptionType } from "../../../components/Form/CustomSelect";
 import useGetCustomComplaints from "../../../hooks/useGetCustomComplaints";
 import { useRegionFilters } from "../../../hooks/useRegionFilters";
 import CustomSelect from "../../../components/CustomSelect";
@@ -11,25 +9,13 @@ import { useMemo, useState } from "react";
 import useGetAllSections from "../../../hooks/useGetAllSections";
 import useGetAllDistricts from "../../../hooks/useGetAllDistricts";
 import useGetAllStaff from "../../../hooks/useGetAllStaff";
-import DatePicker from "../../../components/DatePicker";
 import FineFilter from "./FineFilter";
 import { Button } from "@radix-ui/themes";
 import DownloadWrapper from "./DownloadWrapper";
-import useSearchRegisterUser from "../../../hooks/useSearchRegisterUser";
 import CustomComplaintDialog from "./CustomComplaintDialog";
 import DateFilter from "../../../components/DateFilter";
 
-interface Props {
-  sectionCategoryOptions: OptionType[];
-  sectionOptions: OptionType[];
-  complaintCategoryOptions: OptionType[];
-}
-
-const CustomComplaintComponent = ({
-  sectionCategoryOptions,
-  sectionOptions,
-  complaintCategoryOptions,
-}: Props) => {
+const CustomComplaintComponent = () => {
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
@@ -38,11 +24,13 @@ const CustomComplaintComponent = ({
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [minFine, setMinFine] = useState<number | undefined>(undefined);
   const [maxFine, setMaxFine] = useState<number | undefined>(undefined);
+  const [refresh, setRefresh] = useState(false);
 
   const { divisionId, districtId, tehsilId } = useRegionFilters();
 
   const { data: customComplaintData } = useGetCustomComplaints({
     // startDate: startYear ? `${startYear}-01-01` : "",
+    refresh,
     startDate: startDate ? startDate.toISOString() : undefined,
     endDate: endDate ? endDate.toISOString() : undefined,
     minFineAmount: minFine,
@@ -90,13 +78,8 @@ const CustomComplaintComponent = ({
             {customComplaintData?.length.toLocaleString()} Records
           </p>
         </div>
-        {/* <Forms
-          sectionCategoryOptions={sectionCategoryOptions}
-          sectionOptions={sectionOptions}
-          complaintCategoryOptions={complaintCategoryOptions}
-        /> */}
 
-        <CustomComplaintDialog />
+        <CustomComplaintDialog setRefresh={setRefresh} />
       </div>
       <div className="flex justify-end items-center gap-2 mb-2!">
         <CustomSelect
@@ -143,22 +126,6 @@ const CustomComplaintComponent = ({
           ]}
         />
 
-        {/* <CustomDateRangePicker /> */}
-        {/* <DatePicker
-          placeholder="Start Date"
-          initialDate={startDate}
-          onSelectDate={(d) => {
-            setStartDate(d);
-          }}
-        />
-
-        <DatePicker
-          placeholder="End Date"
-          initialDate={endDate}
-          onSelectDate={(d) => {
-            setEndDate(d);
-          }}
-        /> */}
         <DateFilter />
         <FineFilter
           minFine={minFine}

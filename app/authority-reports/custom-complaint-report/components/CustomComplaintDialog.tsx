@@ -3,14 +3,17 @@ import { useState } from "react";
 import RegisterationForm from "./RegisterationForm";
 import ComplaintForm from "./ComplaintForm";
 
-const CustomComplaintDialog = () => {
+interface CustomComplaintProp {
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const CustomComplaintDialog = ({ setRefresh }: CustomComplaintProp) => {
   const [step, setStep] = useState(1);
   const [userId, setUserId] = useState("");
-
-  console.log(userId, "usertqiqiq");
+  const [openCustomDilaog, setOpenCustomDialog] = useState(false);
 
   return (
-    <Dialog.Root>
+    <Dialog.Root open={openCustomDilaog} onOpenChange={setOpenCustomDialog}>
       <Dialog.Trigger>
         <Button className="bg-(--primary)! cursor-pointer! rounded-full!">
           Add Custom Complaint
@@ -26,7 +29,17 @@ const CustomComplaintDialog = () => {
         {step === 1 && (
           <RegisterationForm setUserId={setUserId} setStep={setStep} />
         )}
-        {step === 2 && <ComplaintForm userId={userId} />}
+        {step === 2 && (
+          <ComplaintForm
+            userId={userId}
+            onSuccess={() => {
+              setOpenCustomDialog(false);
+              setStep(1);
+              setUserId("");
+              setRefresh(true);
+            }}
+          />
+        )}
       </Dialog.Content>
     </Dialog.Root>
   );

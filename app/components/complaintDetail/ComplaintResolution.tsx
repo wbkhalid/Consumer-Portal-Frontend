@@ -31,6 +31,8 @@ const ComplaintResolution = ({
   const [imageUrl, setImageUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const userId = Cookies.get("userId");
@@ -47,6 +49,8 @@ const ComplaintResolution = ({
       return;
     }
 
+    setImagePreview(URL.createObjectURL(file));
+
     try {
       const fileName = await uploadFile(e, DecisionPhotos);
       setImageUrl(fileName?.data?.fileUrl);
@@ -57,12 +61,21 @@ const ComplaintResolution = ({
     }
   };
 
+  const removeImage = () => {
+    setImageUrl("");
+    setImagePreview(null);
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
+  };
+
   const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const url = URL.createObjectURL(file);
     const video = document.createElement("video");
+    video.preload = "metadata";
 
     video.preload = "metadata";
     video.onloadedmetadata = async () => {
@@ -76,6 +89,8 @@ const ComplaintResolution = ({
       video.src = url;
     };
 
+    setVideoPreview(url);
+
     try {
       const fileName = await uploadFile(e, decionsVideos);
       setVideoUrl(fileName?.data?.fileUrl);
@@ -83,6 +98,15 @@ const ComplaintResolution = ({
     } catch (error) {
       toast.error("Error uploading file.");
       console.error("Upload error:", error);
+    }
+  };
+
+  const removeVideo = () => {
+    setVideoUrl("");
+    setVideoPreview(null);
+
+    if (videoInputRef.current) {
+      videoInputRef.current.value = "";
     }
   };
 
@@ -196,22 +220,44 @@ const ComplaintResolution = ({
         Resolution Evidence
       </p>
       <div
-        className="flex justify-center items-center gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-5! rounded-md cursor-pointer mt-1!"
-        onClick={() => imageInputRef.current?.click()}
+        className="flex justify-center items-center gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-5! rounded-md cursor-pointer mt-1! relative"
+        onClick={() => !imagePreview && imageInputRef.current?.click()}
       >
-        <div className="flex flex-col items-center">
-          <img
-            src="/images/complaint-album-gray.png"
-            alt="complaint-album-gray"
-            className="w-6 h-6"
-          />
-          <p className="font-semibold text-[#4A5565] text-sm mb-1!">
-            {imageUrl ? "Document Uploaded" : "Upload Case Decision Document"}
-          </p>
-          <p className="text-xs text-[#545861] font-medium">
-            JPG, PNG (Max: 5MB)
-          </p>
-        </div>
+        {!imagePreview ? (
+          /* 👇 Upload Placeholder */
+          <div className="flex flex-col items-center">
+            <img
+              src="/images/complaint-album-gray.png"
+              alt="complaint-album-gray"
+              className="w-6 h-6"
+            />
+            <p className="font-semibold text-[#4A5565] text-sm mb-1!">
+              Upload Case Decision Document
+            </p>
+            <p className="text-xs text-[#545861] font-medium">
+              JPG, PNG (Max: 5MB)
+            </p>
+          </div>
+        ) : (
+          <div className="relative">
+            <img
+              src={imagePreview}
+              alt="Uploaded"
+              className="w-16 h-16 object-contain"
+            />
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                removeImage();
+              }}
+              className="absolute -top-2 -right-6 bg-red-500 text-white rounded-full p-0.5! cursor-pointer! hover:bg-red-600"
+            >
+              <RxCross2 size={12} />
+            </button>
+          </div>
+        )}
+
         <input
           type="file"
           accept="image/*"
@@ -222,22 +268,43 @@ const ComplaintResolution = ({
       </div>
 
       <div
-        className="flex justify-center items-center gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-4! rounded-md cursor-pointer mt-2!"
-        onClick={() => videoInputRef.current?.click()}
+        className="flex justify-center items-center gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-4! rounded-md cursor-pointer mt-2! relative"
+        onClick={() => !videoPreview && videoInputRef.current?.click()}
       >
-        <div className="flex flex-col items-center">
-          <img
-            src="/images/complaint-video-gray.png"
-            alt="complaint-video-gray"
-            className="w-6 h-6"
-          />
-          <p className="font-semibold text-[#4A5565] text-sm mb-1!">
-            {videoUrl ? "Video Uploaded" : "Upload Court Session Video"}
-          </p>
-          <p className="text-xs text-[#545861] font-medium">
-            MP4, MOV (Max: 15 min)
-          </p>
-        </div>
+        {!videoPreview ? (
+          <div className="flex flex-col items-center">
+            <img
+              src="/images/complaint-video-gray.png"
+              alt="complaint-video-gray"
+              className="w-6 h-6"
+            />
+            <p className="font-semibold text-[#4A5565] text-sm mb-1!">
+              Upload Court Session Video
+            </p>
+            <p className="text-xs text-[#545861] font-medium">
+              MP4, MOV (Max: 15 min)
+            </p>
+          </div>
+        ) : (
+          <div className="relative">
+            <video
+              src={videoPreview}
+              controls
+              className="w-16 h-16 object-contain"
+            />
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                removeVideo();
+              }}
+              className="absolute -top-2 -right-6 bg-red-500 text-white rounded-full p-0.5! cursor-pointer  hover:bg-red-600"
+            >
+              <RxCross2 size={12} />
+            </button>
+          </div>
+        )}
+
         <input
           type="file"
           accept="video/*"
@@ -246,20 +313,8 @@ const ComplaintResolution = ({
           onChange={handleVideoChange}
         />
       </div>
+
       <div className="flex justify-between items-center my-3!">
-        {/* <Button
-          variant="outline"
-          className="text-(--primary)! outline! outline-(--primary)! shadow-none! cursor-pointer! hover:text-white! hover:bg-(--primary)! text-[12px]!"
-          style={{ outlineWidth: "1px" }}
-          onClick={() => {
-            setSelectedComplaint(null);
-            setHearingDate(null);
-            setDialogStep(1);
-            setIsDialogOpen(false);
-          }}
-        >
-          Cancel
-        </Button> */}
         <Dialog.Close>
           <div className="text-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
             <p> Close</p>
