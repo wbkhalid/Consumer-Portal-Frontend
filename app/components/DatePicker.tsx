@@ -39,7 +39,7 @@ const DatePicker = ({
           ${
             disabled
               ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-white border-[#cccccd] cursor-pointer"
+              : "bg-white border-[#d8d8d8] text-[#a89f9f] cursor-pointer"
           }`}
           onClick={() => !disabled && setOpen(true)}
         >

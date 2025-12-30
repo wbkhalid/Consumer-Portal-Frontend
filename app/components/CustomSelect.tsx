@@ -69,7 +69,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
           {options.map((opt) => (
             <Select.Item
               value={String(opt.value)}
-              className="text-xs! py-0.5! leading-none! truncate whitespace-nowrap"
+              className="text-xs! py-0.5! leading-none! truncate whitespace-nowrap cursor-pointer!"
             >
               {opt.label}
             </Select.Item>

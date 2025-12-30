@@ -64,8 +64,8 @@ const SuperEscalationTable = ({
     { label: "Hearing Date" },
     { label: "Hearing Time" },
     { label: "Generate Report" },
-    { label: "Deatils" },
-    { label: "Proceeding" },
+    // { label: "Deatils" },
+    // { label: "Proceeding" },
   ];
 
   const handleSort = (key: string) => {
@@ -289,7 +289,7 @@ const SuperEscalationTable = ({
                         className="text-(--primary) w-5 h-5 cursor-pointer!"
                       />
                     </TableBodyCell>
-                    <TableBodyCell>
+                    {/* <TableBodyCell>
                       <FaRegPenToSquare
                         onClick={() => {
                           setSelectedComplaint(item);
@@ -321,7 +321,7 @@ const SuperEscalationTable = ({
                       >
                         Update Status
                       </div>
-                    </TableBodyCell>
+                    </TableBodyCell> */}
                   </tr>
                 ))}
               </tbody>

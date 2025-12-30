@@ -9,6 +9,9 @@ interface Props {
   refresh?: boolean;
   startDate?: string;
   endDate?: string;
+  assignedTo?: string;
+  minFineAmount?: number;
+  maxFineAmount?: number;
 }
 
 export interface SectionsDetails {
@@ -55,9 +58,13 @@ const useGetAllComplains = ({
   divisionId,
   districtId,
   tehsilId,
-  status,
   startDate,
   endDate,
+  status,
+
+  assignedTo,
+  minFineAmount,
+  maxFineAmount,
 }: Props = {}) => {
   const params = new URLSearchParams();
 
@@ -73,6 +80,13 @@ const useGetAllComplains = ({
     params.append("startDate", String(startDate));
   if (endDate !== undefined && endDate !== "" && endDate !== "0")
     params.append("endDate", String(endDate));
+  if (assignedTo !== undefined && assignedTo !== "" && assignedTo !== "0")
+    params.append("assignedTo", String(assignedTo));
+  if (minFineAmount !== undefined)
+    params.append("minFineAmount", String(minFineAmount));
+
+  if (maxFineAmount !== undefined)
+    params.append("maxFineAmount", String(maxFineAmount));
 
   const queryString = params.toString();
 

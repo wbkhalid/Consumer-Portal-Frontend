@@ -71,8 +71,6 @@ const complaintSchema = z.object({
 type ComplaintInput = z.input<typeof complaintSchema>;
 
 const ComplaintForm = ({ userId, onSuccess }: Props) => {
-  const router = useRouter();
-
   const [mapModalOpen, setMapModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState("");
 
@@ -132,35 +130,14 @@ const ComplaintForm = ({ userId, onSuccess }: Props) => {
 
   const onSubmit = async (formData: ComplaintInput) => {
     try {
-      const fd = new FormData();
-
-      fd.append("shopName", formData.shopName);
-      fd.append("phoneNo", formData.phoneNo);
-      fd.append("address", formData.address);
-      fd.append("latitude", String(formData.latitude ?? 0));
-      fd.append("longitude", String(formData.longitude ?? 0));
-      fd.append("locationName", formData.locationName ?? "");
-      fd.append("DivisionId", String(formData.DivisionId));
-      fd.append("DistrictId", String(formData.DistrictId));
-      fd.append("TehsilId", String(formData.TehsilId));
-      fd.append("complaintCategoryId", String(formData.complaintCategoryId));
-      fd.append("complaintTypeId", String(formData.complaintTypeId));
-      fd.append("productTypeId", String(formData.productTypeId ?? 1));
-      fd.append("entryType", String(formData.entryType));
-      fd.append("remarks", formData.remarks ?? "");
-      fd.append("userId", userId);
-      formData?.complaintSectionId?.forEach((id) => {
-        fd.append("complaintSectionId", String(id));
-      });
+      const payload = {
+        ...formData,
+        userId,
+      };
 
       const response = await apiClient.post(
         `${COMPLAINT_API}/submit-complaint`,
-        fd,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        payload
       );
       console.log("Response:", response);
       toast.success("Complaint submitted successfully!");

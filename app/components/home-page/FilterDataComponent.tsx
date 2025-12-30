@@ -8,23 +8,32 @@ import Cookies from "js-cookie";
 import useGetSelectedDivision from "../../hooks/useGetSelectedDivision";
 import useGetSelectedDistrict from "../../hooks/useGetSelectedDistrict";
 import useGetSelectedTehsil from "../../hooks/useGetSelectedTehsil";
+import { getRole } from "../../utils/utils";
 
 const FilterDataComponent = () => {
-  const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
-  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
-  const [selectedTehsil, setSelectedTehsil] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const role = Cookies.get("role");
+
+  const role = getRole();
   const cookieDivisionId = Cookies.get("divisionId");
   const cookieDistrictId = Cookies.get("districtId");
 
-  useEffect(() => {
-    setSelectedDivision(searchParams.get("divisionId") || null);
-    setSelectedDistrict(searchParams.get("districtId") || null);
-    setSelectedTehsil(searchParams.get("tehsilId") || null);
-  }, [searchParams]);
+  const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
+  const [selectedTehsil, setSelectedTehsil] = useState<string | null>(null);
 
+  /* ---------------- SYNC STATE WITH URL ---------------- */
+  useEffect(() => {
+    setSelectedDivision(
+      searchParams.get("divisionId") ?? cookieDivisionId ?? null
+    );
+    setSelectedDistrict(
+      searchParams.get("districtId") ?? cookieDistrictId ?? null
+    );
+    setSelectedTehsil(searchParams.get("tehsilId"));
+  }, [searchParams, cookieDivisionId, cookieDistrictId]);
+
+  /* ---------------- ROLE BASED VISIBILITY ---------------- */
   if (role === "AC") return null;
 
   const canShowDivision = ["Admin", "DG", "Secretary"].includes(role ?? "");
@@ -40,85 +49,76 @@ const FilterDataComponent = () => {
     "AD",
   ].includes(role ?? "");
 
-  // const [selectedDivision, setSelectedDivision] = useState<string | null>(
-  //   canShowDistrict ? cookieDivisionId || null : searchParams.get("divisionId")
-  // );
-  // const [selectedDistrict, setSelectedDistrict] = useState<string | null>(
-  //   canShowTehsil ? cookieDistrictId || null : searchParams.get("districtId")
-  // );
-  // const [selectedTehsil, setSelectedTehsil] = useState<string | null>(
-  //   searchParams.get("tehsilId")
-  // );
-
-  useEffect(() => {
-    // if (canShowDivision) {
-    setSelectedDivision(
-      cookieDivisionId ?? searchParams.get("divisionId") ?? null
-    );
-    // }
-    // if (canShowDistrict) {
-    setSelectedDistrict(
-      cookieDistrictId ?? searchParams.get("districtId") ?? null
-    );
-    // }
-    // if (canShowTehsil) {
-    setSelectedTehsil(searchParams.get("tehsilId") ?? null);
-    // }
-  }, [searchParams, cookieDivisionId, cookieDistrictId]);
-
+  /* ---------------- DATA ---------------- */
   const { data: divisionData } = useGetSelectedDivision({ id: 1 });
+
   const { data: districtData } = useGetSelectedDistrict({
     id: selectedDivision ? Number(selectedDivision) : undefined,
   });
+
   const { data: tehsilData } = useGetSelectedTehsil({
     id: selectedDistrict ? Number(selectedDistrict) : undefined,
   });
 
+  /* ---------------- APPLY FILTER ---------------- */
   const handleApplyFilter = () => {
-    const params = new URLSearchParams();
-    if (selectedDivision) params.set("divisionId", selectedDivision);
-    if (selectedDistrict) params.set("districtId", selectedDistrict);
-    if (selectedTehsil) params.set("tehsilId", selectedTehsil);
+    const params = new URLSearchParams(searchParams.toString());
+
+    selectedDivision
+      ? params.set("divisionId", selectedDivision)
+      : params.delete("divisionId");
+
+    selectedDistrict
+      ? params.set("districtId", selectedDistrict)
+      : params.delete("districtId");
+
+    selectedTehsil
+      ? params.set("tehsilId", selectedTehsil)
+      : params.delete("tehsilId");
+
     router.push(`?${params.toString()}`);
+  };
+
+  /* ---------------- CLEAR FILTER ---------------- */
+  const handleClearFilter = () => {
+    setSelectedDivision(null);
+    setSelectedDistrict(null);
+    setSelectedTehsil(null);
+    router.push(window.location.pathname);
   };
 
   return (
     <div className="rounded-xl px-4! py-3! bg-white">
-      <div className=" text-[#202224]  mb-4! flex justify-between items-center">
-        <p className="text-sm text-[#202224] font-bold ">Apply Filters</p>
+      <div className="mb-4! flex justify-between items-center">
+        <p className="text-sm font-bold text-[#202224]">Apply Filters</p>
 
-        <Button
-          size="1"
-          variant="soft"
-          className="cursor-pointer!"
-          onClick={() => {
-            setSelectedDivision(null);
-            setSelectedDistrict(null);
-            setSelectedTehsil(null);
-
-            router.push(window.location.pathname);
-          }}
-        >
+        <Button size="1" variant="soft" onClick={handleClearFilter}>
           Clear Filters
         </Button>
       </div>
 
-      <div className="flex flex-col! gap-2">
+      <div className="flex flex-col gap-2">
         {canShowDivision && (
           <CustomSearchDropdown
             placeholder="Select Division"
             options={[
-              { label: "All Divisions", value: "" },
-              ...(divisionData?.map((division) => ({
-                label: division?.name,
-                value: String(division?.id),
+              { label: "All Divisions", value: "ALL" },
+              ...(divisionData?.map((d) => ({
+                label: d.name,
+                value: String(d.id),
               })) ?? []),
             ]}
-            value={selectedDivision ?? ""}
+            value={selectedDivision ?? "ALL"}
             onChange={(val) => {
-              setSelectedDivision(val ? String(val) : null);
-              setSelectedDistrict(null);
-              setSelectedTehsil(null);
+              if (val === "ALL") {
+                setSelectedDivision(null);
+                setSelectedDistrict(null);
+                setSelectedTehsil(null);
+              } else {
+                setSelectedDivision(String(val));
+                setSelectedDistrict(null);
+                setSelectedTehsil(null);
+              }
             }}
           />
         )}
@@ -127,16 +127,21 @@ const FilterDataComponent = () => {
           <CustomSearchDropdown
             placeholder="Select District"
             options={[
-              { label: "All Districts", value: "" },
-              ...(districtData?.map((district) => ({
-                label: district?.name,
-                value: String(district?.id),
+              { label: "All Districts", value: "ALL" },
+              ...(districtData?.map((d) => ({
+                label: d.name,
+                value: String(d.id),
               })) ?? []),
             ]}
-            value={selectedDistrict ?? ""}
+            value={selectedDistrict ?? "ALL"}
             onChange={(val) => {
-              setSelectedDistrict(val ? String(val) : null);
-              setSelectedTehsil(null);
+              if (val === "ALL") {
+                setSelectedDistrict(null);
+                setSelectedTehsil(null);
+              } else {
+                setSelectedDistrict(String(val));
+                setSelectedTehsil(null);
+              }
             }}
           />
         )}
@@ -145,14 +150,20 @@ const FilterDataComponent = () => {
           <CustomSearchDropdown
             placeholder="Select Tehsil"
             options={[
-              { label: "All Tehsils", value: "" },
-              ...(tehsilData?.map((tehsil) => ({
-                label: tehsil?.name,
-                value: String(tehsil?.id),
+              { label: "All Tehsils", value: "ALL" },
+              ...(tehsilData?.map((t) => ({
+                label: t.name,
+                value: String(t.id),
               })) ?? []),
             ]}
-            value={selectedTehsil ?? ""}
-            onChange={(val) => setSelectedTehsil(val ? String(val) : null)}
+            value={selectedTehsil ?? "ALL"}
+            onChange={(val) => {
+              if (val === "ALL") {
+                setSelectedTehsil(null);
+              } else {
+                setSelectedTehsil(String(val));
+              }
+            }}
           />
         )}
 

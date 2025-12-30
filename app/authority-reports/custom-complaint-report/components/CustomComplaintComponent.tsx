@@ -3,74 +3,52 @@
 import CustomComplaintTable from "./CustomComplaintTable";
 import useGetCustomComplaints from "../../../hooks/useGetCustomComplaints";
 import { useRegionFilters } from "../../../hooks/useRegionFilters";
-import CustomSelect from "../../../components/CustomSelect";
-import useGetSectionCategory from "../../../hooks/useGetSectionCategory";
-import { useMemo, useState } from "react";
-import useGetAllSections from "../../../hooks/useGetAllSections";
-import useGetAllDistricts from "../../../hooks/useGetAllDistricts";
-import useGetAllStaff from "../../../hooks/useGetAllStaff";
+import { useState } from "react";
 import FineFilter from "./FineFilter";
 import { Button } from "@radix-ui/themes";
 import DownloadWrapper from "./DownloadWrapper";
 import CustomComplaintDialog from "./CustomComplaintDialog";
 import DateFilter from "../../../components/DateFilter";
+import SectionSelectDropdown from "../../../components/reuseable-filters/SectionSelectDropdown";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import SectionCategoryDropdown from "../../../components/reuseable-filters/SectionCategoryDropdown";
+import StaffDropdown from "../../../components/reuseable-filters/StaffDropdown";
+import DistrictWiseDropdown from "../../../components/reuseable-filters/DistrictWiseDropdown";
+import { getRole } from "../../../utils/utils";
 
 const CustomComplaintComponent = () => {
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSection, setSelectedSection] = useState("");
-  const [selectedAssignee, setSelectedAssignee] = useState("");
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  const [minFine, setMinFine] = useState<number | undefined>(undefined);
-  const [maxFine, setMaxFine] = useState<number | undefined>(undefined);
   const [refresh, setRefresh] = useState(false);
-
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const sectionIds = searchParams.getAll("section");
+  const sectionCategory = searchParams.get("sectionCategory");
+  const assigneeAuthority = searchParams.get("assignedTo");
+  const startDate = searchParams.get("startDate");
+  const endDate = searchParams.get("endDate");
+  const minFine = Number(searchParams.get("minFineAmount"));
+  const maxFine = Number(searchParams.get("maxFineAmount"));
+  const districtParam = searchParams.get("district");
   const { divisionId, districtId, tehsilId } = useRegionFilters();
 
   const { data: customComplaintData } = useGetCustomComplaints({
-    // startDate: startYear ? `${startYear}-01-01` : "",
     refresh,
-    startDate: startDate ? startDate.toISOString() : undefined,
-    endDate: endDate ? endDate.toISOString() : undefined,
-    minFineAmount: minFine,
-    maxFineAmount: maxFine,
+    startDate: startDate || undefined,
+    endDate: endDate || undefined,
+    minFineAmount: minFine || undefined,
+    maxFineAmount: maxFine || undefined,
     divisionId,
-    districtId:
-      selectedDistrict === "all" ? "" : selectedDistrict || districtId,
+    districtId: districtParam || districtId,
     tehsilId,
-    section: selectedSection === "all" ? "" : selectedSection,
-    sectionCategory: selectedCategory === "all" ? "" : selectedCategory,
-    assignedTo: selectedAssignee === "all" ? "" : selectedAssignee,
+    section: sectionIds.length ? sectionIds : undefined,
+    sectionCategory: sectionCategory || undefined,
+    assignedTo: assigneeAuthority || undefined,
   });
-  const { data: sectionCategoryData } = useGetSectionCategory();
-  const { data: sectionData } = useGetAllSections();
-  const { data: districtData } = useGetAllDistricts();
-  const { data: staffData } = useGetAllStaff({ divisionId, districtId });
-
-  const uniqueSectionOptions = useMemo(() => {
-    if (!sectionData) return [];
-
-    const seenNames = new Set<string>();
-    const uniqueSections: { label: string; value: string }[] = [];
-
-    sectionData.forEach((section) => {
-      if (!seenNames.has(section.name)) {
-        seenNames.add(section.name);
-        uniqueSections.push({
-          label: section?.name,
-          value: section?.id,
-        });
-      }
-    });
-
-    return uniqueSections;
-  }, [sectionData]);
+  const role = getRole();
 
   const fileName = "Custom Complaint Report";
   return (
     <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
-      {/* Header Section */}
       <div className="flex justify-between items-center px-2! py-2!">
         <div className="flex items-center gap-1">
           <p className="text-(--primary) font-semibold">{fileName}</p>
@@ -82,72 +60,20 @@ const CustomComplaintComponent = () => {
         <CustomComplaintDialog setRefresh={setRefresh} />
       </div>
       <div className="flex justify-end items-center gap-2 mb-2!">
-        <CustomSelect
-          placeholder="Select Authority"
-          value={selectedAssignee}
-          onChange={(val) => setSelectedAssignee(val as string)}
-          options={[
-            { label: "All", value: "all" },
-            ...staffData?.map((staff) => ({
-              label: `${staff?.fullName}`,
-              value: staff?.userId,
-            })),
-          ]}
-        />
-        <CustomSelect
-          placeholder="Select District"
-          value={selectedDistrict}
-          onChange={(val) => setSelectedDistrict(val as string)}
-          options={[
-            { label: "All", value: "all" },
-            ...districtData?.map((district) => ({
-              label: `${district?.name}`,
-              value: district?.id.toString(),
-            })),
-          ]}
-        />
-        <CustomSelect
-          placeholder="Select Section"
-          value={selectedSection}
-          onChange={(val) => setSelectedSection(val as string)}
-          options={[{ label: "All", value: "all" }, ...uniqueSectionOptions]}
-        />
-
-        <CustomSelect
-          placeholder="Select Category"
-          value={selectedCategory}
-          onChange={(val) => setSelectedCategory(val as string)}
-          options={[
-            { label: "All", value: "all" },
-            ...sectionCategoryData?.map((category) => ({
-              label: category?.name,
-              value: category?.id.toString(),
-            })),
-          ]}
-        />
-
+        <StaffDropdown />
+        {(role === "Admin" || role === "DG" || role === "Secretary") && (
+          <DistrictWiseDropdown />
+        )}
+        <SectionSelectDropdown />
+        <SectionCategoryDropdown />
         <DateFilter />
-        <FineFilter
-          minFine={minFine}
-          maxFine={maxFine}
-          onChange={(min: number | undefined, max: number | undefined) => {
-            setMinFine(min);
-            setMaxFine(max);
-          }}
-        />
+        <FineFilter />
         <Button
           size="2"
           variant="soft"
           className="text-sm! cursor-pointer! font-bold!"
           onClick={() => {
-            setSelectedDistrict("");
-            setSelectedCategory("");
-            setSelectedSection("");
-            setSelectedAssignee("");
-            setStartDate(null);
-            setEndDate(null);
-            setMinFine(undefined);
-            setMaxFine(undefined);
+            router.push(pathname);
           }}
         >
           Clear Filters

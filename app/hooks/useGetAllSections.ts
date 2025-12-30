@@ -6,8 +6,8 @@ interface Props {
 }
 
 export interface ManageSectionsData {
-  id: string;
-  sectionCategoryId: string;
+  id: number;
+  sectionCategoryId: number;
   name: string;
   description: string;
   descriptionUrdu: string;

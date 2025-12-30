@@ -62,8 +62,8 @@ const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
     { label: "Hearing Date" },
     { label: "Hearing Time" },
     { label: "Generate Report" },
-    { label: "Deatils" },
-    { label: "Proceeding" },
+    // { label: "Deatils" },
+    // { label: "Proceeding" },
   ];
 
   const handleSort = (key: string) => {
@@ -288,7 +288,7 @@ const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
                         className="text-(--primary) w-5 h-5 cursor-pointer!"
                       />
                     </TableBodyCell>
-                    <TableBodyCell>
+                    {/* <TableBodyCell>
                       <FaRegPenToSquare
                         onClick={() => {
                           setSelectedComplaint(item);
@@ -307,8 +307,8 @@ const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
                         }}
                         className="text-(--primary) w-4 h-4 cursor-pointer!"
                       />
-                    </TableBodyCell>
-                    <TableBodyCell>
+                    </TableBodyCell> */}
+                    {/* <TableBodyCell>
                       <div
                         className="bg-(--primary) rounded-full py-1! px-2! text-[10px] text-white! whitespace-nowrap cursor-pointer"
                         onClick={() => {
@@ -320,7 +320,7 @@ const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
                       >
                         Update Status
                       </div>
-                    </TableBodyCell>
+                    </TableBodyCell> */}
                   </tr>
                 ))}
               </tbody>

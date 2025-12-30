@@ -2,9 +2,15 @@ import { format, parseISO, isValid } from "date-fns";
 import { FILE_UPLOAD_API } from "../APIs";
 import apiClient from "../services/api-client";
 import { subDays } from "date-fns";
+import Cookies from "js-cookie";
 
 export const DecisionPhotos = "decisionphoto";
 export const decionsVideos = "decisionvideo";
+
+export const getRole = () => {
+  const role = Cookies.get("role");
+  return role;
+};
 
 export const formatDate = (dateString?: string) => {
   if (!dateString) return "-";
