@@ -33,6 +33,7 @@ export interface ManageCustomComplainsData {
   tehsil: string;
   latitude: number;
   longitude: number;
+  finedAmount: number;
   billBoardImage: string;
   sectionCategoryName: string;
   sectionsDetails: SectionsDetails[];

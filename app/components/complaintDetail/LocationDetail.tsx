@@ -7,9 +7,6 @@ const LocationDetail = ({
 }: {
   complaint: ManageComplainsData | ManageCustomComplainsData | null;
 }) => {
-  const lat = 31.52;
-  const lng = 74.35;
-
   const mapSrc = `https://www.google.com/maps?q=${complaint?.latitude},${complaint?.longitude}&z=15&output=embed`;
   const mapLink = `https://www.google.com/maps?q=${complaint?.latitude},${complaint?.longitude}&z=15`;
   return (

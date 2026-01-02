@@ -224,7 +224,6 @@ const ComplaintResolution = ({
         onClick={() => !imagePreview && imageInputRef.current?.click()}
       >
         {!imagePreview ? (
-          /* 👇 Upload Placeholder */
           <div className="flex flex-col items-center">
             <img
               src="/images/complaint-album-gray.png"

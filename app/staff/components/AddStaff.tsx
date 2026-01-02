@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@radix-ui/themes";
-import Image from "next/image";
 import CustomPasswordField from "../../components/CustomPasswordField";
 import { LuPhone, LuUser } from "react-icons/lu";
 import { Controller, useForm } from "react-hook-form";
@@ -11,7 +10,6 @@ import { AxiosError } from "axios";
 import { AUTH_API } from "../../APIs";
 import { toast } from "react-toastify";
 import apiClient from "../../services/api-client";
-import { useRouter } from "next/navigation";
 import CustomSearchDropdown from "../../components/CustomSearchDropdown";
 import CustomTextField from "../../components/CustomTextField";
 import useGetSelectedDivision from "../../hooks/useGetSelectedDivision";
@@ -19,14 +17,13 @@ import useGetSelectedDistrict from "../../hooks/useGetSelectedDistrict";
 import useGetSelectedTehsil from "../../hooks/useGetSelectedTehsil";
 import useGetAllRoles from "../../hooks/useGetAllRoles";
 import { RxCross2 } from "react-icons/rx";
+import { useEffect } from "react";
 
 const schema = z
   .object({
     fullName: z.string().min(1, "Full Name is required"),
     phoneNumber: z.string().min(1, "Phone Number is required"),
-    // cnic: z.string().min(15, "CNIC must be 15 characters"),
     roleName: z.string().min(1, "Role is required"),
-
     divisionId: z.number().optional(),
     districtId: z.number().optional(),
     tehsilId: z.number().optional(),
@@ -73,7 +70,7 @@ const schema = z
     },
     {
       message: "Please fill required fields for this role",
-      path: ["roleName"], // general error
+      path: ["roleName"],
     }
   );
 
@@ -90,11 +87,19 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
     handleSubmit,
     watch,
     control,
+    resetField,
     formState: { errors, isSubmitting },
   } = useForm<Register>({ resolver: zodResolver(schema) });
   const selectedRole = watch("roleName");
   const selectedDivisionId = watch("divisionId");
   const selectedDistrictId = watch("districtId");
+
+  useEffect(() => {
+    if (selectedDivisionId) {
+      resetField("districtId");
+      resetField("tehsilId");
+    }
+  }, [selectedDivisionId]);
 
   console.log(errors, "//////");
 
@@ -108,6 +113,10 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
     id: selectedDistrictId,
   });
   const { data: rolesData } = useGetAllRoles();
+
+  const filteredRoles = rolesData?.filter(
+    (role) => !["Admin", "User"].includes(role?.name)
+  );
 
   const onSubmit = async (formData: Register) => {
     try {
@@ -192,34 +201,6 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
             {...register("phoneNumber")}
           />
 
-          {/* <CustomTextField
-            label="CNIC"
-            placeholder="12345-1234567-1"
-            endAdornment={<LuUser size={18} />}
-            error={errors.cnic?.message}
-            {...register("cnic")}
-            onChange={(e) => {
-              let value = e.target.value.replace(/\D/g, "");
-
-              if (value.length > 13) value = value.slice(0, 13);
-
-              let formatted = value;
-              if (value.length > 5) {
-                formatted = value.slice(0, 5) + "-" + value.slice(5);
-              }
-              if (value.length > 12) {
-                formatted =
-                  value.slice(0, 5) +
-                  "-" +
-                  value.slice(5, 12) +
-                  "-" +
-                  value.slice(12);
-              }
-
-              e.target.value = formatted;
-            }}
-          /> */}
-
           <Controller
             name="roleName"
             control={control}
@@ -232,7 +213,7 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
                 value={String(field.value)}
                 onChange={(val) => field.onChange(val)}
                 options={
-                  rolesData?.map((role) => ({
+                  filteredRoles?.map((role) => ({
                     label: ` ${role?.name}`,
                     value: String(role?.name),
                   })) ?? []
@@ -241,7 +222,6 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
             )}
           />
 
-          {/* SHOW IF: Commissioner, DC, AD, AC */}
           {["User", "Commissioner", "DC", "AD", "AC"].includes(
             selectedRole
           ) && (
@@ -267,7 +247,6 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
             />
           )}
 
-          {/* SHOW IF: DC, AD, AC */}
           {["User", "DC", "AD", "AC"].includes(selectedRole) && (
             <Controller
               name="districtId"
@@ -292,7 +271,6 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
             />
           )}
 
-          {/* SHOW IF: AC */}
           {["AC", "User"].includes(selectedRole) && (
             <Controller
               name="tehsilId"
@@ -330,8 +308,6 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
             {...register("confirmPassword")}
             error={errors?.confirmPassword?.message}
           />
-          {/* </>
-              )} */}
         </div>
 
         <div className="flex justify-between items-center mt-5!">

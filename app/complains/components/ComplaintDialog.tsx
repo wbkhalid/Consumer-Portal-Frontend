@@ -31,14 +31,16 @@ const ComplaintDialog = ({
       <Stepper step={step} setStep={setStep} steps={DETAIL_STEPS} />
       <div className="bg-[rgba(29,28,29,0.13)] h-px w-full" />
 
-      {step === 1 && <LocationDetail complaint={selectedComplaint} />}
-      {step === 2 && <ComplaintDetail complaint={selectedComplaint} />}
-      {step === 3 && (
-        <MediaDetails
-          complaint={selectedComplaint}
-          setMediaModal={setMediaModal}
-        />
-      )}
+      <div className="overflow-y-auto max-h-[65vh]!">
+        {step === 1 && <LocationDetail complaint={selectedComplaint} />}
+        {step === 2 && <ComplaintDetail complaint={selectedComplaint} />}
+        {step === 3 && (
+          <MediaDetails
+            complaint={selectedComplaint}
+            setMediaModal={setMediaModal}
+          />
+        )}
+      </div>
 
       <FullScreenMediaModal
         open={mediaModal.open}

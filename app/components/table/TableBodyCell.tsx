@@ -14,7 +14,7 @@ const TableBodyCell: React.FC<TableBodyCellProps> = ({
 }) => {
   return (
     <td
-      className={`px-4! py-2! border-b border-b-[#E9EAEB] text-[#535862]  text-xs ${className}`}
+      className={`p-3! border-b border-b-[#E9EAEB] text-[#535862]  text-xs whitespace-nowrap ${className}`}
       colSpan={colSpan}
     >
       {children}

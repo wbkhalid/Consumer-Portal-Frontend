@@ -1,10 +1,11 @@
+import { Suspense } from "react";
 import StaffComponent from "./components/StaffComponent";
 
 const StaffPage = () => {
   return (
-    <div>
+    <Suspense fallback={<div>Loading Staff...</div>}>
       <StaffComponent />
-    </div>
+    </Suspense>
   );
 };
 

@@ -1,7 +1,8 @@
 "use client";
 
+import { ArrowDataTransferVerticalIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import React from "react";
-import { FaSort } from "react-icons/fa";
 
 interface TableHeaderCellProps {
   label: string;
@@ -25,14 +26,16 @@ const TableHeaderCell: React.FC<TableHeaderCellProps> = ({
     <th
       colSpan={colSpan}
       rowSpan={rowSpan}
-      className={`px-4! py-2! whitespace-nowrap text-[#535862]  border-b border-b-[#E9EAEB] ${alignmentClass} ${className} ${
+      className={`p-3! bg-[#F9F9F9] whitespace-nowrap uppercase text-[#535353]  border border-[#E9EAEB] ${alignmentClass} ${className} ${
         sortable ? "cursor-pointer select-none" : ""
       }`}
       onClick={sortable ? onSort : undefined}
     >
-      <div className={`flex items-center gap-1 ${alignmentClass}`}>
+      <div className={`flex items-center gap-0.5 ${alignmentClass}`}>
         <span className="text-xs">{label}</span>
-        {sortable && <FaSort className="text-xs text-[#535862]" />}
+        {sortable && (
+          <HugeiconsIcon icon={ArrowDataTransferVerticalIcon} size={16} />
+        )}
       </div>
     </th>
   );

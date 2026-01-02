@@ -2,6 +2,7 @@ import { Dialog } from "@radix-ui/themes";
 import { RxCross2 } from "react-icons/rx";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+import { formatComplaintId } from "../../utils/utils";
 
 const DetailHeader = ({
   complaint,
@@ -11,7 +12,13 @@ const DetailHeader = ({
   return (
     <div className="flex justify-between items-center px-5! py-2.5!">
       <div className="flex flex-col">
-        <p className="text-[#1D1C1D] font-bold">{complaint?.id}</p>
+        <p className="text-[#1D1C1D] font-bold">
+          {formatComplaintId(
+            complaint?.id,
+            complaint?.entryType,
+            complaint?.createdAt
+          )}
+        </p>
         <p className="text-[#1D1C1D] text-sm">{complaint?.shopName}</p>
       </div>
       <Dialog.Close>

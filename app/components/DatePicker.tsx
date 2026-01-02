@@ -35,16 +35,16 @@ const DatePicker = ({
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger>
         <div
-          className={`flex gap-1 items-center justify-center min-w-[100px] px-3! py-1.5! rounded-md! border-[1.2px]
+          className={`flex gap-1 items-center  min-w-fit! px-2! py-1.5! rounded-md! border-[1.2px]
           ${
             disabled
               ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-white border-[#d8d8d8] text-[#a89f9f] cursor-pointer"
+              : "bg-white border-[#DCDCDC] text-[#414651] cursor-pointer"
           }`}
           onClick={() => !disabled && setOpen(true)}
         >
           <CiCalendar className="text-lg" />
-          <span className="text-xs">
+          <span className="text-xs whitespace-nowrap!">
             {value ? format(value, "dd-MM-yyyy") : placeholder || "Select Date"}
           </span>
         </div>

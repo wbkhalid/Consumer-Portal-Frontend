@@ -4,11 +4,18 @@ import StaffTable from "./StaffTable";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
 import AddStaff from "./AddStaff";
 import { useState } from "react";
+import { useRegionFilters } from "../../hooks/useRegionFilters";
 
 const StaffComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const { data: staffData } = useGetAllStaff({ refresh });
+  const { divisionId, districtId, tehsilId } = useRegionFilters();
+  const { data: staffData } = useGetAllStaff({
+    refresh,
+    divisionId,
+    districtId,
+    tehsilId,
+  });
 
   return (
     <div className="border border-[#e2e8f0] rounded-lg overflow-hidden max-h-[calc(100vh-0px)] bg-white">

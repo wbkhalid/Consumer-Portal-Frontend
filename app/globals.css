@@ -12,6 +12,14 @@
   --dashboard-primary: #31694e;
   --dashboard-primary-bg: #254e3a;
   --dashboard-border: #bbc863;
+  --pending: #eb5b0d;
+  --proceeding: #9537eb;
+  --escalation: #cd8e05;
+  --super-escalation: #de2929;
+  --merit: #16a34a;
+  --non-prosecution: #4f5866;
+  --withdraw: #0795b6;
+  --ex-party: #5148e6;
 }
 
 @theme inline {

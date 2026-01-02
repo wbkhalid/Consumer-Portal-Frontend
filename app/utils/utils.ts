@@ -16,7 +16,7 @@ export const formatDate = (dateString?: string) => {
   if (!dateString) return "-";
   try {
     const localDate = new Date(dateString);
-    return format(localDate, "dd-MM-yyyy");
+    return format(localDate, "MMM dd, yyyy");
   } catch {
     return "-";
   }
@@ -48,6 +48,31 @@ export const formatTimeOnly = (dateString?: string | null): string => {
 export const toLocal = (dateString: string) => {
   const d = parseISO(dateString);
   return new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+};
+
+export const formatComplaintId = (
+  id: number | undefined,
+  entryType: number | undefined,
+  date?: string
+) => {
+  if (!id) return "-";
+
+  const typeChar = entryType === 0 ? "O" : "M";
+  const year = date ? new Date(date).getFullYear() : new Date().getFullYear();
+
+  return `CP${typeChar}-${year}-${id}`;
+};
+
+export const getUniqueSectionNumbers = (sections?: { name?: string }[]) => {
+  if (!sections || sections.length === 0) return "-";
+
+  const numbers = sections
+    ?.map((s) => s?.name?.replace(/SECTION\s*/i, "")?.trim())
+    ?.filter(Boolean);
+
+  const uniqueNumbers = Array.from(new Set(numbers));
+
+  return uniqueNumbers.join(",");
 };
 
 export const getDaysOld = (dateString: string) => {
@@ -99,6 +124,17 @@ export const statusData = [
   { id: 6, label: "Withdraw" },
   { id: 7, label: "Non-Prosecution" },
 ];
+
+export const statusColors: Record<string, { text: string; bg: string }> = {
+  Pending: { text: "#eb5b0d", bg: "rgba(235,91,13,0.2)" },
+  Proceeding: { text: "#9537eb", bg: "rgba(149,55,235,0.2)" },
+  Escalation: { text: "#cd8e05", bg: "rgba(205,142,5,0.2)" },
+  "Super Escalation": { text: "#de2929", bg: "rgba(222,41,41,0.2)" },
+  "Decided on Merit": { text: "#16a34a", bg: "rgba(22,163,74,0.2)" },
+  "Non-Prosecution": { text: "#4f5866", bg: "rgba(79,88,102,0.2)" },
+  Withdraw: { text: "#0795b6", bg: "rgba(7,149,182,0.2)" },
+  "Ex-Parte": { text: "#5148e6", bg: "rgba(81,72,230,0.2)" },
+};
 
 export const getDateRange = (rangeLabel: string) => {
   const today = new Date();

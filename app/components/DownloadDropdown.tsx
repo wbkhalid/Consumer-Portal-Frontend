@@ -20,7 +20,7 @@ const DownloadDropdown = ({
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <Button className="rounded-full! cursor-pointer! flex items-center gap-2">
-          Download
+          Export Data
           <RxDownload size={18} />
         </Button>
       </DropdownMenu.Trigger>

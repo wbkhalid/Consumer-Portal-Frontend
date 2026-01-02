@@ -97,8 +97,6 @@ const RegisterationForm = ({ setUserId, setStep }: Props) => {
         router.refresh();
         setShowUserPopup(false);
         setStep(2);
-        // setOpenComplaintForm(true);
-        // handleClose();
       }
 
       console.log(response, "response");

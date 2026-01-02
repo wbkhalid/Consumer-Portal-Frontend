@@ -22,7 +22,6 @@ const FilterDataComponent = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
   const [selectedTehsil, setSelectedTehsil] = useState<string | null>(null);
 
-  /* ---------------- SYNC STATE WITH URL ---------------- */
   useEffect(() => {
     setSelectedDivision(
       searchParams.get("divisionId") ?? cookieDivisionId ?? null
@@ -33,7 +32,6 @@ const FilterDataComponent = () => {
     setSelectedTehsil(searchParams.get("tehsilId"));
   }, [searchParams, cookieDivisionId, cookieDistrictId]);
 
-  /* ---------------- ROLE BASED VISIBILITY ---------------- */
   if (role === "AC") return null;
 
   const canShowDivision = ["Admin", "DG", "Secretary"].includes(role ?? "");
@@ -49,7 +47,6 @@ const FilterDataComponent = () => {
     "AD",
   ].includes(role ?? "");
 
-  /* ---------------- DATA ---------------- */
   const { data: divisionData } = useGetSelectedDivision({ id: 1 });
 
   const { data: districtData } = useGetSelectedDistrict({
@@ -60,7 +57,6 @@ const FilterDataComponent = () => {
     id: selectedDistrict ? Number(selectedDistrict) : undefined,
   });
 
-  /* ---------------- APPLY FILTER ---------------- */
   const handleApplyFilter = () => {
     const params = new URLSearchParams(searchParams.toString());
 

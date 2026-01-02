@@ -61,9 +61,9 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
           placeholder={placeholder}
           disabled={disabled}
           {...rest}
-          className={`w-full text-xs! min-w-[100px] max-w-[150px]! ${
+          className={`w-full text-xs! min-w-[100px] max-w-[150px]!   ${
             isRegister ? "rounded-full!" : "rounded-lg!"
-          } hover:border-(--priamry)!   text-white ${className}`}
+          } hover:border-(--priamry)! ${className}`}
         />
         <Select.Content className="w-[93%] ml-[6%] overflow-auto">
           {options.map((opt) => (
