@@ -3,7 +3,7 @@
 import CustomComplaintTable from "./CustomComplaintTable";
 import useGetCustomComplaints from "../../../hooks/useGetCustomComplaints";
 import { useRegionFilters } from "../../../hooks/useRegionFilters";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import FineFilter from "./FineFilter";
 import { Button } from "@radix-ui/themes";
 import DownloadWrapper from "./DownloadWrapper";
@@ -15,6 +15,9 @@ import SectionCategoryDropdown from "../../../components/reuseable-filters/Secti
 import StaffDropdown from "../../../components/reuseable-filters/StaffDropdown";
 import DistrictWiseDropdown from "../../../components/reuseable-filters/DistrictWiseDropdown";
 import { getRole } from "../../../utils/utils";
+import FineFilterDropdown from "./FineFilter";
+import SearchFilter from "../../../components/reuseable-filters/SearchFilter";
+import DetailTable from "../../../components/table/DetailTable";
 
 const CustomComplaintComponent = () => {
   const [refresh, setRefresh] = useState(false);
@@ -23,6 +26,7 @@ const CustomComplaintComponent = () => {
   const pathname = usePathname();
   const sectionIds = searchParams.getAll("section");
   const sectionCategory = searchParams.get("sectionCategory");
+  const search = searchParams.get("search") ?? "";
   const assigneeAuthority = searchParams.get("assignedTo");
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
@@ -45,43 +49,52 @@ const CustomComplaintComponent = () => {
     assignedTo: assigneeAuthority || undefined,
   });
   const role = getRole();
+  const filteredData = useMemo(() => {
+    if (!customComplaintData) return [];
+    const term = search.toLowerCase();
 
-  const fileName = "Custom Complaint Report";
+    return customComplaintData?.filter((item) =>
+      Object.values(item).some((value) =>
+        String(value).toLowerCase().includes(term)
+      )
+    );
+  }, [customComplaintData, search]);
   return (
-    <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
-      <div className="flex justify-between items-center px-2! py-2!">
+    <>
+      <div className="flex justify-between items-center mb-2.5!">
         <div className="flex items-center gap-1">
-          <p className="text-(--primary) font-semibold">{fileName}</p>
+          <p className="text-[#111827] font-semibold">Custom Complaints</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-            {customComplaintData?.length.toLocaleString()} Records
+            {filteredData?.length?.toLocaleString()} Records
           </p>
         </div>
-
         <CustomComplaintDialog setRefresh={setRefresh} />
       </div>
-      <div className="flex justify-end items-center gap-2 mb-2!">
-        <StaffDropdown />
-        {(role === "Admin" || role === "DG" || role === "Secretary") && (
-          <DistrictWiseDropdown />
-        )}
-        <SectionSelectDropdown />
-        <SectionCategoryDropdown />
-        <DateFilter />
-        <FineFilter />
-        <Button
-          size="2"
-          variant="soft"
-          className="text-sm! cursor-pointer! font-bold!"
-          onClick={() => {
-            router.push(pathname);
-          }}
-        >
-          Clear Filters
-        </Button>
-        <DownloadWrapper fileName={fileName} data={customComplaintData} />
+      <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
+        <div className="flex justify-between items-center py-3! px-5!">
+          <SearchFilter />
+          <div className="flex justify-end items-center gap-2">
+            <StaffDropdown />
+            {(role === "Admin" || role === "DG" || role === "Secretary") && (
+              <DistrictWiseDropdown />
+            )}
+            <SectionSelectDropdown />
+            <SectionCategoryDropdown />
+            <DateFilter />
+            <FineFilterDropdown />
+            <button
+              className="text-sm! cursor-pointer! font-bold! text-[#BD4E42] border border-[#D96F64] py-1! px-3! rounded-lg!"
+              onClick={() => {
+                router.push(pathname);
+              }}
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+        <DetailTable rowsData={filteredData ?? []} />
       </div>
-      <CustomComplaintTable rowsData={customComplaintData} />
-    </div>
+    </>
   );
 };
 

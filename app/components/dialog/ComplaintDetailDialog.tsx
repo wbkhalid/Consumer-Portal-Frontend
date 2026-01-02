@@ -1,17 +1,17 @@
 "use client";
 
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
-import DetailHeader from "../../components/complaintDetail/DetailHeader";
-import Stepper from "../../components/complaintDetail/Stepper";
-import LocationDetail from "../../components/complaintDetail/LocationDetail";
+import DetailHeader from "../complaintDetail/DetailHeader";
+import Stepper from "../complaintDetail/Stepper";
+import LocationDetail from "../complaintDetail/LocationDetail";
 import { useState } from "react";
-import ComplaintDetail from "../../components/complaintDetail/ComplaintDetail";
-import MediaDetails from "../../components/complaintDetail/MediaDetails";
-import { DETAIL_STEPS } from "../../components/complaintDetail/StepperOptions";
-import FullScreenMediaModal from "../../components/dialog/FullScreenMediaModal";
+import ComplaintDetail from "../complaintDetail/ComplaintDetail";
+import MediaDetails from "../complaintDetail/MediaDetails";
+import { DETAIL_STEPS } from "../complaintDetail/StepperOptions";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+import FullScreenMediaModal from "./FullScreenMediaModal";
 
-const ComplaintDialog = ({
+const ComplaintDetailDialog = ({
   selectedComplaint,
 }: {
   selectedComplaint: ManageComplainsData | null | ManageCustomComplainsData;
@@ -52,4 +52,4 @@ const ComplaintDialog = ({
   );
 };
 
-export default ComplaintDialog;
+export default ComplaintDetailDialog;

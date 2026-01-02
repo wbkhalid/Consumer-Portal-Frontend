@@ -3,7 +3,7 @@ import RedHotComponents from "./components/RedHotComponents";
 
 const RedHotComplaints = () => {
   return (
-    <Suspense fallback={<div>Loading REd Hot Complaints complaints...</div>}>
+    <Suspense fallback={<div>Loading Red Hot Complaints...</div>}>
       <RedHotComponents />
     </Suspense>
   );

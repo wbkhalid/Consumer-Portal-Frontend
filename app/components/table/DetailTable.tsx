@@ -1,31 +1,34 @@
+"use client";
+
+import { useState, useMemo } from "react";
 import TableBodyCell from "../../components/table/TableBodyCell";
 import TableHeaderCell from "../../components/table/TableHeaderCell";
+import PaginationControls from "../../components/table/PaginationControls";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import {
   formatComplaintId,
   formatDate,
   getUniqueSectionNumbers,
+  statusColors,
+  statusData,
 } from "../../utils/utils";
-import { useMemo, useState } from "react";
-import PaginationControls from "../../components/table/PaginationControls";
-import PendingDialog from "./PendingDialog";
-import useGetAllStaff from "../../hooks/useGetAllStaff";
-import { useRegionFilters } from "../../hooks/useRegionFilters";
 import { Dialog } from "@radix-ui/themes";
-import { sort } from "fast-sort";
 import { useRouter, useSearchParams } from "next/navigation";
+import { sort } from "fast-sort";
+import ComplaintDetailDialog from "../dialog/ComplaintDetailDialog";
+import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 
-interface PendingTableProps {
-  rowsData: ManageComplainsData[];
-  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+interface DetailTableProps {
+  rowsData: ManageComplainsData[] | ManageCustomComplainsData[];
 }
 
-const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
-  const searchParams = useSearchParams();
+const DetailTable = ({ rowsData }: DetailTableProps) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedComplaint, setSelectedComplaint] =
-    useState<ManageComplainsData | null>(null);
+  const [selectedComplaint, setSelectedComplaint] = useState<
+    ManageComplainsData | ManageCustomComplainsData | null
+  >(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [pageSize, setPageSize] = useState(10);
 
@@ -41,13 +44,15 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     { label: "Section Name", sortable: "sectionName" },
     { label: "Section Description" },
     { label: "Category", sortable: "categoryName" },
+    { label: "Status", sortable: "status" },
     { label: "Remarks" },
     { label: "Type", sortable: "type" },
     { label: "Evidence" },
   ];
+
   const sortFieldMapping: Record<
     string,
-    (item: ManageComplainsData) => string | number
+    (item: ManageComplainsData | ManageCustomComplainsData) => string | number
   > = {
     id: (i) => i.id,
     date: (i) => new Date(i.createdAt).getTime(),
@@ -60,6 +65,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     sectionDescription: (i) =>
       i.sectionsDetails?.map((s) => s.description).join(","),
     categoryName: (i) => i.categoryName,
+    status: (i) => statusData.find((s) => s.id === i.status)?.label || "",
     type: (i) => (i.entryType === 0 ? "Online" : "Manual"),
   };
 
@@ -90,7 +96,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
   const totalPages = Math.ceil(rowsData?.length / pageSize);
 
   return (
-    <div className="relative flex flex-col h-[calc(100vh-160px)]">
+    <div className="relative flex flex-col h-[calc(100vh-170px)]">
       <div className="flex-1 overflow-auto">
         <table className="min-w-full text-sm">
           <thead className="sticky top-0 z-10 bg-white">
@@ -147,6 +153,28 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
 
                 <TableBodyCell>{item?.categoryName}</TableBodyCell>
 
+                <TableBodyCell>
+                  {(() => {
+                    const statusLabel =
+                      statusData?.find((s) => s?.id === item?.status)?.label ||
+                      "-";
+                    const colors = statusColors[statusLabel];
+                    if (!colors) return statusLabel;
+
+                    return (
+                      <div
+                        className="rounded-xl px-2! py-0.5! w-fit"
+                        style={{
+                          backgroundColor: colors.bg,
+                          color: colors.text,
+                        }}
+                      >
+                        {statusLabel}
+                      </div>
+                    );
+                  })()}
+                </TableBodyCell>
+
                 <TableBodyCell className="whitespace-nowrap">
                   {item?.remarks
                     ? item?.remarks?.slice(0, 20) +
@@ -191,19 +219,11 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
         <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]! overflow-hidden!">
-          <PendingDialog
-            selectedComplaint={selectedComplaint}
-            onClose={() => {
-              setSelectedComplaint(null);
-            }}
-            onSuccess={() => {
-              setRefresh((prev) => !prev);
-            }}
-          />
+          <ComplaintDetailDialog selectedComplaint={selectedComplaint} />
         </Dialog.Content>
       </Dialog.Root>
     </div>
   );
 };
 
-export default PendingTable;
+export default DetailTable;

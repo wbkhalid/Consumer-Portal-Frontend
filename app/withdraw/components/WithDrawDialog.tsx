@@ -7,7 +7,7 @@ import LocationDetail from "../../components/complaintDetail/LocationDetail";
 import { useState } from "react";
 import ComplaintDetail from "../../components/complaintDetail/ComplaintDetail";
 import MediaDetails from "../../components/complaintDetail/MediaDetails";
-import FullScreenMediaModal from "../../complains/components/FullScreenMediaModal";
+import FullScreenMediaModal from "../../components/dialog/FullScreenMediaModal";
 import { DETAIL_STEPS } from "../../components/complaintDetail/StepperOptions";
 
 const ExParteDialog = ({

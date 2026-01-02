@@ -1,18 +1,23 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import useGetAllComplains from "../../hooks/useGetAllComplains";
-import PendingTable from "./PendingTable";
-import { useRegionFilters } from "../../hooks/useRegionFilters";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { getRole } from "../../utils/utils";
-import SearchFilter from "../../components/reuseable-filters/SearchFilter";
-import StaffDropdown from "../../components/reuseable-filters/StaffDropdown";
-import DistrictWiseDropdown from "../../components/reuseable-filters/DistrictWiseDropdown";
-import DateFilter from "../../components/DateFilter";
 
-const PendingComponent = () => {
-  const [refresh, setRefresh] = useState(false);
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRegionFilters } from "../hooks/useRegionFilters";
+import { getRole } from "../utils/utils";
+import useGetAllComplains from "../hooks/useGetAllComplains";
+import SearchFilter from "./reuseable-filters/SearchFilter";
+import StaffDropdown from "./reuseable-filters/StaffDropdown";
+import DistrictWiseDropdown from "./reuseable-filters/DistrictWiseDropdown";
+import DateFilter from "./DateFilter";
+import ResolvedTable from "./table/ResolvedTable";
+
+interface ResolvedListProps {
+  title: string;
+  status: number;
+}
+
+const ResolvedComponent = ({ title, status }: ResolvedListProps) => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -23,9 +28,8 @@ const PendingComponent = () => {
   const districtParam = searchParams.get("district");
   const { divisionId, districtId, tehsilId } = useRegionFilters();
   const role = getRole();
-  const { data: pendingData } = useGetAllComplains({
-    status: 0,
-    refresh,
+  const { data: decidedonMeritData } = useGetAllComplains({
+    status,
     startDate: startDate || undefined,
     endDate: endDate || undefined,
     divisionId,
@@ -35,19 +39,19 @@ const PendingComponent = () => {
   });
 
   const filteredData = useMemo(() => {
-    if (!pendingData) return [];
+    if (!decidedonMeritData) return [];
     const term = search.toLowerCase();
 
-    return pendingData?.filter((item) =>
+    return decidedonMeritData?.filter((item) =>
       Object.values(item).some((value) =>
         String(value).toLowerCase().includes(term)
       )
     );
-  }, [pendingData, search]);
+  }, [decidedonMeritData, search]);
   return (
     <>
       <div className="flex items-center gap-1 mb-2.5!">
-        <p className="text-[#111827] font-semibold">Pending Complaints</p>
+        <p className="text-[#111827] font-semibold">{title}</p>
         <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
           {filteredData?.length?.toLocaleString()} Records
         </p>
@@ -62,6 +66,7 @@ const PendingComponent = () => {
               <DistrictWiseDropdown />
             )}
             <DateFilter />
+
             <button
               className="text-sm! cursor-pointer! font-bold! text-[#BD4E42] border border-[#D96F64] py-1! px-3! rounded-lg!"
               onClick={() => {
@@ -72,10 +77,10 @@ const PendingComponent = () => {
             </button>
           </div>
         </div>
-        <PendingTable rowsData={filteredData ?? []} setRefresh={setRefresh} />
+        <ResolvedTable rowsData={filteredData ?? []} />
       </div>
     </>
   );
 };
 
-export default PendingComponent;
+export default ResolvedComponent;

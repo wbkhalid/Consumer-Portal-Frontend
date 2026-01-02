@@ -21,8 +21,6 @@ interface ProceedingTableProps {
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PAGE_SIZE = 10;
-
 const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -354,32 +352,6 @@ const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
           />
         </Dialog.Content>
       </Dialog.Root>
-
-      {/* <ProceedingDialog
-        isDialogOpen={isDialogOpen}
-        setIsDialogOpen={setIsDialogOpen}
-        selectedComplaint={selectedComplaint}
-        setSelectedComplaint={setSelectedComplaint}
-        dialogStep={dialogStep}
-        setDialogStep={setDialogStep}
-        hearingDate={hearingDate}
-        setHearingDate={setHearingDate}
-        isResolved={isResolved}
-        setIsResolved={setIsResolved}
-        selectedStatus={selectedStatus}
-        setSelectedStatus={setSelectedStatus}
-        submittionRemarks={submittionRemarks}
-        setSubmittionRemarks={setSubmittionRemarks}
-        imageUrl={imageUrl}
-        setImageUrl={setImageUrl}
-        videoUrl={videoUrl}
-        setVideoUrl={setVideoUrl}
-        loading={loading}
-        setLoading={setLoading}
-        handleHearingComplaint={handleHearingComplaint}
-        fineAmount={fineAmount}
-        setFineAmount={setFineAmount}
-      /> */}
     </>
   );
 };

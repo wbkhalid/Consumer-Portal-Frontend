@@ -7,7 +7,7 @@ import LocationDetail from "../../components/complaintDetail/LocationDetail";
 import { useState } from "react";
 import ComplaintDetail from "../../components/complaintDetail/ComplaintDetail";
 import MediaDetails from "../../components/complaintDetail/MediaDetails";
-import FullScreenMediaModal from "../../complains/components/FullScreenMediaModal";
+import FullScreenMediaModal from "../../components/dialog/FullScreenMediaModal";
 import { RESOLVED_STEPS } from "../../components/complaintDetail/StepperOptions";
 import ResolvedDetail from "../../components/complaintDetail/ResolvedDetail";
 

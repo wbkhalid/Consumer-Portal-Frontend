@@ -29,13 +29,12 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
 
   const headers = [
     { label: "Id" },
-    { label: "Name", key: "fullName" },
-    { label: "Authority", key: "roles" },
+    { label: "Name", sortable: "fullName" },
+    { label: "Authority", sortable: "roles" },
     { label: "Phone #" },
-    // { label: "CNIC" },
-    { label: "Division", key: "division" },
-    { label: "District", key: "district" },
-    { label: "Tehsil", key: "tehsil" },
+    { label: "Division", sortable: "division" },
+    { label: "District", sortable: "district" },
+    { label: "Tehsil", sortable: "tehsil" },
     { label: "Action" },
   ];
 
@@ -82,7 +81,6 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
 
   const totalPages = Math.ceil(rowsData.length / pageSize);
 
-  // 🗑 Delete Handler
   const handleDelete = async () => {
     if (!selectedId) return;
     try {
@@ -98,78 +96,75 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
   };
 
   return (
-    <div className="relative">
-      <div className="h-[calc(100vh-120px)] overflow-y-auto scrollbar-hide relative">
-        <table className="min-w-full text-sm mb-10!">
-          <thead className="sticky top-0 z-10 bg-white">
-            <tr className="font-semibold">
-              {headers.map((header) => (
-                <TableHeaderCell
-                  key={header.label}
-                  label={header.label}
-                  sortable={header.key}
-                  onSort={
-                    header.key ? () => handleSort(header.key!) : undefined
-                  }
-                />
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>
-            {paginatedData.map((item, index) => (
-              <tr
-                key={item.userId}
-                className={`transition-colors duration-150 ${
-                  index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                } hover:bg-gray-100`}
-              >
-                <TableBodyCell>
-                  {(currentPage - 1) * pageSize + index + 1}
-                </TableBodyCell>
-                <TableBodyCell>{item.fullName}</TableBodyCell>
-                <TableBodyCell>
-                  {item.roles?.map((role) => role).join(", ")}
-                </TableBodyCell>
-                <TableBodyCell>{item.phoneNumber}</TableBodyCell>
-                {/* <TableBodyCell>{item.cnic}</TableBodyCell> */}
-                <TableBodyCell>{item.division}</TableBodyCell>
-                <TableBodyCell>{item.district}</TableBodyCell>
-                <TableBodyCell>{item.tehsil}</TableBodyCell>
-
-                <TableBodyCell>
-                  <RiDeleteBin6Line
-                    className="text-lg text-(--error) cursor-pointer"
-                    onClick={() => {
-                      setSelectedId(item.userId);
-                      setIsDeleteDialogOpen(true);
-                    }}
+    <>
+      <div className="relative flex flex-col h-[calc(100vh-170px)]">
+        <div className="flex-1 overflow-auto">
+          <table className="min-w-full text-sm">
+            <thead className="sticky top-0 z-10 bg-white">
+              <tr className="font-semibold">
+                {headers.map((header) => (
+                  <TableHeaderCell
+                    key={header.label}
+                    label={header.label}
+                    sortable={header.sortable}
+                    onSort={() =>
+                      header.sortable && handleSort(header.sortable)
+                    }
                   />
-                </TableBodyCell>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
 
-      <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
-        <PaginationControls
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
+            <tbody>
+              {paginatedData?.map((item, index) => (
+                <tr
+                  key={item?.userId}
+                  className="cursor-pointer! hover:bg-gray-100"
+                >
+                  <TableBodyCell>
+                    {(currentPage - 1) * pageSize + index + 1}
+                  </TableBodyCell>
+                  <TableBodyCell>{item.fullName}</TableBodyCell>
+                  <TableBodyCell>
+                    {item.roles?.map((role) => role).join(", ")}
+                  </TableBodyCell>
+                  <TableBodyCell>{item.phoneNumber}</TableBodyCell>
+                  <TableBodyCell>{item.division}</TableBodyCell>
+                  <TableBodyCell>{item.district}</TableBodyCell>
+                  <TableBodyCell>{item.tehsil}</TableBodyCell>
+
+                  <TableBodyCell>
+                    <RiDeleteBin6Line
+                      className="text-lg text-(--error) cursor-pointer"
+                      onClick={() => {
+                        setSelectedId(item.userId);
+                        setIsDeleteDialogOpen(true);
+                      }}
+                    />
+                  </TableBodyCell>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        </div>
+        <DeleteDialog
+          open={isDeleteDialogOpen}
+          setOpen={setIsDeleteDialogOpen}
+          message="User will be permanently deleted from the system."
+          onConfirm={handleDelete}
         />
       </div>
-
-      {/* Delete Confirmation */}
-      <DeleteDialog
-        open={isDeleteDialogOpen}
-        setOpen={setIsDeleteDialogOpen}
-        message="User will be permanently deleted from the system."
-        onConfirm={handleDelete}
-      />
-    </div>
+    </>
   );
 };
 

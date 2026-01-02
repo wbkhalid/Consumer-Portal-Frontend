@@ -1,146 +1,142 @@
+"use client";
+
+import { useState, useMemo } from "react";
 import TableBodyCell from "../../components/table/TableBodyCell";
 import TableHeaderCell from "../../components/table/TableHeaderCell";
-import { formatDate } from "../../utils/utils";
-import { useMemo, useState } from "react";
 import PaginationControls from "../../components/table/PaginationControls";
-import { ManageFinedComplaintsData } from "../../hooks/useGetFinedComplaints";
+import { ManageComplainsData } from "../../hooks/useGetAllComplains";
+import { formatComplaintId } from "../../utils/utils";
+import { Dialog } from "@radix-ui/themes";
+import { useRouter, useSearchParams } from "next/navigation";
+import { sort } from "fast-sort";
+import ComplaintDetailDialog from "../../components/dialog/ComplaintDetailDialog";
 
-interface FinedComplaintTableProps {
-  rowsData: ManageFinedComplaintsData[];
-  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+type SortKey = "id" | "finedAmount";
+
+interface DetailTableProps {
+  rowsData: ManageComplainsData[];
 }
 
-const FinedComplaintTable = ({
-  rowsData,
-  setRefresh,
-}: FinedComplaintTableProps) => {
-  const [sortConfig, setSortConfig] = useState<{
-    key: string;
-    direction: "asc" | "desc";
-  } | null>(null);
+const DetailTable = ({ rowsData }: DetailTableProps) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [selectedComplaint, setSelectedComplaint] =
+    useState<ManageComplainsData | null>(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
-  const headers = [
-    { label: "Id", sortable: "complaintId" },
+  const sortBy = (searchParams.get("sortBy") as SortKey) || "";
+  const sortOrder = (searchParams.get("sortOrder") as "asc" | "desc") || "asc";
+
+  const headers: { label: string; sortable?: SortKey }[] = [
+    { label: "Complaint Id", sortable: "id" },
     { label: "Shop Name" },
     { label: "Phone #" },
     { label: "Address" },
     { label: "Fined Amount", sortable: "finedAmount" },
-    { label: "Fined Date", sortable: "finedDate" },
   ];
 
-  const handleSort = (key: string) => {
-    setSortConfig((prev) => {
-      if (prev?.key === key) {
-        return { key, direction: prev.direction === "asc" ? "desc" : "asc" };
-      }
-      return { key, direction: "asc" };
-    });
-    setCurrentPage(1);
+  const handleSort = (field: SortKey) => {
+    const nextOrder = sortBy === field && sortOrder === "asc" ? "desc" : "asc";
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sortBy", field);
+    params.set("sortOrder", nextOrder);
+    router.push(`?${params.toString()}`);
   };
 
   const sortedData = useMemo(() => {
-    if (!sortConfig) return rowsData;
+    if (!sortBy) return rowsData;
 
-    const { key, direction } = sortConfig;
+    if (sortBy === "id") {
+      return sortOrder === "asc"
+        ? sort(rowsData).asc((i) => i.id)
+        : sort(rowsData).desc((i) => i.id);
+    }
 
-    return [...rowsData].sort((a, b) => {
-      const aValue = a[key as keyof ManageFinedComplaintsData];
-      const bValue = b[key as keyof ManageFinedComplaintsData];
+    if (sortBy === "finedAmount") {
+      return sortOrder === "asc"
+        ? sort(rowsData).asc((i) => i.finedAmount ?? 0)
+        : sort(rowsData).desc((i) => i.finedAmount ?? 0);
+    }
 
-      // --- Numeric sorting (complaintId, finedAmount) ---
-      if (typeof aValue === "number" && typeof bValue === "number") {
-        return direction === "asc" ? aValue - bValue : bValue - aValue;
-      }
+    return rowsData;
+  }, [rowsData, sortBy, sortOrder]);
 
-      // --- Date sorting ---
-      const aDate = new Date(aValue as any).getTime();
-      const bDate = new Date(bValue as any).getTime();
-
-      if (!isNaN(aDate) && !isNaN(bDate)) {
-        return direction === "asc" ? aDate - bDate : bDate - aDate;
-      }
-
-      const aString = String(aValue ?? "");
-      const bString = String(bValue ?? "");
-
-      if (aString < bString) return direction === "asc" ? -1 : 1;
-      if (aString > bString) return direction === "asc" ? 1 : -1;
-      return 0;
-    });
-  }, [rowsData, sortConfig]);
-
-  const totalPages = Math.ceil(sortedData.length / pageSize);
   const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return sortedData.slice(startIndex, startIndex + pageSize);
+    const start = (currentPage - 1) * pageSize;
+    return sortedData.slice(start, start + pageSize);
   }, [sortedData, currentPage, pageSize]);
 
+  const totalPages = Math.ceil(rowsData.length / pageSize);
+
   return (
-    <>
-      <div className="relative">
-        <div className="h-[calc(100vh-120px)] overflow-y-auto scrollbar-hide relative">
-          <table className="min-w-full text-sm mb-10!">
-            <thead className="sticky top-0 z-10">
-              <tr className="font-semibold bg-white">
-                {headers?.map((header) => (
-                  <TableHeaderCell
-                    key={header?.label}
-                    label={header?.label}
-                    sortable={header?.sortable}
-                    onSort={
-                      header.sortable
-                        ? () => handleSort(header.sortable!)
-                        : undefined
-                    }
-                  />
-                ))}
-              </tr>
-            </thead>
-
-            <tbody>
-              {paginatedData?.map((item, index) => (
-                <tr
-                  key={index}
-                  className={`transition-colors duration-150 ${
-                    index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                  } hover:bg-gray-100`}
-                >
-                  <TableBodyCell>{item?.id}</TableBodyCell>
-
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.shopName}
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.phoneNumber}
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.address}
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {item?.finedAmount.toLocaleString()}
-                  </TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {formatDate(item?.finedDate)}
-                  </TableBodyCell>
-                </tr>
+    <div className="relative flex flex-col h-[calc(100vh-170px)]">
+      <div className="flex-1 overflow-auto">
+        <table className="min-w-full text-sm">
+          <thead className="sticky top-0 z-10 bg-white">
+            <tr className="font-semibold">
+              {headers.map((header) => (
+                <TableHeaderCell
+                  key={header.label}
+                  label={header.label}
+                  sortable={header.sortable}
+                  onSort={() => header.sortable && handleSort(header.sortable)}
+                />
               ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
-          <PaginationControls
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-          />
-        </div>
+            </tr>
+          </thead>
+
+          <tbody>
+            {paginatedData.map((item) => (
+              <tr
+                key={item.id}
+                className="cursor-pointer! hover:bg-gray-100"
+                onClick={() => {
+                  setSelectedComplaint(item);
+                  setOpenDialog(true);
+                }}
+              >
+                <TableBodyCell className="font-semibold">
+                  {formatComplaintId(item.id, item.entryType, item.createdAt)}
+                </TableBodyCell>
+
+                <TableBodyCell>
+                  {item.shopName
+                    ? item.shopName.slice(0, 20) +
+                      (item.shopName.length > 20 ? "..." : "")
+                    : "-"}
+                </TableBodyCell>
+
+                <TableBodyCell>{item.phoneNumber || "-"}</TableBodyCell>
+
+                <TableBodyCell>{item.address || "-"}</TableBodyCell>
+
+                <TableBodyCell>{item.finedAmount ?? 0}</TableBodyCell>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </>
+
+      <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+        />
+      </div>
+
+      <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
+        <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]! overflow-hidden!">
+          <ComplaintDetailDialog selectedComplaint={selectedComplaint} />
+        </Dialog.Content>
+      </Dialog.Root>
+    </div>
   );
 };
 
-export default FinedComplaintTable;
+export default DetailTable;

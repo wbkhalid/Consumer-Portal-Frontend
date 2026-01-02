@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import ProceedingComponent from "./components/ProceedingComponent";
+import ProcessingComponent from "../components/ProcessingComponent";
 
 const ProceedingPage = () => {
   return (
     <div>
       <Suspense fallback={<div>Loading proceeding complaints...</div>}>
-        <ProceedingComponent />
+        <ProcessingComponent title="Proceeding Complaints" status={1} />
       </Suspense>
     </div>
   );

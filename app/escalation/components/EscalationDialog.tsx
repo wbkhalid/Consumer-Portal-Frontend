@@ -9,7 +9,7 @@ import ComplaintDetail from "../../components/complaintDetail/ComplaintDetail";
 import MediaDetails from "../../components/complaintDetail/MediaDetails";
 import { PROCEEDING_STEPS } from "../../components/complaintDetail/StepperOptions";
 import AssignDetails from "../../components/complaintDetail/AssignDetails";
-import FullScreenMediaModal from "../../complains/components/FullScreenMediaModal";
+import FullScreenMediaModal from "../../components/dialog/FullScreenMediaModal";
 import ComplaintHistory from "../../components/complaintDetail/ComplaintHistory";
 import ComplaintResolution from "../../components/complaintDetail/ComplaintResolution";
 import HearingProcess from "../../components/complaintDetail/HearingProcess";

@@ -9,7 +9,7 @@ import ComplaintDetail from "../../components/complaintDetail/ComplaintDetail";
 import MediaDetails from "../../components/complaintDetail/MediaDetails";
 import { PENDING_STEPS } from "../../components/complaintDetail/StepperOptions";
 import AssignDetails from "../../components/complaintDetail/AssignDetails";
-import FullScreenMediaModal from "../../complains/components/FullScreenMediaModal";
+import FullScreenMediaModal from "../../components/dialog/FullScreenMediaModal";
 
 const PendingDialog = ({
   selectedComplaint,

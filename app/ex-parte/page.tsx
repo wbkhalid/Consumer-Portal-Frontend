@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import ExParteComponent from "./components/ExParteComponent";
+import ResolvedComponent from "../components/ResolvedComponent";
 
 const ExPartePage = () => {
   return (
     <div>
       <Suspense fallback={<div>Loading ex-parte complaints...</div>}>
-        <ExParteComponent />
+        <ResolvedComponent title="Ex-Parte Complaints" status={5} />
       </Suspense>
     </div>
   );

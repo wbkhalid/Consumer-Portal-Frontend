@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import DecidedonMeritComponent from "./components/DecidedonMeritComponent";
+import ResolvedComponent from "../components/ResolvedComponent";
 
 const DecidedonMeritPage = () => {
   return (
     <div>
       <Suspense fallback={<div>Loading decided on merit complaints...</div>}>
-        <DecidedonMeritComponent />
+        <ResolvedComponent title="Decided on Merit Complaints" status={4} />
       </Suspense>
     </div>
   );

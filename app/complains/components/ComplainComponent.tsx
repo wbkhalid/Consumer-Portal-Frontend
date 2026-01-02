@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Button } from "@radix-ui/themes";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
-import ComplainsTable from "./ComplainsTable";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
 import CustomComplaintDialog from "../../authority-reports/custom-complaint-report/components/CustomComplaintDialog";
 import StaffDropdown from "../../components/reuseable-filters/StaffDropdown";
@@ -13,6 +11,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import SearchFilter from "../../components/reuseable-filters/SearchFilter";
 import { getRole } from "../../utils/utils";
 import DistrictWiseDropdown from "../../components/reuseable-filters/DistrictWiseDropdown";
+import DetailTable from "../../components/table/DetailTable";
 
 const ComplainComponent = () => {
   const [refresh, setRefresh] = useState(false);
@@ -82,7 +81,7 @@ const ComplainComponent = () => {
             </button>
           </div>
         </div>
-        <ComplainsTable rowsData={filteredData ?? []} />
+        <DetailTable rowsData={filteredData ?? []} />
       </div>
     </>
   );

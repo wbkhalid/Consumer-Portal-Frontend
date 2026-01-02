@@ -1,6 +1,6 @@
 "use client";
 
-import FullScreenMediaModal from "../../complains/components/FullScreenMediaModal";
+import FullScreenMediaModal from "../../components/dialog/FullScreenMediaModal";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { formatDate } from "../../utils/utils";
 import { useState } from "react";

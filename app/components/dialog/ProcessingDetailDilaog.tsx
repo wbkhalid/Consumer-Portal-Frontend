@@ -13,7 +13,7 @@ import ComplaintHistory from "../../components/complaintDetail/ComplaintHistory"
 import ComplaintResolution from "../../components/complaintDetail/ComplaintResolution";
 import HearingProcess from "../../components/complaintDetail/HearingProcess";
 
-const SuperEscalationDialog = ({
+const ProcessingDetailDilaog = ({
   selectedComplaint,
   onClose,
   onSuccess,
@@ -41,7 +41,7 @@ const SuperEscalationDialog = ({
         IsInProcess={true}
       />
       <div className="bg-[rgba(29,28,29,0.13)] h-px w-full" />
-      <div className="max-h-[65vh]! overflow-y-auto!">
+      <div className="overflow-y-auto max-h-[65vh]!">
         {step === 1 && <LocationDetail complaint={selectedComplaint} />}
         {step === 2 && <ComplaintDetail complaint={selectedComplaint} />}
         {step === 3 && (
@@ -71,4 +71,4 @@ const SuperEscalationDialog = ({
   );
 };
 
-export default SuperEscalationDialog;
+export default ProcessingDetailDilaog;

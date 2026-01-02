@@ -23,7 +23,7 @@ const UserTable = ({ rowsData }: UserTableProps) => {
         <table className="min-w-full text-sm mb-10!">
           <thead className="sticky top-0 z-10 bg-white">
             <tr className="font-semibold">
-              {["Id", "Name", "Email", "CNIC", "Phone #", "Address"]?.map(
+              {["Sr. #", "Name", "Email", "CNIC", "Phone #", "Address"]?.map(
                 (header) => (
                   <TableHeaderCell key={header} label={header} />
                 )
@@ -35,9 +35,7 @@ const UserTable = ({ rowsData }: UserTableProps) => {
             {paginationData?.map((item, index) => (
               <tr
                 key={item?.id}
-                className={`transition-colors duration-150 ${
-                  index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                } hover:bg-gray-100`}
+                className={`transition-colors duration-150  hover:bg-gray-100`}
               >
                 <TableBodyCell>{item?.id}</TableBodyCell>
                 <TableBodyCell>{item?.fullName}</TableBodyCell>

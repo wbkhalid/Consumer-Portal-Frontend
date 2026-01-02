@@ -1,33 +1,38 @@
+"use client";
+
+import { useState, useMemo } from "react";
 import TableBodyCell from "../../components/table/TableBodyCell";
 import TableHeaderCell from "../../components/table/TableHeaderCell";
+import PaginationControls from "../../components/table/PaginationControls";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import {
   formatComplaintId,
   formatDate,
+  getDaysOld,
   getUniqueSectionNumbers,
+  statusData,
 } from "../../utils/utils";
-import { useMemo, useState } from "react";
-import PaginationControls from "../../components/table/PaginationControls";
-import PendingDialog from "./PendingDialog";
-import useGetAllStaff from "../../hooks/useGetAllStaff";
-import { useRegionFilters } from "../../hooks/useRegionFilters";
 import { Dialog } from "@radix-ui/themes";
-import { sort } from "fast-sort";
 import { useRouter, useSearchParams } from "next/navigation";
+import { sort } from "fast-sort";
+import ComplaintDetailDialog from "../dialog/ComplaintDetailDialog";
+import ProcessingDetailDilaog from "../dialog/ProcessingDetailDilaog";
+import useGetAllStaff from "../../hooks/useGetAllStaff";
 
-interface PendingTableProps {
+interface ProcessingTableProps {
   rowsData: ManageComplainsData[];
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
-  const searchParams = useSearchParams();
+const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [pageSize, setPageSize] = useState(10);
+  const { data: staffData } = useGetAllStaff();
 
   const sortBy = searchParams.get("sortBy") || "";
   const sortOrder = (searchParams.get("sortOrder") as "asc" | "desc") || "asc";
@@ -35,6 +40,8 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
   const headers = [
     { label: "Complaint ID", sortable: "id" },
     { label: "Date", sortable: "date" },
+    { label: "Days Old", sortable: "old" },
+    { label: "Assignee To", sortable: "assigneeTo" },
     { label: "Shop Name" },
     { label: "Shop Phone No" },
     { label: "Nature of Complaint", sortable: "complaintType" },
@@ -42,15 +49,23 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     { label: "Section Description" },
     { label: "Category", sortable: "categoryName" },
     { label: "Remarks" },
+    { label: "Assignee Remarks" },
     { label: "Type", sortable: "type" },
     { label: "Evidence" },
   ];
+
   const sortFieldMapping: Record<
     string,
     (item: ManageComplainsData) => string | number
   > = {
     id: (i) => i.id,
     date: (i) => new Date(i.createdAt).getTime(),
+    old: (i) =>
+      Math.floor(
+        (Date.now() - new Date(i.createdAt).getTime()) / (1000 * 60 * 60 * 24)
+      ),
+    assigneeTo: (i) =>
+      staffData?.find((u) => u.userId === i.assignedTo)?.fullName || "",
     complaintType: (i) => i.complaintType,
     sectionName: (i) =>
       i.sectionsDetails
@@ -60,6 +75,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     sectionDescription: (i) =>
       i.sectionsDetails?.map((s) => s.description).join(","),
     categoryName: (i) => i.categoryName,
+    status: (i) => statusData.find((s) => s.id === i.status)?.label || "",
     type: (i) => (i.entryType === 0 ? "Online" : "Manual"),
   };
 
@@ -125,6 +141,11 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
                 </TableBodyCell>
 
                 <TableBodyCell>{formatDate(item?.createdAt)}</TableBodyCell>
+                <TableBodyCell>{getDaysOld(item?.createdAt)}</TableBodyCell>
+                <TableBodyCell>
+                  {staffData?.find((u) => u.userId === item.assignedTo)
+                    ?.fullName || "-"}
+                </TableBodyCell>
 
                 <TableBodyCell>
                   {item?.shopName
@@ -151,6 +172,12 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
                   {item?.remarks
                     ? item?.remarks?.slice(0, 20) +
                       (item?.remarks?.length > 20 ? "..." : "")
+                    : ""}
+                </TableBodyCell>
+                <TableBodyCell className="whitespace-nowrap">
+                  {item?.assigneeRemarks
+                    ? item?.assigneeRemarks?.slice(0, 20) +
+                      (item?.assigneeRemarks?.length > 20 ? "..." : "")
                     : ""}
                 </TableBodyCell>
 
@@ -190,8 +217,11 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
       </div>
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
-        <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]! overflow-hidden!">
-          <PendingDialog
+        <Dialog.Content
+          className="p-0! lg:max-w-[800px]! max-h-[80vh]! overflow-hidden!"
+          onInteractOutside={(e) => e.preventDefault()}
+        >
+          <ProcessingDetailDilaog
             selectedComplaint={selectedComplaint}
             onClose={() => {
               setSelectedComplaint(null);
@@ -206,4 +236,4 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
   );
 };
 
-export default PendingTable;
+export default ProcessingTable;

@@ -15,54 +15,53 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
 
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const paginationData = rowsData?.slice(startIndex, endIndex);
+  const paginatedData = rowsData?.slice(startIndex, endIndex);
   return (
-    <div className="relative">
-      <div className="h-[calc(100vh-110px)] overflow-y-auto scrollbar-hide relative">
-        <table className="min-w-full text-sm mb-10!">
-          <thead className="sticky top-0 z-10 bg-white">
-            <tr className="font-semibold">
-              {[
-                "Appeal Id",
-                "Compalint Id",
-                "Shop Name",
-                "Phone #",
-                "Reason",
-              ]?.map((header) => (
-                <TableHeaderCell key={header} label={header} />
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>
-            {paginationData?.map((item, index) => (
-              <tr
-                key={item?.appealId}
-                className={`transition-colors duration-150 ${
-                  index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                } hover:bg-gray-100`}
-              >
-                <TableBodyCell>{item?.appealId}</TableBodyCell>
-                <TableBodyCell>{item?.complaintId}</TableBodyCell>
-                <TableBodyCell>{item?.shopName}</TableBodyCell>
-                <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
-                <TableBodyCell>{item?.appealReason}</TableBodyCell>
+    <>
+      <div className="relative">
+        <div className="h-[calc(100vh-110px)] overflow-y-auto scrollbar-hide relative">
+          <table className="min-w-full text-sm mb-10!">
+            <thead className="sticky top-0 z-10">
+              <tr className="font-semibold bg-white">
+                {[
+                  "Appeal Id",
+                  "Compalint Id",
+                  "Shop Name",
+                  "Phone #",
+                  "Reason",
+                ]?.map((header) => (
+                  <TableHeaderCell key={header} label={header} />
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
 
-      <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
-        <PaginationControls
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          pageSize={pageSize}
-          setPageSize={setPageSize}
-        />
+            <tbody>
+              {paginatedData?.map((item, index) => (
+                <tr
+                  key={index}
+                  className={`transition-colors duration-150  hover:bg-gray-100`}
+                >
+                  <TableBodyCell>{item?.appealId}</TableBodyCell>
+                  <TableBodyCell>{item?.complaintId}</TableBodyCell>
+                  <TableBodyCell>{item?.shopName}</TableBodyCell>
+                  <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
+                  <TableBodyCell>{item?.appealReason}</TableBodyCell>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

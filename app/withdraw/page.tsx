@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import WithDrawComponent from "./components/WithDrawComponent";
+import ResolvedComponent from "../components/ResolvedComponent";
 
 const WithDrawPage = () => {
   return (
     <div>
       <Suspense fallback={<div>Loading withdraw complaints...</div>}>
-        <WithDrawComponent />
+        <ResolvedComponent title="Withdraw Complaints" status={6} />
       </Suspense>
     </div>
   );

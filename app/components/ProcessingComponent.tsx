@@ -1,17 +1,22 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import useGetAllComplains from "../../hooks/useGetAllComplains";
-import PendingTable from "./PendingTable";
-import { useRegionFilters } from "../../hooks/useRegionFilters";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { getRole } from "../../utils/utils";
-import SearchFilter from "../../components/reuseable-filters/SearchFilter";
-import StaffDropdown from "../../components/reuseable-filters/StaffDropdown";
-import DistrictWiseDropdown from "../../components/reuseable-filters/DistrictWiseDropdown";
-import DateFilter from "../../components/DateFilter";
+import useGetAllComplains from "../hooks/useGetAllComplains";
+import { useRegionFilters } from "../hooks/useRegionFilters";
+import ProcessingTable from "./table/ProcessingTable";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { getRole } from "../utils/utils";
+import SearchFilter from "./reuseable-filters/SearchFilter";
+import StaffDropdown from "./reuseable-filters/StaffDropdown";
+import DistrictWiseDropdown from "./reuseable-filters/DistrictWiseDropdown";
+import DateFilter from "./DateFilter";
 
-const PendingComponent = () => {
+interface ProcessingListProps {
+  title: string;
+  status: number;
+}
+
+const ProcessingComponent = ({ title, status }: ProcessingListProps) => {
   const [refresh, setRefresh] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -23,8 +28,8 @@ const PendingComponent = () => {
   const districtParam = searchParams.get("district");
   const { divisionId, districtId, tehsilId } = useRegionFilters();
   const role = getRole();
-  const { data: pendingData } = useGetAllComplains({
-    status: 0,
+  const { data: proceedingData } = useGetAllComplains({
+    status,
     refresh,
     startDate: startDate || undefined,
     endDate: endDate || undefined,
@@ -35,19 +40,19 @@ const PendingComponent = () => {
   });
 
   const filteredData = useMemo(() => {
-    if (!pendingData) return [];
+    if (!proceedingData) return [];
     const term = search.toLowerCase();
 
-    return pendingData?.filter((item) =>
+    return proceedingData?.filter((item) =>
       Object.values(item).some((value) =>
         String(value).toLowerCase().includes(term)
       )
     );
-  }, [pendingData, search]);
+  }, [proceedingData, search]);
   return (
     <>
       <div className="flex items-center gap-1 mb-2.5!">
-        <p className="text-[#111827] font-semibold">Pending Complaints</p>
+        <p className="text-[#111827] font-semibold">{title}</p>
         <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
           {filteredData?.length?.toLocaleString()} Records
         </p>
@@ -72,10 +77,13 @@ const PendingComponent = () => {
             </button>
           </div>
         </div>
-        <PendingTable rowsData={filteredData ?? []} setRefresh={setRefresh} />
+        <ProcessingTable
+          rowsData={filteredData ?? []}
+          setRefresh={setRefresh}
+        />
       </div>
     </>
   );
 };
 
-export default PendingComponent;
+export default ProcessingComponent;

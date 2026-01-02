@@ -8,7 +8,7 @@ import { useState } from "react";
 import ComplaintDetail from "../../components/complaintDetail/ComplaintDetail";
 import MediaDetails from "../../components/complaintDetail/MediaDetails";
 import { DETAIL_STEPS } from "../../components/complaintDetail/StepperOptions";
-import FullScreenMediaModal from "../../complains/components/FullScreenMediaModal";
+import FullScreenMediaModal from "../../components/dialog/FullScreenMediaModal";
 
 const ComplaintDialog = ({
   selectedComplaint,

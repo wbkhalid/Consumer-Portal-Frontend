@@ -1,11 +1,11 @@
 import { Suspense } from "react";
-import EscalationComponent from "./components/EscalationComponent";
+import ProcessingComponent from "../components/ProcessingComponent";
 
 const EscalationPage = () => {
   return (
     <div>
-      <Suspense fallback={<div>Loading escalation complaints...</div>}>
-        <EscalationComponent />
+      <Suspense fallback={<div>Loading Escalation Complaints...</div>}>
+        <ProcessingComponent title="Escalation Complaints" status={2} />
       </Suspense>
     </div>
   );
