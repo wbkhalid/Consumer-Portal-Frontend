@@ -10,9 +10,6 @@ export type Query = BaseQuery<ComplaintSummary>;
 
 interface Props {
   data: ComplaintSummary[];
-  // currentPage: number;
-  // pageSize: number;
-  // searchParams: Query;
 }
 
 const List = ({ data }: Props) => {
@@ -23,66 +20,66 @@ const List = ({ data }: Props) => {
   const router = useRouter();
 
   return (
-    <div className="relative">
-      <div className="h-[calc(100vh-130px)] overflow-y-auto relative">
-        <table className="min-w-full text-sm">
-          <thead className="sticky top-0 z-10">
-            <tr className="font-semibold bg-white">
-              <CustomTableHeaderCell label="Sr #" />
+    <>
+      <div className="relative">
+        <div className="h-[calc(100vh-180px)] overflow-y-auto relative">
+          <table className="min-w-full text-sm">
+            <thead className="sticky top-0 z-10">
+              <tr className="font-semibold bg-white">
+                <CustomTableHeaderCell label="Sr #" />
 
-              {columns.map((column, i) => (
-                <CustomTableHeaderCell
-                  key={i}
-                  columnValue={column.value}
-                  label={column.label}
-                  // searchParams={searchParams}
-                />
-              ))}
-            </tr>
-          </thead>
+                {columns.map((column, i) => (
+                  <CustomTableHeaderCell
+                    key={i}
+                    columnValue={column.value}
+                    label={column.label}
+                    // searchParams={searchParams}
+                  />
+                ))}
+              </tr>
+            </thead>
 
-          <tbody>
-            {data?.map((d, index) => {
-              // const serial = (currentPage - 1) * pageSize + index + 1;
+            <tbody>
+              {data?.map((d, index) => {
+                // const serial = (currentPage - 1) * pageSize + index + 1;
 
-              return (
-                <tr
-                  key={index + 1}
-                  className={`transition-colors duration-150 cursor-pointer! ${
-                    index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                  } hover:bg-gray-100`}
-                  onClick={() =>
-                    router.push(
-                      `/authority-reports/complaint-reports/complaint-summary/${encodeURIComponent(
-                        d?.districtName
-                      )}/list`
-                    )
-                  }
-                >
-                  <TableBodyCell>{index + 1}</TableBodyCell>
-                  <TableBodyCell>{d.districtName}</TableBodyCell>
-                  <TableBodyCell>{d.complaintsFiled}</TableBodyCell>
-                  <TableBodyCell>{d.disposal}</TableBodyCell>
-                  <TableBodyCell>{d.percentageDisposal}%</TableBodyCell>
-                  <TableBodyCell>{d.pendingComplaints}</TableBodyCell>
-                </tr>
-              );
-            })}
+                return (
+                  <tr
+                    key={index + 1}
+                    className={`transition-colors duration-150 cursor-pointer!  hover:bg-gray-100`}
+                    onClick={() =>
+                      router.push(
+                        `/authority-reports/complaint-reports/complaint-summary/${encodeURIComponent(
+                          d?.districtName
+                        )}/list`
+                      )
+                    }
+                  >
+                    <TableBodyCell>{index + 1}</TableBodyCell>
+                    <TableBodyCell>{d.districtName}</TableBodyCell>
+                    <TableBodyCell>{d.complaintsFiled}</TableBodyCell>
+                    <TableBodyCell>{d.disposal}</TableBodyCell>
+                    <TableBodyCell>{d.percentageDisposal}%</TableBodyCell>
+                    <TableBodyCell>{d.pendingComplaints}</TableBodyCell>
+                  </tr>
+                );
+              })}
 
-            {/* ✅ Total Row */}
-            <tr className="font-semibold bg-[#f1f1f1] text-[#013769] sticky bottom-0">
-              <TableBodyCell colSpan={2} className="text-center">
-                Total
-              </TableBodyCell>
-              <TableBodyCell>{totalFiled}</TableBodyCell>
-              <TableBodyCell>{totalDisposal}</TableBodyCell>
-              <TableBodyCell>{totalPercentage}%</TableBodyCell>
-              <TableBodyCell>{totalPending}</TableBodyCell>
-            </tr>
-          </tbody>
-        </table>
+              {/* ✅ Total Row */}
+              <tr className="font-semibold bg-[#f1f1f1] text-[#013769] sticky bottom-0">
+                <TableBodyCell colSpan={2} className="text-center">
+                  Total
+                </TableBodyCell>
+                <TableBodyCell>{totalFiled}</TableBodyCell>
+                <TableBodyCell>{totalDisposal}</TableBodyCell>
+                <TableBodyCell>{totalPercentage}%</TableBodyCell>
+                <TableBodyCell>{totalPending}</TableBodyCell>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

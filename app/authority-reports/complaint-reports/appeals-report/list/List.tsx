@@ -1,75 +1,89 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import CustomTableHeaderCell from "../../../../components/table/CustomTableHeaderCell";
 import TableBodyCell from "../../../../components/table/TableBodyCell";
 import { BaseQuery, Column } from "../../../../utils/utils";
 import { AppealReport } from "./page";
+import PaginationControls from "../../../../components/table/PaginationControls";
 
 export type Query = BaseQuery<AppealReport>;
 
 interface Props {
   data: AppealReport[];
-  currentPage: number;
-  pageSize: number;
   searchParams: Query;
 }
 
-const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
+const List = ({ data, searchParams }: Props) => {
   const { totalAppeals } = calculateTotals(data);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [pageSize, setPageSize] = useState(10);
 
   const columns = getColumns();
 
+  const totalPages = Math.ceil(data?.length / pageSize);
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return data?.slice(start, start + pageSize);
+  }, [data, currentPage, pageSize]);
+
   return (
-    <div className="relative">
-      <div className="h-[calc(100vh-175px)] overflow-y-auto scrollbar-hide relative">
-        <table className="min-w-full text-sm border-separate border-spacing-0 border border-[#E9EAEB]">
-          {/* ===== Table Header ===== */}
-          <thead className="sticky top-0 z-10">
-            <tr className="font-semibold bg-white text-center">
-              <CustomTableHeaderCell label="Sr #" />
+    <>
+      <div className="relative flex flex-col h-[calc(100vh-180px)]">
+        <div className="flex-1 overflow-auto">
+          <table className="min-w-full text-sm">
+            <thead className="sticky top-0 z-10 bg-white">
+              <tr className="font-semibold">
+                <CustomTableHeaderCell label="Sr #" />
+                {columns.map((column) => (
+                  <CustomTableHeaderCell
+                    key={column.value}
+                    columnValue={column.value}
+                    label={column.label}
+                    searchParams={searchParams}
+                  />
+                ))}
+              </tr>
+            </thead>
 
-              {columns.map((column) => (
-                <CustomTableHeaderCell
-                  key={column.value}
-                  columnValue={column.value}
-                  label={column.label}
-                  searchParams={searchParams}
-                />
-              ))}
-            </tr>
-          </thead>
+            <tbody>
+              {paginatedData?.map((d, index) => {
+                const serial = (currentPage - 1) * pageSize + index + 1;
+                return (
+                  <tr
+                    key={d?.districtName}
+                    className="cursor-pointer! hover:bg-gray-100"
+                  >
+                    <TableBodyCell>{serial}</TableBodyCell>
+                    <TableBodyCell>{d.districtName}</TableBodyCell>
+                    <TableBodyCell>{d.numberOfAppeals}</TableBodyCell>
+                  </tr>
+                );
+              })}
 
-          {/* ===== Table Body ===== */}
-          <tbody>
-            {data?.map((d, index) => {
-              const serial = (currentPage - 1) * pageSize + index + 1;
+              <tr className="font-semibold bg-[#f1f1f1] text-center sticky bottom-0">
+                <TableBodyCell colSpan={2} className="text-center">
+                  Total
+                </TableBodyCell>
 
-              return (
-                <tr
-                  key={serial}
-                  className={`transition-colors duration-150 ${
-                    index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                  } hover:bg-gray-100`}
-                >
-                  <TableBodyCell>{serial}</TableBodyCell>
-                  <TableBodyCell>{d.districtName}</TableBodyCell>
-                  <TableBodyCell>{d.numberOfAppeals}</TableBodyCell>
-                </tr>
-              );
-            })}
+                <TableBodyCell>{totalAppeals}</TableBodyCell>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-            {/* ===== TOTAL ROW ===== */}
-            <tr className="font-semibold bg-[#f1f1f1] text-center sticky bottom-0">
-              <TableBodyCell colSpan={2} className="text-center">
-                Total
-              </TableBodyCell>
-
-              <TableBodyCell>{totalAppeals}</TableBodyCell>
-            </tr>
-          </tbody>
-        </table>
+        <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

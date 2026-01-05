@@ -18,6 +18,8 @@ import { sort } from "fast-sort";
 import ComplaintDetailDialog from "../dialog/ComplaintDetailDialog";
 import ProcessingDetailDilaog from "../dialog/ProcessingDetailDilaog";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
+import { MdOutlineFileDownload } from "react-icons/md";
+import { generateComplaintPDF } from "../../utils/generateComplainPdf";
 
 interface ProcessingTableProps {
   rowsData: ManageComplainsData[];
@@ -52,6 +54,7 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
     { label: "Assignee Remarks" },
     { label: "Type", sortable: "type" },
     { label: "Evidence" },
+    { label: "Generate Report" },
   ];
 
   const sortFieldMapping: Record<
@@ -199,6 +202,12 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
                   ) : (
                     <p className="text-[#535862] text-sm">Attached</p>
                   )}
+                </TableBodyCell>
+                <TableBodyCell>
+                  <MdOutlineFileDownload
+                    onClick={() => generateComplaintPDF(item)}
+                    className="text-(--primary) w-5 h-5 cursor-pointer!"
+                  />
                 </TableBodyCell>
               </tr>
             ))}

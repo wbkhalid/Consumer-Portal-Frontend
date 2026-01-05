@@ -24,130 +24,114 @@ const List = ({ data, searchParams }: Props) => {
 
   const columns = getColumns();
   return (
-    <div className="relative">
-      <div className="h-[calc(100vh-175px)] overflow-y-auto scrollbar-hide relative">
-        <table className="min-w-full text-sm border-separate border-spacing-0 border border-[#E9EAEB]">
-          {/* ===== Table Header ===== */}
-          <thead className="sticky top-0 z-10">
-            <tr className="font-semibold bg-white text-center">
-              <CustomTableHeaderCell label={"Sr"} rowSpan={2} />
-              <CustomTableHeaderCell
-                label={columns[0].label}
-                rowSpan={2}
-                searchParams={searchParams}
-                columnValue={columns[0].value}
-              />
-              {months.map((month, index) => (
+    <>
+      <div className="relative flex flex-col h-[calc(100vh-180px)]">
+        <div className="flex-1 overflow-auto">
+          <table className="min-w-full text-sm">
+            <thead className="sticky top-0 z-10">
+              <tr className="font-semibold e text-center">
+                <CustomTableHeaderCell label={"Sr"} rowSpan={2} />
                 <CustomTableHeaderCell
-                  key={index}
-                  label={`${month} Complaints`}
-                  colSpan={2}
-                  className="border-l border-[#E9EAEB] whitespace-normal!"
-                />
-              ))}
-              {columns.slice(1).map((column) => (
-                <CustomTableHeaderCell
-                  key={column.value}
+                  label={columns[0].label}
                   rowSpan={2}
-                  label={column.label}
                   searchParams={searchParams}
-                  columnValue={column.value}
+                  columnValue={columns[0].value}
                 />
-              ))}
-            </tr>
-
-            <tr className="font-semibold bg-white text-[#535862] text-center">
-              {months.map((month) => (
-                <Fragment key={`${month}-sub`}>
+                {months.map((month, index) => (
                   <CustomTableHeaderCell
-                    label={"F"}
-                    className="[writing-mode:vertical-rl] rotate-180 border-l border-[#E9EAEB] px-2!"
+                    key={index}
+                    label={`${month} Complaints`}
+                    colSpan={2}
+                    className="border-l border-[#E9EAEB] whitespace-normal!"
                   />
+                ))}
+                {columns.slice(1).map((column) => (
                   <CustomTableHeaderCell
-                    label={"D"}
-                    className="[writing-mode:vertical-rl] rotate-180 border-l border-[#E9EAEB] px-2!"
+                    key={column.value}
+                    rowSpan={2}
+                    label={column.label}
+                    searchParams={searchParams}
+                    columnValue={column.value}
                   />
-                </Fragment>
-              ))}
-            </tr>
-          </thead>
+                ))}
+              </tr>
 
-          {/* ===== Table Body ===== */}
-          <tbody>
-            {data.map((d, index) => {
-              const serial = index + 1;
+              <tr className="font-semibold bg-white text-[#535862] text-center">
+                {months.map((month) => (
+                  <Fragment key={`${month}-sub`}>
+                    <CustomTableHeaderCell
+                      label={"F"}
+                      className="[writing-mode:vertical-rl] rotate-180 border-l border-[#E9EAEB] px-2!"
+                    />
+                    <CustomTableHeaderCell
+                      label={"D"}
+                      className="[writing-mode:vertical-rl] rotate-180 border-l border-[#E9EAEB] px-2!"
+                    />
+                  </Fragment>
+                ))}
+              </tr>
+            </thead>
 
-              return (
-                <tr
-                  key={serial}
-                  className={`text-center transition-colors duration-150 ${
-                    index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                  } hover:bg-gray-100`}
-                >
-                  <TableBodyCell>{serial}</TableBodyCell>
-                  <TableBodyCell className="whitespace-nowrap">
-                    {d.districtName}
-                  </TableBodyCell>
+            <tbody>
+              {data.map((d, index) => {
+                const serial = index + 1;
 
-                  {d.monthlyData.map((month, index) => (
-                    <Fragment key={index}>
-                      <TableBodyCell className="px-2!">
-                        {month.filed}
-                      </TableBodyCell>
-                      <TableBodyCell className="px-2!">
-                        {month.disposed}
-                      </TableBodyCell>
-                    </Fragment>
-                  ))}
+                return (
+                  <tr
+                    key={serial}
+                    className={`text-center transition-colors duration-150  hover:bg-gray-100`}
+                  >
+                    <TableBodyCell>{serial}</TableBodyCell>
+                    <TableBodyCell className="whitespace-nowrap">
+                      {d.districtName}
+                    </TableBodyCell>
 
-                  <TableBodyCell>{d.totalFiled}</TableBodyCell>
-                  <TableBodyCell>{d.grandTotal}</TableBodyCell>
-                  <TableBodyCell>{d.totalDisposed}</TableBodyCell>
-                  <TableBodyCell>{d.percentageDisposal}%</TableBodyCell>
-                </tr>
-              );
-            })}
+                    {d.monthlyData.map((month, index) => (
+                      <Fragment key={index}>
+                        <TableBodyCell className="px-2!">
+                          {month.filed}
+                        </TableBodyCell>
+                        <TableBodyCell className="px-2!">
+                          {month.disposed}
+                        </TableBodyCell>
+                      </Fragment>
+                    ))}
 
-            {/* ===== TOTAL ROW ===== */}
-            <tr className="font-semibold bg-[#f1f1f1] text-center sticky bottom-0">
-              <TableBodyCell colSpan={2} className="text-center">
-                Total
-              </TableBodyCell>
-              {monthlyTotals.map((mt, index) => (
-                <Fragment key={`mt-${index}`}>
-                  <TableBodyCell>{mt.filed.toLocaleString()}</TableBodyCell>
-                  <TableBodyCell>{mt.disposed.toLocaleString()}</TableBodyCell>
-                </Fragment>
-              ))}
+                    <TableBodyCell>{d.totalFiled}</TableBodyCell>
+                    <TableBodyCell>{d.grandTotal}</TableBodyCell>
+                    <TableBodyCell>{d.totalDisposed}</TableBodyCell>
+                    <TableBodyCell>{d.percentageDisposal}%</TableBodyCell>
+                  </tr>
+                );
+              })}
 
-              <TableBodyCell>{totalFiled}</TableBodyCell>
-              <TableBodyCell>{totalGrand}</TableBodyCell>
-              <TableBodyCell>{totalDisposal}</TableBodyCell>
-              <TableBodyCell>{totalPercentage}%</TableBodyCell>
-            </tr>
-          </tbody>
-        </table>
+              <tr className="font-semibold bg-[#f1f1f1] text-center sticky bottom-0">
+                <TableBodyCell colSpan={2} className="text-center">
+                  Total
+                </TableBodyCell>
+                {monthlyTotals.map((mt, index) => (
+                  <Fragment key={`mt-${index}`}>
+                    <TableBodyCell>{mt.filed.toLocaleString()}</TableBodyCell>
+                    <TableBodyCell>
+                      {mt.disposed.toLocaleString()}
+                    </TableBodyCell>
+                  </Fragment>
+                ))}
+
+                <TableBodyCell>{totalFiled}</TableBodyCell>
+                <TableBodyCell>{totalGrand}</TableBodyCell>
+                <TableBodyCell>{totalDisposal}</TableBodyCell>
+                <TableBodyCell>{totalPercentage}%</TableBodyCell>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
 export default List;
-
-// export const months = [
-//   "January",
-//   "February",
-//   "March",
-//   "April",
-//   "May",
-//   "June",
-//   "July",
-//   "August",
-//   "September",
-//   "October",
-//   "November",
-//   "December",
-// ];
 
 export const months = [
   "Jan",

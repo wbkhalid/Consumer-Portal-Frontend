@@ -20,9 +20,10 @@ import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 
 interface DetailTableProps {
   rowsData: ManageComplainsData[] | ManageCustomComplainsData[];
+  isBreadCrumbs?: boolean;
 }
 
-const DetailTable = ({ rowsData }: DetailTableProps) => {
+const DetailTable = ({ rowsData, isBreadCrumbs = false }: DetailTableProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
@@ -96,7 +97,11 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
   const totalPages = Math.ceil(rowsData?.length / pageSize);
 
   return (
-    <div className="relative flex flex-col h-[calc(100vh-170px)]">
+    <div
+      className={`relative flex flex-col  ${
+        isBreadCrumbs ? "h-[calc(100vh-190px)]" : "h-[calc(100vh-170px)]"
+      } `}
+    >
       <div className="flex-1 overflow-auto">
         <table className="min-w-full text-sm">
           <thead className="sticky top-0 z-10 bg-white">

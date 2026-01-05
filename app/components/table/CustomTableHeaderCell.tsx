@@ -22,13 +22,12 @@ const CustomTableHeaderCell = ({
 }: Props) => {
   const alignmentClass = label.toLowerCase() === "actions" ? "justify-end" : "";
 
-  // If column is NOT sortable → just show label
   if (!searchParams || !columnValue) {
     return (
       <th
         colSpan={colSpan}
         rowSpan={rowSpan}
-        className={`px-4! py-2! whitespace-nowrap text-[#535862] border-b border-b-[#E9EAEB] ${className} `}
+        className={`p-3! bg-[#F9F9F9] whitespace-nowrap uppercase text-[#535353]  border border-[#E9EAEB] ${className} `}
       >
         <div className={`flex  items-center gap-1 text-xs ${alignmentClass}`}>
           {label}
@@ -45,7 +44,7 @@ const CustomTableHeaderCell = ({
     <th
       colSpan={colSpan}
       rowSpan={rowSpan}
-      className={`px-4! py-2! whitespace-nowrap text-[#535862] border-b border-b-[#E9EAEB] ${className}`}
+      className={`p-3! bg-[#F9F9F9] whitespace-nowrap uppercase text-[#535353]  border border-[#E9EAEB] ${className}`}
     >
       <Link
         href={{

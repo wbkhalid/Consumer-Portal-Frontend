@@ -14,7 +14,7 @@ interface BreadcrumbsProps {
 
 const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
   return (
-    <div className="flex items-center text-sm text-gray-600 px-2.5! pt-1!">
+    <div className="flex items-center text-sm text-gray-600 py-1!">
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
 

@@ -2,13 +2,15 @@ import { sort } from "fast-sort";
 import { Suspense } from "react";
 import { COMPLAINT_REPORT_API } from "../../../../APIs";
 import DatesFilter from "../../../../components/Filters/DatesFilter";
-import SearchFilter from "../../../../components/Filters/SearchFilter";
 import YearFilter from "../../../../components/Filters/YearFilter";
 import ErrorMessage from "../../../../components/Form/ErrorMessage";
 import Spinner from "../../../../components/Spinner";
 import { DEFAULT_YEAR } from "../../../../utils/utils";
 import List, { Query } from "./List";
 import DownloadWrapper from "./DownloadWrapper";
+import ClearButton from "../../../../components/ClearButton";
+import DateFilter from "../../../../components/DateFilter";
+import SearchFilter from "../../../../components/reuseable-filters/SearchFilter";
 
 export interface AnalyticalReport {
   districtName: string;
@@ -72,42 +74,36 @@ const AnalyticalReportsPage = async ({ searchParams }: Props) => {
   const fileName = "Analytical Report";
 
   return (
-    <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
-      {/* Header Section */}
-      <div className="flex justify-between items-center px-2! py-2! flex-wrap gap-2">
-        <div className="flex items-center gap-1 flex-wrap">
-          <p className="text-(--primary) font-semibold">{fileName}</p>
+    <>
+      <div className="flex justify-between items-center mb-2.5!">
+        <div className="flex items-center gap-1">
+          <p className="text-[#111827] font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-            {data.length} Records
+            {data?.length?.toLocaleString()} Records
           </p>
         </div>
-        <div className="flex items-center justify-end gap-2 flex-wrap">
-          <Suspense fallback={<Spinner />}>
-            <YearFilter />
-            <DatesFilter />
-            <SearchFilter />
-            <DownloadWrapper data={data} fileName={fileName} />
-          </Suspense>
-        </div>
+        <DownloadWrapper data={data} fileName={fileName} />
       </div>
-      <div className="relative">
-        <div className="h-[calc(100vh-140px)] overflow-y-auto scrollbar-hide relative">
-          {/* Table */}
-          {response?.responseCode !== 200 ? (
-            // API error
-            <div className="px-2!">
-              <ErrorMessage>{response?.responseMessage}</ErrorMessage>
-            </div>
-          ) : data && data.length > 0 ? (
-            // Normal table data
-            <List data={data} searchParams={query} />
-          ) : (
-            // No records found
-            <p className="px-2!">No records found.</p>
-          )}
+      <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
+        <div className="flex justify-between items-center py-3! px-5!">
+          <SearchFilter />
+          <div className="flex justify-end items-center gap-2">
+            <DateFilter />
+            <ClearButton />
+          </div>
         </div>
+
+        {response?.responseCode !== 200 ? (
+          <div className="px-2!">
+            <ErrorMessage>{response?.responseMessage}</ErrorMessage>
+          </div>
+        ) : data && data.length > 0 ? (
+          <List data={data} searchParams={query} />
+        ) : (
+          <p className="px-2!">No records found.</p>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 
