@@ -6,19 +6,21 @@ import List, { Query } from "./List";
 import { Suspense } from "react";
 import { Spinner } from "@radix-ui/themes";
 import YearFilter from "../../../../components/Filters/YearFilter";
-import SearchFilter from "../../../../components/Filters/SearchFilter";
 import DatesFilter from "../../../../components/Filters/DatesFilter";
 import ErrorMessage from "../../../../components/Form/ErrorMessage";
 import Pagination from "../../../../components/Form/Pagination";
 import DownloadWrapper from "./DownloadWrapper";
-import { Complains } from "../../../../authority-reports/complaint-reports/complaint-summary/list/page";
+import { ManageComplainsData } from "../../../../hooks/useGetAllComplains";
+import SearchFilter from "../../../../components/reuseable-filters/SearchFilter";
+import DateFilter from "../../../../components/DateFilter";
+import ClearButton from "../../../../components/ClearButton";
 
 export interface FrequencyReport {
   name: string;
   email: string;
   phoneNumber: string;
   totalComplaints: number;
-  complaints: Complains[];
+  complaints: ManageComplainsData[];
 }
 
 interface Props {
@@ -36,14 +38,14 @@ const FrequencyReportPage = async ({ searchParams }: Props) => {
   if (pageSize == undefined) myPageSize = DEFAULT_PAGE_SIZE;
   else myPageSize = Number(pageSize);
 
-  const selectedYear = year || DEFAULT_YEAR;
+  // const selectedYear = year || DEFAULT_YEAR;
 
   const baseURL =
     process.env.BACKEND_API + COMPLAINT_REPORT_API + "/frequency-report";
 
   const params = new URLSearchParams();
 
-  params.set("year", year || selectedYear.toString()); // always required
+  // params.set("year", year || selectedYear.toString());
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
@@ -85,50 +87,47 @@ const FrequencyReportPage = async ({ searchParams }: Props) => {
   const fileName = "Frequency Report";
 
   return (
-    <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
-      {/* Header Section */}
-      <div className="flex justify-between items-center px-2! py-2! flex-wrap gap-2">
-        <div className="flex items-center gap-1 flex-wrap">
-          <p className="text-(--primary) font-semibold">{fileName}</p>
+    <>
+      <div className="flex justify-between items-center mb-2.5!">
+        <div className="flex items-center gap-1">
+          <p className="text-[#111827] font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-            {paginatedData.length} Records
+            {data?.length?.toLocaleString()} Records
           </p>
         </div>
-        <div className="flex items-center justify-end gap-2 flex-wrap">
-          <Suspense fallback={<Spinner />}>
-            <YearFilter />
-            <DatesFilter />
-            <SearchFilter />
-            <DownloadWrapper fileName={fileName} data={data} />
-          </Suspense>
-        </div>
+        <DownloadWrapper fileName={fileName} data={data} />
       </div>
-      {/* Table */}
-      {response?.responseCode !== 200 ? (
-        // API error
-        <div className="px-2!">
-          <ErrorMessage>{response?.responseMessage}</ErrorMessage>
+      <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
+        <div className="flex justify-between items-center py-3! px-5!">
+          <SearchFilter />
+          <div className="flex justify-end items-center gap-2">
+            <DateFilter />
+            <ClearButton />
+          </div>
         </div>
-      ) : paginatedData && paginatedData.length > 0 ? (
-        // Normal table data
-        <List
-          data={paginatedData}
-          currentPage={myPage}
-          pageSize={myPageSize}
-          searchParams={query}
-        />
-      ) : (
-        // No records found
-        <p className="px-2!">No records found.</p>
-      )}
-      <Suspense fallback={<Spinner />}>
-        <Pagination
-          pageSize={myPageSize}
-          currentPage={myPage}
-          itemCount={totalCount}
-        />
-      </Suspense>
-    </div>
+        {response?.responseCode !== 200 ? (
+          <div className="px-2!">
+            <ErrorMessage>{response?.responseMessage}</ErrorMessage>
+          </div>
+        ) : paginatedData && paginatedData?.length > 0 ? (
+          <List
+            data={paginatedData}
+            currentPage={myPage}
+            pageSize={myPageSize}
+            searchParams={query}
+          />
+        ) : (
+          <p className="px-2!">No records found.</p>
+        )}
+        <Suspense fallback={<Spinner />}>
+          <Pagination
+            pageSize={myPageSize}
+            currentPage={myPage}
+            itemCount={totalCount}
+          />
+        </Suspense>
+      </div>
+    </>
   );
 };
 

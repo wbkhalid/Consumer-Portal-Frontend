@@ -8,12 +8,26 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import DateFilter from "../../../../components/DateFilter";
 import YearFilter from "../../../../components/YearFilter";
+import SearchFilter from "../../../../components/reuseable-filters/SearchFilter";
+import ClearButton from "../../../../components/ClearButton";
+import { useSearchParams } from "next/navigation";
 
 interface FineReportComponentProp {
   data: FineImposedProp[];
 }
 
 const FineReportComponent = ({ data }: FineReportComponentProp) => {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search") || "";
+
+  if (search) {
+    const lowerSearch = search.toLowerCase();
+
+    data = data?.filter((c) =>
+      c.districtName?.toLowerCase().includes(lowerSearch)
+    );
+  }
+
   const exportFineReportToExcel = (data: FineImposedProp[]) => {
     const formattedData = data.map((item, index) => ({
       "Sr. No": `${index + 1}`,
@@ -88,31 +102,32 @@ const FineReportComponent = ({ data }: FineReportComponentProp) => {
   };
 
   return (
-    <div>
-      <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
-        <div className="flex justify-between items-center px-4! py-2!">
-          <div className="flex items-center gap-1">
-            <p className="text-(--primary) font-semibold">
-              Fine Imposed Report
-            </p>
-            <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-              {data?.length?.toLocaleString()} Records
-            </p>
-          </div>
-          <div className="flex gap-1 items-center">
-            <YearFilter />
-            <DateFilter />
+    <>
+      <div className="flex justify-between items-center mb-2.5!">
+        <div className="flex items-center gap-1">
+          <p className="text-[#111827] font-semibold">Fine Imposed Report</p>
+          <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
+            {data?.length?.toLocaleString()} Records
+          </p>
+        </div>
 
-            <DownloadDropdown
-              onExportExcel={() => exportFineReportToExcel(data)}
-              onExportPDF={() => exportFineReportToPDF(data)}
-              disabled={!data?.length}
-            />
+        <DownloadDropdown
+          onExportExcel={() => exportFineReportToExcel(data)}
+          onExportPDF={() => exportFineReportToPDF(data)}
+          disabled={!data?.length}
+        />
+      </div>
+      <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
+        <div className="flex justify-between items-center py-3! px-5!">
+          <SearchFilter />
+          <div className="flex justify-end items-center gap-2">
+            <DateFilter />
+            <ClearButton />
           </div>
         </div>
         <FineReportTable rowsData={data ?? []} />
       </div>
-    </div>
+    </>
   );
 };
 

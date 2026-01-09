@@ -6,15 +6,28 @@ interface Props {
   params: Promise<{
     districtComplaints: string;
   }>;
+  searchParams: Promise<{
+    year?: string;
+    startDate?: string;
+    endDate?: string;
+  }>;
 }
 
-const DistrictComplaintPage = async ({ params }: Props) => {
+const DistrictComplaintPage = async ({ params, searchParams }: Props) => {
   const { districtComplaints } = await params;
+  const { year, startDate, endDate } = await searchParams;
 
   const decodedDistrict = decodeURIComponent(districtComplaints);
+
+  const urlParams = new URLSearchParams();
+
+  if (year) urlParams.set("year", year);
+  if (startDate) urlParams.set("startDate", startDate);
+  if (endDate) urlParams.set("endDate", endDate);
+
   const baseURL = `${
     process.env.BACKEND_API
-  }${COMPLAINT_REPORT_API}/fine-imposed-report${params ? `?${params}` : ""}`;
+  }${COMPLAINT_REPORT_API}/fine-imposed-report?${urlParams.toString()}`;
 
   const res = await fetch(baseURL, {
     next: { revalidate: 10 },

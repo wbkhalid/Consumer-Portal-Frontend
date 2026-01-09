@@ -7,6 +7,7 @@ import DetailTable from "../../../../../components/table/DetailTable";
 import DateFilter from "../../../../../components/DateFilter";
 import SearchFilter from "../../../../../components/reuseable-filters/SearchFilter";
 import Breadcrumbs from "../../../../../components/Breadcrumbs";
+import { cookies } from "next/headers";
 
 export type Query = BaseQuery<ManageComplainsData>;
 interface Props {
@@ -19,6 +20,8 @@ interface Props {
 const DistrictComplaintPage = async ({ searchParams, params }: Props) => {
   const { districtName } = await params;
   const query = await searchParams;
+  const cookieStore = await cookies();
+  const divisionId = cookieStore.get("divisionId")?.value;
 
   const { startDate, endDate, search } = query;
 
@@ -29,6 +32,7 @@ const DistrictComplaintPage = async ({ searchParams, params }: Props) => {
 
   if (startDate) urlParams.set("startDate", startDate);
   if (endDate) urlParams.set("endDate", endDate);
+  if (divisionId) urlParams.set("divisionId", divisionId);
 
   const finalAPI = `${baseURL}?${urlParams.toString()}`;
   console.log("finalAPI call", finalAPI);

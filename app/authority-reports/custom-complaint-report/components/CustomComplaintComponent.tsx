@@ -10,7 +10,7 @@ import DownloadWrapper from "./DownloadWrapper";
 import CustomComplaintDialog from "./CustomComplaintDialog";
 import DateFilter from "../../../components/DateFilter";
 import SectionSelectDropdown from "../../../components/reuseable-filters/SectionSelectDropdown";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import SectionCategoryDropdown from "../../../components/reuseable-filters/SectionCategoryDropdown";
 import StaffDropdown from "../../../components/reuseable-filters/StaffDropdown";
 import DistrictWiseDropdown from "../../../components/reuseable-filters/DistrictWiseDropdown";
@@ -18,12 +18,12 @@ import { getRole } from "../../../utils/utils";
 import FineFilterDropdown from "./FineFilter";
 import SearchFilter from "../../../components/reuseable-filters/SearchFilter";
 import DetailTable from "../../../components/table/DetailTable";
+import ClearButton from "../../../components/ClearButton";
 
 const CustomComplaintComponent = () => {
   const [refresh, setRefresh] = useState(false);
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
+
   const sectionIds = searchParams.getAll("section");
   const sectionCategory = searchParams.get("sectionCategory");
   const search = searchParams.get("search") ?? "";
@@ -82,14 +82,7 @@ const CustomComplaintComponent = () => {
             <SectionCategoryDropdown />
             <DateFilter />
             <FineFilterDropdown />
-            <button
-              className="text-sm! cursor-pointer! font-bold! text-[#BD4E42] border border-[#D96F64] py-1! px-3! rounded-lg!"
-              onClick={() => {
-                router.push(pathname);
-              }}
-            >
-              Clear
-            </button>
+            <ClearButton />
           </div>
         </div>
         <DetailTable rowsData={filteredData ?? []} />

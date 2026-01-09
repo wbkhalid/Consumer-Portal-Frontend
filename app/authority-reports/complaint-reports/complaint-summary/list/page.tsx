@@ -73,7 +73,7 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
-  if (divisionId) params.set("divisionId", divisionId);
+  if (divisionId !== "0") params.set("divisionId", divisionId ?? "");
 
   const finalAPI = `${baseURL}?${params.toString()}`;
   console.log("finalAPI call", finalAPI);

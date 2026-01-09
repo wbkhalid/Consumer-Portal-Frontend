@@ -20,7 +20,7 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
 
   return (
     <div className="relative">
-      <div className="h-[calc(100vh-175px)] overflow-y-auto scrollbar-hide relative">
+      <div className="h-[calc(100vh-220px)] overflow-y-auto scrollbar-hide relative">
         <table className="min-w-full text-sm">
           <thead className="sticky top-0 z-10">
             <tr className="font-semibold bg-white text-center">

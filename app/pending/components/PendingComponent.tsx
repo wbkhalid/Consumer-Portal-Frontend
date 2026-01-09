@@ -57,7 +57,6 @@ const PendingComponent = () => {
         <div className="flex justify-between items-center py-3! px-5!">
           <SearchFilter />
           <div className="flex justify-end items-center gap-2">
-            <StaffDropdown />
             {(role === "Admin" || role === "DG" || role === "Secretary") && (
               <DistrictWiseDropdown />
             )}

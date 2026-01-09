@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import TableBodyCell from "../../../../components/table/TableBodyCell";
 import TableHeaderCell from "../../../../components/table/TableHeaderCell";
 import { FineImposedProp } from "../page";
@@ -9,6 +9,7 @@ interface FineReportTableProps {
 
 const FineReportTable = ({ rowsData }: FineReportTableProps) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const totalComplaints = rowsData?.reduce(
     (sum, item) => sum + (item?.complaints || 0),
@@ -21,8 +22,8 @@ const FineReportTable = ({ rowsData }: FineReportTableProps) => {
   );
   return (
     <div className="relative">
-      <div className="h-[calc(100vh-120px)] overflow-auto">
-        <div className="overflow-scroll mb-10!">
+      <div className="h-[calc(100vh-175px)] overflow-y-auto">
+        <div className="mb-10!">
           <table className="min-w-full text-sm">
             <thead className="sticky top-0 z-10">
               <tr className="font-semibold bg-white">
@@ -48,7 +49,11 @@ const FineReportTable = ({ rowsData }: FineReportTableProps) => {
                     router.push(
                       `/others-report/complaint-reports/fine-imposed-report/${encodeURIComponent(
                         item?.districtName
-                      )}`
+                      )}${
+                        searchParams.toString()
+                          ? `?${searchParams.toString()}`
+                          : ""
+                      }`
                     )
                   }
                 >

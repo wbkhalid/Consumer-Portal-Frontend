@@ -6,7 +6,7 @@ import { PiFilePdfThin, PiMicrosoftExcelLogoLight } from "react-icons/pi";
 import styles from "./DropDown.module.css";
 import { Button, DropdownMenu } from "@radix-ui/themes";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { CloudDownloadIcon } from "@hugeicons/core-free-icons";
+import { CloudDownloadIcon, Download03Icon } from "@hugeicons/core-free-icons";
 
 interface Props {
   onClickPdf?: () => void;
@@ -44,10 +44,10 @@ const DownloadDropDown = ({
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         {styleVarient === 1 ? (
-          <Button className="h-full! rounded-[0.438rem]! py-[9.5px]! outline-0!">
-            <HugeiconsIcon icon={CloudDownloadIcon} /> Download
-            <DropdownMenu.TriggerIcon />
-          </Button>
+          <div className="h-full! flex gap-1 items-center bg-white border border-[#D5D7DA] rounded-lg px-3! py-2! text-[#414651] font-bold text-sm ">
+            Download
+            <HugeiconsIcon icon={Download03Icon} size={16} color="#414651" />
+          </div>
         ) : (
           <Button size="2" className="rounded-[0.438rem]! outline-0!">
             <HugeiconsIcon icon={CloudDownloadIcon} /> Download
@@ -57,12 +57,12 @@ const DownloadDropDown = ({
       </DropdownMenu.Trigger>
       <DropdownMenu.Content size={styleVarient === 1 ? "2" : "1"}>
         {onClickPdf && (
-          <DropdownMenu.Item onClick={onClickPdf}>
+          <DropdownMenu.Item onClick={onClickPdf} className="cursor-pointer!">
             <PiFilePdfThin /> PDF
           </DropdownMenu.Item>
         )}
         {onClickExcel && (
-          <DropdownMenu.Item onClick={onClickExcel}>
+          <DropdownMenu.Item onClick={onClickExcel} className="cursor-pointer!">
             <PiMicrosoftExcelLogoLight /> EXCEL
           </DropdownMenu.Item>
         )}

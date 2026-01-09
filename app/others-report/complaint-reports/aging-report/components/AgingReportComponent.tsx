@@ -23,7 +23,6 @@ const AgingReportComponent = ({ data }: AgingReportComponentProp) => {
       "Number of Complaints": item.numberOfComplaints,
     }));
 
-    // ✅ Total row
     formattedData.push({
       "Sr #": "",
       "Day Range": "Total",
@@ -54,7 +53,6 @@ const AgingReportComponent = ({ data }: AgingReportComponentProp) => {
       item.numberOfComplaints,
     ]);
 
-    // ✅ Total row add
     tableBody.push(["", "Total", totalComplaints]);
 
     autoTable(doc, {
@@ -65,7 +63,6 @@ const AgingReportComponent = ({ data }: AgingReportComponentProp) => {
         fontSize: 10,
       },
       didParseCell: (hookData) => {
-        // 🎨 Total row styling
         if (hookData.row.index === tableBody.length - 1) {
           hookData.cell.styles.fontStyle = "bold";
           hookData.cell.styles.fillColor = [241, 241, 241];
@@ -77,26 +74,20 @@ const AgingReportComponent = ({ data }: AgingReportComponentProp) => {
   };
 
   return (
-    <div>
-      <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
-        <div className="flex justify-between items-center px-4! py-2!">
-          <div className="flex items-center gap-1">
-            <p className="text-(--primary) font-semibold">Aging Report</p>
-            <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-              {data?.length?.toLocaleString()} Records
-            </p>
-          </div>
-          <div>
-            <DownloadDropdown
-              onExportExcel={() => exportAgingReportToExcel(data)}
-              onExportPDF={() => exportAgingReportToPDF(data)}
-              disabled={!data?.length}
-            />
-          </div>
-        </div>
+    <>
+      <div className="flex justify-between items-center mb-2.5!">
+        <p className="text-[#111827] font-semibold">Aging Report</p>
+
+        <DownloadDropdown
+          onExportExcel={() => exportAgingReportToExcel(data)}
+          onExportPDF={() => exportAgingReportToPDF(data)}
+          disabled={!data?.length}
+        />
+      </div>
+      <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
         <AgingReportTable rowsData={data ?? []} />
       </div>
-    </div>
+    </>
   );
 };
 

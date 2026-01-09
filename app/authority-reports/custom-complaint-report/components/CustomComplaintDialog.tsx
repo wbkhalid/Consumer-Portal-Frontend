@@ -15,7 +15,16 @@ const CustomComplaintDialog = ({ setRefresh }: CustomComplaintProp) => {
   const [openCustomDilaog, setOpenCustomDialog] = useState(false);
 
   return (
-    <Dialog.Root open={openCustomDilaog} onOpenChange={setOpenCustomDialog}>
+    <Dialog.Root
+      open={openCustomDilaog}
+      onOpenChange={(open) => {
+        setOpenCustomDialog(open);
+        if (!open) {
+          setStep(1);
+          setUserId("");
+        }
+      }}
+    >
       <Dialog.Trigger>
         <Button className="border! border-(--primary)! cursor-pointer! rounded-lg! bg-[linear-gradient(180deg,#036CCF_-46.25%,#013769_100%)]! shadow-[0px_1px_2px_rgba(10,13,18,0.05)]! hover:opacity-95! transition-all!">
           Add Custom Complaint

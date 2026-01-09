@@ -3,7 +3,6 @@ import { sort } from "fast-sort";
 import { Suspense } from "react";
 import { COMPLAINT_REPORT_API } from "../../../../APIs";
 import DatesFilter from "../../../../components/Filters/DatesFilter";
-import SearchFilter from "../../../../components/Filters/SearchFilter";
 import SectionCategoryFilter from "../../../../components/Filters/SectionCategoryFilter";
 import SectionFilter from "../../../../components/Filters/SectionFilter";
 import YearFilter from "../../../../components/Filters/YearFilter";
@@ -13,6 +12,11 @@ import { APIResponse } from "../../../../services/api-client";
 import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../../utils/utils";
 import DownloadWrapper from "./DownloadWrapper";
 import List, { Query } from "./List";
+import SearchFilter from "../../../../components/reuseable-filters/SearchFilter";
+import SectionSelectDropdown from "../../../../components/reuseable-filters/SectionSelectDropdown";
+import SectionCategoryDropdown from "../../../../components/reuseable-filters/SectionCategoryDropdown";
+import DateFilter from "../../../../components/DateFilter";
+import ClearButton from "../../../../components/ClearButton";
 
 export interface SectionReport {
   districtName: string;
@@ -26,7 +30,6 @@ interface Props {
 const SectionReportPage = async ({ searchParams }: Props) => {
   const query = await searchParams;
   const {
-    year,
     startDate,
     endDate,
     page,
@@ -44,27 +47,24 @@ const SectionReportPage = async ({ searchParams }: Props) => {
   if (pageSize == undefined) myPageSize = DEFAULT_PAGE_SIZE;
   else myPageSize = Number(pageSize);
 
-  const selectedYear = year || DEFAULT_YEAR;
+  // const selectedYear = year || DEFAULT_YEAR;
 
   const baseURL =
     process.env.BACKEND_API + COMPLAINT_REPORT_API + "/section-report";
 
   const params = new URLSearchParams();
 
-  params.set("year", year || selectedYear.toString()); // always required
-  console.log("selected section", section);
-  const sectionIds = section?.split(","); // ["4", "5", "6"]
+  const sectionIds = Array.isArray(section)
+    ? section
+    : section
+    ? [section]
+    : [];
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
 
-  if (sectionIds?.length) {
-    sectionIds.forEach((id) => {
-      params.append("sectionIds", id);
-    });
-  }
-
   if (sectionCategory) params.set("sectionCategoryId", sectionCategory);
+  sectionIds.forEach((id) => params.append("section", id));
 
   const finalAPI = `${baseURL}?${params.toString()}`;
   console.log("finalAPI call", finalAPI);
@@ -75,7 +75,6 @@ const SectionReportPage = async ({ searchParams }: Props) => {
   const response: APIResponse<SectionReport[]> = await res.json();
   let data: SectionReport[] = response.data;
 
-  // **Apply Search Filter**
   if (search) {
     const lowerSearch = search.toLowerCase();
     data = data.filter(
@@ -85,14 +84,12 @@ const SectionReportPage = async ({ searchParams }: Props) => {
     );
   }
 
-  // **Pagination Logic**
   const totalCount = data?.length;
 
   if (orderBy && order) {
     data = sort(data)[order]((item) => item[orderBy]);
   }
 
-  // Apply pagination using slice()
   const paginatedData = data?.slice(
     (myPage - 1) * myPageSize,
     myPage * myPageSize
@@ -101,53 +98,49 @@ const SectionReportPage = async ({ searchParams }: Props) => {
   const fileName = "Section Report";
 
   return (
-    <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
-      {/* Header Section */}
-      <div className="flex justify-between items-center px-2! py-2! flex-wrap gap-2">
-        <div className="flex items-center gap-1 flex-wrap">
-          <p className="text-(--primary) font-semibold">{fileName}</p>
+    <>
+      <div className="flex justify-between items-center mb-2.5!">
+        <div className="flex items-center gap-1">
+          <p className="text-[#111827] font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-            {paginatedData.length} Records
+            {data?.length} Records
           </p>
         </div>
-        <div className="flex items-center justify-end gap-2 flex-wrap">
-          <Suspense fallback={<Spinner />}>
-            <SectionFilter />
-            <SectionCategoryFilter />
-            <YearFilter />
-            <DatesFilter />
-            <SearchFilter />
-            <DownloadWrapper fileName={fileName} data={data} />
-          </Suspense>
-        </div>
       </div>
-      {/* Table */}
-      {response?.responseCode !== 200 ? (
-        // API error
-        <div className="px-2!">
-          <ErrorMessage>{response?.responseMessage}</ErrorMessage>
+      <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
+        <div className="flex justify-between items-center py-3! px-5!">
+          <SearchFilter />
+          <div className="flex justify-end items-center gap-2">
+            <SectionSelectDropdown />
+            <SectionCategoryDropdown />
+            <DateFilter />
+            <ClearButton />
+          </div>
         </div>
-      ) : paginatedData && paginatedData.length > 0 ? (
-        // Normal table data
-        <List
-          data={paginatedData}
-          currentPage={myPage}
-          pageSize={myPageSize}
-          searchParams={query}
-        />
-      ) : (
-        // No records found
-        <p className="px-2!">No records found.</p>
-      )}
+        {response?.responseCode !== 200 ? (
+          <div className="px-2!">
+            <ErrorMessage>{response?.responseMessage}</ErrorMessage>
+          </div>
+        ) : paginatedData && paginatedData.length > 0 ? (
+          <List
+            data={paginatedData}
+            currentPage={myPage}
+            pageSize={myPageSize}
+            searchParams={query}
+          />
+        ) : (
+          <p className="px-2!">No records found.</p>
+        )}
 
-      <Suspense fallback={<Spinner />}>
-        <Pagination
-          pageSize={myPageSize}
-          currentPage={myPage}
-          itemCount={totalCount}
-        />
-      </Suspense>
-    </div>
+        <Suspense fallback={<Spinner />}>
+          <Pagination
+            pageSize={myPageSize}
+            currentPage={myPage}
+            itemCount={totalCount}
+          />
+        </Suspense>
+      </div>
+    </>
   );
 };
 

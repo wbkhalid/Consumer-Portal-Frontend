@@ -15,8 +15,8 @@ const AgingReportTable = ({ rowsData }: AgingReportTableProps) => {
   );
   return (
     <div className="relative">
-      <div className="h-[calc(100vh-120px)] overflow-auto">
-        <div className="overflow-scroll mb-10!">
+      <div className="h-[calc(100vh-115px)] ">
+        <div className="mb-10!">
           <table className="min-w-full text-sm">
             <thead className="sticky top-0 z-10">
               <tr className="font-semibold bg-white">

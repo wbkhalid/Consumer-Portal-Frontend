@@ -1,5 +1,7 @@
 "use client";
 
+import { Download03Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { DropdownMenu } from "@radix-ui/themes";
 import { Button } from "@radix-ui/themes";
 import { PiFilePdf, PiFileXlsDuotone } from "react-icons/pi";
@@ -19,10 +21,10 @@ const DownloadDropdown = ({
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
-        <Button className="rounded-full! cursor-pointer! flex items-center gap-2">
-          Export Data
-          <RxDownload size={18} />
-        </Button>
+        <div className="h-full! flex gap-1 items-center bg-white border border-[#D5D7DA] rounded-lg px-3! py-2! text-[#414651] font-bold text-sm ">
+          Download
+          <HugeiconsIcon icon={Download03Icon} size={16} color="#414651" />
+        </div>
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content className="p-0!">

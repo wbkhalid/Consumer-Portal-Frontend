@@ -12,6 +12,7 @@ import SearchFilter from "../../components/reuseable-filters/SearchFilter";
 import { getRole } from "../../utils/utils";
 import DistrictWiseDropdown from "../../components/reuseable-filters/DistrictWiseDropdown";
 import DetailTable from "../../components/table/DetailTable";
+import ClearButton from "../../components/ClearButton";
 
 const ComplainComponent = () => {
   const [refresh, setRefresh] = useState(false);
@@ -71,14 +72,7 @@ const ComplainComponent = () => {
             )}
             <DateFilter />
             <FineFilterDropdown />
-            <button
-              className="text-sm! cursor-pointer! font-bold! text-[#BD4E42] border border-[#D96F64] py-1! px-3! rounded-lg!"
-              onClick={() => {
-                router.push(pathname);
-              }}
-            >
-              Clear
-            </button>
+            <ClearButton />
           </div>
         </div>
         <DetailTable rowsData={filteredData ?? []} />

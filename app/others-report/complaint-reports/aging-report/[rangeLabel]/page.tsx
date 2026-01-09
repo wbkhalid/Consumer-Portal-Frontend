@@ -1,6 +1,8 @@
+import { useSearchParams } from "next/navigation";
 import { COMPLAINT_REPORT_API } from "../../../../APIs";
 import { AgingReportProp } from "../page";
 import DayRangeComponent from "./components/DayRangeComponent";
+import { cookies } from "next/headers";
 
 interface Props {
   params: Promise<{
@@ -11,20 +13,28 @@ interface Props {
 const DayRangePage = async ({ params }: Props) => {
   const { rangeLabel } = await params;
 
+  const cookieStore = await cookies();
+  const divisionId = cookieStore.get("divisionId")?.value;
+
   const decodedDayRange = decodeURIComponent(rangeLabel);
 
   const baseURL =
     process.env.BACKEND_API + COMPLAINT_REPORT_API + "/aging-report";
+  const urlParams = new URLSearchParams();
 
-  const res = await fetch(baseURL, {
+  if (divisionId !== "0") urlParams.set("divisionId", divisionId ?? "");
+  const finalAPI = `${baseURL}?${urlParams.toString()}`;
+  console.log("finalAPI call", finalAPI);
+
+  const res = await fetch(finalAPI, {
     next: { revalidate: 10 },
   });
 
   const response = await res.json();
 
-  const data: AgingReportProp[] = response?.data ?? [];
+  let data: AgingReportProp[] = response?.data ?? [];
 
-  const selectedRange = data?.find(
+  let selectedRange = data?.find(
     (item) => item?.rangeLabel === decodedDayRange
   );
 

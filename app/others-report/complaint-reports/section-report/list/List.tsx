@@ -5,7 +5,7 @@ import { BaseQuery, Column } from "../../../../utils/utils";
 import { SectionReport } from "./page";
 
 export interface Query extends BaseQuery<SectionReport> {
-  section?: string;
+  section?: string | string[];
   sectionCategory?: string;
 }
 
@@ -23,7 +23,7 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
 
   return (
     <div className="relative">
-      <div className="h-[calc(100vh-175px)] overflow-y-auto scrollbar-hide relative">
+      <div className="h-[calc(100vh-200px)] overflow-y-auto scrollbar-hide relative">
         <table className="min-w-full text-sm">
           <thead className="sticky top-0 z-10">
             <tr className="font-semibold bg-white text-center">
@@ -47,9 +47,7 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
               return (
                 <tr
                   key={serial}
-                  className={`transition-colors duration-150 ${
-                    index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                  } hover:bg-gray-100`}
+                  className={`transition-colors duration-150  hover:bg-gray-100`}
                 >
                   <TableBodyCell>{serial}</TableBodyCell>
                   <TableBodyCell>{d.districtName}</TableBodyCell>
@@ -58,7 +56,6 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
               );
             })}
 
-            {/* ✅ Total Row */}
             <tr className="font-semibold bg-[#f1f1f1] text-[#013769] sticky bottom-0">
               <TableBodyCell colSpan={2} className="text-center">
                 Total
