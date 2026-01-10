@@ -9,7 +9,7 @@ interface Props {
   year?: string;
   startDate?: string;
   endDate?: string;
-  section?: string | string[];
+  sectionIds?: string | string[];
   sectionCategory?: string;
   assignedTo?: string;
   minFineAmount?: number;
@@ -55,7 +55,7 @@ const useGetCustomComplaints = ({
   year,
   startDate,
   endDate,
-  section,
+  sectionIds,
   sectionCategory,
   assignedTo,
   minFineAmount,
@@ -75,15 +75,15 @@ const useGetCustomComplaints = ({
     params.append("startDate", String(startDate));
   if (endDate !== undefined && endDate !== "" && endDate !== "0")
     params.append("endDate", String(endDate));
-  if (section) {
-    if (Array.isArray(section)) {
-      section.forEach((s) => {
+  if (sectionIds) {
+    if (Array.isArray(sectionIds)) {
+      sectionIds.forEach((s) => {
         if (s && s !== "0") {
-          params.append("section", s);
+          params.append("sectionIds", s);
         }
       });
     } else {
-      params.append("section", section);
+      params.append("sectionIds", sectionIds);
     }
   }
 

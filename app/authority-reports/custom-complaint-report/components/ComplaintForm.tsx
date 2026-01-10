@@ -152,7 +152,7 @@ const ComplaintForm = ({ userId, onSuccess }: Props) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3  gap-3 max-h-[60vh]! overflow-y-auto">
           <CustomTextField
             label="Shop Name"
             placeholder="Enter Shop Name"
@@ -342,7 +342,11 @@ const ComplaintForm = ({ userId, onSuccess }: Props) => {
               Cancel
             </Button>
           </Dialog.Close>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="cursor-pointer!"
+          >
             {isSubmitting ? "Submitting..." : "Submit Complaint"}
           </Button>
         </Flex>

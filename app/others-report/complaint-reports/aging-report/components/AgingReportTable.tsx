@@ -15,7 +15,7 @@ const AgingReportTable = ({ rowsData }: AgingReportTableProps) => {
   );
   return (
     <div className="relative">
-      <div className="h-[calc(100vh-115px)] ">
+      <div className="h-[calc(100vh-120px)] ">
         <div className="mb-10!">
           <table className="min-w-full text-sm">
             <thead className="sticky top-0 z-10">

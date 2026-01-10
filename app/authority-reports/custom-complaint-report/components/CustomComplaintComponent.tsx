@@ -44,7 +44,7 @@ const CustomComplaintComponent = () => {
     divisionId,
     districtId: districtParam || districtId,
     tehsilId,
-    section: sectionIds.length ? sectionIds : undefined,
+    sectionIds: sectionIds.length ? sectionIds : undefined,
     sectionCategory: sectionCategory || undefined,
     assignedTo: assigneeAuthority || undefined,
   });

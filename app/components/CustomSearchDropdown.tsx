@@ -57,31 +57,27 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
       )
     : options.find((opt) => String(opt.value) === String(value ?? "")) || null;
 
-  // const selectedOption =
-  //   options?.find((opt) => String(opt.value) === String(value ?? "")) || null;
-
-  // SingleValue with icon (for selected area/control)
-  const SingleValueWithIcon: React.FC<SingleValueProps<Option, false>> = (
-    props
-  ) => {
-    const { data } = props;
-    return (
-      <components.SingleValue {...props}>
-        <div className="flex items-center gap-2">
-          {data.icon && (
-            <Image
-              src={data.icon}
-              alt={`${data.label} icon`}
-              width={18}
-              height={18}
-              className="rounded"
-            />
-          )}
-          <span style={{ fontSize }}>{data.label}</span>
-        </div>
-      </components.SingleValue>
-    );
-  };
+  // const SingleValueWithIcon: React.FC<SingleValueProps<Option, false>> = (
+  //   props
+  // ) => {
+  //   const { data } = props;
+  //   return (
+  //     <components.SingleValue {...props}>
+  //       <div className="flex items-center gap-2">
+  //         {data.icon && (
+  //           <Image
+  //             src={data.icon}
+  //             alt={`${data.label} icon`}
+  //             width={18}
+  //             height={18}
+  //             className="rounded"
+  //           />
+  //         )}
+  //         <span style={{ fontSize }}>{data.label}</span>
+  //       </div>
+  //     </components.SingleValue>
+  //   );
+  // };
 
   const selectComponents: Partial<
     SelectProps<Option, typeof isMultiple, GroupBase<Option>>["components"]
@@ -89,10 +85,6 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
     IndicatorSeparator: () => null,
     ClearIndicator: () => null,
   };
-
-  // if (iconPlacement === "value" || iconPlacement === "both") {
-  //   selectComponents.SingleValue = SingleValueWithIcon;
-  // }
 
   const wantMenuIcons = iconPlacement === "menu" || iconPlacement === "both";
   const wantValueIcons = iconPlacement === "value" || iconPlacement === "both";
@@ -186,16 +178,20 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
             paddingBottom: 2,
           }),
 
-          multiValue: (base) => ({
-            ...base,
-            maxWidth: "100%",
-          }),
+          // multiValue: (base) => ({
+          //   ...base,
+          //   maxWidth: "100%",
+          // }),
 
-          multiValueLabel: (base) => ({
-            ...base,
-            fontSize,
-            whiteSpace: "nowrap",
-          }),
+          // multiValueLabel: (base) => ({
+          //   ...base,
+          //   fontSize,
+          //   whiteSpace: "nowrap",
+          // }),
+          multiValue: () => ({ display: "none" }),
+          multiValueLabel: () => ({ display: "none" }),
+          multiValueRemove: () => ({ display: "none" }),
+
           menuPortal: (base) => ({
             ...base,
             zIndex: 9999,
@@ -232,6 +228,35 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
         }}
         classNames={{ control: () => "text-sm" }}
       />
+
+      {isMultiple &&
+        Array.isArray(selectedOption) &&
+        selectedOption.length > 0 && (
+          <div className="flex flex-wrap gap-0.5 mt-1!">
+            {selectedOption.map((opt) => (
+              <div
+                key={opt.value}
+                className="flex items-center gap-1 px-1! py-0.5! rounded-full bg-(--primary) text-white text-[8px]"
+              >
+                <span>{opt.label}</span>
+
+                <button
+                  type="button"
+                  className="ml-0.5! font-bold! hover:opacity-80 cursor-pointer!"
+                  onClick={() => {
+                    const updatedValues = selectedOption
+                      .filter((o) => o.value !== opt.value)
+                      .map((o) => o.value);
+
+                    onChange?.(updatedValues);
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
     </Box>

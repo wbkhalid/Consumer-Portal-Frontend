@@ -37,7 +37,7 @@ const UserTable = ({ rowsData }: UserTableProps) => {
                 key={item?.id}
                 className={`transition-colors duration-150  hover:bg-gray-100`}
               >
-                <TableBodyCell>{item?.id}</TableBodyCell>
+                <TableBodyCell>{startIndex + index + 1}</TableBodyCell>
                 <TableBodyCell>{item?.fullName}</TableBodyCell>
                 <TableBodyCell>{item?.email}</TableBodyCell>
                 <TableBodyCell>{item?.cnic}</TableBodyCell>

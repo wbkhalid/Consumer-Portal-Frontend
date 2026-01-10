@@ -22,7 +22,7 @@ const SectionSelectDropdown = () => {
 
   const sectionNames = Object.keys(groupedSections || {});
 
-  const sectionParams = searchParams.getAll("section");
+  const sectionParams = searchParams.getAll("sectionIds");
   const selectedSectionName = sectionParams.length
     ? Object.entries(groupedSections).find(([name, ids]) =>
         ids.some((id) => sectionParams.includes(id.toString()))
@@ -33,15 +33,15 @@ const SectionSelectDropdown = () => {
     const params = new URLSearchParams(searchParams.toString());
 
     if (value === "ALL") {
-      params.delete("section");
+      params.delete("sectionIds");
       router.push(`${pathname}?${params.toString()}`);
       return;
     }
 
     const ids = groupedSections[value];
 
-    params.delete("section");
-    ids.forEach((id) => params.append("section", id.toString()));
+    params.delete("sectionIds");
+    ids.forEach((id) => params.append("sectionIds", id.toString()));
 
     router.push(`${pathname}?${params.toString()}`);
   };

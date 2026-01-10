@@ -117,10 +117,7 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
 
             <tbody>
               {paginatedData?.map((item, index) => (
-                <tr
-                  key={item?.userId}
-                  className="cursor-pointer! hover:bg-gray-100"
-                >
+                <tr key={item?.userId} className="hover:bg-gray-100">
                   <TableBodyCell>
                     {(currentPage - 1) * pageSize + index + 1}
                   </TableBodyCell>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@radix-ui/themes";
+import { Button, Dialog } from "@radix-ui/themes";
 import CustomPasswordField from "../../components/CustomPasswordField";
 import { LuPhone, LuUser } from "react-icons/lu";
 import { Controller, useForm } from "react-hook-form";
@@ -183,7 +183,6 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
         </div>
 
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-3 max-h-[40vh] overflow-y-auto">
-          {/* Full Name */}
           <CustomTextField
             label="Full Name"
             placeholder="Enter Full Name"
@@ -192,7 +191,6 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
             {...register("fullName")}
           />
 
-          {/* Phone */}
           <CustomTextField
             label="Phone Number"
             placeholder="03XXXXXXXXX"
@@ -311,20 +309,24 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
         </div>
 
         <div className="flex justify-between items-center mt-5!">
-          <Button
-            size="3"
-            variant="soft"
-            className="rounded-lg!  cursor-pointer! "
-          >
-            Cancel
-          </Button>
+          <Dialog.Close>
+            <Button
+              type="button"
+              size="3"
+              variant="soft"
+              className="rounded-lg!  cursor-pointer! "
+            >
+              Cancel
+            </Button>
+          </Dialog.Close>
 
           <Button
             size="3"
+            type="submit"
             className="rounded-lg!  cursor-pointer! "
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Sign Up..." : "Sign Up"}
+            {isSubmitting ? "Register..." : "Register"}
           </Button>
         </div>
 
