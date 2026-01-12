@@ -21,6 +21,11 @@ export interface SectionsDetails {
   description: string;
 }
 
+export interface DecisionFilePaths {
+  filePath: string;
+  fileType: number;
+}
+
 export interface ManageCustomComplainsData {
   id: number;
   shopName: string;
@@ -41,10 +46,12 @@ export interface ManageCustomComplainsData {
   status: number;
   remarks: string | null;
   hearingDate: string | null;
+  closingRemarks: string | null;
   assigneeRemarks: string | null;
   listAudio: string[];
   listOfImage: string[];
   createdAt: string;
+  decisionFilePaths: DecisionFilePaths[];
 }
 
 const useGetCustomComplaints = ({
@@ -105,6 +112,7 @@ const useGetCustomComplaints = ({
   const queryString = params.toString();
 
   console.log(queryString, "query");
+  console.log(sectionIds, "..////..");
 
   return useData<ManageCustomComplainsData>({
     refresh,

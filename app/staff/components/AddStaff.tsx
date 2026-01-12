@@ -27,7 +27,7 @@ const schema = z
     divisionId: z.number().optional(),
     districtId: z.number().optional(),
     tehsilId: z.number().optional(),
-
+    email: z.string().optional(),
     password: z
       .string()
       .min(6, "Password must be at least 6 characters")
@@ -115,12 +115,13 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
   const { data: rolesData } = useGetAllRoles();
 
   const filteredRoles = rolesData?.filter(
-    (role) => !["Admin", "User"].includes(role?.name)
+    (role) => !["Admin", "User", "PTCL_MEETING_USER"].includes(role?.name)
   );
 
   const onSubmit = async (formData: Register) => {
     try {
       const { confirmPassword, ...payload } = formData;
+      payload.email = "";
 
       const role = formData.roleName;
 

@@ -1,7 +1,8 @@
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
+import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 
 interface MediaDetailsProps {
-  complaint: ManageComplainsData | null;
+  complaint: ManageComplainsData | ManageCustomComplainsData | null;
   setMediaModal: React.Dispatch<
     React.SetStateAction<{
       open: boolean;

@@ -41,5 +41,6 @@ export const PROCEEDING_STEPS = [
 
 export const RESOLVED_STEPS = [
   ...DETAIL_STEPS,
-  { id: 4, label: "Resolved Details", iconImage: TickDouble01Icon },
+  { id: 4, label: "Remarks and history", iconImage: UserMultipleIcon },
+  { id: 5, label: "Resolved Details", iconImage: TickDouble01Icon },
 ];

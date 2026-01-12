@@ -24,7 +24,7 @@ const CustomComplaintComponent = () => {
   const [refresh, setRefresh] = useState(false);
   const searchParams = useSearchParams();
 
-  const sectionIds = searchParams.getAll("section");
+  const sectionIds = searchParams.getAll("sectionIds");
   const sectionCategory = searchParams.get("sectionCategory");
   const search = searchParams.get("search") ?? "";
   const assigneeAuthority = searchParams.get("assignedTo");
@@ -44,7 +44,7 @@ const CustomComplaintComponent = () => {
     divisionId,
     districtId: districtParam || districtId,
     tehsilId,
-    sectionIds: sectionIds.length ? sectionIds : undefined,
+    sectionIds: sectionIds?.length ? sectionIds : undefined,
     sectionCategory: sectionCategory || undefined,
     assignedTo: assigneeAuthority || undefined,
   });

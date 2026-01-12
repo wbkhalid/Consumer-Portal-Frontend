@@ -26,11 +26,11 @@ interface ResolvedTableProps {
 const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [pageSize, setPageSize] = useState(10);
+  // const [pageSize, setPageSize] = useState(10);
   const { data: staffData } = useGetAllStaff();
 
   const sortBy = searchParams.get("sortBy") || "";
@@ -83,7 +83,9 @@ const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
   };
 
   const sortedData = useMemo(() => {
-    if (!sortBy) return rowsData;
+    if (!sortBy) {
+      return sort(rowsData).desc((i) => i.id);
+    }
 
     const getField = sortFieldMapping[sortBy];
     if (!getField) return rowsData;
@@ -93,17 +95,17 @@ const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
       : sort(rowsData).desc(getField);
   }, [rowsData, sortBy, sortOrder]);
 
-  const paginatedData = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
-    return sortedData?.slice(start, start + pageSize);
-  }, [sortedData, currentPage, pageSize]);
+  // const paginatedData = useMemo(() => {
+  //   const start = (currentPage - 1) * pageSize;
+  //   return sortedData?.slice(start, start + pageSize);
+  // }, [sortedData, currentPage, pageSize]);
 
-  const totalPages = Math.ceil(rowsData?.length / pageSize);
+  // const totalPages = Math.ceil(rowsData?.length / pageSize);
 
   return (
     <div
       className={`relative flex flex-col  ${
-        isBreadCrumbs ? "h-[calc(100vh-190px)]" : "h-[calc(100vh-170px)]"
+        isBreadCrumbs ? "h-[calc(100vh-190px)]" : "h-[calc(100vh-165px)]"
       } `}
     >
       <div className="flex-1 overflow-auto">
@@ -122,7 +124,7 @@ const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
           </thead>
 
           <tbody>
-            {paginatedData?.map((item) => (
+            {sortedData?.map((item) => (
               <tr
                 key={item?.id}
                 className="cursor-pointer! hover:bg-gray-100"
@@ -210,7 +212,7 @@ const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
         </table>
       </div>
 
-      <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
+      {/* <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
         <PaginationControls
           currentPage={currentPage}
           totalPages={totalPages}
@@ -218,7 +220,7 @@ const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
           pageSize={pageSize}
           setPageSize={setPageSize}
         />
-      </div>
+      </div> */}
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
         <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]">

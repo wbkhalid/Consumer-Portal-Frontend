@@ -10,11 +10,13 @@ import MediaDetails from "../../components/complaintDetail/MediaDetails";
 import FullScreenMediaModal from "../../components/dialog/FullScreenMediaModal";
 import { RESOLVED_STEPS } from "../../components/complaintDetail/StepperOptions";
 import ResolvedDetail from "../../components/complaintDetail/ResolvedDetail";
+import ComplaintHistory from "../complaintDetail/ComplaintHistory";
+import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 
 const ResolvedDialog = ({
   selectedComplaint,
 }: {
-  selectedComplaint: ManageComplainsData | null;
+  selectedComplaint: ManageComplainsData | ManageCustomComplainsData | null;
 }) => {
   const [step, setStep] = useState(1);
   const [mediaModal, setMediaModal] = useState<{
@@ -40,7 +42,8 @@ const ResolvedDialog = ({
           setMediaModal={setMediaModal}
         />
       )}
-      {step === 4 && (
+      {step === 4 && <ComplaintHistory complaint={selectedComplaint} />}
+      {step === 5 && (
         <ResolvedDetail
           complaint={selectedComplaint}
           setMediaModal={setMediaModal}

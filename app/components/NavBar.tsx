@@ -39,6 +39,12 @@ const NavBar = () => {
 
   const handleLogout = () => {
     Cookies.remove("token");
+    Cookies.remove("divisionId");
+    Cookies.remove("districtId");
+    Cookies.remove("tehsilId");
+    Cookies.remove("userId");
+    Cookies.remove("email");
+    Cookies.remove("role");
     router.push("/login");
   };
   useEffect(() => {

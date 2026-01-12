@@ -1,13 +1,15 @@
+import { format } from "date-fns";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
 import useGetComplaintHistory from "../../hooks/useGetComplaintHistory";
+import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
-import { formatTimeOnly, LongFormatDate } from "../../utils/utils";
+import { formatTimeOnly, LongFormatDate, toLocal } from "../../utils/utils";
 
 const ComplaintHistory = ({
   complaint,
 }: {
-  complaint: ManageComplainsData | null;
+  complaint: ManageComplainsData | ManageCustomComplainsData | null;
 }) => {
   const { divisionId, districtId, tehsilId } = useRegionFilters();
 
@@ -35,19 +37,26 @@ const ComplaintHistory = ({
       <div className="flex flex-col gap-2.5">
         {complaintHistoryData?.map((history) => (
           <div className="bg-[#F9FAFB] border border-[#E5E7EB] px-3! py-1! rounded-[5px]">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center text-sm">
               <p>
                 {staffData?.find((u) => u.userId === history?.assignedTo)
                   ?.fullName || "-"}
               </p>
-              <p className="text-sm">{LongFormatDate(history?.changedAt)}</p>
+              <p className="text-sm"> pending to Proceeding </p>
             </div>
-            <div className="flex justify-between items-center text-sm">
-              <p className="text-[#4A5565]">Admin</p>
-              <p className="text-sm">{formatTimeOnly(history?.changedAt)}</p>
+            <div className="flex justify-between items-center text-xs">
+              <p className="text-[#4A5565]">
+                Assigned By :{" "}
+                {staffData?.find((u) => u?.userId === history?.changedBy)
+                  ?.fullName || "-"}
+              </p>
+              <p className="text-xs">
+                {LongFormatDate(history?.changedAt)} -
+                {format(toLocal(history?.changedAt), "hh:mm a")}
+              </p>
             </div>
             {history?.reason && (
-              <p className="text-[#4A5565] text-sm mt-2!">
+              <p className="text-[#4A5565] text-xs mt-2!">
                 Reason:{history?.reason}
               </p>
             )}

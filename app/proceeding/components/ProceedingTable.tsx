@@ -345,6 +345,7 @@ const ProceedingTable = ({ rowsData, setRefresh }: ProceedingTableProps) => {
             selectedComplaint={selectedComplaint}
             onClose={() => {
               setSelectedComplaint(null);
+              setOpenDialog(false);
             }}
             onSuccess={() => {
               setRefresh((prev) => !prev);

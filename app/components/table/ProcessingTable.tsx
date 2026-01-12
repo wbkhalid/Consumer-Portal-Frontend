@@ -29,11 +29,11 @@ interface ProcessingTableProps {
 const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [pageSize, setPageSize] = useState(10);
+  // const [pageSize, setPageSize] = useState(10);
   const { data: staffData } = useGetAllStaff();
 
   const sortBy = searchParams.get("sortBy") || "";
@@ -91,7 +91,9 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
   };
 
   const sortedData = useMemo(() => {
-    if (!sortBy) return rowsData;
+    if (!sortBy) {
+      return sort(rowsData).desc((i) => i.id);
+    }
 
     const getField = sortFieldMapping[sortBy];
     if (!getField) return rowsData;
@@ -101,12 +103,12 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
       : sort(rowsData).desc(getField);
   }, [rowsData, sortBy, sortOrder]);
 
-  const paginatedData = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
-    return sortedData?.slice(start, start + pageSize);
-  }, [sortedData, currentPage, pageSize]);
+  // const paginatedData = useMemo(() => {
+  //   const start = (currentPage - 1) * pageSize;
+  //   return sortedData?.slice(start, start + pageSize);
+  // }, [sortedData, currentPage, pageSize]);
 
-  const totalPages = Math.ceil(rowsData?.length / pageSize);
+  // const totalPages = Math.ceil(rowsData?.length / pageSize);
 
   return (
     <div className="relative flex flex-col h-[calc(100vh-160px)]">
@@ -126,7 +128,7 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
           </thead>
 
           <tbody>
-            {paginatedData?.map((item) => (
+            {sortedData?.map((item) => (
               <tr
                 key={item?.id}
                 className="cursor-pointer! hover:bg-gray-100"
@@ -215,7 +217,7 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
         </table>
       </div>
 
-      <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
+      {/* <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
         <PaginationControls
           currentPage={currentPage}
           totalPages={totalPages}
@@ -223,7 +225,7 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
           pageSize={pageSize}
           setPageSize={setPageSize}
         />
-      </div>
+      </div> */}
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
         <Dialog.Content
@@ -234,9 +236,11 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
             selectedComplaint={selectedComplaint}
             onClose={() => {
               setSelectedComplaint(null);
+              setOpenDialog(false);
             }}
             onSuccess={() => {
               setRefresh((prev) => !prev);
+              setOpenDialog(false);
             }}
           />
         </Dialog.Content>

@@ -21,8 +21,8 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [pageSize, setPageSize] = useState(10);
   const [selectedComplaint, setSelectedComplaint] =
     useState<ManageComplainsData | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
@@ -47,7 +47,9 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
   };
 
   const sortedData = useMemo(() => {
-    if (!sortBy) return rowsData;
+    if (!sortBy) {
+      return sort(rowsData).desc((i) => i.id);
+    }
 
     if (sortBy === "id") {
       return sortOrder === "asc"
@@ -64,15 +66,15 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
     return rowsData;
   }, [rowsData, sortBy, sortOrder]);
 
-  const paginatedData = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
-    return sortedData.slice(start, start + pageSize);
-  }, [sortedData, currentPage, pageSize]);
+  // const paginatedData = useMemo(() => {
+  //   const start = (currentPage - 1) * pageSize;
+  //   return sortedData.slice(start, start + pageSize);
+  // }, [sortedData, currentPage, pageSize]);
 
-  const totalPages = Math.ceil(rowsData.length / pageSize);
+  // const totalPages = Math.ceil(rowsData.length / pageSize);
 
   return (
-    <div className="relative flex flex-col h-[calc(100vh-170px)]">
+    <div className="relative flex flex-col h-[calc(100vh-165px)]">
       <div className="flex-1 overflow-auto">
         <table className="min-w-full text-sm">
           <thead className="sticky top-0 z-10 bg-white">
@@ -89,9 +91,9 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
           </thead>
 
           <tbody>
-            {paginatedData.map((item) => (
+            {sortedData?.map((item) => (
               <tr
-                key={item.id}
+                key={item?.id}
                 className="cursor-pointer! hover:bg-gray-100"
                 onClick={() => {
                   setSelectedComplaint(item);
@@ -99,28 +101,32 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
                 }}
               >
                 <TableBodyCell className="font-semibold">
-                  {formatComplaintId(item.id, item.entryType, item.createdAt)}
+                  {formatComplaintId(
+                    item?.id,
+                    item?.entryType,
+                    item?.createdAt
+                  )}
                 </TableBodyCell>
 
                 <TableBodyCell>
-                  {item.shopName
-                    ? item.shopName.slice(0, 20) +
-                      (item.shopName.length > 20 ? "..." : "")
+                  {item?.shopName
+                    ? item?.shopName?.slice(0, 20) +
+                      (item?.shopName?.length > 20 ? "..." : "")
                     : "-"}
                 </TableBodyCell>
 
-                <TableBodyCell>{item.phoneNumber || "-"}</TableBodyCell>
+                <TableBodyCell>{item?.phoneNumber || "-"}</TableBodyCell>
 
-                <TableBodyCell>{item.address || "-"}</TableBodyCell>
+                <TableBodyCell>{item?.address || "-"}</TableBodyCell>
 
-                <TableBodyCell>{item.finedAmount ?? 0}</TableBodyCell>
+                <TableBodyCell>{item?.finedAmount ?? 0}</TableBodyCell>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
+      {/* <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
         <PaginationControls
           currentPage={currentPage}
           totalPages={totalPages}
@@ -128,7 +134,7 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
           pageSize={pageSize}
           setPageSize={setPageSize}
         />
-      </div>
+      </div> */}
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
         <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]! overflow-hidden!">

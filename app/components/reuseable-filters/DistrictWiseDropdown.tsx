@@ -3,6 +3,7 @@
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import CustomSelect from "../CustomSelect";
 import useGetAllDistricts from "../../hooks/useGetAllDistricts";
+import CustomSearchDropdown from "../CustomSearchDropdown";
 
 const DistrictWiseDropdown = () => {
   const router = useRouter();
@@ -41,6 +42,13 @@ const DistrictWiseDropdown = () => {
       onChange={handleChange}
       className="text-xs!"
     />
+    // <CustomSearchDropdown
+    //   placeholder="Select District"
+    //   options={options}
+    //   value={selectedDistrictId}
+    //   onChange={handleChange}
+    //   className="text-xs!"
+    // />
   );
 };
 

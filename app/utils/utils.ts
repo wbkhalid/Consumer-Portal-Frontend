@@ -39,7 +39,7 @@ export const formatTimeOnly = (dateString?: string | null): string => {
     const date = parseISO(dateString);
     if (!isValid(date)) return "-";
 
-    return format(date, "hh:mm a"); // ✅ 12:09 PM
+    return format(date, "hh:mm a");
   } catch {
     return "-";
   }

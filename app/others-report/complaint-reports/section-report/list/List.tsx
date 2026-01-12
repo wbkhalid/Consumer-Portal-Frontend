@@ -5,7 +5,7 @@ import { BaseQuery, Column } from "../../../../utils/utils";
 import { SectionReport } from "./page";
 
 export interface Query extends BaseQuery<SectionReport> {
-  section?: string | string[];
+  sectionIds?: string | string[];
   sectionCategory?: string;
 }
 

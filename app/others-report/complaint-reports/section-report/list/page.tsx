@@ -37,7 +37,7 @@ const SectionReportPage = async ({ searchParams }: Props) => {
     search,
     orderBy,
     order,
-    section,
+    sectionIds,
     sectionCategory,
   } = query;
 
@@ -54,17 +54,17 @@ const SectionReportPage = async ({ searchParams }: Props) => {
 
   const params = new URLSearchParams();
 
-  const sectionIds = Array.isArray(section)
-    ? section
-    : section
-    ? [section]
+  const sectionId = Array.isArray(sectionIds)
+    ? sectionIds
+    : sectionIds
+    ? [sectionIds]
     : [];
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
 
   if (sectionCategory) params.set("sectionCategoryId", sectionCategory);
-  sectionIds.forEach((id) => params.append("section", id));
+  sectionId.forEach((id) => params.append("sectionIds", id));
 
   const finalAPI = `${baseURL}?${params.toString()}`;
   console.log("finalAPI call", finalAPI);
