@@ -22,7 +22,7 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
 
   return (
     <div className="relative">
-      <div className="h-[calc(100vh-220px)] overflow-y-auto relative">
+      <div className="h-[calc(100vh-175px)] overflow-y-auto relative">
         <table className="min-w-full text-sm">
           <thead className="sticky top-0 z-10">
             <tr className="font-semibold bg-white text-center">
@@ -41,23 +41,23 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
 
           <tbody>
             {data?.map((d, index) => {
-              const serial = (currentPage - 1) * pageSize + index + 1;
+              // const serial = (currentPage - 1) * pageSize + index + 1;
 
               return (
                 <tr
-                  key={serial}
+                  key={index}
                   className={`transition-colors duration-150 cursor-pointer! ${
                     index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
                   } hover:bg-gray-100`}
                   onClick={() =>
                     router.push(
                       `/others-report/complaint-reports/frequency-report/${encodeURIComponent(
-                        d?.name
-                      )}/list`
+                        d?.name,
+                      )}/list`,
                     )
                   }
                 >
-                  <TableBodyCell>{serial}</TableBodyCell>
+                  <TableBodyCell>{index + 1}</TableBodyCell>
                   <TableBodyCell>{d.name}</TableBodyCell>
                   <TableBodyCell>{d.email}</TableBodyCell>
                   <TableBodyCell>{d.phoneNumber}</TableBodyCell>
@@ -66,7 +66,6 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
               );
             })}
 
-            {/* ✅ Total Row */}
             <tr className="font-semibold bg-[#f1f1f1] text-[#013769] sticky bottom-0">
               <TableBodyCell colSpan={4} className="text-center">
                 Total
@@ -82,7 +81,6 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
 
 export default List;
 
-// strongly typed column list
 export const getColumns = (): Column<FrequencyReport>[] => [
   { label: "Name", value: "name" },
   { label: "Email", value: "email" },
@@ -91,10 +89,9 @@ export const getColumns = (): Column<FrequencyReport>[] => [
 ];
 
 export const calculateTotals = (data: FrequencyReport[]) => {
-  // Calculate totals dynamically
-  const totalComplaints = data.reduce(
-    (sum, item) => sum + (item.totalComplaints || 0),
-    0
+  const totalComplaints = data?.reduce(
+    (sum, item) => sum + (item?.totalComplaints || 0),
+    0,
   );
 
   return {

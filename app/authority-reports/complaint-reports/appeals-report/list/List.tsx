@@ -16,17 +16,17 @@ interface Props {
 
 const List = ({ data, searchParams }: Props) => {
   const { totalAppeals } = calculateTotals(data);
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
 
-  const [pageSize, setPageSize] = useState(10);
+  // const [pageSize, setPageSize] = useState(10);
 
   const columns = getColumns();
 
-  const totalPages = Math.ceil(data?.length / pageSize);
-  const paginatedData = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
-    return data?.slice(start, start + pageSize);
-  }, [data, currentPage, pageSize]);
+  // const totalPages = Math.ceil(data?.length / pageSize);
+  // const paginatedData = useMemo(() => {
+  //   const start = (currentPage - 1) * pageSize;
+  //   return data?.slice(start, start + pageSize);
+  // }, [data, currentPage, pageSize]);
 
   return (
     <>
@@ -48,14 +48,14 @@ const List = ({ data, searchParams }: Props) => {
             </thead>
 
             <tbody>
-              {paginatedData?.map((d, index) => {
-                const serial = (currentPage - 1) * pageSize + index + 1;
+              {data?.map((d, index) => {
+                // const serial = (currentPage - 1) * pageSize + index + 1;
                 return (
                   <tr
                     key={d?.districtName}
                     className="cursor-pointer! hover:bg-gray-100"
                   >
-                    <TableBodyCell>{serial}</TableBodyCell>
+                    <TableBodyCell>{index + 1}</TableBodyCell>
                     <TableBodyCell>{d.districtName}</TableBodyCell>
                     <TableBodyCell>{d.numberOfAppeals}</TableBodyCell>
                   </tr>
@@ -73,7 +73,7 @@ const List = ({ data, searchParams }: Props) => {
           </table>
         </div>
 
-        <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
+        {/* <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
           <PaginationControls
             currentPage={currentPage}
             totalPages={totalPages}
@@ -81,7 +81,7 @@ const List = ({ data, searchParams }: Props) => {
             pageSize={pageSize}
             setPageSize={setPageSize}
           />
-        </div>
+        </div> */}
       </div>
     </>
   );
@@ -96,9 +96,9 @@ export const getColumns = (): Column<AppealReport>[] => [
 ];
 
 export const calculateTotals = (data: AppealReport[]) => {
-  const totalAppeals = data.reduce(
-    (sum, item) => sum + (item.numberOfAppeals || 0),
-    0
+  const totalAppeals = data?.reduce(
+    (sum, item) => sum + (item?.numberOfAppeals || 0),
+    0,
   );
 
   return {

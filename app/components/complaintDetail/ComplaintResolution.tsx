@@ -131,6 +131,7 @@ const ComplaintResolution = ({
 
       const payload = {
         complaintId: complaint?.id,
+        previousStaus: complaint?.status ?? 1,
         status: selectedStatus,
         updatedBy: userId,
         assignedTo: complaint?.assignedTo,

@@ -11,6 +11,7 @@ import DownloadWrapper from "./DownloadWrapper";
 import ClearButton from "../../../../components/ClearButton";
 import DateFilter from "../../../../components/DateFilter";
 import SearchFilter from "../../../../components/reuseable-filters/SearchFilter";
+import { cookies } from "next/headers";
 
 export interface AnalyticalReport {
   districtName: string;
@@ -19,7 +20,7 @@ export interface AnalyticalReport {
       month: string;
       filed: number;
       disposed: number;
-    }
+    },
   ];
   totalFiled: number;
   grandTotal: number;
@@ -34,17 +35,20 @@ interface Props {
 const AnalyticalReportsPage = async ({ searchParams }: Props) => {
   const query = await searchParams; // 👈 fix
   const { year, startDate, endDate, search, orderBy, order } = query;
+  const cookieStore = await cookies();
+  const divisionId = cookieStore.get("divisionId")?.value;
 
-  const selectedYear = year || DEFAULT_YEAR;
+  // const selectedYear = year || DEFAULT_YEAR;
   const baseURL =
     process.env.BACKEND_API + COMPLAINT_REPORT_API + "/analytical-report";
 
   const params = new URLSearchParams();
 
-  params.set("year", year || selectedYear.toString()); // always required
+  // params.set("year", year || selectedYear.toString());
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
+  if (divisionId !== "0") params.set("divisionId", divisionId ?? "");
 
   const finalAPI = `${baseURL}?${params.toString()}`;
   console.log("finalAPI call", finalAPI);
@@ -63,7 +67,7 @@ const AnalyticalReportsPage = async ({ searchParams }: Props) => {
         d.districtName.toLowerCase().includes(lowerSearch) ||
         d.totalFiled.toString().includes(lowerSearch) ||
         d.totalDisposed.toString().includes(lowerSearch) ||
-        d.grandTotal.toString().includes(lowerSearch)
+        d.grandTotal.toString().includes(lowerSearch),
     );
   }
 

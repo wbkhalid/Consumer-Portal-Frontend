@@ -74,7 +74,7 @@ const NavBar = () => {
       className={` ${
         currentPath === "/dashboard"
           ? "bg-(--dashboard-primary)"
-          : "bg-(--primary)"
+          : "bg-[linear-gradient(0deg,#013769_0%,#036CCF_143.89%)]"
       }  px-4! py-1!`}
     >
       <div className="flex justify-between items-center">

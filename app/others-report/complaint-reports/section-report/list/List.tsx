@@ -23,7 +23,7 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
 
   return (
     <div className="relative">
-      <div className="h-[calc(100vh-200px)] overflow-y-auto scrollbar-hide relative">
+      <div className="h-[calc(100vh-160px)] overflow-y-auto scrollbar-hide relative">
         <table className="min-w-full text-sm">
           <thead className="sticky top-0 z-10">
             <tr className="font-semibold bg-white text-center">
@@ -42,14 +42,14 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
 
           <tbody>
             {data?.map((d, index) => {
-              const serial = (currentPage - 1) * pageSize + index + 1;
+              // const serial = (currentPage - 1) * pageSize + index + 1;
 
               return (
                 <tr
-                  key={serial}
+                  key={index + 1}
                   className={`transition-colors duration-150  hover:bg-gray-100`}
                 >
-                  <TableBodyCell>{serial}</TableBodyCell>
+                  <TableBodyCell>{index + 1}</TableBodyCell>
                   <TableBodyCell>{d.districtName}</TableBodyCell>
                   <TableBodyCell>{d.complaintCount}</TableBodyCell>
                 </tr>
@@ -79,9 +79,9 @@ export const getColumns = (): Column<SectionReport>[] => [
 
 export const calculateTotals = (data: SectionReport[]) => {
   // Calculate totals dynamically
-  const totalComplaints = data.reduce(
-    (sum, item) => sum + (item.complaintCount || 0),
-    0
+  const totalComplaints = data?.reduce(
+    (sum, item) => sum + (item?.complaintCount || 0),
+    0,
   );
 
   return {

@@ -12,6 +12,7 @@ import DownloadWrapper from "./DownloadWrapper";
 import SearchFilter from "../../../../components/reuseable-filters/SearchFilter";
 import DateFilter from "../../../../components/DateFilter";
 import ClearButton from "../../../../components/ClearButton";
+import { cookies } from "next/headers";
 
 export interface ComplaintInstitution {
   districtName: string;
@@ -28,12 +29,14 @@ const ComplaintInstitutionPage = async ({ searchParams }: Props) => {
   const query = await searchParams;
   const { year, startDate, endDate, page, pageSize, search, orderBy, order } =
     query;
+  const cookieStore = await cookies();
+  const divisionId = cookieStore.get("divisionId")?.value;
 
-  const myPage = parseInt(page || "1") || 1;
-  let myPageSize: number;
+  // const myPage = parseInt(page || "1") || 1;
+  // let myPageSize: number;
 
-  if (pageSize == undefined) myPageSize = DEFAULT_PAGE_SIZE;
-  else myPageSize = Number(pageSize);
+  // if (pageSize == undefined) myPageSize = DEFAULT_PAGE_SIZE;
+  // else myPageSize = Number(pageSize);
 
   // const selectedYear = year || DEFAULT_YEAR;
 
@@ -48,6 +51,7 @@ const ComplaintInstitutionPage = async ({ searchParams }: Props) => {
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
+  if (divisionId) params.set("divisionId", divisionId);
 
   const finalAPI = `${baseURL}?${params.toString()}`;
   console.log("finalAPI call", finalAPI);
@@ -66,22 +70,22 @@ const ComplaintInstitutionPage = async ({ searchParams }: Props) => {
         d.districtName.toLowerCase().includes(lowerSearch) ||
         d.walkIn.toString().includes(lowerSearch) ||
         d.online.toString().includes(lowerSearch) ||
-        d.total.toString().includes(lowerSearch)
+        d.total.toString().includes(lowerSearch),
     );
   }
 
   // **Pagination Logic**
-  const totalCount = data?.length;
+  // const totalCount = data?.length;
 
   if (orderBy && order) {
     data = sort(data)[order]((item) => item[orderBy]);
   }
 
   // Apply pagination using slice()
-  const paginatedData = data?.slice(
-    (myPage - 1) * myPageSize,
-    myPage * myPageSize
-  );
+  // const paginatedData = data?.slice(
+  //   (myPage - 1) * myPageSize,
+  //   myPage * myPageSize
+  // );
 
   const fileName = "Complaint Institution Report";
 
@@ -108,23 +112,23 @@ const ComplaintInstitutionPage = async ({ searchParams }: Props) => {
           <div className="px-2!">
             <ErrorMessage>{response?.responseMessage}</ErrorMessage>
           </div>
-        ) : paginatedData && paginatedData?.length > 0 ? (
+        ) : data && data?.length > 0 ? (
           <List
-            data={paginatedData}
-            currentPage={myPage}
-            pageSize={myPageSize}
+            data={data}
+            // currentPage={myPage}
+            // pageSize={myPageSize}
             searchParams={query}
           />
         ) : (
           <p className="px-2!">No records found.</p>
         )}
-        <Suspense fallback={<Spinner />}>
+        {/* <Suspense fallback={<Spinner />}>
           <Pagination
             pageSize={myPageSize}
             currentPage={myPage}
             itemCount={totalCount}
           />
-        </Suspense>
+        </Suspense> */}
       </div>
     </>
   );

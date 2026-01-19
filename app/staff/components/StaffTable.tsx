@@ -60,10 +60,10 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
 
         const aValue = Array.isArray(valA)
           ? valA.join(", ")
-          : valA?.toString() ?? "";
+          : (valA?.toString() ?? "");
         const bValue = Array.isArray(valB)
           ? valB.join(", ")
-          : valB?.toString() ?? "";
+          : (valB?.toString() ?? "");
 
         if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
         if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
@@ -74,12 +74,12 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
     return sortableData;
   }, [rowsData, sortConfig]);
 
-  const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * pageSize;
-    return sortedData.slice(startIndex, startIndex + pageSize);
-  }, [sortedData, currentPage, pageSize]);
+  // const paginatedData = useMemo(() => {
+  //   const startIndex = (currentPage - 1) * pageSize;
+  //   return sortedData.slice(startIndex, startIndex + pageSize);
+  // }, [sortedData, currentPage, pageSize]);
 
-  const totalPages = Math.ceil(rowsData.length / pageSize);
+  // const totalPages = Math.ceil(rowsData.length / pageSize);
 
   const handleDelete = async () => {
     if (!selectedId) return;
@@ -116,7 +116,7 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
             </thead>
 
             <tbody>
-              {paginatedData?.map((item, index) => (
+              {sortedData?.map((item, index) => (
                 <tr key={item?.userId} className="hover:bg-gray-100">
                   <TableBodyCell>
                     {(currentPage - 1) * pageSize + index + 1}
@@ -145,7 +145,7 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
           </table>
         </div>
 
-        <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
+        {/* <div className="shrink-0 py-1! bg-white border-t border-[#e2e8f0]">
           <PaginationControls
             currentPage={currentPage}
             totalPages={totalPages}
@@ -153,7 +153,7 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
             pageSize={pageSize}
             setPageSize={setPageSize}
           />
-        </div>
+        </div> */}
         <DeleteDialog
           open={isDeleteDialogOpen}
           setOpen={setIsDeleteDialogOpen}

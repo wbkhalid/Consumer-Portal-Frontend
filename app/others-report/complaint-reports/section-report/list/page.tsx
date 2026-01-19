@@ -57,8 +57,8 @@ const SectionReportPage = async ({ searchParams }: Props) => {
   const sectionId = Array.isArray(sectionIds)
     ? sectionIds
     : sectionIds
-    ? [sectionIds]
-    : [];
+      ? [sectionIds]
+      : [];
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
@@ -77,23 +77,23 @@ const SectionReportPage = async ({ searchParams }: Props) => {
 
   if (search) {
     const lowerSearch = search.toLowerCase();
-    data = data.filter(
+    data = data?.filter(
       (d) =>
-        d.districtName.toLowerCase().includes(lowerSearch) ||
-        d.complaintCount.toString().includes(lowerSearch)
+        d?.districtName.toLowerCase().includes(lowerSearch) ||
+        d?.complaintCount.toString().includes(lowerSearch),
     );
   }
 
-  const totalCount = data?.length;
+  // const totalCount = data?.length;
 
   if (orderBy && order) {
     data = sort(data)[order]((item) => item[orderBy]);
   }
 
-  const paginatedData = data?.slice(
-    (myPage - 1) * myPageSize,
-    myPage * myPageSize
-  );
+  // const paginatedData = data?.slice(
+  //   (myPage - 1) * myPageSize,
+  //   myPage * myPageSize,
+  // );
 
   const fileName = "Section Report";
 
@@ -121,9 +121,9 @@ const SectionReportPage = async ({ searchParams }: Props) => {
           <div className="px-2!">
             <ErrorMessage>{response?.responseMessage}</ErrorMessage>
           </div>
-        ) : paginatedData && paginatedData.length > 0 ? (
+        ) : data && data.length > 0 ? (
           <List
-            data={paginatedData}
+            data={data}
             currentPage={myPage}
             pageSize={myPageSize}
             searchParams={query}
@@ -132,13 +132,13 @@ const SectionReportPage = async ({ searchParams }: Props) => {
           <p className="px-2!">No records found.</p>
         )}
 
-        <Suspense fallback={<Spinner />}>
+        {/* <Suspense fallback={<Spinner />}>
           <Pagination
             pageSize={myPageSize}
             currentPage={myPage}
             itemCount={totalCount}
           />
-        </Suspense>
+        </Suspense> */}
       </div>
     </>
   );

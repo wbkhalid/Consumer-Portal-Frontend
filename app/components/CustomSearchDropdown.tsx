@@ -32,6 +32,7 @@ type CustomSearchDropdownProps = {
   isClearable?: boolean;
   isRegister?: boolean;
   isMultiple?: boolean;
+  isHome?: boolean;
 };
 
 const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
@@ -50,10 +51,11 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
   isClearable = true,
   isRegister = false,
   isMultiple = false,
+  isHome = false,
 }) => {
   const selectedOption = isMultiple
     ? options.filter((opt) =>
-        (value as string[] | undefined)?.includes(opt.value)
+        (value as string[] | undefined)?.includes(opt.value),
       )
     : options.find((opt) => String(opt.value) === String(value ?? "")) || null;
 
@@ -157,25 +159,35 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
         styles={{
           control: (base, state) => ({
             ...base,
-            backgroundColor: "#fff",
-            borderWidth: 1.5,
-            borderColor: state.isFocused ? "var(--primary)" : "#EFF0F2",
+            backgroundColor: isHome ? "#F5F6F8" : "#fff",
+            borderWidth: 1,
+            borderColor: state.isFocused ? "var(--primary)" : "#D1D5DB",
             boxShadow: "none",
             borderRadius: isRegister ? 999 : 8,
-            height: 40,
-            minHeight: 40,
+            height: isHome ? 26 : 40,
+            minHeight: isHome ? 26 : 40,
             overflow: "hidden",
+            whiteSpace: "nowrap",
             // overflowY:'auto',
             padding: "0 0.25rem",
             "&:hover": { borderColor: "var(--primary)" },
           }),
+          container: (base) => ({
+            ...base,
+            minWidth: "100%",
+          }),
           valueContainer: (base) => ({
             ...base,
-            maxHeight: 32, // 🔑 chips height
-            overflowY: "auto", // 🔑 scroll inside
+            maxHeight: isHome ? 26 : 40,
+            overflowY: isMultiple ? "auto" : "hidden",
             flexWrap: "wrap",
-            paddingTop: 2,
-            paddingBottom: 2,
+            paddingTop: 0,
+            paddingBottom: 0,
+          }),
+
+          indicatorsContainer: (base) => ({
+            ...base,
+            height: isHome ? 26 : 40,
           }),
 
           // multiValue: (base) => ({
@@ -188,6 +200,13 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
           //   fontSize,
           //   whiteSpace: "nowrap",
           // }),
+
+          menu: (base) => ({
+            ...base,
+            width: "auto",
+            minWidth: "100%",
+            whiteSpace: "nowrap",
+          }),
           multiValue: () => ({ display: "none" }),
           multiValueLabel: () => ({ display: "none" }),
           multiValueRemove: () => ({ display: "none" }),
@@ -201,19 +220,31 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
             ...base,
             backgroundColor: "#fff",
             color: "#111111",
-            borderRadius: 6,
-            padding: "4px 0",
+            borderRadius: 4,
+            padding: "0",
           }),
           singleValue: (base) => ({ ...base, color: "#111111", fontSize }),
-          placeholder: (base) => ({ ...base, color: "gray", fontSize }),
-          input: (base) => ({ ...base, color: "#111111", fontSize }),
+          placeholder: (base) => ({
+            ...base,
+            color: "gray",
+            fontSize,
+            margin: 0,
+          }),
+          input: (base) => ({
+            ...base,
+            color: "#111111",
+            lineHeight: "1",
+            fontSize,
+            padding: 0,
+            margin: 0,
+          }),
           option: (base, state) => ({
             ...base,
             backgroundColor: state.isSelected
               ? "var(--primary)"
               : state.isFocused
-              ? "var(--primary)"
-              : "#fff",
+                ? "var(--primary)"
+                : "#fff",
             color:
               state.isSelected || state.isFocused ? "#fff" : "var(--primary)",
             cursor: "pointer",

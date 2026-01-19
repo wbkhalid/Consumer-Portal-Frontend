@@ -36,7 +36,7 @@ const schema = z
       .regex(/[0-9]/, "Password must contain at least 1 number")
       .regex(
         /[^A-Za-z0-9]/,
-        "Password must contain at least 1 special character"
+        "Password must contain at least 1 special character",
       ),
 
     confirmPassword: z.string().min(1, "Confirm Password is required"),
@@ -71,7 +71,7 @@ const schema = z
     {
       message: "Please fill required fields for this role",
       path: ["roleName"],
-    }
+    },
   );
 
 type Register = z.infer<typeof schema>;
@@ -100,6 +100,13 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
       resetField("tehsilId");
     }
   }, [selectedDivisionId]);
+  useEffect(() => {
+    if (selectedRole) {
+      resetField("divisionId");
+      resetField("districtId");
+      resetField("tehsilId");
+    }
+  }, [selectedRole]);
 
   console.log(errors, "//////");
 
@@ -115,7 +122,7 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
   const { data: rolesData } = useGetAllRoles();
 
   const filteredRoles = rolesData?.filter(
-    (role) => !["Admin", "User", "PTCL_MEETING_USER"].includes(role?.name)
+    (role) => !["Admin", "User", "PTCL_MEETING_USER"].includes(role?.name),
   );
 
   const onSubmit = async (formData: Register) => {
@@ -147,14 +154,14 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
 
       if (response?.data?.responseCode === 200) {
         toast.success(
-          response?.data?.responseMessage || "Register successful!"
+          response?.data?.responseMessage || "Register successful!",
         );
         setRefresh((prev) => !prev);
         setIsOpen(false);
       } else {
         toast.error(
           response?.data?.responseMessage ||
-            "Register failed. Please try again."
+            "Register failed. Please try again.",
         );
       }
     } catch (err) {
@@ -162,7 +169,7 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
       console.log(err, "errror");
 
       toast.error(
-        error.response?.data?.message || "Register failed. Please try again."
+        error.response?.data?.message || "Register failed. Please try again.",
       );
     }
   };
@@ -222,7 +229,7 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
           />
 
           {["User", "Commissioner", "DC", "AD", "AC"].includes(
-            selectedRole
+            selectedRole,
           ) && (
             <Controller
               name="divisionId"

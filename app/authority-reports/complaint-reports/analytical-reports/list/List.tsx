@@ -150,7 +150,7 @@ export const months = [
 
 // strongly typed column list
 export const getColumns = (): Column<AnalyticalReport>[] => [
-  { label: "Name of Authority", value: "districtName" },
+  { label: "Name of District", value: "districtName" },
   { label: "Complaints Filed", value: "totalFiled" },
   { label: "Grand Total", value: "grandTotal" },
   { label: "No. of Disposed", value: "totalDisposed" },
@@ -160,17 +160,17 @@ export const getColumns = (): Column<AnalyticalReport>[] => [
 export const calculateTotals = (data: AnalyticalReport[]) => {
   const totalFiled = data.reduce(
     (sum, item) => sum + (item.totalFiled || 0),
-    0
+    0,
   );
 
   const totalDisposal = data.reduce(
     (sum, item) => sum + (item.totalDisposed || 0),
-    0
+    0,
   );
 
   const totalGrand = data?.reduce(
     (sum, item) => sum + (item.grandTotal || 0),
-    0
+    0,
   );
 
   const totalPercentage =
@@ -185,12 +185,12 @@ export const calculateTotals = (data: AnalyticalReport[]) => {
   const monthlyTotals = months.map((_, monthIndex) => {
     const totalFiled = data.reduce(
       (sum, item) => sum + (item.monthlyData[monthIndex]?.filed || 0),
-      0
+      0,
     );
 
     const totalDisposed = data.reduce(
       (sum, item) => sum + (item.monthlyData[monthIndex]?.disposed || 0),
-      0
+      0,
     );
 
     return {

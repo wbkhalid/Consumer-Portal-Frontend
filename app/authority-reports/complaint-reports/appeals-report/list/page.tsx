@@ -12,6 +12,7 @@ import DownloadWrapper from "./DownloadWrapper";
 import ClearButton from "../../../../components/ClearButton";
 import DateFilter from "../../../../components/DateFilter";
 import SearchFilter from "../../../../components/reuseable-filters/SearchFilter";
+import { cookies } from "next/headers";
 
 export interface AppealReport {
   districtName: string;
@@ -26,6 +27,8 @@ const AppealsReportPage = async ({ searchParams }: Props) => {
   const query = await searchParams;
   const { year, startDate, endDate, page, pageSize, search, orderBy, order } =
     query;
+  const cookieStore = await cookies();
+  const divisionId = cookieStore.get("divisionId")?.value;
 
   const myPage = parseInt(page || "1") || 1;
   let myPageSize: number;
@@ -44,6 +47,7 @@ const AppealsReportPage = async ({ searchParams }: Props) => {
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
+  if (divisionId !== "0") params.set("divisionId", divisionId ?? "");
 
   const finalAPI = `${baseURL}?${params.toString()}`;
   console.log("finalAPI call", finalAPI);
@@ -52,29 +56,29 @@ const AppealsReportPage = async ({ searchParams }: Props) => {
   });
 
   const response = await res.json();
-  let data: AppealReport[] = response.data;
+  let data: AppealReport[] = response?.data;
 
   // **Apply Search Filter**
   if (search) {
     const lowerSearch = search.toLowerCase();
-    data = data.filter(
+    data = data?.filter(
       (d) =>
         d.districtName.toLowerCase().includes(lowerSearch) ||
-        d.numberOfAppeals.toString().includes(lowerSearch)
+        d.numberOfAppeals.toString().includes(lowerSearch),
     );
   }
 
   // **Pagination Logic**
-  const totalCount = data?.length;
+  // const totalCount = data?.length;
 
   if (orderBy && order) {
     data = sort(data)[order]((item) => item[orderBy]);
   }
 
-  const paginatedData = data?.slice(
-    (myPage - 1) * myPageSize,
-    myPage * myPageSize
-  );
+  // const paginatedData = data?.slice(
+  //   (myPage - 1) * myPageSize,
+  //   myPage * myPageSize,
+  // );
 
   const fileName = "Appeals Report";
   return (
@@ -83,7 +87,7 @@ const AppealsReportPage = async ({ searchParams }: Props) => {
         <div className="flex items-center gap-1">
           <p className="text-[#111827] font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-            {paginatedData?.length?.toLocaleString()} Records
+            {data?.length?.toLocaleString()} Records
           </p>
         </div>
         <DownloadWrapper data={data} fileName={fileName} />
@@ -97,7 +101,7 @@ const AppealsReportPage = async ({ searchParams }: Props) => {
           </div>
         </div>
 
-        <List data={paginatedData} searchParams={query} />
+        <List data={data} searchParams={query} />
         {/* {response?.responseCode !== 200 ? (
           <div className="px-2!">
             <ErrorMessage>{response?.responseMessage}</ErrorMessage>

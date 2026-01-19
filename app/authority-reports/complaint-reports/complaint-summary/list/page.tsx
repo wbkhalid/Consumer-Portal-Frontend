@@ -6,6 +6,7 @@ import DateFilter from "../../../../components/DateFilter";
 import ClearButton from "../../../../components/ClearButton";
 import SearchFilter from "../../../../components/reuseable-filters/SearchFilter";
 import { ManageComplainsData } from "../../../../hooks/useGetAllComplains";
+import { cookies } from "next/headers";
 // import { cookies } from "next/headers";
 
 export interface Complains {
@@ -63,8 +64,8 @@ interface Props {
 const ComplaintSummaryPage = async ({ searchParams }: Props) => {
   const query = await searchParams;
   const { startDate, endDate, search, orderBy, order } = query;
-  // const cookieStore = await cookies();
-  // const divisionId = cookieStore.get("divisionId")?.value;
+  const cookieStore = await cookies();
+  const divisionId = cookieStore.get("divisionId")?.value;
 
   const baseURL =
     process.env.BACKEND_API + COMPLAINT_REPORT_API + "/complaint-summary";
@@ -73,7 +74,7 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
 
   if (startDate) params.set("startDate", startDate);
   if (endDate) params.set("endDate", endDate);
-  // if (divisionId !== "0") params.set("divisionId", divisionId ?? "");
+  if (divisionId !== "0") params.set("divisionId", divisionId ?? "");
 
   const finalAPI = `${baseURL}?${params.toString()}`;
   console.log("finalAPI call", finalAPI);
@@ -95,7 +96,7 @@ const ComplaintSummaryPage = async ({ searchParams }: Props) => {
         d.complaintsFiled.toString().includes(lowerSearch) ||
         d.disposal.toString().includes(lowerSearch) ||
         d.percentageDisposal.toString().includes(lowerSearch) ||
-        d.pendingComplaints.toString().includes(lowerSearch)
+        d.pendingComplaints.toString().includes(lowerSearch),
     );
   }
 

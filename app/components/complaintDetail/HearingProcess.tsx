@@ -16,6 +16,7 @@ import useGetAllStaff from "../../hooks/useGetAllStaff";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
 import CustomSearchDropdown from "../CustomSearchDropdown";
 import { RxCross2 } from "react-icons/rx";
+import apiClient from "../../services/api-client";
 
 const HearingProcess = ({
   complaint,
@@ -31,6 +32,28 @@ const HearingProcess = ({
     tehsilId: tehsilId || "",
   });
 
+  const scheduleHearing = async () => {
+    try {
+      const response = await apiClient.post(
+        `https://oconnect.ptclgroup.pk/utalk/umeet-create-login`,
+        null,
+        {
+          params: {
+            username: "demovideo",
+            password: "demovideo@1",
+            title: complaint?.id,
+          },
+        }
+      );
+
+      console.log("API Response:", response.data);
+
+      setHearingStep(1);
+    } catch (error) {
+      console.error("API Error:", error);
+    }
+  };
+
   return (
     <>
       {hearingStep === 0 ? (
@@ -39,7 +62,8 @@ const HearingProcess = ({
             <p className="text-[#555555] text-sm">Schedule New Hearing</p>
             <Button
               className="rounded-full! text-xs! font-medium! cursor-pointer!"
-              onClick={() => setHearingStep(1)}
+              onClick={scheduleHearing}
+              // onClick={() => setHearingStep(1)}
             >
               <HugeiconsIcon icon={Add01Icon} size={18} /> Schedule New Hearing
             </Button>
@@ -135,7 +159,7 @@ const HearingProcess = ({
             </div>
           </div>
 
-          <div className="flex gap-4">
+          {/* <div className="flex gap-4">
             <div className="flex-1">
               <p className="text-[#2A2A2B] text-xs font-semibold mb-1!">
                 Hearing Date
@@ -145,11 +169,11 @@ const HearingProcess = ({
                   type="datetime-local"
                   aria-label="Hearing date"
                   className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
-                  // value={
-                  //   hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
-                  // }
+                  value={
+                    hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
+                  }
                   min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
-                  // onChange={(e) => setHearingDate(parseISO(e.target.value))}
+                  onChange={(e) => setHearingDate(parseISO(e.target.value))}
                 />
               </div>
             </div>
@@ -163,11 +187,11 @@ const HearingProcess = ({
                   type="datetime-local"
                   aria-label="Hearing date"
                   className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
-                  // value={
-                  //   hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
-                  // }
+                  value={
+                    hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
+                  }
                   min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
-                  // onChange={(e) => setHearingDate(parseISO(e.target.value))}
+                  onChange={(e) => setHearingDate(parseISO(e.target.value))}
                 />
               </div>
             </div>
@@ -181,17 +205,17 @@ const HearingProcess = ({
                   type="datetime-local"
                   aria-label="Hearing date"
                   className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
-                  // value={
-                  //   hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
-                  // }
+                  value={
+                    hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
+                  }
                   min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
-                  // onChange={(e) => setHearingDate(parseISO(e.target.value))}
+                  onChange={(e) => setHearingDate(parseISO(e.target.value))}
                 />
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className="mt-2!">
+          {/* <div className="mt-2!">
             <p className="text-[#2A2A2B] text-xs font-semibold mb-1!">
               Meeting Type
             </p>
@@ -205,8 +229,8 @@ const HearingProcess = ({
                 <p className="text-[#4A5565] font-semibold text-sm">Physical</p>
               </div>
             </div>
-          </div>
-
+          </div> */}
+          {/* 
           <div className="flex gap-3 items-end w-full mt-2!">
             <CustomTextField
               placeholder="https://meet.google.com/pth-oeuf-gbr?ijlm=1764675526962&hs=187&adhoc=1"
@@ -217,15 +241,15 @@ const HearingProcess = ({
             <Button className="text-sm! font-medium! rounded-xl! h-10! shrink-0">
               <HugeiconsIcon icon={Copy01Icon} /> Copy
             </Button>
-          </div>
+          </div> */}
 
-          <p className="text-[#555555] text-sm my-2!">Attendees</p>
+          {/* <p className="text-[#555555] text-sm my-2!">Attendees</p>
           <div className="flex gap-3">
             <CustomSearchDropdown
               label="Complainant"
               placeholder="Select Complainant"
-              //   value={selectedStaff}
-              //   onChange={(val) => setSelectedStaff(val)}
+              value={selectedStaff}
+              onChange={(val) => setSelectedStaff(val)}
               options={
                 staffData?.map((status) => ({
                   label: status?.fullName,
@@ -237,8 +261,8 @@ const HearingProcess = ({
             <CustomSearchDropdown
               label="Internal Staff"
               placeholder="Select Staff"
-              //   value={selectedStaff}
-              //   onChange={(val) => setSelectedStaff(val)}
+              value={selectedStaff}
+              onChange={(val) => setSelectedStaff(val)}
               options={
                 staffData?.map((status) => ({
                   label: status?.fullName,
@@ -246,7 +270,7 @@ const HearingProcess = ({
                 })) ?? []
               }
             />
-          </div>
+          </div> */}
           <div className="flex justify-between items-center mt-5! mb-3!">
             <Dialog.Close>
               <div className="text-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
@@ -254,14 +278,13 @@ const HearingProcess = ({
               </div>
             </Dialog.Close>
 
-            <Button
+            {/* <Button
               className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
-              //   disabled={loading}
-              //   onClick={handleAssignComplaint}
+              disabled={loading}
+              onClick={handleAssignComplaint}
             >
-              {/* {loading ? "Assigning..." : "Assign"} */}
-              Assign
-            </Button>
+              {loading ? "Assigning..." : "Assign"}
+            </Button> */}
           </div>
         </div>
       )}

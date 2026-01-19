@@ -45,6 +45,7 @@ const AssignDetails = ({
       const payload = {
         complaintId: complaint?.id,
         status: 1,
+        previousStaus: 0,
         updatedBy: userId,
         assignedTo: selectedStaff,
         hearingDate: null,

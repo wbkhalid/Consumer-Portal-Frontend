@@ -62,27 +62,27 @@ const FrequencyReportPage = async ({ searchParams }: Props) => {
   // **Apply Search Filter**
   if (search) {
     const lowerSearch = search.toLowerCase();
-    data = data.filter(
+    data = data?.filter(
       (d) =>
         d.name.toLowerCase().includes(lowerSearch) ||
         d.email.toString().includes(lowerSearch) ||
         d.phoneNumber.toString().includes(lowerSearch) ||
-        d.totalComplaints.toString().includes(lowerSearch)
+        d.totalComplaints.toString().includes(lowerSearch),
     );
   }
 
   // **Pagination Logic**
-  const totalCount = data?.length;
+  // const totalCount = data?.length;
 
   if (orderBy && order) {
     data = sort(data)[order]((item) => item[orderBy]);
   }
 
   // Apply pagination using slice()
-  const paginatedData = data?.slice(
-    (myPage - 1) * myPageSize,
-    myPage * myPageSize
-  );
+  // const paginatedData = data?.slice(
+  //   (myPage - 1) * myPageSize,
+  //   myPage * myPageSize
+  // );
 
   const fileName = "Frequency Report";
 
@@ -109,9 +109,9 @@ const FrequencyReportPage = async ({ searchParams }: Props) => {
           <div className="px-2!">
             <ErrorMessage>{response?.responseMessage}</ErrorMessage>
           </div>
-        ) : paginatedData && paginatedData?.length > 0 ? (
+        ) : data && data?.length > 0 ? (
           <List
-            data={paginatedData}
+            data={data}
             currentPage={myPage}
             pageSize={myPageSize}
             searchParams={query}
@@ -119,13 +119,13 @@ const FrequencyReportPage = async ({ searchParams }: Props) => {
         ) : (
           <p className="px-2!">No records found.</p>
         )}
-        <Suspense fallback={<Spinner />}>
+        {/* <Suspense fallback={<Spinner />}>
           <Pagination
             pageSize={myPageSize}
             currentPage={myPage}
             itemCount={totalCount}
           />
-        </Suspense>
+        </Suspense> */}
       </div>
     </>
   );
