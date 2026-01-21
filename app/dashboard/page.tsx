@@ -5,6 +5,7 @@ import DashboardStatSummary from "./components/DashboardStatSummary";
 import DashboardAreaChart from "./components/DashboardAreaChart";
 import DashboardTypeChart from "./components/DashboardTypeChart";
 import DashboardFilter from "./components/DashboardFilter";
+import { ComplaintBreakdownChart, ComplaintsGrowthPercentages } from "../page";
 
 interface PageProps {
   searchParams: Promise<{ districtId?: string; status?: string }>;
@@ -66,6 +67,8 @@ export interface ComplainDashboardType {
   statusStats: StatusStatsType[];
   dailyAverageComplaints: DailyAvergeType[];
   complaintsList: ComplaintsListType[];
+  complaintsGrowthPercentages: ComplaintsGrowthPercentages;
+  complaintBreakdownChart: ComplaintBreakdownChart;
 }
 
 const page = async ({ searchParams }: PageProps) => {

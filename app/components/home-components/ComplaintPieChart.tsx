@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { SectionTypeStatsType } from "../page";
+import { ComplaintBreakdownChart } from "../../page";
 import {
   PieChart,
   Pie,
@@ -14,66 +14,38 @@ const GRADIENTS = [
   { from: "#036CCF", to: "#013769" },
   { from: "#F87015", to: "#EB5B0D" },
   { from: "#21C35D", to: "#17A74C" },
-  { from: "#EA4495", to: "#DC2A7A" },
-  { from: "#ED4141", to: "#DD2828" },
-  { from: "#A651F6", to: "#9537EB" },
-  { from: "#06B1CF", to: "#0795B6" },
-  { from: "#EBEB00", to: "#BEB100" },
-  { from: "#C803CF", to: "#9F05A4" },
 ];
 
-const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
-  const normalizeText = (text: string) =>
-    text
-      .replace(/\s+/g, " ")
-      .replace(/\u00A0/g, " ")
-      .trim();
+const ComplaintPieChart = ({ data }: { data: ComplaintBreakdownChart }) => {
+  const chartData = [
+    { name: "Total Complaints", value: data?.totalComplaints },
+    { name: "Appeals", value: data?.appealedComplaints },
+    { name: "Resolved", value: data?.resolvedComlaints },
+  ];
 
-  const chartData = Object.values(
-    data.reduce<Record<string, { name: string; value: number }>>(
-      (acc, item) => {
-        const key = normalizeText(item.sectionName);
-
-        if (!acc[key]) {
-          acc[key] = { name: key, value: item.count };
-        } else {
-          acc[key].value += item.count;
-        }
-
-        return acc;
-      },
-      {}
-    )
+  const maxSection = chartData.reduce((prev, curr) =>
+    curr.value > prev.value ? curr : prev,
   );
-
-  console.log(chartData, "..//cart");
-
-  const maxSection =
-    chartData.length > 0
-      ? chartData.reduce((prev, curr) =>
-          curr.value > prev.value ? curr : prev
-        )
-      : { value: 0 };
 
   return (
     <div className="bg-white border border-[#E5E7EB] rounded-2xl col-span-12 md:col-span-5">
       <div className="flex gap-1.5 items-center px-5! py-3.5!">
-        <div className="w-12 h-12 bg-[linear-gradient(135deg,#ED4141_0%,#DD2828_100%)] rounded-[10px] flex items-center justify-center">
+        <div className="w-12 h-12 bg-[linear-gradient(135deg,#6061EF_0%,#5148E6_100%)] rounded-[10px] flex items-center justify-center">
           <Image
-            src={`/icons/section-chart.png`}
-            alt={` section chart icon`}
+            src={`/icons/complaint-chart.png`}
+            alt={` complaint chart icon`}
             width={24}
             height={24}
           />
         </div>
         <div>
-          <p className="text-[#111827] font-bold">Section Breakdown</p>
+          <p className="text-[#111827] font-bold">Complaint Breakdown</p>
           <p className="text-[10px] text-[#6B7280] font-semibold">
             Current distribution of complaint statuses
           </p>
         </div>
       </div>
-      <div className="h-[370px]">
+      <div className="h-[350px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <defs>
@@ -108,7 +80,7 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
 
             <text
               x="50%"
-              y="40%"
+              y="47%"
               textAnchor="middle"
               dominantBaseline="middle"
               className="fill-[#111827] font-extrabold text-xl"
@@ -120,10 +92,10 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
               contentStyle={{
                 backgroundColor: "var(--primary)",
                 border: "none",
-                borderRadius: "10px",
+                borderRadius: "6px",
                 color: "#ffffff",
                 boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
-                padding: "10px 12px",
+                padding: "5px 12px",
               }}
               labelStyle={{
                 color: "#ffffff",
@@ -161,4 +133,4 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
   );
 };
 
-export default SectionPieChart;
+export default ComplaintPieChart;

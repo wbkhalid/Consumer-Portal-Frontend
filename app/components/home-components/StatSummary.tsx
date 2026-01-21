@@ -3,7 +3,7 @@ import Link from "next/link";
 import CustomStatCard from "./CustomStatCard";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
 import { IoDocumentTextOutline } from "react-icons/io5";
-import { ComplainDashboardType } from "../page";
+import { ComplainDashboardType } from "../../page";
 
 const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
   const { divisionId, districtId, tehsilId } = useRegionFilters();

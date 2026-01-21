@@ -8,21 +8,62 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { FineInsightType } from "../page";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { FineInsightType } from "../../page";
+import { useEffect, useState } from "react";
+import apiClient from "../../services/api-client";
+import { ADMIN_DASHBOARD_API } from "../../APIs";
 
-const FineBarChart = ({ data }: { data: FineInsightType[] }) => {
+const FineBarChart = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const [data, setData] = useState<FineInsightType[]>([]);
+  const [loading, setLoading] = useState(false);
   const activePeriod = Number(searchParams.get("period") ?? 3);
+
+  useEffect(() => {
+    const fetchFineData = async () => {
+      setLoading(true);
+
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("period", activePeriod.toString());
+
+      const res = await apiClient.get(
+        `${ADMIN_DASHBOARD_API}/financial-insight?${params.toString()}`,
+      );
+
+      console.log(res?.data?.data, "...//...///");
+
+      setData(res?.data?.data || []);
+
+      setLoading(false);
+    };
+
+    fetchFineData();
+  }, [activePeriod]);
 
   const handleClick = (index: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("period", index.toString());
     router.replace(`?${params.toString()}`, { scroll: false });
   };
+
+  const getWeekDayPK = (label: string) => {
+    const [day, month] = label.split("-");
+
+    // IMPORTANT: current year explicitly
+    const year = new Date().getFullYear(); // 2026
+
+    // Noon time to avoid timezone shift
+    const date = new Date(`${year} ${month} ${day} 12:00:00`);
+
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      timeZone: "Asia/Karachi",
+    });
+  };
+
   return (
     <div className="bg-white border border-[#E5E7EB] rounded-2xl col-span-12 md:col-span-7">
       <div className="flex justify-between items-center px-5! py-3.5!">
@@ -111,6 +152,9 @@ const FineBarChart = ({ data }: { data: FineInsightType[] }) => {
                 tick={{ fontSize: 10 }}
                 angle={0}
                 textAnchor="middle"
+                tickFormatter={(value) =>
+                  activePeriod === 1 ? getWeekDayPK(value) : value
+                }
               />
 
               <YAxis

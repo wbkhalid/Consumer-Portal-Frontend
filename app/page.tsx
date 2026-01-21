@@ -1,17 +1,18 @@
 import { cookies } from "next/headers";
-import StatSummary from "./components/home-page/StatSummary";
-import AreachartComponent from "./components/home-page/AreaChartComponent";
-import ComplainFieldChart from "./components/home-page/ComplainFieldChart";
-import ComplainTypeChart from "./components/home-page/ComplainTypeChart";
-import FilterDataComponent from "./components/home-page/FilterDataComponent";
-import ComplainStatusChart from "./components/home-page/ComplainStatusChart";
-import ComplainMap from "./components/home-page/ComplainMap";
+import { ADMIN_DASHBOARD_API } from "./APIs";
+import HomeFilters from "./components/home-components/HomeFilters";
+import StatSummary from "./components/home-components/StatSummary";
+import FineBarChart from "./components/home-components/FineBarChart";
+import ComplaintPieChart from "./components/home-components/ComplaintPieChart";
+import SectionPieChart from "./components/home-components/SectionPieChart";
+import HomeMap from "./components/home-components/HomeMap";
 
 interface PageProps {
   searchParams: Promise<{
     divisionId?: string;
     districtId?: string;
     tehsilId?: string;
+    period?: string;
   }>;
 }
 
@@ -46,6 +47,27 @@ export interface ComplaintsListType {
   longitude: number;
 }
 
+export interface ComplaintsGrowthPercentages {
+  totalComplaints: number;
+  pendingComplaints: number;
+  inProceedingComplaints: number;
+  escalatedComplaints: number;
+  superEscalatedComplaints: number;
+  decidedOnMeritComplaints: number;
+  exParteComplaints: number;
+  withdrawnComplaints: number;
+  nonProsecutedComplaints: number;
+  appealsComplaints: number;
+  redHotComplaints: number;
+  avgResolutionTime: number;
+}
+
+export interface ComplaintBreakdownChart {
+  totalComplaints: number;
+  resolvedComlaints: number;
+  appealedComplaints: number;
+}
+
 export interface ComplainDashboardType {
   totalComplaints: number;
   inPendingComplaints: number;
@@ -66,99 +88,98 @@ export interface ComplainDashboardType {
   statusStats: StatusStatsType[];
   dailyAverageComplaints: DailyAvergeType[];
   complaintsList: ComplaintsListType[];
+  complaintsGrowthPercentages: ComplaintsGrowthPercentages;
+  complaintBreakdownChart: ComplaintBreakdownChart;
 }
 
-// export const dynamic = "force-dynamic";
+export interface FineInsightType {
+  label: string;
+  totalFine: number;
+}
 
-const DashboardPage = async ({ searchParams }: PageProps) => {
+export interface FineInsightApiResponse {
+  responseCode: number;
+  responseMessage: string;
+  data: FineInsightType[];
+}
+
+const MainPage = async ({ searchParams }: PageProps) => {
   const {
     divisionId: filterDivisionId,
     districtId: filterDistrictId,
     tehsilId: filterTehsilId,
+    period = "3",
   } = await searchParams;
   const cookieStore = await cookies();
   const role = cookieStore.get("role")?.value || "";
-
-  console.log(
-    filterDivisionId,
-    filterDistrictId,
-    filterTehsilId,
-    "searchParams"
-  );
 
   const cookieDivisionId = cookieStore.get("divisionId")?.value;
   const cookieDistrictId = cookieStore.get("districtId")?.value;
   const cookieTehsilId = cookieStore.get("tehsilId")?.value;
 
-  const params = new URLSearchParams();
+  const baseParams = new URLSearchParams();
 
   if (role === "Admin" || role === "DG" || role === "Secretary") {
-    params.append("divisionId", filterDivisionId || "");
-    params.append("districtId", filterDistrictId || "");
-    params.append("tehsilId", filterTehsilId || "");
+    baseParams.append("divisionId", filterDivisionId || "");
+    baseParams.append("districtId", filterDistrictId || "");
+    baseParams.append("tehsilId", filterTehsilId || "");
   }
 
   if (role === "Commissioner") {
     if (filterDistrictId || filterTehsilId) {
-      params.append("divisionId", cookieDivisionId || "");
-      params.append("districtId", filterDistrictId || "");
-      params.append("tehsilId", filterTehsilId || "");
+      baseParams.append("divisionId", cookieDivisionId || "");
+      baseParams.append("districtId", filterDistrictId || "");
+      baseParams.append("tehsilId", filterTehsilId || "");
     } else {
-      params.append("divisionId", cookieDivisionId || "");
+      baseParams.append("divisionId", cookieDivisionId || "");
     }
   }
 
   if (role === "DC" || role === "AD") {
     if (filterTehsilId) {
-      params.append("divisionId", cookieDivisionId || "");
-      params.append("districtId", cookieDistrictId || "");
-      params.append("tehsilId", filterTehsilId || "");
+      baseParams.append("divisionId", cookieDivisionId || "");
+      baseParams.append("districtId", cookieDistrictId || "");
+      baseParams.append("tehsilId", filterTehsilId || "");
     } else {
-      params.append("divisionId", cookieDivisionId || "");
-      params.append("districtId", cookieDistrictId || "");
+      baseParams.append("divisionId", cookieDivisionId || "");
+      baseParams.append("districtId", cookieDistrictId || "");
     }
   }
 
   if (role === "AC") {
-    params.append("divisionId", cookieDivisionId || "");
-    params.append("districtId", cookieDistrictId || "");
-    params.append("tehsilId", cookieTehsilId || "");
+    baseParams.append("divisionId", cookieDivisionId || "");
+    baseParams.append("districtId", cookieDistrictId || "");
+    baseParams.append("tehsilId", cookieTehsilId || "");
   }
+  const fineParams = new URLSearchParams(baseParams);
+  fineParams.set("period", period);
 
-  console.log(params, "params");
+  console.log(baseParams, "baseParams");
 
   const url = `${
     process.env.BACKEND_API
-  }/api/AdminDashboard?${params.toString()}`;
+  }${ADMIN_DASHBOARD_API}?${baseParams.toString()}`;
   console.log(url, "API URL");
-
-  console.log(url, "url");
 
   const response = await fetch(url, { cache: "no-store" });
   const complainDashboardData: ComplainDashboardType = await response.json();
 
   return (
-    <div className="grid grid-cols-12 gap-2">
-      <div className="col-span-12 lg:col-span-8 xl:col-span-9">
-        <StatSummary data={complainDashboardData} />
-        <AreachartComponent
-          data={complainDashboardData?.dailyAverageComplaints}
+    <div>
+      <HomeFilters />
+      <StatSummary data={complainDashboardData} />
+      <div className="grid grid-cols-12 gap-2.5 ">
+        <FineBarChart />
+        <ComplaintPieChart
+          data={complainDashboardData?.complaintBreakdownChart}
         />
-        <div className="grid grid-cols-2 gap-2">
-          <ComplainFieldChart
-            data={complainDashboardData?.complaintCategoryStats}
-          />
-          <ComplainTypeChart data={complainDashboardData?.sectionTypeStats} />
-        </div>
       </div>
-
-      <div className="col-span-12 lg:col-span-4 xl:col-span-3">
-        <FilterDataComponent />
-        <ComplainStatusChart data={complainDashboardData?.statusStats} />
-        <ComplainMap data={complainDashboardData?.complaintsList} />
+      <div className="grid grid-cols-12 gap-2.5 mt-2.5!">
+        <SectionPieChart data={complainDashboardData?.sectionTypeStats} />
+        <HomeMap data={complainDashboardData?.complaintsList} />
       </div>
     </div>
   );
 };
 
-export default DashboardPage;
+export default MainPage;
