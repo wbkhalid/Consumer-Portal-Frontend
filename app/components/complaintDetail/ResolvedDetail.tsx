@@ -29,47 +29,51 @@ const ResolvedDetail = ({ complaint, setMediaModal }: MediaDetailsProps) => {
 
         <div>
           {complaint?.decisionFilePaths &&
-          complaint.decisionFilePaths.length > 0 ? (
+          complaint?.decisionFilePaths?.length > 0 ? (
             <div className="flex flex-wrap gap-2">
-              {decisionImages.map((file, i) => (
-                <div
-                  key={`img-${i}`}
-                  className="w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
-                  onClick={() =>
-                    setMediaModal({
-                      open: true,
-                      type: "image",
-                      url: file.filePath,
-                    })
-                  }
-                >
-                  <img
-                    src={file.filePath}
-                    alt={`decision-img-${i}`}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
+              {decisionImages &&
+                decisionImages?.length > 0 &&
+                decisionImages?.map((file, i) => (
+                  <div
+                    key={`img-${i}`}
+                    className="w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
+                    onClick={() =>
+                      setMediaModal({
+                        open: true,
+                        type: "image",
+                        url: file.filePath,
+                      })
+                    }
+                  >
+                    <img
+                      src={file.filePath}
+                      alt={`decision-img-${i}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
 
-              {decisionVideos.map((file, i) => (
-                <div
-                  key={`vid-${i}`}
-                  className="relative w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
-                  onClick={() =>
-                    setMediaModal({
-                      open: true,
-                      type: "video",
-                      url: file.filePath,
-                    })
-                  }
-                >
-                  <video
-                    src={file.filePath}
-                    className="w-full h-full object-cover"
-                    muted
-                  />
-                </div>
-              ))}
+              {decisionVideos &&
+                decisionVideos?.length > 0 &&
+                decisionVideos?.map((file, i) => (
+                  <div
+                    key={`vid-${i}`}
+                    className="relative w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
+                    onClick={() =>
+                      setMediaModal({
+                        open: true,
+                        type: "video",
+                        url: file.filePath,
+                      })
+                    }
+                  >
+                    <video
+                      src={file.filePath}
+                      className="w-full h-full object-cover"
+                      muted
+                    />
+                  </div>
+                ))}
             </div>
           ) : (
             <p className="text-xs text-gray-400 italic">No media available.</p>

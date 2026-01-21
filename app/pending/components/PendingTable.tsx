@@ -33,6 +33,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
   const sortOrder = (searchParams.get("sortOrder") as "asc" | "desc") || "asc";
 
   const headers = [
+    { label: "Sr #" },
     { label: "Complaint ID", sortable: "id" },
     { label: "Date", sortable: "date" },
     { label: "Shop Name" },
@@ -109,7 +110,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
           </thead>
 
           <tbody>
-            {sortedData?.map((item) => (
+            {sortedData?.map((item, index) => (
               <tr
                 key={item?.id}
                 className="cursor-pointer! hover:bg-gray-100"
@@ -119,10 +120,13 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
                 }}
               >
                 <TableBodyCell className="font-semibold">
+                  {index + 1}
+                </TableBodyCell>
+                <TableBodyCell className="font-semibold">
                   {formatComplaintId(
                     item?.id,
                     item?.entryType,
-                    item?.createdAt
+                    item?.createdAt,
                   )}
                 </TableBodyCell>
 

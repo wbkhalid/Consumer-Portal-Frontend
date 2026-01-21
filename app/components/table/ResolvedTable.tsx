@@ -17,9 +17,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { sort } from "fast-sort";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
 import ResolvedDialog from "../dialog/ResolvedDialog";
+import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 
 interface ResolvedTableProps {
-  rowsData: ManageComplainsData[];
+  rowsData: ManageComplainsData[] | ManageCustomComplainsData[];
   isBreadCrumbs?: boolean;
 }
 
@@ -37,6 +38,7 @@ const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
   const sortOrder = (searchParams.get("sortOrder") as "asc" | "desc") || "asc";
 
   const headers = [
+    { label: "Sr #" },
     { label: "Complaint ID", sortable: "id" },
     { label: "Date", sortable: "date" },
     { label: "Assignee To", sortable: "assigneeTo" },
@@ -55,7 +57,7 @@ const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
 
   const sortFieldMapping: Record<
     string,
-    (item: ManageComplainsData) => string | number
+    (item: ManageComplainsData | ManageCustomComplainsData) => string | number
   > = {
     id: (i) => i.id,
     date: (i) => new Date(i.createdAt).getTime(),
@@ -124,7 +126,7 @@ const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
           </thead>
 
           <tbody>
-            {sortedData?.map((item) => (
+            {sortedData?.map((item, index) => (
               <tr
                 key={item?.id}
                 className="cursor-pointer! hover:bg-gray-100"
@@ -134,10 +136,13 @@ const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
                 }}
               >
                 <TableBodyCell className="font-semibold">
+                  {index + 1}
+                </TableBodyCell>
+                <TableBodyCell className="font-semibold">
                   {formatComplaintId(
                     item?.id,
                     item?.entryType,
-                    item?.createdAt
+                    item?.createdAt,
                   )}
                 </TableBodyCell>
 

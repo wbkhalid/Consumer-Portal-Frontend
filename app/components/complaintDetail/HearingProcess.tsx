@@ -39,11 +39,11 @@ const HearingProcess = ({
         null,
         {
           params: {
-            username: "demovideo",
-            password: "demovideo@1",
+            username: "cpcadminlhr",
+            password: "PaSSword_Jm5Dks2P!@",
             title: complaint?.id,
           },
-        }
+        },
       );
 
       console.log("API Response:", response.data);

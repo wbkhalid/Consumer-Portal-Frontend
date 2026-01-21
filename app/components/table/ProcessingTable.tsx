@@ -40,6 +40,7 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
   const sortOrder = (searchParams.get("sortOrder") as "asc" | "desc") || "asc";
 
   const headers = [
+    { label: "Sr #" },
     { label: "Complaint ID", sortable: "id" },
     { label: "Date", sortable: "date" },
     { label: "Days Old", sortable: "old" },
@@ -65,7 +66,7 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
     date: (i) => new Date(i.createdAt).getTime(),
     old: (i) =>
       Math.floor(
-        (Date.now() - new Date(i.createdAt).getTime()) / (1000 * 60 * 60 * 24)
+        (Date.now() - new Date(i.createdAt).getTime()) / (1000 * 60 * 60 * 24),
       ),
     assigneeTo: (i) =>
       staffData?.find((u) => u.userId === i.assignedTo)?.fullName || "",
@@ -128,7 +129,7 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
           </thead>
 
           <tbody>
-            {sortedData?.map((item) => (
+            {sortedData?.map((item, index) => (
               <tr
                 key={item?.id}
                 className="cursor-pointer! hover:bg-gray-100"
@@ -138,10 +139,13 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
                 }}
               >
                 <TableBodyCell className="font-semibold">
+                  {index + 1}
+                </TableBodyCell>
+                <TableBodyCell className="font-semibold">
                   {formatComplaintId(
                     item?.id,
                     item?.entryType,
-                    item?.createdAt
+                    item?.createdAt,
                   )}
                 </TableBodyCell>
 

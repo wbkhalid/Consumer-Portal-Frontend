@@ -17,10 +17,13 @@ import SectionSelectDropdown from "../../../../components/reuseable-filters/Sect
 import SectionCategoryDropdown from "../../../../components/reuseable-filters/SectionCategoryDropdown";
 import DateFilter from "../../../../components/DateFilter";
 import ClearButton from "../../../../components/ClearButton";
+import { ManageComplainsData } from "../../../../hooks/useGetAllComplains";
+import { ManageCustomComplainsData } from "../../../../hooks/useGetCustomComplaints";
 
 export interface SectionReport {
   districtName: string;
   complaintCount: number;
+  complaints: ManageComplainsData[] | ManageCustomComplainsData[];
 }
 
 interface Props {

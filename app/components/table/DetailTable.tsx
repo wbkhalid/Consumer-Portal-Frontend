@@ -17,6 +17,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { sort } from "fast-sort";
 import ComplaintDetailDialog from "../dialog/ComplaintDetailDialog";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+import ResolvedDialog from "../dialog/ResolvedDialog";
 
 interface DetailTableProps {
   rowsData: ManageComplainsData[] | ManageCustomComplainsData[];
@@ -37,6 +38,7 @@ const DetailTable = ({ rowsData, isBreadCrumbs = false }: DetailTableProps) => {
   const sortOrder = (searchParams.get("sortOrder") as "asc" | "desc") || "asc";
 
   const headers = [
+    { label: "Sr #" },
     { label: "Complaint ID", sortable: "id" },
     { label: "Date", sortable: "date" },
     { label: "Shop Name" },
@@ -131,7 +133,7 @@ const DetailTable = ({ rowsData, isBreadCrumbs = false }: DetailTableProps) => {
           </thead>
 
           <tbody>
-            {sortedData?.map((item) => (
+            {sortedData?.map((item, index) => (
               <tr
                 key={item?.id}
                 className="cursor-pointer! hover:bg-gray-100"
@@ -141,10 +143,13 @@ const DetailTable = ({ rowsData, isBreadCrumbs = false }: DetailTableProps) => {
                 }}
               >
                 <TableBodyCell className="font-semibold">
+                  {index + 1}
+                </TableBodyCell>
+                <TableBodyCell className="font-semibold">
                   {formatComplaintId(
                     item?.id,
                     item?.entryType,
-                    item?.createdAt
+                    item?.createdAt,
                   )}
                 </TableBodyCell>
 
@@ -237,7 +242,7 @@ const DetailTable = ({ rowsData, isBreadCrumbs = false }: DetailTableProps) => {
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
         <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]! overflow-hidden!">
-          <ComplaintDetailDialog selectedComplaint={selectedComplaint} />
+          <ResolvedDialog selectedComplaint={selectedComplaint} />
         </Dialog.Content>
       </Dialog.Root>
     </div>

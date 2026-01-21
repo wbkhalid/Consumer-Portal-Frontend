@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import CustomTableHeaderCell from "../../../../components/table/CustomTableHeaderCell";
 import TableBodyCell from "../../../../components/table/TableBodyCell";
 import { BaseQuery, Column } from "../../../../utils/utils";
@@ -18,8 +19,11 @@ interface Props {
 
 const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
   const { totalComplaints } = calculateTotals(data);
+  const router = useRouter();
 
   const columns = getColumns();
+
+  console.log(searchParams, "..///...search");
 
   return (
     <div className="relative">
@@ -43,11 +47,29 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
           <tbody>
             {data?.map((d, index) => {
               // const serial = (currentPage - 1) * pageSize + index + 1;
+              console.log(
+                `/others-report/complaint-reports/section-report/${encodeURIComponent(
+                  d?.districtName,
+                )}${
+                  searchParams.toString() ? `?${searchParams.toString()}` : ""
+                }`,
+              );
 
               return (
                 <tr
                   key={index + 1}
-                  className={`transition-colors duration-150  hover:bg-gray-100`}
+                  className={`transition-colors duration-150  hover:bg-gray-100 cursor-pointer`}
+                  onClick={() =>
+                    router.push(
+                      `/others-report/complaint-reports/section-report/${encodeURIComponent(
+                        d?.districtName,
+                      )}${
+                        searchParams.toString()
+                          ? `?${searchParams.toString()}`
+                          : ""
+                      }`,
+                    )
+                  }
                 >
                   <TableBodyCell>{index + 1}</TableBodyCell>
                   <TableBodyCell>{d.districtName}</TableBodyCell>
