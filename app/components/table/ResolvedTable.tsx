@@ -3,12 +3,10 @@
 import { useState, useMemo } from "react";
 import TableBodyCell from "../../components/table/TableBodyCell";
 import TableHeaderCell from "../../components/table/TableHeaderCell";
-import PaginationControls from "../../components/table/PaginationControls";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import {
   formatComplaintId,
   formatDate,
-  getDaysOld,
   getUniqueSectionNumbers,
   statusData,
 } from "../../utils/utils";
@@ -16,8 +14,8 @@ import { Dialog } from "@radix-ui/themes";
 import { useRouter, useSearchParams } from "next/navigation";
 import { sort } from "fast-sort";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
-import ResolvedDialog from "../dialog/ResolvedDialog";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+import ComplaintDetailDialog from "../dialog/ComplaintDetailDialog";
 
 interface ResolvedTableProps {
   rowsData: ManageComplainsData[] | ManageCustomComplainsData[];
@@ -229,7 +227,11 @@ const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
         <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]">
-          <ResolvedDialog selectedComplaint={selectedComplaint} />
+          <ComplaintDetailDialog
+            selectedComplaint={selectedComplaint}
+            onSuccess={() => {}}
+            onClose={() => {}}
+          />
         </Dialog.Content>
       </Dialog.Root>
     </div>

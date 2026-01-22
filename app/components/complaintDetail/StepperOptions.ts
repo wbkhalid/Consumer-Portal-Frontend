@@ -31,16 +31,16 @@ export const DETAIL_STEPS = [
 
 export const PENDING_STEPS = [
   ...DETAIL_STEPS,
-  { id: 4, label: "Assign", iconImage: AssignmentsIcon },
+  { id: 5, label: "Assign", iconImage: AssignmentsIcon },
 ];
 export const PROCEEDING_STEPS = [
   ...DETAIL_STEPS,
-  { id: 5, label: "Hearing Process", iconImage: Calendar02Icon },
-  { id: 6, label: "Order", iconImage: FileValidationIcon },
+  { id: 6, label: "Hearing Process", iconImage: Calendar02Icon },
+  { id: 7, label: "Order", iconImage: FileValidationIcon },
 ];
 
 export const RESOLVED_STEPS = [
   ...DETAIL_STEPS,
   // { id: 4, label: "Remarks and history", iconImage: UserMultipleIcon },
-  { id: 5, label: "Resolved Details", iconImage: TickDouble01Icon },
+  { id: 8, label: "Resolved Details", iconImage: TickDouble01Icon },
 ];

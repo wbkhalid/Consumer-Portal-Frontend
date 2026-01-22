@@ -236,7 +236,7 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
           className="p-0! lg:max-w-[800px]! max-h-[80vh]! overflow-hidden!"
           onInteractOutside={(e) => e.preventDefault()}
         >
-          <ProcessingDetailDilaog
+          <ComplaintDetailDialog
             selectedComplaint={selectedComplaint}
             onClose={() => {
               setSelectedComplaint(null);

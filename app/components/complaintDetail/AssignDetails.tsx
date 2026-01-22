@@ -69,13 +69,13 @@ const AssignDetails = ({
 
       const response = await apiClient.post(
         COMPLAINT_API + "/update-status",
-        payload
+        payload,
       );
       console.log(response, "response");
 
       if (response.status === 200) {
         toast.success(
-          response?.data?.message || "Complaint assigned successfully."
+          response?.data?.message || "Complaint assigned successfully.",
         );
         onSuccess();
         onClose();
