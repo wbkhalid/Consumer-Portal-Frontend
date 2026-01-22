@@ -16,23 +16,15 @@ import {
   FiBarChart2,
   FiPieChart,
   FiFileText,
-  FiMoreHorizontal,
   FiDatabase,
   FiClock,
   FiTrendingUp,
-  FiGlobe,
-  FiBox,
   FiCheckCircle,
-  FiShoppingCart,
-  FiAlertTriangle,
-  FiPercent,
   FiLayers,
 } from "react-icons/fi";
 import { FaUsers } from "react-icons/fa";
 
 const MegaMenu = () => {
-  const [open, setOpen] = useState(false);
-
   const categories = [
     {
       title: "Authority Reports",
@@ -75,13 +67,7 @@ const MegaMenu = () => {
           icon: <FiPieChart className="text-white" size={22} />,
           route: "/reports/frequency-report/list",
         },
-        // {
-        //   label: "Section Report",
-        //   description:
-        //     "Break down complaints by legal or departmental sections.",
-        //   icon: <FiDatabase className="text-white" size={22} />,
-        //   route: "/others-report/section-complaint",
-        // },
+
         {
           label: "Complaint Institution Report",
           description:
@@ -118,93 +104,6 @@ const MegaMenu = () => {
           route: "/reports/section-report/list",
         },
       ],
-    },
-  ];
-
-  const otherReports = [
-    // {
-    //   label: "Defective Product Report",
-    //   description: "View complaints related to defective or damaged products.",
-    //   icon: <FiBox className="text-white" size={22} />,
-    //   route: "/others-report/defective-product-report",
-    // },
-    // {
-    //   label: "Faulty Service Report",
-    //   description: "Track complaints about poor or unsatisfactory services.",
-    //   icon: <FiAlertTriangle className="text-white" size={22} />,
-    //   route: "/others-report/faulty-service-report",
-    // },
-    // {
-    //   label: "City Wise Faulty Service Report",
-    //   description: "Analyze faulty service complaints distributed by city.",
-    //   icon: <FiGlobe className="text-white" size={22} />,
-    //   route: "/others-report/city-wise-faulty-service-report",
-    // },
-    // {
-    //   label: "City Wise Defective Product Report",
-    //   description: "Analyze defective product complaints grouped by city.",
-    //   icon: <FiBarChart2 className="text-white" size={22} />,
-    //   route: "/others-report/city-wise-defective-product-report",
-    // },
-    {
-      label: "Complaint Institution Report",
-      description: "View complaint distribution by responsible institutions.",
-      icon: <FiLayers className="text-white" size={22} />,
-      route:
-        "/others-report/complaint-reports/complaint-institution-report/list",
-    },
-    {
-      label: "Decided Complaint Report",
-      description:
-        "See a list of complaints that have been resolved or closed.",
-      icon: <FiCheckCircle className="text-white" size={22} />,
-      route: "/others-report/complaint-reports/decided-complaint-report/list",
-    },
-    // {
-    //   label: "Online Business Report",
-    //   description:
-    //     "Monitor complaints filed against online businesses or stores.",
-    //   icon: <FiShoppingCart className="text-white" size={22} />,
-    //   route: "/others-report/online-business-report",
-    // },
-    // {
-    //   label: "Brand Wise Report",
-    //   description: "Evaluate complaint frequency by brand or company.",
-    //   icon: <FiFileText className="text-white" size={22} />,
-    //   route: "/others-report/brand-report",
-    // },
-    {
-      label: "Aging Report",
-      description: "Check pending complaints based on their age and duration.",
-      icon: <FiClock className="text-white" size={22} />,
-      route: "/others-report/complaint-reports/aging-report/list",
-    },
-    {
-      label: "Fine Imposed Report",
-      description:
-        "Track fines imposed on businesses after complaint resolution.",
-      icon: <FiTrendingUp className="text-white" size={22} />,
-      route: "/others-report/complaint-reports/fine-imposed-report/list",
-    },
-    // {
-    //   label: "Ratio Report",
-    //   description:
-    //     "Compare resolved versus pending complaints in percentage form.",
-    //   icon: <FiPercent className="text-white" size={22} />,
-    //   route: "/others-report/ratio-report",
-    // },
-    {
-      label: "Frequency Report",
-      description:
-        "Identify users or brands with frequent complaint occurrences.",
-      icon: <FiPieChart className="text-white" size={22} />,
-      route: "/others-report/complaint-reports/frequency-report/list",
-    },
-    {
-      label: "Section Report",
-      description: "Break down complaints by legal or departmental sections.",
-      icon: <FiDatabase className="text-white" size={22} />,
-      route: "/others-report/complaint-reports/section-report/list",
     },
   ];
 
@@ -274,7 +173,7 @@ const MegaMenu = () => {
       </div>
 
       {/* 🪟 Dialog for Other Reports */}
-      <Dialog.Root open={open} onOpenChange={setOpen}>
+      {/* <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Content className="min-w-[500px]! lg:min-w-[1000px]! p-1 rounded-xl shadow-xl bg-white">
           <p className="text-(--primary) mb-2! font-bold text-lg">
             Other Reports
@@ -315,7 +214,7 @@ const MegaMenu = () => {
             </Button>
           </Flex>
         </Dialog.Content>
-      </Dialog.Root>
+      </Dialog.Root> */}
     </>
   );
 };

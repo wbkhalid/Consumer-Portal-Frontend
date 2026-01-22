@@ -48,7 +48,7 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
             {data?.map((d, index) => {
               // const serial = (currentPage - 1) * pageSize + index + 1;
               console.log(
-                `/others-report/complaint-reports/section-report/${encodeURIComponent(
+                `/reports/section-report/${encodeURIComponent(
                   d?.districtName,
                 )}${
                   searchParams.toString() ? `?${searchParams.toString()}` : ""

@@ -3,16 +3,16 @@
 import { useState, useMemo } from "react";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
-import CustomComplaintDialog from "../../authority-reports/custom-complaint-report/components/CustomComplaintDialog";
 import StaffDropdown from "../../components/reuseable-filters/StaffDropdown";
 import DateFilter from "../../components/DateFilter";
-import FineFilterDropdown from "../../authority-reports/custom-complaint-report/components/FineFilter";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import SearchFilter from "../../components/reuseable-filters/SearchFilter";
 import { getRole } from "../../utils/utils";
 import DistrictWiseDropdown from "../../components/reuseable-filters/DistrictWiseDropdown";
 import DetailTable from "../../components/table/DetailTable";
 import ClearButton from "../../components/ClearButton";
+import CustomComplaintDialog from "../../reports/custom-complaint-report/components/CustomComplaintDialog";
+import FineFilterDropdown from "../../reports/custom-complaint-report/components/FineFilter";
 
 const ComplainComponent = () => {
   const [refresh, setRefresh] = useState(false);
@@ -46,8 +46,8 @@ const ComplainComponent = () => {
 
     return complainData?.filter((item) =>
       Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(term)
-      )
+        String(value).toLowerCase().includes(term),
+      ),
     );
   }, [complainData, search]);
 

@@ -1,4 +1,4 @@
-import { FrequencyReport } from "../../list/page";
+// import { FrequencyReport } from "../../list/page";
 import { BaseQuery, DEFAULT_PAGE_SIZE } from "../../../../utils/utils";
 import { COMPLAINT_REPORT_API } from "../../../../APIs";
 import { APIResponse } from "../../../../services/api-client";
@@ -6,6 +6,7 @@ import { ManageComplainsData } from "../../../../hooks/useGetAllComplains";
 import Breadcrumbs from "../../../../components/Breadcrumbs";
 import SearchFilter from "../../../../components/reuseable-filters/SearchFilter";
 import DetailTable from "../../../../components/table/DetailTable";
+import { FrequencyReport } from "../../list/page";
 export type Query = BaseQuery<ManageComplainsData>;
 
 interface Props {
@@ -48,9 +49,7 @@ const FrequencyComplaintPage = async ({ searchParams, params }: Props) => {
 
   const finalAPI = `${baseURL}?${params.toString()}`;
   console.log("finalAPI call", finalAPI);
-  const res = await fetch(finalAPI, {
-    next: { revalidate: 10 },
-  });
+  const res = await fetch(finalAPI);
 
   const response: APIResponse<FrequencyReport[]> = await res.json();
 
@@ -100,64 +99,9 @@ const FrequencyComplaintPage = async ({ searchParams, params }: Props) => {
       <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
         <div className="flex justify-between items-center py-3! px-5!">
           <SearchFilter />
-          {/* <div className="flex justify-end items-center gap-2">
-            <DateFilter />
-
-            <ClearButton />
-          </div> */}
         </div>
         <DetailTable rowsData={data ?? []} isBreadCrumbs={true} />
       </div>
-
-      {/* <div className="border border-[#e2e8f0] rounded-lg overflow-hidden bg-white">
-        <div className="flex items-center gap-1 p-2! flex-wrap">
-          <Link
-            className="text-(--primary) font-medium hover:underline"
-            href="/"
-          >
-            Home
-          </Link>
-          <LuChevronRight className="text-(--primary)" />
-          <Link
-            className="text-(--primary) font-medium hover:underline"
-            href="/others-report/complaint-reports/frequency-report/list"
-          >
-            Frequency Report
-          </Link>
-          <LuChevronRight className="text-(--primary)" />
-          <span className="text-(--primary)">{decodedParam}</span>
-        </div>
-        <div className="flex justify-between items-center px-2! py-2! flex-wrap gap-2">
-          <div className="flex items-center gap-1 flex-wrap">
-            <p className="text-(--primary) font-semibold">{fileName}</p>
-            <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-              {paginatedData.length} Records
-            </p>
-          </div>
-          <div className="flex items-center justify-end gap-2 flex-wrap">
-            <Suspense fallback={<Spinner />}>
-              <YearFilter />
-              <DatesFilter />
-              <SearchFilter />
-            </Suspense>
-          </div>
-        </div>
-
-        <List
-          data={data}
-          paginatedData={paginatedData}
-          currentPage={myPage}
-          pageSize={myPageSize}
-          searchParams={query}
-        />
-        <Suspense fallback={<Spinner />}>
-          <Pagination
-            pageSize={myPageSize}
-            currentPage={myPage}
-            itemCount={totalCount}
-          />
-        </Suspense>
-      </div> */}
     </>
   );
 };

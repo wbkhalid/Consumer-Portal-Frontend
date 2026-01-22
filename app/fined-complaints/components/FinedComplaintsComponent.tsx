@@ -4,9 +4,9 @@ import { useRegionFilters } from "../../hooks/useRegionFilters";
 import useGetFinedComplaints from "../../hooks/useGetFinedComplaints";
 import FinedComplaintTable from "./FinedComplaintTable";
 import SearchFilter from "../../components/reuseable-filters/SearchFilter";
-import FineFilterDropdown from "../../authority-reports/custom-complaint-report/components/FineFilter";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
+import FineFilterDropdown from "../../reports/custom-complaint-report/components/FineFilter";
 
 const FinedComplaintsComponent = () => {
   const router = useRouter();
@@ -30,8 +30,8 @@ const FinedComplaintsComponent = () => {
 
     return finedComplaintData?.filter((item) =>
       Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(term)
-      )
+        String(value).toLowerCase().includes(term),
+      ),
     );
   }, [finedComplaintData, search]);
   return (
