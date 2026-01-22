@@ -47,25 +47,25 @@ const MegaMenu = () => {
           label: "Custom Complaint Report",
           description: "Manage custom complaints report",
           icon: <FiFileText className="text-white" size={22} />,
-          route: "/authority-reports/custom-complaint-report",
+          route: "/reports/custom-complaint-report",
         },
         {
           label: "Complaint Summary Report",
           description: "View summary of all complaints",
           icon: <FiBarChart2 className="text-white" size={22} />,
-          route: "/authority-reports/complaint-reports/complaint-summary/list",
+          route: "/reports/complaint-summary/list",
         },
         {
           label: "Analytical Report",
           description: "Analyze complaint trends",
           icon: <FiPieChart className="text-white" size={22} />,
-          route: "/authority-reports/complaint-reports/analytical-reports/list",
+          route: "/reports/analytical-reports/list",
         },
         {
           label: "Appeals Report",
           description: "Manage submitted appeals data",
           icon: <FiFlag className="text-white" size={22} />,
-          route: "/authority-reports/complaint-reports/appeals-report/list",
+          route: "/reports/appeals-report/list",
         },
 
         {
@@ -73,7 +73,7 @@ const MegaMenu = () => {
           description:
             "Identify users or brands with frequent complaint occurrences.",
           icon: <FiPieChart className="text-white" size={22} />,
-          route: "/others-report/complaint-reports/frequency-report/list",
+          route: "/reports/frequency-report/list",
         },
         // {
         //   label: "Section Report",
@@ -87,37 +87,35 @@ const MegaMenu = () => {
           description:
             "View complaint distribution by responsible institutions.",
           icon: <FiLayers className="text-white" size={22} />,
-          route:
-            "/others-report/complaint-reports/complaint-institution-report/list",
+          route: "/reports/complaint-institution-report/list",
         },
         {
           label: "Decided Complaint Report",
           description:
             "See a list of complaints that have been resolved or closed.",
           icon: <FiCheckCircle className="text-white" size={22} />,
-          route:
-            "/others-report/complaint-reports/decided-complaint-report/list",
+          route: "/reports/decided-complaint-report/list",
         },
         {
           label: "Aging Report",
           description:
             "Check pending complaints based on their age and duration.",
           icon: <FiClock className="text-white" size={22} />,
-          route: "/others-report/complaint-reports/aging-report",
+          route: "/reports/aging-report",
         },
         {
           label: "Fine Imposed Report",
           description:
             "Track fines imposed on businesses after complaint resolution.",
           icon: <FiTrendingUp className="text-white" size={22} />,
-          route: "/others-report/complaint-reports/fine-imposed-report",
+          route: "/reports/fine-imposed-report",
         },
         {
           label: "Section Report",
           description:
             "Break down complaints by legal or departmental sections.",
           icon: <FiDatabase className="text-white" size={22} />,
-          route: "/others-report/complaint-reports/section-report/list",
+          route: "/reports/section-report/list",
         },
       ],
     },

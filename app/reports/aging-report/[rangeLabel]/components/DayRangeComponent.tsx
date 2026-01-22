@@ -1,17 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import DatePicker from "../../../../../components/DatePicker";
+import DatePicker from "../../../../components/DatePicker";
 import { AgingReportDailyBreakdown } from "../../page";
 import DayRangeTable from "./DayRangeTable";
 import { format, parseISO } from "date-fns";
 import { Button } from "@radix-ui/themes";
-import { getDateRange } from "../../../../../utils/utils";
-import Breadcrumbs from "../../../../../components/Breadcrumbs";
-import SearchFilter from "../../../../../components/reuseable-filters/SearchFilter";
-import DateFilter from "../../../../../components/DateFilter";
-import ClearButton from "../../../../../components/ClearButton";
-import DetailTable from "../../../../../components/table/DetailTable";
+import { getDateRange } from "../../../../utils/utils";
+import Breadcrumbs from "../../../../components/Breadcrumbs";
+import SearchFilter from "../../../../components/reuseable-filters/SearchFilter";
+
+import DetailTable from "../../../../components/table/DetailTable";
 import { useSearchParams } from "next/navigation";
 
 interface DayRangeComponentProp {

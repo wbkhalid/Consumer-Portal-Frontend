@@ -1,4 +1,5 @@
-import { COMPLAINT_REPORT_API } from "../../../../APIs";
+import { useSearchParams } from "next/navigation";
+import { COMPLAINT_REPORT_API } from "../../../APIs";
 import { AgingReportProp } from "../page";
 import DayRangeComponent from "./components/DayRangeComponent";
 import { cookies } from "next/headers";

@@ -17,6 +17,7 @@ import { useRegionFilters } from "../../hooks/useRegionFilters";
 import CustomSearchDropdown from "../CustomSearchDropdown";
 import { RxCross2 } from "react-icons/rx";
 import apiClient from "../../services/api-client";
+import { toast } from "react-toastify";
 
 const HearingProcess = ({
   complaint,
@@ -25,8 +26,9 @@ const HearingProcess = ({
 }) => {
   const [hearingStep, setHearingStep] = useState(0);
   const { divisionId, districtId, tehsilId } = useRegionFilters();
-  const [meetingToken, setMeetingToken] = useState("");
+  // const [meetingToken, setMeetingToken] = useState("");
   const [hearingDate, setHearingDate] = useState<Date | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const { data: staffData } = useGetAllStaff({
     divisionId: divisionId || "",
@@ -34,8 +36,50 @@ const HearingProcess = ({
     tehsilId: tehsilId || "",
   });
 
-  const scheduleHearing = async () => {
+  const createMeeting = async (token: string) => {
+    if (!hearingDate || !complaint?.id) return;
+
     try {
+      const params = new URLSearchParams({
+        meeting_title: String(complaint.id),
+        meeting_date: format(hearingDate, "yyyy-MM-dd HH:mm"),
+      });
+
+      const response = await fetch(
+        `https://oconnect.ptclgroup.pk/utalk/api/meetings/create?${params.toString()}`,
+        {
+          method: "POST",
+          headers: {
+            "OCONNECT-API-TOKEN": token,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Create meeting failed: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (data?.status === true) {
+        toast.success(data?.message || "Meeting created");
+        setLoading(false);
+      }
+      console.log("Meeting Created:", data);
+    } catch (error) {
+      console.error("Create Meeting API Error:", error);
+      toast.error("Failed to create meeting");
+      setLoading(false);
+    }
+  };
+
+  const scheduleHearing = async () => {
+    if (!hearingDate) {
+      toast.warning("Please select a hearing date");
+      return;
+    }
+
+    try {
+      setLoading(true);
       const params = new URLSearchParams({
         username: "cpcadminlhr",
         password: "PaSSword_Jm5Dks2P!@",
@@ -53,41 +97,15 @@ const HearingProcess = ({
       }
 
       const data = await response.json();
-      setMeetingToken(data?.token);
-      console.log("API Response (actual data):", data);
+      console.log("Login Response:", data);
+
+      if (data?.status === true && data?.token) {
+        await createMeeting(data?.token);
+      }
     } catch (error) {
       console.error("API Error:", error);
-    }
-  };
-
-  const createMeeting = async () => {
-    if (!meetingToken || !hearingDate) return;
-
-    try {
-      const params = new URLSearchParams({
-        meeting_title: String(complaint?.id),
-        meeting_date: format(hearingDate, "yyyy-MM-dd HH:mm"),
-      });
-
-      const response = await fetch(
-        `https://oconnect.ptclgroup.pk/utalk/api/meetings/create?${params.toString()}`,
-        {
-          method: "POST",
-          headers: {
-            "OCONNECT-API-TOKEN": meetingToken,
-          },
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error(`Create meeting failed: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      console.log("Meeting Created:", data);
-    } catch (error) {
-      console.error("Create Meeting API Error:", error);
+      setLoading(false);
+      toast.error("Failed to schedule hearing");
     }
   };
 
@@ -97,56 +115,82 @@ const HearingProcess = ({
         <div className="px-5! py-2.5!">
           <div className="flex justify-between items-center mb-2.5!">
             <p className="text-[#555555] text-sm">Schedule New Hearing</p>
-            <Button
+            {/* <Button
               className="rounded-full! text-xs! font-medium! cursor-pointer!"
               onClick={scheduleHearing}
               // onClick={() => setHearingStep(1)}
             >
               <HugeiconsIcon icon={Add01Icon} size={18} /> Schedule New Hearing
-            </Button>
+            </Button> */}
           </div>
 
-          {meetingToken && (
-            <>
-              <div className="w-fit">
-                <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
-                  <input
-                    type="datetime-local"
-                    aria-label="Hearing date"
-                    className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
-                    value={
-                      hearingDate
-                        ? format(hearingDate, "yyyy-MM-dd'T'HH:mm")
-                        : ""
-                    }
-                    min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
-                    onChange={(e) => setHearingDate(parseISO(e.target.value))}
-                  />
-                </div>
-              </div>{" "}
-              <Button
-                className="mt-2! text-xs!"
-                onClick={createMeeting}
-                disabled={!hearingDate}
-              >
-                Create Meeting
-              </Button>
-            </>
-          )}
+          {/* <>
+            <div className="w-fit">
+              <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
+                <input
+                  type="datetime-local"
+                  aria-label="Hearing date"
+                  className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
+                  value={
+                    hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
+                  }
+                  min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
+                  onChange={(e) => setHearingDate(parseISO(e.target.value))}
+                />
+              </div>
+            </div>{" "}
+            <Button
+              className="rounded-full! text-xs! font-medium! cursor-pointer!"
+              onClick={scheduleHearing}
+              disabled={loading}
+              // onClick={() => setHearingStep(1)}
+            >
+              <HugeiconsIcon icon={Add01Icon} size={18} />
+              {loading ? "Scheduling..." : "Schedule New Hearing"}
+            </Button>
+          </> */}
 
-          {/* {false ? (
+          {true ? (
             <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-10! rounded-[5px]! flex flex-col items-center gap-1 mt-2.5!">
               <HugeiconsIcon icon={Calendar03Icon} />
               <p className="text-[#4A5565] text-sm">
                 No hearings scheduled yet
               </p>
-              <Button
+
+              <>
+                <div className="w-fit">
+                  <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
+                    <input
+                      type="datetime-local"
+                      aria-label="Hearing date"
+                      className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
+                      value={
+                        hearingDate
+                          ? format(hearingDate, "yyyy-MM-dd'T'HH:mm")
+                          : ""
+                      }
+                      min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
+                      onChange={(e) => setHearingDate(parseISO(e.target.value))}
+                    />
+                  </div>
+                </div>{" "}
+                <Button
+                  className="rounded-full! text-xs! font-medium! cursor-pointer!"
+                  onClick={scheduleHearing}
+                  disabled={loading}
+                  // onClick={() => setHearingStep(1)}
+                >
+                  <HugeiconsIcon icon={Add01Icon} size={18} />
+                  {loading ? "Scheduling..." : "Schedule New Hearing"}
+                </Button>
+              </>
+              {/* <Button
                 className="text-xs! font-medium! cursor-pointer! leading-0! max-h-4!"
                 onClick={() => setHearingStep(1)}
               >
                 <HugeiconsIcon icon={Add01Icon} size={18} /> Schedule First
                 Hearing
-              </Button>
+              </Button> */}
             </div>
           ) : (
             <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-2.5! rounded-[5px]!">
@@ -208,7 +252,7 @@ const HearingProcess = ({
                 </Button>
               </div>
             </div>
-          )} */}
+          )}
         </div>
       ) : (
         <div className="px-5! py-2.5!">

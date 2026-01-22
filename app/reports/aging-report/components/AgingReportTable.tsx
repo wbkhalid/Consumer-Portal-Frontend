@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
-import TableBodyCell from "../../../../components/table/TableBodyCell";
-import TableHeaderCell from "../../../../components/table/TableHeaderCell";
+import TableBodyCell from "../../../components/table/TableBodyCell";
+import TableHeaderCell from "../../../components/table/TableHeaderCell";
 import { AgingReportProp } from "../page";
 
 interface AgingReportTableProps {
@@ -37,7 +37,7 @@ const AgingReportTable = ({ rowsData }: AgingReportTableProps) => {
                   } hover:bg-gray-100`}
                   onClick={() =>
                     router.push(
-                      `/others-report/complaint-reports/aging-report/${encodeURIComponent(
+                      `/reports/aging-report/${encodeURIComponent(
                         item?.rangeLabel,
                       )}`,
                     )
