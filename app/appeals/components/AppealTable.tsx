@@ -9,17 +9,17 @@ interface AppealsTableProps {
 }
 
 const AppealTable = ({ rowsData }: AppealsTableProps) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const totalPages = Math.ceil(rowsData?.length / pageSize);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [pageSize, setPageSize] = useState(10);
+  // const totalPages = Math.ceil(rowsData?.length / pageSize);
 
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const paginatedData = rowsData?.slice(startIndex, endIndex);
+  // const startIndex = (currentPage - 1) * pageSize;
+  // const endIndex = startIndex + pageSize;
+  // const paginatedData = rowsData?.slice(startIndex, endIndex);
   return (
     <>
       <div className="relative">
-        <div className="h-[calc(100vh-110px)] overflow-y-auto scrollbar-hide relative">
+        <div className="h-[calc(100vh-160px)] overflow-y-auto scrollbar-hide relative">
           <table className="min-w-full text-sm mb-10!">
             <thead className="sticky top-0 z-10">
               <tr className="font-semibold bg-white">
@@ -36,7 +36,7 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
             </thead>
 
             <tbody>
-              {paginatedData?.map((item, index) => (
+              {rowsData?.map((item, index) => (
                 <tr
                   key={index}
                   className={`transition-colors duration-150  hover:bg-gray-100`}
@@ -51,7 +51,7 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
             </tbody>
           </table>
         </div>
-        <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
+        {/* <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
           <PaginationControls
             currentPage={currentPage}
             totalPages={totalPages}
@@ -59,7 +59,7 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
             pageSize={pageSize}
             setPageSize={setPageSize}
           />
-        </div>
+        </div> */}
       </div>
     </>
   );

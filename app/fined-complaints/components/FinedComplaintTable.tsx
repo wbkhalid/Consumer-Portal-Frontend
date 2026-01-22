@@ -31,6 +31,7 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
   const sortOrder = (searchParams.get("sortOrder") as "asc" | "desc") || "asc";
 
   const headers: { label: string; sortable?: SortKey }[] = [
+    { label: "Sr #" },
     { label: "Complaint Id", sortable: "id" },
     { label: "Shop Name" },
     { label: "Phone #" },
@@ -91,7 +92,7 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
           </thead>
 
           <tbody>
-            {sortedData?.map((item) => (
+            {sortedData?.map((item, index) => (
               <tr
                 key={item?.id}
                 className="cursor-pointer! hover:bg-gray-100"
@@ -101,10 +102,13 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
                 }}
               >
                 <TableBodyCell className="font-semibold">
+                  {index + 1}
+                </TableBodyCell>
+                <TableBodyCell className="font-semibold">
                   {formatComplaintId(
                     item?.id,
                     item?.entryType,
-                    item?.createdAt
+                    item?.createdAt,
                   )}
                 </TableBodyCell>
 

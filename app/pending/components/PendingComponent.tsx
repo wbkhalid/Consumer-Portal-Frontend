@@ -40,8 +40,8 @@ const PendingComponent = () => {
 
     return pendingData?.filter((item) =>
       Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(term)
-      )
+        String(value).toLowerCase().includes(term),
+      ),
     );
   }, [pendingData, search]);
   return (

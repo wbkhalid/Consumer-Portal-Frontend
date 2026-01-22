@@ -1,11 +1,11 @@
-import React from "react";
+import React, { Suspense } from "react";
 import AppealComponent from "./components/AppealComponent";
 
 const AppealPage = () => {
   return (
-    <div>
+    <Suspense fallback={<div>Loading appleas complaints...</div>}>
       <AppealComponent />
-    </div>
+    </Suspense>
   );
 };
 

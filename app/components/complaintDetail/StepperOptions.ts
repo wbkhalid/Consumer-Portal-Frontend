@@ -26,6 +26,7 @@ export const DETAIL_STEPS = [
     label: "Evidence",
     iconImage: Album02Icon,
   },
+  { id: 4, label: "Remarks and history", iconImage: UserMultipleIcon },
 ];
 
 export const PENDING_STEPS = [
@@ -34,13 +35,12 @@ export const PENDING_STEPS = [
 ];
 export const PROCEEDING_STEPS = [
   ...DETAIL_STEPS,
-  { id: 4, label: "Remarks and history", iconImage: UserMultipleIcon },
   { id: 5, label: "Hearing Process", iconImage: Calendar02Icon },
   { id: 6, label: "Order", iconImage: FileValidationIcon },
 ];
 
 export const RESOLVED_STEPS = [
   ...DETAIL_STEPS,
-  { id: 4, label: "Remarks and history", iconImage: UserMultipleIcon },
+  // { id: 4, label: "Remarks and history", iconImage: UserMultipleIcon },
   { id: 5, label: "Resolved Details", iconImage: TickDouble01Icon },
 ];

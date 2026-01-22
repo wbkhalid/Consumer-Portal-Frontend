@@ -20,7 +20,7 @@ const FineBarChart = () => {
   const searchParams = useSearchParams();
   const [data, setData] = useState<FineInsightType[]>([]);
   const [loading, setLoading] = useState(false);
-  const activePeriod = Number(searchParams.get("period") ?? 3);
+  const activePeriod = Number(searchParams.get("period") ?? 2);
 
   useEffect(() => {
     const fetchFineData = async () => {
@@ -52,10 +52,8 @@ const FineBarChart = () => {
   const getWeekDayPK = (label: string) => {
     const [day, month] = label.split("-");
 
-    // IMPORTANT: current year explicitly
-    const year = new Date().getFullYear(); // 2026
+    const year = new Date().getFullYear();
 
-    // Noon time to avoid timezone shift
     const date = new Date(`${year} ${month} ${day} 12:00:00`);
 
     return date.toLocaleDateString("en-US", {

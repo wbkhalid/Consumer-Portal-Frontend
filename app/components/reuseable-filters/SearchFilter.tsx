@@ -3,19 +3,30 @@
 import { TextField } from "@radix-ui/themes";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FiSearch } from "react-icons/fi";
+import { useEffect, useState } from "react";
 
 const SearchFilter = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const value = searchParams.get("search") ?? "";
+  // 🔹 Local state (IMPORTANT)
+  const [inputValue, setInputValue] = useState(
+    searchParams.get("search") ?? "",
+  );
 
-  const handleChange = (val: string) => {
+  // 🔹 Sync URL → input (back/forward support)
+  useEffect(() => {
+    setInputValue(searchParams.get("search") ?? "");
+  }, [searchParams]);
+
+  const updateQuery = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (val.trim()) {
-      params.set("search", val.trim());
+    const normalizedValue = value.toLowerCase().replace(/\s+/g, " ");
+
+    if (normalizedValue) {
+      params.set("search", normalizedValue);
     } else {
       params.delete("search");
     }
@@ -27,8 +38,12 @@ const SearchFilter = () => {
 
   return (
     <TextField.Root
-      value={value}
-      onChange={(e) => handleChange(e.target.value)}
+      value={inputValue}
+      onChange={(e) => {
+        const val = e.target.value;
+        setInputValue(val); // ✅ space allowed
+        updateQuery(val); // ✅ sanitized for URL
+      }}
       placeholder="Search"
       style={
         {

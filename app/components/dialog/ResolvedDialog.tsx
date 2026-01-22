@@ -8,7 +8,10 @@ import { useState } from "react";
 import ComplaintDetail from "../../components/complaintDetail/ComplaintDetail";
 import MediaDetails from "../../components/complaintDetail/MediaDetails";
 import FullScreenMediaModal from "../../components/dialog/FullScreenMediaModal";
-import { RESOLVED_STEPS } from "../../components/complaintDetail/StepperOptions";
+import {
+  DETAIL_STEPS,
+  RESOLVED_STEPS,
+} from "../../components/complaintDetail/StepperOptions";
 import ResolvedDetail from "../../components/complaintDetail/ResolvedDetail";
 import ComplaintHistory from "../complaintDetail/ComplaintHistory";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
@@ -30,7 +33,11 @@ const ResolvedDialog = ({
     <>
       <DetailHeader complaint={selectedComplaint} />
       <div className="bg-[rgba(29,28,29,0.13)] h-px w-full" />
-      <Stepper step={step} setStep={setStep} steps={RESOLVED_STEPS} />
+      <Stepper
+        step={step}
+        setStep={setStep}
+        steps={selectedComplaint?.status !== 6 ? RESOLVED_STEPS : DETAIL_STEPS}
+      />
 
       <div className="bg-[rgba(29,28,29,0.13)] h-px w-full" />
 

@@ -101,20 +101,16 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         />
       </Link>
       <Link
-        href={`/non-prosecution${
-          params.toString() ? `?${params.toString()}` : ""
-        }`}
+        href={`/ex-parte${params.toString() ? `?${params.toString()}` : ""}`}
       >
         <CustomStatCard
-          title="NON PROSECUTION"
-          value={data?.nonProsecutedComplaints}
-          icon={"nonProsecution.png"}
-          iconBg="bg-[linear-gradient(135deg,#686F7D_0%,#4F5866_100%)]"
-          percentage={
-            data?.complaintsGrowthPercentages?.nonProsecutedComplaints
-          }
-          percentageBg="bg-[rgba(79,88,102,0.15)]"
-          percentageText="text-[#4F5866]"
+          title="Ex parte"
+          value={data?.exParteComplaints}
+          icon={"exParte.png"}
+          iconBg="bg-[linear-gradient(135deg,#6061EF_0%,#5148E6_100%)]"
+          percentage={data?.complaintsGrowthPercentages?.exParteComplaints}
+          percentageBg="bg-[rgba(81,72,230,0.15)]"
+          percentageText="text-[#5148E6]"
         />
       </Link>
       <Link
@@ -130,17 +126,22 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
           percentageText="text-[#0795B6]"
         />
       </Link>
+
       <Link
-        href={`/ex-parte${params.toString() ? `?${params.toString()}` : ""}`}
+        href={`/non-prosecution${
+          params.toString() ? `?${params.toString()}` : ""
+        }`}
       >
         <CustomStatCard
-          title="Ex parte"
-          value={data?.exParteComplaints}
-          icon={"exParte.png"}
-          iconBg="bg-[linear-gradient(135deg,#6061EF_0%,#5148E6_100%)]"
-          percentage={data?.complaintsGrowthPercentages?.exParteComplaints}
-          percentageBg="bg-[rgba(81,72,230,0.15)]"
-          percentageText="text-[#5148E6]"
+          title="NON PROSECUTION"
+          value={data?.nonProsecutedComplaints}
+          icon={"nonProsecution.png"}
+          iconBg="bg-[linear-gradient(135deg,#686F7D_0%,#4F5866_100%)]"
+          percentage={
+            data?.complaintsGrowthPercentages?.nonProsecutedComplaints
+          }
+          percentageBg="bg-[rgba(79,88,102,0.15)]"
+          percentageText="text-[#4F5866]"
         />
       </Link>
 

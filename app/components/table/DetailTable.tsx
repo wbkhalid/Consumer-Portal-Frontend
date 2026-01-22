@@ -242,7 +242,7 @@ const DetailTable = ({ rowsData, isBreadCrumbs = false }: DetailTableProps) => {
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
         <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]! overflow-hidden!">
-          <ResolvedDialog selectedComplaint={selectedComplaint} />
+          <ComplaintDetailDialog selectedComplaint={selectedComplaint} />
         </Dialog.Content>
       </Dialog.Root>
     </div>

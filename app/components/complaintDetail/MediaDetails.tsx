@@ -21,11 +21,11 @@ interface MediaDetailsProps {
 
 const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
   const images = complaint?.listOfImage?.filter((url) =>
-    url.match(/\.(jpg|jpeg|png|gif|webp)$/i)
+    url.match(/\.(jpg|jpeg|png|gif|webp)$/i),
   );
 
   const videos = complaint?.listOfImage?.filter((url) =>
-    url.match(/\.(mp4|mov|avi|mkv)$/i)
+    url.match(/\.(mp4|mov|avi|mkv)$/i),
   );
   return (
     <div className="px-5! py-2.5!">
@@ -38,7 +38,7 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
               <HugeiconsIcon icon={Image02Icon} color="#ffffff" />
             </div>
             <p className="text-[#4A5565] font-medium text-sm">
-              Feature Image :{complaint?.billBoardImage?.length ? 1 : 0}
+              Billboard Image :{complaint?.billBoardImage?.length ? 1 : 0}
             </p>
           </div>
           <div className="flex flex-col items-center">
@@ -77,9 +77,7 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
       <div className="flex gap-5 mb-4!">
         {/* Featured Evidence */}
         <div className="flex flex-col gap-1.5">
-          <p className="text-sm text-[#555555] font-medium">
-            Featured Evidence
-          </p>
+          <p className="text-sm text-[#555555] font-medium">Billboard Image</p>
 
           {complaint?.billBoardImage ? (
             <div

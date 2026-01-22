@@ -10,7 +10,7 @@ import {
   VideoCameraAiIcon,
 } from "@hugeicons/core-free-icons";
 import { useState } from "react";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import CustomTextField from "../CustomTextField";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
@@ -25,6 +25,8 @@ const HearingProcess = ({
 }) => {
   const [hearingStep, setHearingStep] = useState(0);
   const { divisionId, districtId, tehsilId } = useRegionFilters();
+  const [meetingToken, setMeetingToken] = useState("");
+  const [hearingDate, setHearingDate] = useState<Date | null>(null);
 
   const { data: staffData } = useGetAllStaff({
     divisionId: divisionId || "",
@@ -34,23 +36,58 @@ const HearingProcess = ({
 
   const scheduleHearing = async () => {
     try {
-      const response = await apiClient.post(
-        `https://oconnect.ptclgroup.pk/utalk/umeet-create-login`,
-        null,
+      const params = new URLSearchParams({
+        username: "cpcadminlhr",
+        password: "PaSSword_Jm5Dks2P!@",
+      });
+
+      const response = await fetch(
+        `https://oconnect.ptclgroup.pk/utalk/api/login?${params.toString()}`,
         {
-          params: {
-            username: "cpcadminlhr",
-            password: "PaSSword_Jm5Dks2P!@",
-            title: complaint?.id,
+          method: "POST",
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      const data = await response.json();
+      setMeetingToken(data?.token);
+      console.log("API Response (actual data):", data);
+    } catch (error) {
+      console.error("API Error:", error);
+    }
+  };
+
+  const createMeeting = async () => {
+    if (!meetingToken || !hearingDate) return;
+
+    try {
+      const params = new URLSearchParams({
+        meeting_title: String(complaint?.id),
+        meeting_date: format(hearingDate, "yyyy-MM-dd HH:mm"),
+      });
+
+      const response = await fetch(
+        `https://oconnect.ptclgroup.pk/utalk/api/meetings/create?${params.toString()}`,
+        {
+          method: "POST",
+          headers: {
+            "OCONNECT-API-TOKEN": meetingToken,
           },
         },
       );
 
-      console.log("API Response:", response.data);
+      if (!response.ok) {
+        throw new Error(`Create meeting failed: ${response.status}`);
+      }
 
-      setHearingStep(1);
+      const data = await response.json();
+
+      console.log("Meeting Created:", data);
     } catch (error) {
-      console.error("API Error:", error);
+      console.error("Create Meeting API Error:", error);
     }
   };
 
@@ -69,7 +106,35 @@ const HearingProcess = ({
             </Button>
           </div>
 
-          {false ? (
+          {meetingToken && (
+            <>
+              <div className="w-fit">
+                <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
+                  <input
+                    type="datetime-local"
+                    aria-label="Hearing date"
+                    className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
+                    value={
+                      hearingDate
+                        ? format(hearingDate, "yyyy-MM-dd'T'HH:mm")
+                        : ""
+                    }
+                    min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
+                    onChange={(e) => setHearingDate(parseISO(e.target.value))}
+                  />
+                </div>
+              </div>{" "}
+              <Button
+                className="mt-2! text-xs!"
+                onClick={createMeeting}
+                disabled={!hearingDate}
+              >
+                Create Meeting
+              </Button>
+            </>
+          )}
+
+          {/* {false ? (
             <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-10! rounded-[5px]! flex flex-col items-center gap-1 mt-2.5!">
               <HugeiconsIcon icon={Calendar03Icon} />
               <p className="text-[#4A5565] text-sm">
@@ -143,9 +208,7 @@ const HearingProcess = ({
                 </Button>
               </div>
             </div>
-          )}
-
-          {/* */}
+          )} */}
         </div>
       ) : (
         <div className="px-5! py-2.5!">

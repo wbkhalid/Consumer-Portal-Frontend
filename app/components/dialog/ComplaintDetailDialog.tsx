@@ -10,6 +10,7 @@ import MediaDetails from "../complaintDetail/MediaDetails";
 import { DETAIL_STEPS } from "../complaintDetail/StepperOptions";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 import FullScreenMediaModal from "./FullScreenMediaModal";
+import ComplaintHistory from "../complaintDetail/ComplaintHistory";
 
 const ComplaintDetailDialog = ({
   selectedComplaint,
@@ -23,6 +24,8 @@ const ComplaintDetailDialog = ({
     url: string | null;
   }>({ open: false, type: null, url: null });
   if (!selectedComplaint) return null;
+
+  console.log(selectedComplaint, "selected");
 
   return (
     <>
@@ -40,6 +43,7 @@ const ComplaintDetailDialog = ({
             setMediaModal={setMediaModal}
           />
         )}
+        {step === 4 && <ComplaintHistory complaint={selectedComplaint} />}
       </div>
 
       <FullScreenMediaModal
