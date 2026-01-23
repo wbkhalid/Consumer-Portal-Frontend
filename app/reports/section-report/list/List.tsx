@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import CustomTableHeaderCell from "../../../components/table/CustomTableHeaderCell";
 import TableBodyCell from "../../../components/table/TableBodyCell";
-import { BaseQuery, Column } from "../../../utils/utils";
+import { BaseQuery, buildQueryString, Column } from "../../../utils/utils";
 import { SectionReport } from "./page";
 
 export interface Query extends BaseQuery<SectionReport> {
@@ -24,6 +24,7 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
   const columns = getColumns();
 
   console.log(searchParams, "..///...search");
+  const queryString = buildQueryString(searchParams);
 
   return (
     <div className="relative">
@@ -61,12 +62,8 @@ const List = ({ data, currentPage, pageSize, searchParams }: Props) => {
                   className={`transition-colors duration-150  hover:bg-gray-100 cursor-pointer`}
                   onClick={() =>
                     router.push(
-                      `/reports/section-report/${encodeURIComponent(
-                        d?.districtName,
-                      )}${
-                        searchParams.toString()
-                          ? `?${searchParams.toString()}`
-                          : ""
+                      `/reports/section-report/${encodeURIComponent(d.districtName)}${
+                        queryString ? `?${queryString}` : ""
                       }`,
                     )
                   }

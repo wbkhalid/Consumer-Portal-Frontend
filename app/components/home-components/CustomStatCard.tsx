@@ -37,7 +37,7 @@ const CustomStatCard = ({
           className={`${percentageBg} rounded-3xl py-0.5! px-3! flex items-center`}
         >
           <p className={`${percentageText} text-xs font-medium`}>
-            {percentage?.toFixed(2)}
+            {percentage?.toFixed(2)}%
           </p>
         </div>
       </div>

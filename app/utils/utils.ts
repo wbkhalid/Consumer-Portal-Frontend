@@ -53,7 +53,7 @@ export const toLocal = (dateString: string) => {
 export const formatComplaintId = (
   id: number | undefined,
   entryType: number | undefined,
-  date?: string
+  date?: string,
 ) => {
   if (!id) return "-";
 
@@ -87,7 +87,7 @@ export const getDaysOld = (dateString: string) => {
 
 export const uploadFile = async (
   e: React.ChangeEvent<HTMLInputElement>,
-  category: string
+  category: string,
 ) => {
   const file = e.target.files?.[0];
   if (!file) return;
@@ -104,7 +104,7 @@ export const uploadFile = async (
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      }
+      },
     );
 
     console.log("API Response:", response);
@@ -134,6 +134,24 @@ export const statusColors: Record<string, { text: string; bg: string }> = {
   "Non-Prosecution": { text: "#4f5866", bg: "rgba(79,88,102,0.2)" },
   Withdraw: { text: "#0795b6", bg: "rgba(7,149,182,0.2)" },
   "Ex-Parte": { text: "#5148e6", bg: "rgba(81,72,230,0.2)" },
+};
+
+// type QueryValue = string | string[] | undefined;
+
+export const buildQueryString = <T extends object>(params: T): string => {
+  const search = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null) return;
+
+    if (Array.isArray(value)) {
+      value.forEach((v) => search.append(key, String(v)));
+    } else {
+      search.set(key, String(value));
+    }
+  });
+
+  return search.toString();
 };
 
 export const getDateRange = (rangeLabel: string) => {
@@ -183,7 +201,7 @@ export const DEFAULT_YEAR = new Date().getFullYear();
 
 export const getFormattedDate = (
   dateInput: string | Date,
-  formatType: "short" | "numeric" = "short"
+  formatType: "short" | "numeric" = "short",
 ): string => {
   let date: Date | null = null;
 
@@ -286,7 +304,7 @@ import * as XLSX from "xlsx";
 export const exportDataToExcel = (
   data: Record<string, any>[],
   headers: string[],
-  filename: string
+  filename: string,
 ) => {
   // Create a worksheet
   const worksheetData = [
@@ -318,7 +336,7 @@ export const exportDataToPDF = (
   headers: string[],
   rows: any[],
   filename: string,
-  orientation: "portrait" | "landscape" = "portrait"
+  orientation: "portrait" | "landscape" = "portrait",
 ) => {
   const doc = new jsPDF({ orientation });
 

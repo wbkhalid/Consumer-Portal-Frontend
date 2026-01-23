@@ -9,7 +9,11 @@ import YearFilter from "../../../components/Filters/YearFilter";
 import ErrorMessage from "../../../components/Form/ErrorMessage";
 import Pagination from "../../../components/Form/Pagination";
 import { APIResponse } from "../../../services/api-client";
-import { DEFAULT_PAGE_SIZE, DEFAULT_YEAR } from "../../../utils/utils";
+import {
+  BaseQuery,
+  DEFAULT_PAGE_SIZE,
+  DEFAULT_YEAR,
+} from "../../../utils/utils";
 import DownloadWrapper from "./DownloadWrapper";
 import List, { Query } from "./List";
 import SearchFilter from "../../../components/reuseable-filters/SearchFilter";
