@@ -30,7 +30,7 @@ const DistrictSectionComplaintPage = async ({
 
   const decodedDistrict = decodeURIComponent(districtSection);
 
-  const urlParams = new URLSearchParams();
+  // const urlParams = new URLSearchParams();
 
   // if (year) urlParams.set("year", year);
   // if (startDate) urlParams.set("startDate", startDate);

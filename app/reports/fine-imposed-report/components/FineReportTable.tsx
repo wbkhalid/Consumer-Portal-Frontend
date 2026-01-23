@@ -42,9 +42,7 @@ const FineReportTable = ({ rowsData }: FineReportTableProps) => {
               {rowsData?.map((item, index) => (
                 <tr
                   key={index}
-                  className={`transition-colors duration-150 cursor-pointer! ${
-                    index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                  } hover:bg-gray-100`}
+                  className={`transition-colors duration-150 cursor-pointer! hover:bg-gray-100`}
                   onClick={() =>
                     router.push(
                       `/reports/fine-imposed-report/${encodeURIComponent(

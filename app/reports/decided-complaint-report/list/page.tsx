@@ -8,11 +8,13 @@ import SearchFilter from "../../../components/reuseable-filters/SearchFilter";
 import DateFilter from "../../../components/DateFilter";
 import ClearButton from "../../../components/ClearButton";
 import ErrorMessage from "../../../components/Form/ErrorMessage";
+import { ManageComplainsData } from "../../../hooks/useGetAllComplains";
 
 export interface DecidedComplaint {
   districtName: string;
   totalComplaints: number;
   avgDays: number;
+  complaints: ManageComplainsData[];
 }
 
 interface Props {
