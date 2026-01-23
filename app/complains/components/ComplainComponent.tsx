@@ -16,8 +16,6 @@ import FineFilterDropdown from "../../reports/custom-complaint-report/components
 
 const ComplainComponent = () => {
   const [refresh, setRefresh] = useState(false);
-  const pathname = usePathname();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const search = searchParams.get("search") ?? "";
   const assigneeAuthority = searchParams.get("assignedTo");
@@ -40,16 +38,40 @@ const ComplainComponent = () => {
     assignedTo: assigneeAuthority || undefined,
   });
 
-  const filteredData = useMemo(() => {
-    if (!complainData) return [];
-    const term = search.toLowerCase();
+  // const filteredData = useMemo(() => {
+  //   if (!complainData) return [];
+  //   const term = search.toLowerCase();
 
-    return complainData?.filter((item) =>
-      Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(term),
-      ),
-    );
-  }, [complainData, search]);
+  //   return complainData?.filter((item) =>
+  //     Object.values(item).some((value) =>
+  //       String(value).toLowerCase().includes(term),
+  //     ),
+  //   );
+  // }, [complainData, search]);
+
+  let filteredData = complainData;
+
+  if (search && complainData) {
+    const lowerSearch = search.toLowerCase();
+
+    filteredData = complainData.filter((d) => {
+      return (
+        d?.id?.toString().includes(lowerSearch) ||
+        d?.shopName?.toLowerCase().includes(lowerSearch) ||
+        d?.phoneNumber?.toString().includes(lowerSearch) ||
+        d?.remarks?.toLowerCase().includes(lowerSearch) ||
+        d?.assigneeRemarks?.toLowerCase().includes(lowerSearch) ||
+        d?.categoryName?.toLowerCase().includes(lowerSearch) ||
+        d?.sectionCategoryName?.toLowerCase().includes(lowerSearch) ||
+        d?.assignedTo?.toString().includes(lowerSearch) ||
+        d?.sectionsDetails?.some(
+          (s) =>
+            s?.name?.toString().includes(lowerSearch) ||
+            s?.description?.toLowerCase().includes(lowerSearch),
+        )
+      );
+    });
+  }
 
   return (
     <>

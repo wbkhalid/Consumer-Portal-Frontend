@@ -14,6 +14,7 @@ import { useRegionFilters } from "../../hooks/useRegionFilters";
 import { Dialog } from "@radix-ui/themes";
 import { sort } from "fast-sort";
 import { useRouter, useSearchParams } from "next/navigation";
+import ComplaintDetailDialog from "../../components/dialog/ComplaintDetailDialog";
 
 interface PendingTableProps {
   rowsData: ManageComplainsData[];
@@ -197,7 +198,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
         <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]! overflow-hidden!">
-          <PendingDialog
+          <ComplaintDetailDialog
             selectedComplaint={selectedComplaint}
             onClose={() => {
               setSelectedComplaint(null);

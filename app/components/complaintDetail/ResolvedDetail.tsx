@@ -1,5 +1,6 @@
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+import { statusData } from "../../utils/utils";
 
 interface MediaDetailsProps {
   complaint: ManageComplainsData | ManageCustomComplainsData | null;
@@ -20,10 +21,32 @@ const ResolvedDetail = ({ complaint, setMediaModal }: MediaDetailsProps) => {
 
   return (
     <div className="px-5! py-2.5!">
-      <div className="py-2!">
+      {/* <div className="py-2!">
         <p className="text-[#555555] text-sm">Final Remarks</p>
         <p className="text-sm">{complaint?.closingRemarks}</p>
+      </div> */}
+
+      <div className="flex gap-5">
+        <div className="flex flex-col gap-0.5">
+          <p className="text-[#555555] text-sm">Fined Amount</p>
+          <p className="text-[15px]">
+            {complaint?.finedAmount?.toLocaleString()}
+            <span className="text-xs font-semibold"> (PKR)</span>
+          </p>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <p className="text-[#555555] text-sm">Resolved Status</p>
+          <p className="text-[15px]">
+            {
+              statusData?.find((status) => status?.id === complaint?.status)
+                ?.label
+            }
+          </p>
+        </div>
       </div>
+
+      <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full" />
+
       <div className="flex flex-col gap-1.5">
         <p className="text-sm font-medium text-[#555555]">Files</p>
 

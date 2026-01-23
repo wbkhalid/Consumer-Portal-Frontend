@@ -45,6 +45,7 @@ const NavBar = () => {
     Cookies.remove("userId");
     Cookies.remove("email");
     Cookies.remove("role");
+    Cookies.remove("fullName");
     router.push("/login");
   };
   useEffect(() => {

@@ -160,7 +160,11 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
         <p className="text-sm text-[#555555] font-medium">Audio</p>
         {complaint?.listAudio?.length ? (
           complaint?.listAudio?.map((url, i) => (
-            <audio key={i} controls className="w-full mb-2! rounded">
+            <audio
+              key={i}
+              controls
+              className="w-full mb-2! rounded bg-red-300!"
+            >
               <source src={`${url}`} type="audio/mpeg" />
             </audio>
           ))

@@ -10,16 +10,38 @@ const AppealComponent = () => {
   const { data: appealData } = useGetAppeals();
   const searchParams = useSearchParams();
   const search = searchParams.get("search") ?? "";
-  const filteredData = useMemo(() => {
-    if (!appealData) return [];
-    const term = search.toLowerCase();
 
-    return appealData?.filter((item) =>
-      Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(term),
-      ),
-    );
-  }, [appealData, search]);
+  let filteredData = appealData;
+
+  if (search && appealData) {
+    const lowerSearch = search.toLowerCase();
+
+    filteredData = appealData.filter((d) => {
+      return (
+        d.appealReason?.toLowerCase().includes(lowerSearch) ||
+        d.appealId?.toString().includes(lowerSearch) ||
+        d.createdAt?.toLowerCase().includes(lowerSearch) ||
+        d.complaintDetails?.id?.toString().includes(lowerSearch) ||
+        d.complaintDetails?.shopName?.toLowerCase().includes(lowerSearch) ||
+        d.complaintDetails?.phoneNumber?.toString().includes(lowerSearch) ||
+        d.complaintDetails?.remarks?.toLowerCase().includes(lowerSearch) ||
+        d.complaintDetails?.assigneeRemarks
+          ?.toLowerCase()
+          .includes(lowerSearch) ||
+        d.complaintDetails?.categoryName?.toLowerCase().includes(lowerSearch) ||
+        d.complaintDetails?.sectionCategoryName
+          ?.toLowerCase()
+          .includes(lowerSearch) ||
+        d.complaintDetails?.assignedTo?.toString().includes(lowerSearch) ||
+        d.complaintDetails?.sectionsDetails?.some(
+          (s) =>
+            s?.name?.toString().includes(lowerSearch) ||
+            s?.description?.toLowerCase().includes(lowerSearch),
+        )
+      );
+    });
+  }
+
   return (
     <>
       <div className="flex items-center gap-1 mb-2.5!">
