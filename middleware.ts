@@ -1,37 +1,26 @@
-// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  const url = new URL(request.url);
-  const token = request.cookies.get("token");
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const token = request.cookies.get("token")?.value;
 
-  // Allow /dashboard publicly
-  if (url.pathname.startsWith("/dashboard")) {
-    return NextResponse.next();
+  // Public routes (no login required)
+  const publicPaths = ["/login", "/privacy-policy", "/dashboard"];
+
+  // Agar user login hai aur login page open kare
+  if (token && pathname === "/login") {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Handle /login
-  if (url.pathname === "/login") {
-    if (token) {
-      // If logged in, redirect to homepage
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-    return NextResponse.next();
-  }
-
-  // Protect homepage (/) or other protected routes
-  if (url.pathname === "/" && !token) {
+  // Agar user login nahi hai aur protected page open kare
+  if (!token && !publicPaths.includes(pathname)) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // For all other routes, optionally you can protect or leave public
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    // apply middleware to all routes except static assets
-    "/((?!_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|images).*)"],
 };

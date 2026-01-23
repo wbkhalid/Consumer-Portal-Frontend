@@ -11,7 +11,7 @@ const PrivacyPolicyPage = () => {
           </p>
         </div>
         <div className="relative">
-          <div className="h-[calc(100vh-100px)] overflow-auto px-4! mt-2!">
+          <div className="h-[calc(100vh-120px)] overflow-auto px-4! mt-2!">
             <p className="text-gray-700 leading-relaxed mb-6">
               <b>Consumer Protect</b> is an official government application
               designed to help citizens file, track, and resolve consumer-rights
