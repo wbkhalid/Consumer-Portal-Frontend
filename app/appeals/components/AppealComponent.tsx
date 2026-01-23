@@ -32,9 +32,9 @@ const AppealComponent = () => {
       <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
         <div className="flex justify-between items-center py-3! px-5!">
           <SearchFilter />
-          <div className="flex justify-end items-center gap-2">
+          {/* <div className="flex justify-end items-center gap-2">
             <ClearButton />
-          </div>
+          </div> */}
         </div>
         <AppealTable rowsData={filteredData ?? []} />
       </div>

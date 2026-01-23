@@ -1,5 +1,6 @@
 import { COMPLAINT_APPEALS_API } from "../APIs";
 import useData from "./useData";
+import { ManageComplainsData } from "./useGetAllComplains";
 
 interface Props {
   divisionId?: number | string;
@@ -10,12 +11,10 @@ interface Props {
 
 export interface ManageAppealsData {
   appealId: number;
-  complaintId: number;
-  shopName: string;
-  phoneNumber: string;
   appealReason: string;
   appealStatus: number;
   createdAt: string;
+  complaintDetails: ManageComplainsData;
 }
 
 const useGetAppeals = ({

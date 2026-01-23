@@ -3,19 +3,46 @@ import PaginationControls from "../../components/table/PaginationControls";
 import TableBodyCell from "../../components/table/TableBodyCell";
 import TableHeaderCell from "../../components/table/TableHeaderCell";
 import { ManageAppealsData } from "../../hooks/useGetAppeals";
+import {
+  formatComplaintId,
+  formatDate,
+  getRole,
+  getUniqueSectionNumbers,
+} from "../../utils/utils";
+import useGetAllStaff from "../../hooks/useGetAllStaff";
+import { Dialog } from "@radix-ui/themes";
+import ComplaintDetailDialog from "../../components/dialog/ComplaintDetailDialog";
+import { ManageComplainsData } from "../../hooks/useGetAllComplains";
+import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 
 interface AppealsTableProps {
   rowsData: ManageAppealsData[];
 }
 
-const AppealTable = ({ rowsData }: AppealsTableProps) => {
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [pageSize, setPageSize] = useState(10);
-  // const totalPages = Math.ceil(rowsData?.length / pageSize);
+const headers = [
+  { label: "Sr #" },
+  { label: "Complaint ID", sortable: "id" },
+  { label: "Appeal Date", sortable: "date" },
+  { label: "Appeal Reason", sortable: "reason" },
+  { label: "Assignee To", sortable: "assigneeTo" },
+  { label: "Shop Name" },
+  { label: "Shop Phone No" },
+  { label: "Nature of Complaint", sortable: "complaintType" },
+  { label: "Section Name", sortable: "sectionName" },
+  { label: "Section Description" },
+  { label: "Category", sortable: "categoryName" },
+  { label: "Remarks" },
+  { label: "Assignee Remarks" },
+];
 
-  // const startIndex = (currentPage - 1) * pageSize;
-  // const endIndex = startIndex + pageSize;
-  // const paginatedData = rowsData?.slice(startIndex, endIndex);
+const AppealTable = ({ rowsData }: AppealsTableProps) => {
+  const role = getRole();
+  const { data: staffData } = useGetAllStaff();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedComplaint, setSelectedComplaint] = useState<
+    ManageComplainsData | ManageCustomComplainsData | null
+  >(null);
+  const isAllowed = role === "Admin" || role === "Secretary" || role === "DG";
   return (
     <>
       <div className="relative">
@@ -23,14 +50,15 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
           <table className="min-w-full text-sm mb-10!">
             <thead className="sticky top-0 z-10">
               <tr className="font-semibold bg-white">
-                {[
-                  "Appeal Id",
-                  "Compalint Id",
-                  "Shop Name",
-                  "Phone #",
-                  "Reason",
-                ]?.map((header) => (
-                  <TableHeaderCell key={header} label={header} />
+                {headers.map((header) => (
+                  <TableHeaderCell
+                    key={header.label}
+                    label={header.label}
+                    sortable={header.sortable}
+                    // onSort={() =>
+                    //   header.sortable && handleSort(header.sortable)
+                    // }
+                  />
                 ))}
               </tr>
             </thead>
@@ -38,14 +66,92 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
             <tbody>
               {rowsData?.map((item, index) => (
                 <tr
-                  key={index}
-                  className={`transition-colors duration-150  hover:bg-gray-100`}
+                  key={item?.appealId}
+                  className={
+                    isAllowed ? "cursor-pointer hover:bg-gray-100" : ""
+                  }
+                  onClick={
+                    isAllowed
+                      ? () => {
+                          setSelectedComplaint(item?.complaintDetails);
+                          setOpenDialog(true);
+                        }
+                      : undefined
+                  }
                 >
-                  <TableBodyCell>{item?.appealId}</TableBodyCell>
-                  <TableBodyCell>{item?.complaintId}</TableBodyCell>
-                  <TableBodyCell>{item?.shopName}</TableBodyCell>
-                  <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
-                  <TableBodyCell>{item?.appealReason}</TableBodyCell>
+                  <TableBodyCell className="font-semibold">
+                    {index + 1}
+                  </TableBodyCell>
+                  <TableBodyCell className="font-semibold">
+                    {formatComplaintId(
+                      item?.complaintDetails?.id,
+                      item?.complaintDetails?.entryType,
+                      item?.complaintDetails?.createdAt,
+                    )}
+                  </TableBodyCell>
+
+                  <TableBodyCell>{formatDate(item?.createdAt)}</TableBodyCell>
+                  <TableBodyCell>
+                    {item?.appealReason
+                      ? item?.appealReason?.slice(0, 20) +
+                        (item?.appealReason?.length > 20 ? "..." : "")
+                      : ""}
+                  </TableBodyCell>
+                  <TableBodyCell>
+                    {staffData?.find(
+                      (u) => u.userId === item?.complaintDetails?.assignedTo,
+                    )?.fullName || "-"}
+                  </TableBodyCell>
+
+                  <TableBodyCell>
+                    {item?.complaintDetails?.shopName
+                      ? item?.complaintDetails?.shopName?.slice(0, 20) +
+                        (item?.complaintDetails?.shopName?.length > 20
+                          ? "..."
+                          : "")
+                      : ""}
+                  </TableBodyCell>
+
+                  <TableBodyCell>
+                    {item?.complaintDetails?.phoneNumber}
+                  </TableBodyCell>
+
+                  <TableBodyCell>
+                    {item?.complaintDetails?.sectionCategoryName}
+                  </TableBodyCell>
+
+                  <TableBodyCell>
+                    {getUniqueSectionNumbers(
+                      item?.complaintDetails?.sectionsDetails,
+                    )}
+                  </TableBodyCell>
+
+                  <TableBodyCell>
+                    {item?.complaintDetails?.sectionsDetails
+                      ?.map((s) => s?.description)
+                      .join(",")}
+                  </TableBodyCell>
+
+                  <TableBodyCell>
+                    {item?.complaintDetails?.categoryName}
+                  </TableBodyCell>
+
+                  <TableBodyCell className="whitespace-nowrap">
+                    {item?.complaintDetails?.remarks
+                      ? item?.complaintDetails?.remarks?.slice(0, 20) +
+                        (item?.complaintDetails?.remarks?.length > 20
+                          ? "..."
+                          : "")
+                      : "-"}
+                  </TableBodyCell>
+                  <TableBodyCell className="whitespace-nowrap">
+                    {item?.complaintDetails?.assigneeRemarks
+                      ? item?.complaintDetails?.assigneeRemarks?.slice(0, 20) +
+                        (item?.complaintDetails?.assigneeRemarks?.length > 20
+                          ? "..."
+                          : "")
+                      : "-"}
+                  </TableBodyCell>
                 </tr>
               ))}
             </tbody>
@@ -60,6 +166,15 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
             setPageSize={setPageSize}
           />
         </div> */}
+        <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
+          <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]! overflow-hidden!">
+            <ComplaintDetailDialog
+              selectedComplaint={selectedComplaint}
+              onClose={() => {}}
+              onSuccess={() => {}}
+            />
+          </Dialog.Content>
+        </Dialog.Root>
       </div>
     </>
   );
