@@ -13,7 +13,7 @@ const LocationDetail = ({
     <div className="px-5! py-3!">
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-0.5">
-          <p className="text-[#555555] text-sm">Phone No</p>
+          <p className="text-[#555555] text-sm">Shop Phone #</p>
           <p className="text-[#000000] text-sm">{complaint?.phoneNumber}</p>
         </div>
         <div className="flex flex-col gap-0.5">
@@ -31,7 +31,7 @@ const LocationDetail = ({
         <div className="flex flex-col gap-0.5">
           <p className="text-[#555555] text-sm">Lat Lon</p>
           <p className="text-[#000000] text-sm">{`${complaint?.latitude?.toFixed(
-            2
+            2,
           )}-${complaint?.longitude?.toFixed(2)}`}</p>
         </div>
       </div>

@@ -28,9 +28,10 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const headers = [
-    { label: "Id" },
+    { label: "Sr #" },
     { label: "Name", sortable: "fullName" },
     { label: "Authority", sortable: "roles" },
+    { label: "Email" },
     { label: "Phone #" },
     { label: "Division", sortable: "division" },
     { label: "District", sortable: "district" },
@@ -119,12 +120,14 @@ const StaffTable = ({ rowsData, setRefresh }: StaffTableProps) => {
               {sortedData?.map((item, index) => (
                 <tr key={item?.userId} className="hover:bg-gray-100">
                   <TableBodyCell>
-                    {(currentPage - 1) * pageSize + index + 1}
+                    {/* {(currentPage - 1) * pageSize + index + 1} */}
+                    {index + 1}
                   </TableBodyCell>
                   <TableBodyCell>{item.fullName}</TableBodyCell>
                   <TableBodyCell>
                     {item.roles?.map((role) => role).join(", ")}
                   </TableBodyCell>
+                  <TableBodyCell>{item.email}</TableBodyCell>
                   <TableBodyCell>{item.phoneNumber}</TableBodyCell>
                   <TableBodyCell>{item.division}</TableBodyCell>
                   <TableBodyCell>{item.district}</TableBodyCell>

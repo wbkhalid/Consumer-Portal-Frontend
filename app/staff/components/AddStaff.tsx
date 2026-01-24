@@ -18,6 +18,7 @@ import useGetSelectedTehsil from "../../hooks/useGetSelectedTehsil";
 import useGetAllRoles from "../../hooks/useGetAllRoles";
 import { RxCross2 } from "react-icons/rx";
 import { useEffect } from "react";
+import { IoMailUnreadOutline } from "react-icons/io5";
 
 const schema = z
   .object({
@@ -27,7 +28,9 @@ const schema = z
     divisionId: z.number().optional(),
     districtId: z.number().optional(),
     tehsilId: z.number().optional(),
-    email: z.string().optional(),
+    email: z.email().min(1, "Email is required"),
+    ptclUsername: z.string().min(1, "PTCL Username is required"),
+    ptclPassword: z.string(),
     password: z
       .string()
       .min(6, "Password must be at least 6 characters")
@@ -88,11 +91,19 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
     watch,
     control,
     resetField,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<Register>({ resolver: zodResolver(schema) });
   const selectedRole = watch("roleName");
   const selectedDivisionId = watch("divisionId");
   const selectedDistrictId = watch("districtId");
+  const passwordValue = watch("password");
+
+  useEffect(() => {
+    if (passwordValue) {
+      setValue("ptclPassword", passwordValue);
+    }
+  }, [passwordValue]);
 
   useEffect(() => {
     if (selectedDivisionId) {
@@ -128,7 +139,7 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
   const onSubmit = async (formData: Register) => {
     try {
       const { confirmPassword, ...payload } = formData;
-      payload.email = "";
+      // payload.email = "";
 
       const role = formData.roleName;
 
@@ -192,7 +203,7 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
 
         <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-3 max-h-[40vh] overflow-y-auto">
           <CustomTextField
-            label="Full Name"
+            label="Full Name*"
             placeholder="Enter Full Name"
             endAdornment={<LuUser size={18} />}
             error={errors.fullName?.message}
@@ -200,11 +211,18 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
           />
 
           <CustomTextField
-            label="Phone Number"
+            label="Phone Number*"
             placeholder="03XXXXXXXXX"
             endAdornment={<LuPhone size={18} />}
             error={errors.phoneNumber?.message}
             {...register("phoneNumber")}
+          />
+          <CustomTextField
+            label="Email*"
+            placeholder="abc@gmail.com"
+            endAdornment={<IoMailUnreadOutline size={18} />}
+            error={errors.email?.message}
+            {...register("email")}
           />
 
           <Controller
@@ -212,7 +230,7 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
             control={control}
             render={({ field }) => (
               <CustomSearchDropdown
-                label="Authority"
+                label="Authority*"
                 name="roleName"
                 placeholder="Select Authority"
                 error={errors.roleName?.message}
@@ -236,7 +254,7 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
               control={control}
               render={({ field }) => (
                 <CustomSearchDropdown
-                  label="Division"
+                  label="Division*"
                   name="divisionId"
                   placeholder="Select Division"
                   error={errors.divisionId?.message}
@@ -259,7 +277,7 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
               control={control}
               render={({ field }) => (
                 <CustomSearchDropdown
-                  label="District"
+                  label="District*"
                   name="districtId"
                   placeholder="Select District"
                   disabled={!selectedDivisionId}
@@ -283,7 +301,7 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
               control={control}
               render={({ field }) => (
                 <CustomSearchDropdown
-                  label="Tehsil"
+                  label="Tehsil*"
                   name="tehsilId"
                   placeholder="Select Tehsil"
                   disabled={!selectedDistrictId}
@@ -301,15 +319,29 @@ const AddStaff = ({ setIsOpen, setRefresh }: AddStaffDialog) => {
             />
           )}
 
+          <CustomTextField
+            label="PTCL Username*"
+            placeholder="Enter PTCL Username"
+            endAdornment={<LuUser size={18} />}
+            error={errors.ptclUsername?.message}
+            {...register("ptclUsername")}
+          />
+
+          {/* <CustomPasswordField
+            label="PTCL Password"
+            placeholder="PTCL Password"
+            {...register("ptclPassword")}
+            error={errors?.ptclPassword?.message}
+          /> */}
           <CustomPasswordField
-            label="Password"
+            label="Password*"
             placeholder="Password"
             {...register("password")}
             error={errors?.password?.message}
           />
 
           <CustomPasswordField
-            label="Confirm Password"
+            label="Confirm Password*"
             placeholder="Confirm Password"
             {...register("confirmPassword")}
             error={errors?.confirmPassword?.message}

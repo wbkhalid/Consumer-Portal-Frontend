@@ -20,6 +20,8 @@ import AssignDetails from "../complaintDetail/AssignDetails";
 import HearingProcess from "../complaintDetail/HearingProcess";
 import ComplaintResolution from "../complaintDetail/ComplaintResolution";
 import ResolvedDetail from "../complaintDetail/ResolvedDetail";
+import UpdatePhoneNumber from "../complaintDetail/UpdatePhoneNumber";
+import SendUserDetails from "../complaintDetail/SendUserDetails";
 
 const ComplaintDetailDialog = ({
   selectedComplaint,
@@ -92,6 +94,19 @@ const ComplaintDetailDialog = ({
           <ResolvedDetail
             complaint={selectedComplaint}
             setMediaModal={setMediaModal}
+          />
+        )}
+        {step === 9 && (
+          <UpdatePhoneNumber
+            complaint={selectedComplaint}
+            onSuccess={onSuccess}
+          />
+        )}
+
+        {step === 10 && (
+          <SendUserDetails
+            complaint={selectedComplaint}
+            onSuccess={onSuccess}
           />
         )}
       </div>

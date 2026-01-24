@@ -2,13 +2,14 @@ import {
   Album02Icon,
   AssignmentsIcon,
   Calendar02Icon,
+  CallIcon,
   Files01Icon,
   FileValidationIcon,
+  SentIcon,
   Store01Icon,
   TickDouble01Icon,
   UserMultipleIcon,
 } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 export const DETAIL_STEPS = [
   {
@@ -32,15 +33,18 @@ export const DETAIL_STEPS = [
 export const PENDING_STEPS = [
   ...DETAIL_STEPS,
   { id: 5, label: "Assign", iconImage: AssignmentsIcon },
+  { id: 9, label: "Update Phone #", iconImage: CallIcon },
+  { id: 10, label: "Send  Details", iconImage: SentIcon },
 ];
 export const PROCEEDING_STEPS = [
   ...DETAIL_STEPS,
   { id: 6, label: "Hearing Process", iconImage: Calendar02Icon },
   { id: 7, label: "Order", iconImage: FileValidationIcon },
+  { id: 9, label: "Update Phone #", iconImage: CallIcon },
+  { id: 10, label: "Send  Details", iconImage: SentIcon },
 ];
 
 export const RESOLVED_STEPS = [
   ...DETAIL_STEPS,
-  // { id: 4, label: "Remarks and history", iconImage: UserMultipleIcon },
   { id: 8, label: "Resolved Details", iconImage: TickDouble01Icon },
 ];

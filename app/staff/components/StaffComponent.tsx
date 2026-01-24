@@ -9,9 +9,11 @@ import SearchFilter from "../../components/reuseable-filters/SearchFilter";
 import { useSearchParams } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AddSquareIcon } from "@hugeicons/core-free-icons";
+import { getRole } from "../../utils/utils";
 
 const StaffComponent = () => {
   const searchParams = useSearchParams();
+  let role = getRole();
   const search = searchParams.get("search") ?? "";
   const [isOpen, setIsOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -29,8 +31,8 @@ const StaffComponent = () => {
 
     return staffData?.filter((item) =>
       Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(term)
-      )
+        String(value).toLowerCase().includes(term),
+      ),
     );
   }, [staffData, search]);
 
@@ -43,15 +45,17 @@ const StaffComponent = () => {
             {filteredData?.length?.toLocaleString()} Records
           </p>
         </div>
-        <Button
-          className="border! border-(--primary)! cursor-pointer! rounded-lg! bg-[linear-gradient(180deg,#036CCF_-46.25%,#013769_100%)]! shadow-[0px_1px_2px_rgba(10,13,18,0.05)]! hover:opacity-95! transition-all!"
-          onClick={() => {
-            setIsOpen(true);
-          }}
-        >
-          <HugeiconsIcon icon={AddSquareIcon} />
-          Add Staff
-        </Button>
+        {role?.toLocaleLowerCase() === "admin" && (
+          <Button
+            className="border! border-(--primary)! cursor-pointer! rounded-lg! bg-[linear-gradient(180deg,#036CCF_-46.25%,#013769_100%)]! shadow-[0px_1px_2px_rgba(10,13,18,0.05)]! hover:opacity-95! transition-all!"
+            onClick={() => {
+              setIsOpen(true);
+            }}
+          >
+            <HugeiconsIcon icon={AddSquareIcon} />
+            Add Staff
+          </Button>
+        )}
       </div>
       <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
         <div className="flex justify-between items-center py-3! px-5!">
@@ -61,7 +65,10 @@ const StaffComponent = () => {
       </div>
 
       <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-        <Dialog.Content className="max-w-[300px]! md:max-w-[700px]! lg:max-w-[800px]! w-full overflow-y-auto rounded-2xl! p-4!">
+        <Dialog.Content
+          className="max-w-[300px]! md:max-w-[700px]! lg:max-w-[800px]! w-full overflow-y-auto rounded-2xl! p-4!"
+          onInteractOutside={(e) => e.preventDefault()}
+        >
           <AddStaff setIsOpen={setIsOpen} setRefresh={setRefresh} />
         </Dialog.Content>
       </Dialog.Root>

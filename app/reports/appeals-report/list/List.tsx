@@ -1,8 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import CustomTableHeaderCell from "../../../components/table/CustomTableHeaderCell";
 import TableBodyCell from "../../../components/table/TableBodyCell";
-import { BaseQuery, Column } from "../../../utils/utils";
+import { BaseQuery, buildQueryString, Column } from "../../../utils/utils";
 import { AppealReport } from "./page";
 
 export type Query = BaseQuery<AppealReport>;
@@ -14,11 +15,13 @@ interface Props {
 
 const List = ({ data, searchParams }: Props) => {
   const { totalAppeals } = calculateTotals(data);
+  const router = useRouter();
   // const [currentPage, setCurrentPage] = useState(1);
 
   // const [pageSize, setPageSize] = useState(10);
 
   const columns = getColumns();
+  const queryString = buildQueryString(searchParams);
 
   // const totalPages = Math.ceil(data?.length / pageSize);
   // const paginatedData = useMemo(() => {
@@ -28,7 +31,7 @@ const List = ({ data, searchParams }: Props) => {
 
   return (
     <>
-      <div className="relative flex flex-col h-[calc(100vh-180px)]">
+      <div className="relative flex flex-col h-[calc(100vh-190px)]">
         <div className="flex-1 overflow-auto">
           <table className="min-w-full text-sm">
             <thead className="sticky top-0 z-10 bg-white">
@@ -52,6 +55,13 @@ const List = ({ data, searchParams }: Props) => {
                   <tr
                     key={d?.districtName}
                     className="cursor-pointer! hover:bg-gray-100"
+                    onClick={() =>
+                      router.push(
+                        `/reports/appeals-report/${encodeURIComponent(
+                          d?.districtName,
+                        )}${queryString ? `?${queryString}` : ""}`,
+                      )
+                    }
                   >
                     <TableBodyCell>{index + 1}</TableBodyCell>
                     <TableBodyCell>{d.districtName}</TableBodyCell>

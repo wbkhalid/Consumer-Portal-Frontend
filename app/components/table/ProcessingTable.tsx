@@ -233,7 +233,7 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
         <Dialog.Content
-          className="p-0! lg:max-w-[800px]! max-h-[80vh]! overflow-hidden!"
+          className="p-0! md:max-w-[720px]! lg:max-w-[910px]! max-h-[80vh]! overflow-hidden!"
           onInteractOutside={(e) => e.preventDefault()}
         >
           <ComplaintDetailDialog

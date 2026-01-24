@@ -19,7 +19,6 @@ import { RxCross2 } from "react-icons/rx";
 import apiClient from "../../services/api-client";
 import { toast } from "react-toastify";
 import useGetMeetingDetails from "../../hooks/useGetMeetingDetails";
-import { formatDate, toLocal } from "../../utils/utils";
 
 const HearingProcess = ({
   complaint,
@@ -27,9 +26,17 @@ const HearingProcess = ({
   complaint: ManageComplainsData | null;
 }) => {
   const [hearingStep, setHearingStep] = useState(0);
-  // const { data: meetingDetails } = useGetMeetingDetails({ id: complaint?.id });
+  const { data: meetingDetails } = useGetMeetingDetails({ id: complaint?.id });
+  // const { divisionId, districtId, tehsilId } = useRegionFilters();
+  // const [meetingToken, setMeetingToken] = useState("");
   const [hearingDate, setHearingDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // const { data: staffData } = useGetAllStaff({
+  //   divisionId: divisionId || "",
+  //   districtId: districtId || "",
+  //   tehsilId: tehsilId || "",
+  // });
 
   const createMeeting = async (token: string) => {
     if (!hearingDate || !complaint?.id) return;
@@ -76,7 +83,7 @@ const HearingProcess = ({
     try {
       setLoading(true);
       const params = new URLSearchParams({
-        username: "adllahore",
+        username: "cpcadminlhr",
         password: "PaSSword_Jm5Dks2P!@",
       });
 
@@ -104,131 +111,46 @@ const HearingProcess = ({
     }
   };
 
-  const meetingDetails = [
-    {
-      id: 64,
-      caseNo: 1178,
-      meetingDate: "2026-01-25T00:00:00",
-      meetingTime: "2026-01-25T18:25:00",
-      meetingLink_Admin: null,
-      meetingLink_Client:
-        "https://oconnect.ptclgroup.com/utalk/meet/hiVy5WgbJw",
-      meeting_Remarks: null,
-      ptclMeetingStatus: 0,
-    },
-  ];
-
   return (
     <>
-      <div className="px-5! py-2.5!">
-        <p className="text-[#555555] text-sm">Schedule Meeting</p>
-
-        <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-4! rounded-[5px]! mt-2.5!">
-          {meetingDetails?.length ? (
-            meetingDetails?.map((meeting) => (
-              <div
-                key={meeting?.id}
-                className="flex flex-col gap-2 text-sm text-[#4A5565]"
-              >
-                <div className="flex justify-between items-center">
-                  <p className="text-sm text-[#374151] font-medium">
-                    <span className="font-semibold text-[#111827]">
-                      Meeting ID:
-                    </span>
-                    {meeting?.id}
-                  </p>
-
-                  {meeting.ptclMeetingStatus === 0 ? (
-                    <span className="px-3! py-1! rounded-full text-xs font-medium bg-[#FFF7D6] text-[#CBA611] border border-[#E6D37B]">
-                      Scheduled
-                    </span>
-                  ) : (
-                    <span className="px-3! py-1! rounded-full text-xs font-medium bg-[#E6F7EF] text-(--success) border border-(--success)">
-                      Completed
-                    </span>
-                  )}
-                </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-sm text-[#374151] font-medium">
-                    <span className="font-semibold text-[#111827]">
-                      Meeting Date:
-                    </span>{" "}
-                    {formatDate(meeting?.meetingDate)}
-                  </p>
-                  <p className="text-sm text-[#374151] font-medium">
-                    <span className="font-semibold text-[#111827]">
-                      Meeting Time:
-                    </span>{" "}
-                    {meeting?.meetingTime?.split("T")[1]}
-                  </p>
-                </div>
-                <p className="font-semibold text-[#111827]">
-                  <span className="text-sm text-[#374151] font-medium">
-                    Admin Meeting Link:{" "}
-                  </span>
-                  {meeting?.meetingLink_Admin}
-                </p>
-                <p className="text-sm text-[#374151] font-medium">
-                  <span className="text-sm text-[#374151] font-medium">
-                    User Meeting Link:{" "}
-                  </span>
-                  {meeting?.meetingLink_Client}
-                </p>
-              </div>
-            ))
-          ) : (
-            <div className="flex flex-col items-center gap-2 py-6!">
-              <HugeiconsIcon icon={Calendar03Icon} />
-              <p className="text-[#4A5565] text-sm">
-                No hearings scheduled yet
-              </p>
-
-              <div className="w-fit">
-                <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
-                  <input
-                    type="datetime-local"
-                    aria-label="Hearing date"
-                    className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
-                    value={
-                      hearingDate
-                        ? format(hearingDate, "yyyy-MM-dd'T'HH:mm")
-                        : ""
-                    }
-                    min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
-                    onChange={(e) => setHearingDate(parseISO(e.target.value))}
-                  />
-                </div>
-              </div>
-
-              <Button
-                className="rounded-full! text-xs! font-medium! cursor-pointer!"
-                onClick={scheduleHearing}
-                disabled={loading}
-              >
-                <HugeiconsIcon icon={Add01Icon} size={18} />
-                {loading ? "Scheduling..." : "Schedule New Hearing"}
-              </Button>
-            </div>
-          )}
-        </div>
-        <div className="flex gap-2.5! mt-1!">
-          <Button className="text-xs! font-medium! cursor-pointer! bg-[#028B02]!">
-            <HugeiconsIcon icon={Add01Icon} size={18} /> Start Video Meeting
-          </Button>
-          <Button className="text-xs! font-medium! cursor-pointer! text-[#606060]! border! border-[#606060]! bg-transparent!">
-            Reschedule
-          </Button>
-          {/* <Button className="text-xs! font-medium! cursor-pointer!  text-[#BD0000]! border! border-[#BD0000]! bg-transparent!">
-            Cancel
-          </Button> */}
-        </div>
-      </div>
-
-      {/* {hearingStep === 0 ? (
+      {hearingStep === 0 ? (
         <div className="px-5! py-2.5!">
           <div className="flex justify-between items-center mb-2.5!">
             <p className="text-[#555555] text-sm">Schedule New Hearing</p>
+            {/* <Button
+              className="rounded-full! text-xs! font-medium! cursor-pointer!"
+              onClick={scheduleHearing}
+              // onClick={() => setHearingStep(1)}
+            >
+              <HugeiconsIcon icon={Add01Icon} size={18} /> Schedule New Hearing
+            </Button> */}
           </div>
+
+          {/* <>
+            <div className="w-fit">
+              <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
+                <input
+                  type="datetime-local"
+                  aria-label="Hearing date"
+                  className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
+                  value={
+                    hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
+                  }
+                  min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
+                  onChange={(e) => setHearingDate(parseISO(e.target.value))}
+                />
+              </div>
+            </div>{" "}
+            <Button
+              className="rounded-full! text-xs! font-medium! cursor-pointer!"
+              onClick={scheduleHearing}
+              disabled={loading}
+              // onClick={() => setHearingStep(1)}
+            >
+              <HugeiconsIcon icon={Add01Icon} size={18} />
+              {loading ? "Scheduling..." : "Schedule New Hearing"}
+            </Button>
+          </> */}
 
           {false ? (
             <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-10! rounded-[5px]! flex flex-col items-center gap-1 mt-2.5!">
@@ -258,11 +180,19 @@ const HearingProcess = ({
                   className="rounded-full! text-xs! font-medium! cursor-pointer!"
                   onClick={scheduleHearing}
                   disabled={loading}
+                  // onClick={() => setHearingStep(1)}
                 >
                   <HugeiconsIcon icon={Add01Icon} size={18} />
                   {loading ? "Scheduling..." : "Schedule New Hearing"}
                 </Button>
               </>
+              {/* <Button
+                className="text-xs! font-medium! cursor-pointer! leading-0! max-h-4!"
+                onClick={() => setHearingStep(1)}
+              >
+                <HugeiconsIcon icon={Add01Icon} size={18} /> Schedule First
+                Hearing
+              </Button> */}
             </div>
           ) : (
             <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-2.5! rounded-[5px]!">
@@ -338,15 +268,135 @@ const HearingProcess = ({
             </div>
           </div>
 
+          {/* <div className="flex gap-4">
+            <div className="flex-1">
+              <p className="text-[#2A2A2B] text-xs font-semibold mb-1!">
+                Hearing Date
+              </p>
+              <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
+                <input
+                  type="datetime-local"
+                  aria-label="Hearing date"
+                  className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
+                  value={
+                    hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
+                  }
+                  min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
+                  onChange={(e) => setHearingDate(parseISO(e.target.value))}
+                />
+              </div>
+            </div>
+
+            <div className="flex-1">
+              <p className="text-[#2A2A2B] text-xs font-semibold mb-1!">
+                Start Time
+              </p>
+              <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
+                <input
+                  type="datetime-local"
+                  aria-label="Hearing date"
+                  className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
+                  value={
+                    hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
+                  }
+                  min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
+                  onChange={(e) => setHearingDate(parseISO(e.target.value))}
+                />
+              </div>
+            </div>
+
+            <div className="flex-1">
+              <p className="text-[#2A2A2B] text-xs font-semibold mb-1!">
+                End Time
+              </p>
+              <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
+                <input
+                  type="datetime-local"
+                  aria-label="Hearing date"
+                  className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
+                  value={
+                    hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
+                  }
+                  min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
+                  onChange={(e) => setHearingDate(parseISO(e.target.value))}
+                />
+              </div>
+            </div>
+          </div> */}
+
+          {/* <div className="mt-2!">
+            <p className="text-[#2A2A2B] text-xs font-semibold mb-1!">
+              Meeting Type
+            </p>
+            <div className="flex gap-3">
+              <div className="flex flex-col items-center flex-1 rounded-[5px] gap-1 bg-[#F9FAFB] border border-[#E5E7EB] p-6! cursor-pointer!">
+                <HugeiconsIcon icon={Video01Icon} />
+                <p className="text-[#4A5565] font-semibold text-sm">Virtual</p>
+              </div>
+              <div className="flex flex-col items-center flex-1 rounded-[5px] gap-1 bg-[#F9FAFB] border border-[#E5E7EB] p-6! cursor-pointer!">
+                <HugeiconsIcon icon={Location05Icon} />
+                <p className="text-[#4A5565] font-semibold text-sm">Physical</p>
+              </div>
+            </div>
+          </div> */}
+          {/* 
+          <div className="flex gap-3 items-end w-full mt-2!">
+            <CustomTextField
+              placeholder="https://meet.google.com/pth-oeuf-gbr?ijlm=1764675526962&hs=187&adhoc=1"
+              label="Meeting Link"
+              className="grow!"
+            />
+
+            <Button className="text-sm! font-medium! rounded-xl! h-10! shrink-0">
+              <HugeiconsIcon icon={Copy01Icon} /> Copy
+            </Button>
+          </div> */}
+
+          {/* <p className="text-[#555555] text-sm my-2!">Attendees</p>
+          <div className="flex gap-3">
+            <CustomSearchDropdown
+              label="Complainant"
+              placeholder="Select Complainant"
+              value={selectedStaff}
+              onChange={(val) => setSelectedStaff(val)}
+              options={
+                staffData?.map((status) => ({
+                  label: status?.fullName,
+                  value: status?.userId,
+                })) ?? []
+              }
+            />
+            <CustomTextField label="Shop Representative" placeholder="name" />
+            <CustomSearchDropdown
+              label="Internal Staff"
+              placeholder="Select Staff"
+              value={selectedStaff}
+              onChange={(val) => setSelectedStaff(val)}
+              options={
+                staffData?.map((status) => ({
+                  label: status?.fullName,
+                  value: status?.userId,
+                })) ?? []
+              }
+            />
+          </div> */}
           <div className="flex justify-between items-center mt-5! mb-3!">
             <Dialog.Close>
               <div className="text-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
                 <p> Close</p>
               </div>
             </Dialog.Close>
+
+            {/* <Button
+              className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
+              disabled={loading}
+              onClick={handleAssignComplaint}
+            >
+              {loading ? "Assigning..." : "Assign"}
+            </Button> */}
           </div>
         </div>
-      )} */}
+      )}
     </>
   );
 };

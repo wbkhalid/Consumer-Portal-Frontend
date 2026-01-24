@@ -8,10 +8,12 @@ import { COMPLAINT_REPORT_API } from "../../../APIs";
 import SearchFilter from "../../../components/reuseable-filters/SearchFilter";
 import DateFilter from "../../../components/DateFilter";
 import ClearButton from "../../../components/ClearButton";
+import { ManageComplainsData } from "../../../hooks/useGetAllComplains";
 
 export interface AppealReport {
   districtName: string;
   numberOfAppeals: number;
+  complaints: ManageComplainsData[];
 }
 
 interface Props {

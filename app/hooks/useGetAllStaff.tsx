@@ -11,8 +11,8 @@ interface Props {
 export interface ManageStaffData {
   userId: string;
   fullName: string;
-  cnic: string;
   phoneNumber: string;
+  email: string;
   division: string;
   district: string;
   tehsil: string;
