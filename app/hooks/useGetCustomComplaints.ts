@@ -26,6 +26,13 @@ export interface DecisionFilePaths {
   fileType: number;
 }
 
+export interface ComplainantDetails {
+  fullName: string;
+  phoneNumber: string;
+  email: string | null;
+  address: string;
+}
+
 export interface ManageCustomComplainsData {
   id: number;
   shopName: string;
@@ -53,6 +60,7 @@ export interface ManageCustomComplainsData {
   createdAt: string;
   assignedTo: string | null;
   decisionFilePaths: DecisionFilePaths[];
+  complainantDetails: ComplainantDetails;
 }
 
 const useGetCustomComplaints = ({

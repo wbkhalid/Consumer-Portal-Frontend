@@ -125,6 +125,13 @@ export const statusData = [
   { id: 7, label: "Non-Prosecution" },
 ];
 
+export const appealStatusData = [
+  { id: 0, label: "Pending" },
+  { id: 1, label: "Proceeding" },
+  { id: 2, label: "Resolved" },
+  { id: 3, label: "Cancel" },
+];
+
 export const statusColors: Record<string, { text: string; bg: string }> = {
   Pending: { text: "#eb5b0d", bg: "rgba(235,91,13,0.2)" },
   Proceeding: { text: "#9537eb", bg: "rgba(149,55,235,0.2)" },

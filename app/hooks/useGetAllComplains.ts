@@ -24,6 +24,13 @@ export interface DecisionFilePaths {
   fileType: number;
 }
 
+export interface ComplainantDetails {
+  fullName: string;
+  phoneNumber: string;
+  email: string | null;
+  address: string;
+}
+
 export interface ManageComplainsData {
   id: number;
   shopName: string;
@@ -51,6 +58,7 @@ export interface ManageComplainsData {
   listOfImage: string[];
   createdAt: string;
   decisionFilePaths: DecisionFilePaths[];
+  complainantDetails: ComplainantDetails;
 }
 
 const useGetAllComplains = ({
@@ -61,7 +69,6 @@ const useGetAllComplains = ({
   startDate,
   endDate,
   status,
-
   assignedTo,
   minFineAmount,
   maxFineAmount,

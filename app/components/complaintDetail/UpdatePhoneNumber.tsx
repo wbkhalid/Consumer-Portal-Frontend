@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 interface MediaDetailsProps {
   complaint: ManageComplainsData | ManageCustomComplainsData | null;
   onSuccess: () => void;
+  // setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const UpdatePhoneNumber = ({ complaint, onSuccess }: MediaDetailsProps) => {
@@ -40,6 +41,8 @@ const UpdatePhoneNumber = ({ complaint, onSuccess }: MediaDetailsProps) => {
 
       toast.success(response.data.message || "Notice sent successfully");
       onSuccess();
+      // setRefresh?.((prev) => !prev);
+
       console.log("Success:", response.data);
     } catch (error) {
       console.error("Error sending notice", error);
@@ -72,6 +75,8 @@ const UpdatePhoneNumber = ({ complaint, onSuccess }: MediaDetailsProps) => {
         response.data.message || "Phone number updated successfully",
       );
       onSuccess();
+      // setRefresh?.((prev) => !prev);
+
       console.log("Success:", response.data);
     } catch (error) {
       console.error("Error updating phone number", error);

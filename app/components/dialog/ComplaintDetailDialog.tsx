@@ -31,6 +31,7 @@ const ComplaintDetailDialog = ({
   selectedComplaint: ManageComplainsData | null | ManageCustomComplainsData;
   onClose: () => void;
   onSuccess: () => void;
+  setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [step, setStep] = useState(1);
   const [mediaModal, setMediaModal] = useState<{
@@ -39,8 +40,6 @@ const ComplaintDetailDialog = ({
     url: string | null;
   }>({ open: false, type: null, url: null });
   if (!selectedComplaint) return null;
-
-  console.log(selectedComplaint, "selected");
 
   const STATUS_STEP_MAP: Record<number, typeof DETAIL_STEPS> = {
     0: PENDING_STEPS,
@@ -100,6 +99,7 @@ const ComplaintDetailDialog = ({
           <UpdatePhoneNumber
             complaint={selectedComplaint}
             onSuccess={onSuccess}
+            // setRefresh={setRefresh}
           />
         )}
 

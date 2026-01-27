@@ -11,6 +11,29 @@ const ComplaintDetail = ({
     <div className="px-5!">
       <div className="flex justify-between items-center py-2!">
         <div className="flex flex-col gap-0.5">
+          <p className="text-[#555555] text-sm">Complainant Name</p>
+          <p className="text-[15px]">
+            {complaint?.complainantDetails?.fullName}
+          </p>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <p className="text-[#555555] text-sm">Complainant Phone #</p>
+          <p className="text-[15px]">
+            {complaint?.complainantDetails?.phoneNumber}
+          </p>
+        </div>
+        <div className="flex flex-col gap-0.5 ">
+          <p className="text-[#555555] text-sm">Complainant Address</p>
+          <p className="text-sm">
+            {complaint?.complainantDetails?.address || "-"}
+          </p>
+        </div>
+      </div>
+
+      <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full" />
+
+      <div className="flex justify-between items-center py-2!">
+        <div className="flex flex-col gap-0.5">
           <p className="text-[#555555] text-sm">Nature of Complaint</p>
           <p className="text-[15px]">{complaint?.sectionCategoryName}</p>
         </div>
@@ -28,10 +51,6 @@ const ComplaintDetail = ({
           <p className="text-[#555555] text-sm">Date of Incident</p>
           <p className="text-sm">{formatDate(complaint?.createdAt)}</p>
         </div>
-        {/* <div className="flex flex-col gap-0.5">
-          <p className="text-[#555555] text-sm">Fined Amount</p>
-          <p className="text-[15px]">{complaint?.finedAmount ?? 0}</p>
-        </div> */}
       </div>
       <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full" />
       <div className="flex gap-5  py-2!">
