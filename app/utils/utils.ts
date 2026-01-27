@@ -138,6 +138,15 @@ export const statusColors: Record<string, { text: string; bg: string }> = {
 
 // type QueryValue = string | string[] | undefined;
 
+export const copyToClipboard = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast.success("Link copied!");
+  } catch {
+    toast.error("Failed to copy link");
+  }
+};
+
 export const buildQueryString = <T extends object>(params: T): string => {
   const search = new URLSearchParams();
 
@@ -330,6 +339,7 @@ export type Column<T> = {
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { toast } from "react-toastify";
 
 // Generic PDF export method
 export const exportDataToPDF = (

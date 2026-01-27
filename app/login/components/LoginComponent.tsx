@@ -60,6 +60,12 @@ const LoginComponent = () => {
       Cookies.set("fullName", userProfile?.fullName ?? "", {
         expires: new Date(expiration),
       });
+      Cookies.set("ptclUsername", userProfile?.ptclUsername ?? "", {
+        expires: new Date(expiration),
+      });
+      Cookies.set("ptclPassword", userProfile?.ptclPassword ?? "", {
+        expires: new Date(expiration),
+      });
 
       toast.success("Login successful!");
       router.push("/");
@@ -67,7 +73,7 @@ const LoginComponent = () => {
       if (isAxiosError(err)) {
         toast.error(
           err.response?.data?.responseMessage ||
-            "Login failed. Please try again."
+            "Login failed. Please try again.",
         );
       } else {
         toast.error("Something went wrong.");

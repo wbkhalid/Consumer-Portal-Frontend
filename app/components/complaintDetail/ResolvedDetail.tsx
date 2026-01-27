@@ -1,5 +1,6 @@
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+import useGetMeetingVideos from "../../hooks/useGetMeetingVideos";
 import { statusData } from "../../utils/utils";
 
 interface MediaDetailsProps {
@@ -13,11 +14,14 @@ interface MediaDetailsProps {
   >;
 }
 const ResolvedDetail = ({ complaint, setMediaModal }: MediaDetailsProps) => {
+  const { data: meetingVideos } = useGetMeetingVideos({ id: complaint?.id });
   const decisionImages =
     complaint?.decisionFilePaths?.filter((f) => f.fileType === 0) ?? [];
 
   const decisionVideos =
     complaint?.decisionFilePaths?.filter((f) => f.fileType === 1) ?? [];
+
+  console.log(meetingVideos, "....///...");
 
   return (
     <div className="px-5! py-2.5!">
@@ -45,10 +49,10 @@ const ResolvedDetail = ({ complaint, setMediaModal }: MediaDetailsProps) => {
         </div>
       </div>
 
-      <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full" />
+      <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full my-1!" />
 
       <div className="flex flex-col gap-1.5">
-        <p className="text-sm font-medium text-[#555555]">Files</p>
+        <p className="text-sm font-medium text-[#555555]">Decision Orders</p>
 
         <div>
           {complaint?.decisionFilePaths &&
@@ -92,6 +96,43 @@ const ResolvedDetail = ({ complaint, setMediaModal }: MediaDetailsProps) => {
                   >
                     <video
                       src={file.filePath}
+                      className="w-full h-full object-cover"
+                      muted
+                    />
+                  </div>
+                ))}
+            </div>
+          ) : (
+            <p className="text-xs text-gray-400 italic">No media available.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full my-1!" />
+
+      <div className="flex flex-col gap-1.5">
+        <p className="text-sm font-medium text-[#555555]">Meeting Videos</p>
+
+        <div>
+          {meetingVideos && meetingVideos?.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {meetingVideos &&
+                meetingVideos?.length > 0 &&
+                meetingVideos?.map((file, i) => (
+                  <div
+                    key={`vid-${i}`}
+                    className="relative w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
+                    onClick={() =>
+                      setMediaModal({
+                        open: true,
+                        type: "video",
+                        url: file?.videoRecordingLink,
+                      })
+                    }
+                  >
+                    <video
+                      src={file?.videoRecordingLink}
+                      // poster="/logo.png"
                       className="w-full h-full object-cover"
                       muted
                     />

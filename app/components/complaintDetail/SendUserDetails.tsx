@@ -6,7 +6,6 @@ import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 import apiClient from "../../services/api-client";
 import { ADMIN_DASHBOARD_API, COMPLAINT_API } from "../../APIs";
 import { toast } from "react-toastify";
-import { warn } from "console";
 import { useRouter } from "next/navigation";
 
 interface MediaDetailsProps {
@@ -55,7 +54,7 @@ const SendUserDetails = ({ complaint, onSuccess }: MediaDetailsProps) => {
   return (
     <div className="px-5! py-3!">
       <CustomTextField
-        label="Update Phone Number"
+        label="Phone Number"
         placeholder="03001234567"
         value={phoneNumber}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

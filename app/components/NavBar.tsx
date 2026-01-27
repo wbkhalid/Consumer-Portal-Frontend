@@ -46,6 +46,8 @@ const NavBar = () => {
     Cookies.remove("email");
     Cookies.remove("role");
     Cookies.remove("fullName");
+    Cookies.remove("ptclUsername");
+    Cookies.remove("ptclPassword");
     router.push("/login");
   };
   useEffect(() => {

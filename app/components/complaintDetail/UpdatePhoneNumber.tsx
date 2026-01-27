@@ -4,7 +4,7 @@ import { Button, Dialog } from "@radix-ui/themes";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 import apiClient from "../../services/api-client";
-import { COMPLAINT_API } from "../../APIs";
+import { ADMIN_DASHBOARD_API, COMPLAINT_API } from "../../APIs";
 import { toast } from "react-toastify";
 import { warn } from "console";
 import { useRouter } from "next/navigation";
@@ -15,9 +15,39 @@ interface MediaDetailsProps {
 }
 
 const UpdatePhoneNumber = ({ complaint, onSuccess }: MediaDetailsProps) => {
-  const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState(complaint?.phoneNumber || "");
   const [loading, setLoading] = useState(false);
+  const [noticeLoading, setNoticeLoading] = useState(false);
+
+  const sendNotice = async () => {
+    if (!complaint?.phoneNumber) {
+      toast.warning("Please update  phone number first");
+      return;
+    }
+    setNoticeLoading(true);
+    try {
+      const payload = {
+        complaintId: complaint?.id,
+        phoneNumber: complaint?.phoneNumber,
+      };
+
+      console.log(payload, "payload");
+
+      const response = await apiClient.post(
+        `${ADMIN_DASHBOARD_API}/send-notice-to-shopkeeper`,
+        payload,
+      );
+
+      toast.success(response.data.message || "Notice sent successfully");
+      onSuccess();
+      console.log("Success:", response.data);
+    } catch (error) {
+      console.error("Error sending notice", error);
+      toast.error("Failed to sent notice");
+    } finally {
+      setNoticeLoading(false);
+    }
+  };
 
   const updatePhoneNumber = async () => {
     if (!phoneNumber) {
@@ -54,7 +84,7 @@ const UpdatePhoneNumber = ({ complaint, onSuccess }: MediaDetailsProps) => {
   return (
     <div className="px-5! py-3!">
       <CustomTextField
-        label="Update Phone Number"
+        label="Update Shop Phone Number"
         placeholder="03001234567"
         value={phoneNumber}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -68,14 +98,22 @@ const UpdatePhoneNumber = ({ complaint, onSuccess }: MediaDetailsProps) => {
             <p>Close</p>
           </div>
         </Dialog.Close>
-
-        <Button
-          className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
-          disabled={loading}
-          onClick={updatePhoneNumber}
-        >
-          Update
-        </Button>
+        <div className="flex gap-1">
+          <Button
+            className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
+            disabled={noticeLoading}
+            onClick={sendNotice}
+          >
+            Send Notice
+          </Button>
+          <Button
+            className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
+            disabled={loading}
+            onClick={updatePhoneNumber}
+          >
+            Update
+          </Button>
+        </div>
       </div>
     </div>
   );

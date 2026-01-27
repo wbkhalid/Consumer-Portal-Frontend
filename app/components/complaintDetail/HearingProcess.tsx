@@ -1,35 +1,76 @@
-import { Button, Dialog } from "@radix-ui/themes";
+"use client";
+
+import { Button } from "@radix-ui/themes";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Add01Icon,
   Calendar03Icon,
-  Copy01Icon,
-  Location05Icon,
-  Video01Icon,
-  VideoCameraAiIcon,
+  CopyLinkIcon,
 } from "@hugeicons/core-free-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
-import CustomTextField from "../CustomTextField";
-import useGetAllStaff from "../../hooks/useGetAllStaff";
-import { useRegionFilters } from "../../hooks/useRegionFilters";
-import CustomSearchDropdown from "../CustomSearchDropdown";
-import { RxCross2 } from "react-icons/rx";
-import apiClient from "../../services/api-client";
 import { toast } from "react-toastify";
-import useGetMeetingDetails from "../../hooks/useGetMeetingDetails";
-import { formatDate, toLocal } from "../../utils/utils";
+import { copyToClipboard, formatDate } from "../../utils/utils";
+import cookies from "js-cookie";
+import apiClient from "../../services/api-client";
+import { ADMIN_DASHBOARD_API } from "../../APIs";
+
+interface MeetingDetails {
+  id: number;
+  meetingDate: string;
+  meetingTime: string;
+  meetingLink_Admin: string;
+  meetingLink_Client: string;
+  ptclMeetingStatus: number;
+}
 
 const HearingProcess = ({
   complaint,
 }: {
   complaint: ManageComplainsData | null;
 }) => {
-  const [hearingStep, setHearingStep] = useState(0);
-  // const { data: meetingDetails } = useGetMeetingDetails({ id: complaint?.id });
+  const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(
+    null,
+  );
+  const [showScheduler, setShowScheduler] = useState(false);
   const [hearingDate, setHearingDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const ptclUserName = cookies.get("ptclUsername") || "";
+  const ptclPassword = cookies.get("ptclPassword") || "";
+
+  const getMeetingDetails = async () => {
+    if (!complaint?.id) return;
+
+    try {
+      const { data } = await apiClient.get(
+        `${ADMIN_DASHBOARD_API}/complaint-meeting-details?complaintId=${complaint?.id}`,
+      );
+
+      if (data) {
+        setMeetingDetails(data);
+        setShowScheduler(false);
+      } else {
+        setMeetingDetails(null);
+        setShowScheduler(true);
+      }
+    } catch (error) {
+      setMeetingDetails(null);
+      setShowScheduler(true);
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getMeetingDetails();
+  }, [complaint?.id]);
+
+  // const RescheduleMeeting = async () => {
+  //   try {
+  //     if (!hearingDate || !complaint?.id) return;
+  //   } catch (error) {}
+  // };
 
   const createMeeting = async (token: string) => {
     if (!hearingDate || !complaint?.id) return;
@@ -50,304 +91,180 @@ const HearingProcess = ({
         },
       );
 
-      if (!response.ok) {
-        throw new Error(`Create meeting failed: ${response.status}`);
-      }
-
       const data = await response.json();
+
       if (data?.status === true) {
-        toast.success(data?.message || "Meeting created");
-        setLoading(false);
+        toast.success("Meeting scheduled successfully");
+        setShowScheduler(false);
+        setHearingDate(null);
+        setTimeout(() => {
+          getMeetingDetails();
+        }, 2000);
       }
-      console.log("Meeting Created:", data);
-    } catch (error) {
-      console.error("Create Meeting API Error:", error);
+    } catch {
       toast.error("Failed to create meeting");
+    } finally {
       setLoading(false);
     }
   };
 
   const scheduleHearing = async () => {
     if (!hearingDate) {
-      toast.warning("Please select a hearing date");
+      toast.warning("Please select hearing date");
       return;
     }
 
     try {
       setLoading(true);
+
       const params = new URLSearchParams({
-        username: "adllahore",
-        password: "PaSSword_Jm5Dks2P!@",
+        username: ptclUserName,
+        password: ptclPassword,
       });
 
       const response = await fetch(
         `https://oconnect.ptclgroup.pk/utalk/api/login?${params.toString()}`,
-        {
-          method: "POST",
-        },
+        { method: "POST" },
       );
 
-      if (!response.ok) {
-        throw new Error(`Request failed with status ${response.status}`);
-      }
-
       const data = await response.json();
-      console.log("Login Response:", data);
 
-      if (data?.status === true && data?.token) {
-        await createMeeting(data?.token);
+      if (data?.status && data?.token) {
+        await createMeeting(data.token);
       }
-    } catch (error) {
-      console.error("API Error:", error);
-      setLoading(false);
+    } catch {
       toast.error("Failed to schedule hearing");
+      setLoading(false);
     }
   };
 
-  const meetingDetails = [
-    {
-      id: 64,
-      caseNo: 1178,
-      meetingDate: "2026-01-25T00:00:00",
-      meetingTime: "2026-01-25T18:25:00",
-      meetingLink_Admin: null,
-      meetingLink_Client:
-        "https://oconnect.ptclgroup.com/utalk/meet/hiVy5WgbJw",
-      meeting_Remarks: null,
-      ptclMeetingStatus: 0,
-    },
-  ];
+  const openAdminMeeting = () => {
+    window.open(
+      meetingDetails?.meetingLink_Admin,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
 
   return (
-    <>
-      <div className="px-5! py-2.5!">
-        <p className="text-[#555555] text-sm">Schedule Meeting</p>
+    <div className="px-5! py-2.5!">
+      <p className="text-[#555555] text-sm">Schedule Meeting</p>
 
-        <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-4! rounded-[5px]! mt-2.5!">
-          {meetingDetails?.length ? (
-            meetingDetails?.map((meeting) => (
-              <div
-                key={meeting?.id}
-                className="flex flex-col gap-2 text-sm text-[#4A5565]"
-              >
-                <div className="flex justify-between items-center">
-                  <p className="text-sm text-[#374151] font-medium">
-                    <span className="font-semibold text-[#111827]">
-                      Meeting ID:
-                    </span>
-                    {meeting?.id}
-                  </p>
-
-                  {meeting.ptclMeetingStatus === 0 ? (
-                    <span className="px-3! py-1! rounded-full text-xs font-medium bg-[#FFF7D6] text-[#CBA611] border border-[#E6D37B]">
-                      Scheduled
-                    </span>
-                  ) : (
-                    <span className="px-3! py-1! rounded-full text-xs font-medium bg-[#E6F7EF] text-(--success) border border-(--success)">
-                      Completed
-                    </span>
-                  )}
-                </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-sm text-[#374151] font-medium">
-                    <span className="font-semibold text-[#111827]">
-                      Meeting Date:
-                    </span>{" "}
-                    {formatDate(meeting?.meetingDate)}
-                  </p>
-                  <p className="text-sm text-[#374151] font-medium">
-                    <span className="font-semibold text-[#111827]">
-                      Meeting Time:
-                    </span>{" "}
-                    {meeting?.meetingTime?.split("T")[1]}
-                  </p>
-                </div>
-                <p className="font-semibold text-[#111827]">
-                  <span className="text-sm text-[#374151] font-medium">
-                    Admin Meeting Link:{" "}
-                  </span>
-                  {meeting?.meetingLink_Admin}
-                </p>
-                <p className="text-sm text-[#374151] font-medium">
-                  <span className="text-sm text-[#374151] font-medium">
-                    User Meeting Link:{" "}
-                  </span>
-                  {meeting?.meetingLink_Client}
-                </p>
-              </div>
-            ))
-          ) : (
-            <div className="flex flex-col items-center gap-2 py-6!">
-              <HugeiconsIcon icon={Calendar03Icon} />
-              <p className="text-[#4A5565] text-sm">
-                No hearings scheduled yet
+      <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-4! rounded-[5px]! mt-2.5!">
+        {meetingDetails && !showScheduler && (
+          <div className="flex flex-col gap-2 text-sm text-[#4A5565]">
+            <div className="flex justify-between items-center">
+              <p className="font-medium">
+                <b>Meeting ID:</b> {meetingDetails.id}
               </p>
 
-              <div className="w-fit">
-                <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
-                  <input
-                    type="datetime-local"
-                    aria-label="Hearing date"
-                    className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
-                    value={
-                      hearingDate
-                        ? format(hearingDate, "yyyy-MM-dd'T'HH:mm")
-                        : ""
-                    }
-                    min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
-                    onChange={(e) => setHearingDate(parseISO(e.target.value))}
-                  />
-                </div>
-              </div>
-
-              <Button
-                className="rounded-full! text-xs! font-medium! cursor-pointer!"
-                onClick={scheduleHearing}
-                disabled={loading}
-              >
-                <HugeiconsIcon icon={Add01Icon} size={18} />
-                {loading ? "Scheduling..." : "Schedule New Hearing"}
-              </Button>
+              {meetingDetails.ptclMeetingStatus === 0 ? (
+                <span className="px-3! py-1! rounded-full text-xs bg-[#FFF7D6] text-[#CBA611] border">
+                  Scheduled
+                </span>
+              ) : (
+                <span className="px-3 py-1 rounded-full text-xs bg-[#E6F7EF] text-green-600 border">
+                  Completed
+                </span>
+              )}
             </div>
-          )}
-        </div>
-        <div className="flex gap-2.5! mt-1!">
-          <Button className="text-xs! font-medium! cursor-pointer! bg-[#028B02]!">
-            <HugeiconsIcon icon={Add01Icon} size={18} /> Start Video Meeting
-          </Button>
-          <Button className="text-xs! font-medium! cursor-pointer! text-[#606060]! border! border-[#606060]! bg-transparent!">
-            Reschedule
-          </Button>
-          {/* <Button className="text-xs! font-medium! cursor-pointer!  text-[#BD0000]! border! border-[#BD0000]! bg-transparent!">
-            Cancel
-          </Button> */}
-        </div>
+
+            <div className="flex justify-between">
+              <p>
+                <b>Date:</b> {formatDate(meetingDetails.meetingDate)}
+              </p>
+              <p>
+                <b>Time:</b> {meetingDetails.meetingTime.split("T")[1]}
+              </p>
+            </div>
+            <div className="flex gap-1 items-center">
+              <p className="break-all">
+                <b>Admin Link:</b>{" "}
+                {meetingDetails.meetingLink_Admin.length > 70
+                  ? meetingDetails.meetingLink_Admin.slice(0, 70) + "..."
+                  : meetingDetails.meetingLink_Admin}
+              </p>
+
+              <HugeiconsIcon
+                icon={CopyLinkIcon}
+                size={16}
+                className="cursor-pointer hover:opacity-70"
+                onClick={() =>
+                  copyToClipboard(meetingDetails.meetingLink_Admin)
+                }
+              />
+            </div>
+
+            <div className="flex gap-1 items-center">
+              <p className="break-all">
+                <b>Client Link:</b>{" "}
+                {meetingDetails.meetingLink_Client.length > 70
+                  ? meetingDetails.meetingLink_Client.slice(0, 70) + "..."
+                  : meetingDetails.meetingLink_Client}
+              </p>
+
+              <HugeiconsIcon
+                icon={CopyLinkIcon}
+                size={16}
+                className="cursor-pointer hover:opacity-70"
+                onClick={() =>
+                  copyToClipboard(meetingDetails.meetingLink_Client)
+                }
+              />
+            </div>
+          </div>
+        )}
+
+        {showScheduler && (
+          <div className="flex flex-col items-center gap-3 py-6!">
+            <HugeiconsIcon icon={Calendar03Icon} />
+            <p className="text-sm text-[#4A5565]">Select hearing date & time</p>
+
+            <input
+              type="datetime-local"
+              className="border p-2! rounded-md text-xs"
+              value={
+                hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
+              }
+              min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
+              onChange={(e) => setHearingDate(parseISO(e.target.value))}
+            />
+
+            <Button
+              className="rounded-full! text-xs! cursor-pointer!"
+              onClick={scheduleHearing}
+              disabled={loading}
+            >
+              <HugeiconsIcon icon={Add01Icon} size={18} />
+              {loading ? "Scheduling..." : "Schedule Hearing"}
+            </Button>
+          </div>
+        )}
       </div>
 
-      {/* {hearingStep === 0 ? (
-        <div className="px-5! py-2.5!">
-          <div className="flex justify-between items-center mb-2.5!">
-            <p className="text-[#555555] text-sm">Schedule New Hearing</p>
-          </div>
+      {meetingDetails && !showScheduler && (
+        <div className="flex gap-2.5! mt-3!">
+          <Button
+            className="text-xs! bg-[#028B02]! cursor-pointer! hover:opacity-80!"
+            onClick={() => {
+              const adminUrl = meetingDetails?.meetingLink_Admin;
 
-          {false ? (
-            <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-10! rounded-[5px]! flex flex-col items-center gap-1 mt-2.5!">
-              <HugeiconsIcon icon={Calendar03Icon} />
-              <p className="text-[#4A5565] text-sm">
-                No hearings scheduled yet
-              </p>
+              window.location.href = meetingDetails?.meetingLink_Admin;
+            }}
+          >
+            <HugeiconsIcon icon={Add01Icon} size={18} />
+            Start Video Meeting
+          </Button>
 
-              <>
-                <div className="w-fit">
-                  <div className="flex items-center gap-1 border border-[#E2E8F0] rounded-md p-2! cursor-pointer! hover:border-(--primary) transition">
-                    <input
-                      type="datetime-local"
-                      aria-label="Hearing date"
-                      className="outline-none bg-transparent text-[#606060] w-full cursor-pointer text-xs"
-                      value={
-                        hearingDate
-                          ? format(hearingDate, "yyyy-MM-dd'T'HH:mm")
-                          : ""
-                      }
-                      min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
-                      onChange={(e) => setHearingDate(parseISO(e.target.value))}
-                    />
-                  </div>
-                </div>{" "}
-                <Button
-                  className="rounded-full! text-xs! font-medium! cursor-pointer!"
-                  onClick={scheduleHearing}
-                  disabled={loading}
-                >
-                  <HugeiconsIcon icon={Add01Icon} size={18} />
-                  {loading ? "Scheduling..." : "Schedule New Hearing"}
-                </Button>
-              </>
-            </div>
-          ) : (
-            <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-2.5! rounded-[5px]!">
-              <div className="flex justify-between items-center">
-                <div className="flex gap-1 items-center">
-                  <div>
-                    <HugeiconsIcon
-                      icon={VideoCameraAiIcon}
-                      className="text-(--primary)"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-0! text-[#606060] text-sm font-medium">
-                    <p>HRG-176467592735</p>
-                    <p>Thursday, December 31, 2009</p>
-                  </div>
-                </div>
-                <div className="border border-[#CBA611] bg-[#f0e9cc]! rounded-xl py-2! px-4!">
-                  <p className="text-[#CBA611] text-sm font-medium">
-                    Scheduled
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 my-4!">
-                <div>
-                  <p className="text-[#555555] text-sm">Time</p>
-                  <p className="text-[15px]">12:12 PM - 12:51 PM</p>
-                </div>
-                <div>
-                  <p className="text-[#555555] text-sm">Type</p>
-                  <p className="text-[15px]">Virtual</p>
-                </div>
-                <div>
-                  <p className="text-[#555555] text-sm">Location</p>
-                  <p className="text-[15px]">
-                    123 Main Bazaar Road, Shop No. 45 Commercial Area, Near City
-                    Hospital
-                  </p>
-                </div>
-              </div>
-              <p className="text-[#555555] text-sm">Attendees</p>
-              <div className="flex gap-4! text-sm font-medium">
-                <p>Complainant: Ali</p>
-                <p>Shop Rep: ALi ahmed Raza</p>
-                <p>Staff: Jabir, Saleem</p>
-              </div>
-
-              <div className="bg-[rgba(29,28,29,0.13)] h-0.5! w-full my-2!" />
-
-              <div className="flex gap-2.5!">
-                <Button className="text-xs! font-medium! cursor-pointer! bg-[#028B02]!">
-                  <HugeiconsIcon icon={Add01Icon} size={18} /> Start Hearing
-                </Button>
-                <Button className="text-xs! font-medium! cursor-pointer! text-[#606060]! border! border-[#606060]! bg-transparent!">
-                  Reschedule
-                </Button>
-                <Button className="text-xs! font-medium! cursor-pointer!  text-[#BD0000]! border! border-[#BD0000]! bg-transparent!">
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          )}
+          <Button
+            className="text-xs! text-[#606060]! border! border-[#606060]! bg-transparent! cursor-pointer! hover:opacity-80!"
+            onClick={() => setShowScheduler(true)}
+          >
+            Reschedule
+          </Button>
         </div>
-      ) : (
-        <div className="px-5! py-2.5!">
-          <div className="flex justify-between items-center my-2!">
-            <p className="text-[#555555] text-sm">Schedule New Hearing</p>
-            <div
-              className="rounded-full! text-xs! font-medium! cursor-pointer! border border-[#E2E8F0] px-2! py-0.5!"
-              onClick={() => setHearingStep(0)}
-            >
-              Cancel
-            </div>
-          </div>
-
-          <div className="flex justify-between items-center mt-5! mb-3!">
-            <Dialog.Close>
-              <div className="text-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
-                <p> Close</p>
-              </div>
-            </Dialog.Close>
-          </div>
-        </div>
-      )} */}
-    </>
+      )}
+    </div>
   );
 };
 

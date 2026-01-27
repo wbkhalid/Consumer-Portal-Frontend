@@ -77,7 +77,7 @@ const FineBarChart = () => {
           <div>
             <p className="text-[#111827] font-bold">Financial Insight</p>
             <p className="text-[10px] text-[#6B7280] font-semibold">
-              Fine Collection
+              Fine Charged
             </p>
           </div>
         </div>
