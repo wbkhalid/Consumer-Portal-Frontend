@@ -56,6 +56,7 @@ export interface ManageComplainsData {
   assignedTo: string | null;
   listAudio: string[];
   listOfImage: string[];
+  closedDate: string;
   createdAt: string;
   decisionFilePaths: DecisionFilePaths[];
   complainantDetails: ComplainantDetails;

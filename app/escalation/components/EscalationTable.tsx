@@ -12,7 +12,6 @@ import { FaRegPenToSquare } from "react-icons/fa6";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { format, parseISO } from "date-fns";
 import { generateComplaintPDF } from "../../utils/generateComplainPdf";
-import EscalationDialog from "./EscalationDialog";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
 import { Dialog } from "@radix-ui/themes";
 
@@ -162,7 +161,7 @@ const EscalationTable = ({ rowsData, setRefresh }: EscalationTableProps) => {
 
       const response = await apiClient.post(
         COMPLAINT_API + "/update-status",
-        payload
+        payload,
       );
 
       if (response.status === 200) {
@@ -337,7 +336,7 @@ const EscalationTable = ({ rowsData, setRefresh }: EscalationTableProps) => {
         </div>
       </div>
 
-      <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
+      {/* <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
         <Dialog.Content
           className="p-0! lg:max-w-[800px]! max-h-[80vh]! overflow-hidden!"
           onInteractOutside={(e) => e.preventDefault()}
@@ -352,7 +351,7 @@ const EscalationTable = ({ rowsData, setRefresh }: EscalationTableProps) => {
             }}
           />
         </Dialog.Content>
-      </Dialog.Root>
+      </Dialog.Root> */}
 
       {/* <EscalationDialog
         isDialogOpen={isDialogOpen}

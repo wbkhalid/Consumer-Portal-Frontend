@@ -157,7 +157,7 @@ const ComplaintResolution = ({
 
       const response = await apiClient.post(
         COMPLAINT_API + "/update-status",
-        payload
+        payload,
       );
 
       if (response.status === 200) {
@@ -315,11 +315,14 @@ const ComplaintResolution = ({
       </div>
 
       <div className="flex justify-between items-center my-3!">
-        <Dialog.Close>
-          <div className="text-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
-            <p> Close</p>
-          </div>
-        </Dialog.Close>
+        {/* <Dialog.Close> */}
+        <div
+          className="text-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!"
+          onClick={onClose}
+        >
+          <p> Close</p>
+        </div>
+        {/* </Dialog.Close> */}
 
         <Button
           className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"

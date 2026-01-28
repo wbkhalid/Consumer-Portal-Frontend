@@ -1,7 +1,13 @@
+import { format } from "date-fns";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 import useGetMeetingVideos from "../../hooks/useGetMeetingVideos";
-import { statusData } from "../../utils/utils";
+import {
+  formatDate,
+  statusData,
+  toLocal,
+  toLocalDateString,
+} from "../../utils/utils";
 
 interface MediaDetailsProps {
   complaint: ManageComplainsData | ManageCustomComplainsData | null;
@@ -30,7 +36,7 @@ const ResolvedDetail = ({ complaint, setMediaModal }: MediaDetailsProps) => {
         <p className="text-sm">{complaint?.closingRemarks}</p>
       </div> */}
 
-      <div className="flex gap-5">
+      <div className="flex justify-between">
         <div className="flex flex-col gap-0.5">
           <p className="text-[#555555] text-sm">Fined Amount</p>
           <p className="text-[15px]">
@@ -45,6 +51,17 @@ const ResolvedDetail = ({ complaint, setMediaModal }: MediaDetailsProps) => {
               statusData?.find((status) => status?.id === complaint?.status)
                 ?.label
             }
+          </p>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <p className="text-[#555555] text-sm">Resolved Date</p>
+          <p className="text-[15px]">{formatDate(complaint?.closedDate)}</p>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <p className="text-[#555555] text-sm">Resolved Time</p>
+          <p className="text-[15px]">
+            {complaint?.closedDate &&
+              format(toLocal(complaint.closedDate), "hh:mm a")}
           </p>
         </div>
       </div>

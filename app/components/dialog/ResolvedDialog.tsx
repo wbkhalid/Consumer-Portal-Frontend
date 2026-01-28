@@ -31,7 +31,7 @@ const ResolvedDialog = ({
 
   return (
     <>
-      <DetailHeader complaint={selectedComplaint} />
+      <DetailHeader complaint={selectedComplaint} onClose={() => {}} />
       <div className="bg-[rgba(29,28,29,0.13)] h-px w-full" />
       <Stepper
         step={step}

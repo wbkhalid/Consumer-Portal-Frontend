@@ -1,6 +1,11 @@
+import { format } from "date-fns";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
-import { formatDate, getUniqueSectionNumbers } from "../../utils/utils";
+import {
+  formatDate,
+  getUniqueSectionNumbers,
+  toLocal,
+} from "../../utils/utils";
 
 const ComplaintDetail = ({
   complaint,
@@ -48,8 +53,15 @@ const ComplaintDetail = ({
           <p className="text-sm">{complaint?.categoryName || "-"}</p>
         </div>
         <div className="flex flex-col gap-0.5">
-          <p className="text-[#555555] text-sm">Date of Incident</p>
+          <p className="text-[#555555] text-sm">Date of Complaint</p>
           <p className="text-sm">{formatDate(complaint?.createdAt)}</p>
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <p className="text-[#555555] text-sm">Time of Complaint</p>
+          <p className="text-sm">
+            {complaint?.createdAt &&
+              format(toLocal(complaint?.createdAt), "hh:mm a")}
+          </p>
         </div>
       </div>
       <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full" />

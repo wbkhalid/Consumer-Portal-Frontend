@@ -14,6 +14,7 @@ import { Dialog } from "@radix-ui/themes";
 import ComplaintDetailDialog from "../../components/dialog/ComplaintDetailDialog";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+import AppealDialog from "./AppealDialog";
 
 interface AppealsTableProps {
   rowsData: ManageAppealsData[];
@@ -167,10 +168,12 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
           />
         </div> */}
         <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
-          <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]! overflow-hidden!">
-            <ComplaintDetailDialog
+          <Dialog.Content className="p-0! lg:max-w-[920px]! max-h-[80vh]! overflow-hidden!">
+            <AppealDialog
               selectedComplaint={selectedComplaint}
-              onClose={() => {}}
+              onClose={() => {
+                setOpenDialog(false);
+              }}
               onSuccess={() => {}}
             />
           </Dialog.Content>

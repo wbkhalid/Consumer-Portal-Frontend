@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
 import StaffDropdown from "../../components/reuseable-filters/StaffDropdown";
 import DateFilter from "../../components/DateFilter";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import SearchFilter from "../../components/reuseable-filters/SearchFilter";
 import { getRole } from "../../utils/utils";
 import DistrictWiseDropdown from "../../components/reuseable-filters/DistrictWiseDropdown";

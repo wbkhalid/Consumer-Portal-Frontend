@@ -29,7 +29,7 @@ const UpdatePhoneNumber = ({ complaint, onSuccess }: MediaDetailsProps) => {
     try {
       const payload = {
         complaintId: complaint?.id,
-        phoneNumber: complaint?.phoneNumber,
+        phoneNumber: phoneNumber,
       };
 
       console.log(payload, "payload");
@@ -40,7 +40,7 @@ const UpdatePhoneNumber = ({ complaint, onSuccess }: MediaDetailsProps) => {
       );
 
       toast.success(response.data.message || "Notice sent successfully");
-      onSuccess();
+      // onSuccess();
       // setRefresh?.((prev) => !prev);
 
       console.log("Success:", response.data);

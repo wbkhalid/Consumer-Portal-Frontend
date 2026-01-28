@@ -119,11 +119,14 @@ const AssignDetails = ({
         />
       </div>
       <div className="flex justify-between items-center mt-5!">
-        <Dialog.Close>
-          <div className="border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]! text-center">
-            <p> Close</p>
-          </div>
-        </Dialog.Close>
+        {/* <Dialog.Close> */}
+        <div
+          className="border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]! text-center"
+          onClick={onClose}
+        >
+          <p> Close</p>
+        </div>
+        {/* </Dialog.Close> */}
 
         <Button
           className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"

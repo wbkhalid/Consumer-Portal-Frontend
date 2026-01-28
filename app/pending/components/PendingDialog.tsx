@@ -30,7 +30,7 @@ const PendingDialog = ({
 
   return (
     <>
-      <DetailHeader complaint={selectedComplaint} />
+      <DetailHeader complaint={selectedComplaint} onClose={onClose} />
       <div className="bg-[rgba(29,28,29,0.13)] h-px w-full" />
       <Stepper step={step} setStep={setStep} steps={PENDING_STEPS} />
       <div className="bg-[rgba(29,28,29,0.13)] h-px w-full" />

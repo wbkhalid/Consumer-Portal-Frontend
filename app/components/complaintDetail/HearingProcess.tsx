@@ -11,13 +11,15 @@ import {
 import { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { toast } from "react-toastify";
-import { copyToClipboard, formatDate } from "../../utils/utils";
+import { copyToClipboard, formatDate, toLocal } from "../../utils/utils";
 import cookies from "js-cookie";
 import apiClient from "../../services/api-client";
 import { ADMIN_DASHBOARD_API } from "../../APIs";
+import Cookies from "js-cookie";
 
 interface MeetingDetails {
   id: number;
+  caseNo: number;
   meetingDate: string;
   meetingTime: string;
   meetingLink_Admin: string;
@@ -30,6 +32,7 @@ const HearingProcess = ({
 }: {
   complaint: ManageComplainsData | null;
 }) => {
+  const userId = Cookies.get("userId");
   const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(
     null,
   );
@@ -40,6 +43,87 @@ const HearingProcess = ({
   const ptclUserName = cookies.get("ptclUsername") || "";
   const ptclPassword = cookies.get("ptclPassword") || "";
 
+  const reScheduleMeeting = async (meetingDetails: MeetingDetails) => {
+    if (!hearingDate) {
+      toast.warning("Please select hearing date");
+      return;
+    }
+    try {
+      const payload = {
+        id: meetingDetails?.id,
+        caseNo: meetingDetails?.caseNo,
+        meetingDate: format(hearingDate, "yyyy-MM-dd'T'HH:mm"),
+        meetingTime: format(hearingDate, "yyyy-MM-dd'T'HH:mm"),
+        meetingLink_Admin: meetingDetails?.meetingLink_Admin,
+        meetingLink_Client: meetingDetails?.meetingLink_Client,
+        meeting_Remarks: "string123",
+        ptclMeetingStatus: 3,
+      };
+
+      const response = await apiClient.post(
+        `${ADMIN_DASHBOARD_API}/reschedule-meeting
+  `,
+        payload,
+      );
+
+      if (response?.data?.responseCode === 200) {
+        toast?.success(response?.data?.responseMessage || "Meeting reschedule");
+        await sendMeetingLinks(response?.data?.data);
+
+        setHearingDate(null);
+        setTimeout(() => {
+          getMeetingDetails();
+        }, 2000);
+      }
+
+      console.log(response?.data?.data, "response reschudle");
+    } catch (error) {
+      console.error("Error sending meeting links", error);
+      toast.error("Failed to send meeting links");
+    } finally {
+      setShowScheduler(false);
+    }
+  };
+
+  const sendMeetingLinks = async (meetingDetails: any) => {
+    try {
+      const meetingDateTime = meetingDetails?.meeting_start_date?.replace(
+        " ",
+        "T",
+      );
+
+      console.log(meetingDetails, "meetingDetails1");
+
+      const meetingLink =
+        meetingDetails?.meeting_link_client ??
+        meetingDetails?.meetingLink_Client;
+
+      console.log(meetingLink, "meetingLink");
+
+      const payload = {
+        complaintId: complaint?.id,
+        meetingLink,
+        meetingDate: meetingDateTime,
+        meetingTime: meetingDateTime,
+        sentBy: userId,
+        isReSchedueled: showScheduler,
+      };
+
+      console.log(payload, "payload");
+
+      const response = await apiClient.post(
+        `${ADMIN_DASHBOARD_API}/send-meeting-links`,
+        payload,
+      );
+
+      console.log(response, "response123");
+      toast.success("Meeting links sent successfully");
+    } catch (error) {
+      console.error("Error sending meeting links", error);
+      toast.error("Failed to send meeting links");
+    }
+  };
+
   const getMeetingDetails = async () => {
     if (!complaint?.id) return;
 
@@ -47,6 +131,8 @@ const HearingProcess = ({
       const { data } = await apiClient.get(
         `${ADMIN_DASHBOARD_API}/complaint-meeting-details?complaintId=${complaint?.id}`,
       );
+
+      console.log(data, "data2222444");
 
       if (data) {
         setMeetingDetails(data);
@@ -66,18 +152,20 @@ const HearingProcess = ({
     getMeetingDetails();
   }, [complaint?.id]);
 
-  // const RescheduleMeeting = async () => {
-  //   try {
-  //     if (!hearingDate || !complaint?.id) return;
-  //   } catch (error) {}
-  // };
-
   const createMeeting = async (token: string) => {
-    if (!hearingDate || !complaint?.id) return;
+    if (!hearingDate || !complaint?.id) {
+      toast.warning("Hearing Date or complaint details Missing");
+      return;
+    }
+    if (!complaint?.phoneNumber) {
+      toast?.warning("Shop Phone Number Missing");
+      setLoading(false);
+      return;
+    }
 
     try {
       const params = new URLSearchParams({
-        meeting_title: String(complaint.id),
+        meeting_title: String(complaint?.id),
         meeting_date: format(hearingDate, "yyyy-MM-dd HH:mm"),
       });
 
@@ -93,18 +181,20 @@ const HearingProcess = ({
 
       const data = await response.json();
 
+      console.log(data, "..///...///...data2");
+
       if (data?.status === true) {
         toast.success("Meeting scheduled successfully");
+        await sendMeetingLinks(data?.meeting_details);
         setShowScheduler(false);
         setHearingDate(null);
         setTimeout(() => {
           getMeetingDetails();
+          setLoading(false);
         }, 2000);
       }
     } catch {
       toast.error("Failed to create meeting");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -128,22 +218,17 @@ const HearingProcess = ({
       );
 
       const data = await response.json();
+      console.log(data, "..///data//...");
 
-      if (data?.status && data?.token) {
-        await createMeeting(data.token);
+      if (data?.status === true && data?.token) {
+        await createMeeting(data?.token);
+      } else {
+        toast.error(data?.message);
       }
     } catch {
       toast.error("Failed to schedule hearing");
       setLoading(false);
     }
-  };
-
-  const openAdminMeeting = () => {
-    window.open(
-      meetingDetails?.meetingLink_Admin,
-      "_blank",
-      "noopener,noreferrer",
-    );
   };
 
   return (
@@ -162,6 +247,10 @@ const HearingProcess = ({
                 <span className="px-3! py-1! rounded-full text-xs bg-[#FFF7D6] text-[#CBA611] border">
                   Scheduled
                 </span>
+              ) : meetingDetails.ptclMeetingStatus === 3 ? (
+                <span className="px-3! py-1! rounded-full text-xs bg-[#FFF7D6] text-[#CBA611] border">
+                  Re-Scheduled
+                </span>
               ) : (
                 <span className="px-3 py-1 rounded-full text-xs bg-[#E6F7EF] text-green-600 border">
                   Completed
@@ -174,7 +263,17 @@ const HearingProcess = ({
                 <b>Date:</b> {formatDate(meetingDetails.meetingDate)}
               </p>
               <p>
-                <b>Time:</b> {meetingDetails.meetingTime.split("T")[1]}
+                <b>Time:</b>
+                {/* {format(toLocal(meetingDetails.meetingTime), "hh:mm a")}
+                {meetingDetails.meetingTime.split("T")[1]} */}
+                {new Date(meetingDetails.meetingTime).toLocaleTimeString(
+                  "en-Pk",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  },
+                )}
               </p>
             </div>
             <div className="flex gap-1 items-center">
@@ -232,7 +331,11 @@ const HearingProcess = ({
 
             <Button
               className="rounded-full! text-xs! cursor-pointer!"
-              onClick={scheduleHearing}
+              onClick={
+                meetingDetails && showScheduler
+                  ? () => reScheduleMeeting(meetingDetails)
+                  : scheduleHearing
+              }
               disabled={loading}
             >
               <HugeiconsIcon icon={Add01Icon} size={18} />

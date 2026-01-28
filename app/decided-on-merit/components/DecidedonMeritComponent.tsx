@@ -3,7 +3,6 @@
 import { useState } from "react";
 import useGetAllComplains from "../../hooks/useGetAllComplains";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
-import DecidedonMeritTable from "./DecidedonMeritTable";
 
 const DecidedonMeritComponent = () => {
   const [refresh, setRefresh] = useState(false);
@@ -25,10 +24,10 @@ const DecidedonMeritComponent = () => {
           </p>
         </div>
       </div>
-      <DecidedonMeritTable
+      {/* <DecidedonMeritTable
         rowsData={decidedonMeritData ?? []}
         setRefresh={setRefresh}
-      />
+      /> */}
     </div>
   );
 };

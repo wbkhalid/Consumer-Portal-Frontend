@@ -126,6 +126,8 @@ const NavBar = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-2 ">
+          {/* <img src="/images/cm.png" /> */}
+          <Avatar src="/images/cm.png" fallback="?" radius="full" size="3" />
           <IconButton
             className="bg-transparent! text-white hover:bg-white/10! cursor-pointer!"
             onClick={toggleFullScreen}
@@ -189,9 +191,9 @@ const NavBar = () => {
                   <Text size="2">{fullName || ""}</Text>
                 </DropdownMenu.Label>
 
-                <DropdownMenu.Item className="hover:bg-(--primary)!">
+                {/* <DropdownMenu.Item className="hover:bg-(--primary)!">
                   <Link href="/settings">Settings</Link>
-                </DropdownMenu.Item>
+                </DropdownMenu.Item> */}
 
                 {/* <DropdownMenu.Item className="hover:bg-(--primary)!">
                   <Link href="/staff">Staff Management</Link>
