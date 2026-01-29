@@ -84,12 +84,12 @@ const NavBar = () => {
         <div className="flex items-center gap-4">
           <Link href="/">
             <Image
-              src="/logo.png"
+              src="/logo-white.png"
               width={40}
               height={40}
               alt="logo"
               priority
-              className="invert brightness-0 saturate-0"
+              // className="invert brightness-0 saturate-0"
             />
           </Link>
 
@@ -175,9 +175,9 @@ const NavBar = () => {
                     />
                     <div>
                       <p className="font-semibold">{role || ""}</p>
-                      <Text as="p" className="text-[9px]">
+                      {/* <Text as="p" className="text-[9px]">
                         {fullName || ""}
-                      </Text>
+                      </Text> */}
                     </div>
                     <Box>
                       <GoChevronDown size={12} />

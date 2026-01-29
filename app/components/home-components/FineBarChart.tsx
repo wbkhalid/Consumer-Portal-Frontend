@@ -75,10 +75,10 @@ const FineBarChart = () => {
             />
           </div>
           <div>
-            <p className="text-[#111827] font-bold">Financial Insight</p>
-            <p className="text-[10px] text-[#6B7280] font-semibold">
+            <p className="text-[#111827] font-bold">Total Fine Imposed</p>
+            {/* <p className="text-[10px] text-[#6B7280] font-semibold">
               Fine Charged
-            </p>
+            </p> */}
           </div>
         </div>
         <div className="flex gap-2 items-start">
@@ -108,7 +108,7 @@ const FineBarChart = () => {
               width={18}
               height={18}
             />
-            Visit
+            Fine Detail
           </div>
         </div>
       </div>

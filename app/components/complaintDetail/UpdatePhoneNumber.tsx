@@ -8,6 +8,7 @@ import { ADMIN_DASHBOARD_API, COMPLAINT_API } from "../../APIs";
 import { toast } from "react-toastify";
 import { warn } from "console";
 import { useRouter } from "next/navigation";
+import { canEditable } from "../../utils/utils";
 
 interface MediaDetailsProps {
   complaint: ManageComplainsData | ManageCustomComplainsData | null;
@@ -16,6 +17,7 @@ interface MediaDetailsProps {
 }
 
 const UpdatePhoneNumber = ({ complaint, onSuccess }: MediaDetailsProps) => {
+  const loginUser = canEditable();
   const [phoneNumber, setPhoneNumber] = useState(complaint?.phoneNumber || "");
   const [loading, setLoading] = useState(false);
   const [noticeLoading, setNoticeLoading] = useState(false);
@@ -89,7 +91,7 @@ const UpdatePhoneNumber = ({ complaint, onSuccess }: MediaDetailsProps) => {
   return (
     <div className="px-5! py-3!">
       <CustomTextField
-        label="Update Responder Phone Number"
+        label="Update Respondent Phone Number"
         placeholder="03001234567"
         value={phoneNumber}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -97,29 +99,31 @@ const UpdatePhoneNumber = ({ complaint, onSuccess }: MediaDetailsProps) => {
         }
       />
 
-      <div className="flex justify-between items-center mt-5!">
-        <Dialog.Close>
-          <div className="border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]! text-center">
-            <p>Close</p>
+      {loginUser === complaint?.assignedTo && (
+        <div className="flex justify-end items-center mt-5!">
+          {/* <Dialog.Close>
+            <div className="border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]! text-center">
+              <p>Close</p>
+            </div>
+          </Dialog.Close> */}
+          <div className="flex gap-1">
+            <Button
+              className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
+              disabled={noticeLoading}
+              onClick={sendNotice}
+            >
+              Send Notice
+            </Button>
+            <Button
+              className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
+              disabled={loading}
+              onClick={updatePhoneNumber}
+            >
+              Update
+            </Button>
           </div>
-        </Dialog.Close>
-        <div className="flex gap-1">
-          <Button
-            className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
-            disabled={noticeLoading}
-            onClick={sendNotice}
-          >
-            Send Notice
-          </Button>
-          <Button
-            className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
-            disabled={loading}
-            onClick={updatePhoneNumber}
-          >
-            Update
-          </Button>
         </div>
-      </div>
+      )}
     </div>
   );
 };

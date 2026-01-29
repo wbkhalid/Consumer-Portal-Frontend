@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 import {
+  canEditable,
   formatDate,
   getUniqueSectionNumbers,
   toLocal,
@@ -24,6 +25,7 @@ const ComplaintDetail = ({
   complaint: ManageComplainsData | ManageCustomComplainsData | null;
   onSuccess: () => void;
 }) => {
+  const loginUser = canEditable();
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const { data: sectionData = [] } = useGetAllSections();
   const [selectedSections, setSelectedSections] = useState<number[]>(
@@ -109,12 +111,14 @@ const ComplaintDetail = ({
           <div className="flex flex-col gap-0.5 flex-1">
             <div className="flex justify-between">
               <p className="text-[#555555] text-sm">Section Description</p>
-              <HugeiconsIcon
-                icon={Edit04Icon}
-                size={14}
-                className="text-(--primary) cursor-pointer"
-                onClick={() => setOpenEditDialog(true)}
-              />
+              {loginUser === complaint?.assignedTo && (
+                <HugeiconsIcon
+                  icon={Edit04Icon}
+                  size={14}
+                  className="text-(--primary) cursor-pointer"
+                  onClick={() => setOpenEditDialog(true)}
+                />
+              )}
               {/* <p
                 className="text-(--primary)! text-sm font-medium cursor-pointer
             hover:underline transition"

@@ -11,6 +11,7 @@ import useGetSelectedTehsil from "../../hooks/useGetSelectedTehsil";
 import { COMPLAINT_API } from "../../APIs";
 import apiClient from "../../services/api-client";
 import { toast } from "react-toastify";
+import { canEditable } from "../../utils/utils";
 
 const LocationDetail = ({
   complaint,
@@ -19,6 +20,7 @@ const LocationDetail = ({
   complaint: ManageComplainsData | ManageCustomComplainsData | null;
   onSuccess: () => void;
 }) => {
+  const loginUser = canEditable();
   const [openEditTehsil, setOpenEditTehsil] = useState(false);
   const [selectedTehsil, setSelectedTehsil] = useState<number>(
     complaint?.tehsil?.id ?? 0,
@@ -56,7 +58,7 @@ const LocationDetail = ({
       <div className="px-5! py-3!">
         <div className="flex justify-between items-center">
           <div className="flex flex-col gap-0.5">
-            <p className="text-[#555555] text-sm">Responder Phone #</p>
+            <p className="text-[#555555] text-sm">Respondent Phone #</p>
             <p className="text-[#000000] text-sm">{complaint?.phoneNumber}</p>
           </div>
           <div className="flex flex-col gap-0.5">
@@ -74,12 +76,14 @@ const LocationDetail = ({
           <div className="flex flex-col gap-0.5">
             <div className="flex gap-1.5 items-center">
               <p className="text-[#555555] text-sm">Tehsil</p>
-              <HugeiconsIcon
-                icon={Edit04Icon}
-                size={14}
-                className="text-[#555555] cursor-pointer"
-                onClick={() => setOpenEditTehsil(true)}
-              />
+              {loginUser === complaint?.assignedTo && (
+                <HugeiconsIcon
+                  icon={Edit04Icon}
+                  size={14}
+                  className="text-[#555555] cursor-pointer"
+                  onClick={() => setOpenEditTehsil(true)}
+                />
+              )}
             </div>
             <p className="text-[#000000] text-sm">{complaint?.tehsil?.name}</p>
           </div>

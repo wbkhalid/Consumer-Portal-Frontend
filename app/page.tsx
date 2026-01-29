@@ -169,7 +169,10 @@ const MainPage = async ({ searchParams }: PageProps) => {
 
   return (
     <div>
-      <HomeFilters />
+      <HomeFilters
+        total={complainDashboardData?.totalComplaints}
+        downloads={complainDashboardData?.appDownloadsCount}
+      />
       <StatSummary data={complainDashboardData} />
       <div className="grid grid-cols-12 gap-2.5 ">
         <FineBarChart />

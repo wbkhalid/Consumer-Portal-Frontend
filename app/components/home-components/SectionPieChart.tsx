@@ -48,12 +48,12 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
 
   console.log(chartData, "..//cart");
 
-  const maxSection =
-    chartData.length > 0
-      ? chartData.reduce((prev, curr) =>
-          curr.value > prev.value ? curr : prev,
-        )
-      : { value: 0 };
+  // const maxSection =
+  //   chartData.length > 0
+  //     ? chartData.reduce((prev, curr) =>
+  //         curr.value > prev.value ? curr : prev,
+  //       )
+  //     : { value: 0 };
 
   return (
     <div className="bg-white border border-[#E5E7EB] rounded-2xl col-span-12 lg:col-span-5">
@@ -67,10 +67,10 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
           />
         </div>
         <div>
-          <p className="text-[#111827] font-bold">Section Breakdown</p>
-          <p className="text-[10px] text-[#6B7280] font-semibold">
+          <p className="text-[#111827] font-bold">Nature of Complaints</p>
+          {/* <p className="text-[10px] text-[#6B7280] font-semibold">
             Current distribution of complaint statuses
-          </p>
+          </p> */}
         </div>
       </div>
       <div className="h-[370px]">
@@ -137,7 +137,7 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
               }}
               formatter={(value, name) => [`${value} Complaints`, name]}
             />
-            <Legend
+            {/* <Legend
               verticalAlign="bottom"
               align="center"
               iconType="circle"
@@ -153,7 +153,7 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
                   {value}
                 </span>
               )}
-            />
+            /> */}
           </PieChart>
         </ResponsiveContainer>
       </div>

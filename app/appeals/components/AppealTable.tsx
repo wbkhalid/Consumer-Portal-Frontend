@@ -43,7 +43,7 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
   const [selectedComplaint, setSelectedComplaint] = useState<
     ManageComplainsData | ManageCustomComplainsData | null
   >(null);
-  const isAllowed = role === "Admin" || role === "Secretary" || role === "DG";
+  const isAllowed = role === "Secretary" || role === "DG";
   return (
     <>
       <div className="relative">

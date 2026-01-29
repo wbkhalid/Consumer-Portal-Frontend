@@ -116,7 +116,7 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         }`}
       >
         <CustomStatCard
-          title="Decided"
+          title="Decided (on merit)"
           value={data?.decidedOnMeritComplaints}
           icon={"decidedOnMerit.png"}
           iconBg="bg-[linear-gradient(135deg,#21C35D_0%,#17A74C_100%)]"
@@ -180,9 +180,9 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
           value={data?.appealsCount}
           icon={"appeals.png"}
           iconBg="bg-[linear-gradient(135deg,#EA4495_0%,#DC2A7A_100%)]"
-          // percentage={data?.complaintsGrowthPercentages?.appealsComplaints}
-          // percentageBg="bg-[rgba(220,42,122,0.15)]"
-          // percentageText="text-[#DC2A7A]"
+          percentage={"15 Days"}
+          percentageBg="bg-[rgba(220,42,122,0.15)]"
+          percentageText="text-[#DC2A7A]"
         />
       </Link>
       {/* <Link
@@ -201,7 +201,7 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         />
       </Link> */}
 
-      <Link
+      {/* <Link
         href={`/complains${params.toString() ? `?${params.toString()}` : ""}`}
       >
         <CustomStatCard
@@ -209,21 +209,21 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
           value={data?.totalComplaints}
           icon={"totalComplaints.png"}
           iconBg="bg-[linear-gradient(135deg,#397FF5_0%,#2867ED_100%)]"
-          // percentage={data?.complaintsGrowthPercentages?.totalComplaints}
-          // percentageBg="bg-[rgba(22,167,118,0.15)]"
-          // percentageText="text-[#16A34A]"
+          percentage={data?.complaintsGrowthPercentages?.totalComplaints}
+          percentageBg="bg-[rgba(22,167,118,0.15)]"
+          percentageText="text-[#16A34A]"
         />
-      </Link>
+      </Link> */}
 
-      <CustomStatCard
+      {/* <CustomStatCard
         title="Avg Resolution (Days)"
         value={data?.avgResolutionTime.toFixed(2)}
         icon={"avgResolve.png"}
         iconBg="bg-[linear-gradient(135deg,#14B4A3_0%,#0D978A_100%)]"
-        // percentage={data?.complaintsGrowthPercentages?.avgResolutionTime}
-        // percentageBg="bg-[rgba(13,151,138,0.15)]"
-        // percentageText="text-[#0D978A]"
-      />
+        percentage={data?.complaintsGrowthPercentages?.avgResolutionTime}
+        percentageBg="bg-[rgba(13,151,138,0.15)]"
+        percentageText="text-[#0D978A]"
+      /> */}
     </div>
   );
 };

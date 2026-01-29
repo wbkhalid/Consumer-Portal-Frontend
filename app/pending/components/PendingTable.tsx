@@ -198,7 +198,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
         <Dialog.Content
-          className="p-0!  md:max-w-[650px]!  lg:max-w-[820px]! max-h-[80vh]! overflow-hidden!"
+          className="p-0!  md:max-w-[80%]! max-h-[80vh]! overflow-hidden!"
           onInteractOutside={(event) => event.preventDefault()}
         >
           <ComplaintDetailDialog

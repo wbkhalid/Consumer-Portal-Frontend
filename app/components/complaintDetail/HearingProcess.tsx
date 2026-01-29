@@ -11,7 +11,12 @@ import {
 import { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { toast } from "react-toastify";
-import { copyToClipboard, formatDate, toLocal } from "../../utils/utils";
+import {
+  canEditable,
+  copyToClipboard,
+  formatDate,
+  toLocal,
+} from "../../utils/utils";
 import cookies from "js-cookie";
 import apiClient from "../../services/api-client";
 import { ADMIN_DASHBOARD_API } from "../../APIs";
@@ -32,7 +37,7 @@ const HearingProcess = ({
 }: {
   complaint: ManageComplainsData | null;
 }) => {
-  const userId = Cookies.get("userId");
+  const loginUser = canEditable();
   const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(
     null,
   );
@@ -105,7 +110,7 @@ const HearingProcess = ({
         meetingLink,
         meetingDate: meetingDateTime,
         meetingTime: meetingDateTime,
-        sentBy: userId,
+        sentBy: loginUser,
         isReSchedueled: showScheduler,
       };
 
@@ -234,7 +239,6 @@ const HearingProcess = ({
   return (
     <div className="px-5! py-2.5!">
       <p className="text-[#555555] text-sm">Schedule Meeting</p>
-
       <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-4! rounded-[5px]! mt-2.5!">
         {meetingDetails && !showScheduler && (
           <div className="flex flex-col gap-2 text-sm text-[#4A5565]">
@@ -329,44 +333,45 @@ const HearingProcess = ({
               onChange={(e) => setHearingDate(parseISO(e.target.value))}
             />
 
-            <Button
-              className="rounded-full! text-xs! cursor-pointer!"
-              onClick={
-                meetingDetails && showScheduler
-                  ? () => reScheduleMeeting(meetingDetails)
-                  : scheduleHearing
-              }
-              disabled={loading}
-            >
-              <HugeiconsIcon icon={Add01Icon} size={18} />
-              {loading ? "Scheduling..." : "Schedule Hearing"}
-            </Button>
+            {loginUser === complaint?.assignedTo && (
+              <Button
+                className="rounded-full! text-xs! cursor-pointer!"
+                onClick={
+                  meetingDetails && showScheduler
+                    ? () => reScheduleMeeting(meetingDetails)
+                    : scheduleHearing
+                }
+                disabled={loading}
+              >
+                <HugeiconsIcon icon={Add01Icon} size={18} />
+                {loading ? "Scheduling..." : "Schedule Hearing"}
+              </Button>
+            )}
           </div>
         )}
       </div>
+      {loginUser === complaint?.assignedTo &&
+        meetingDetails &&
+        !showScheduler && (
+          <div className="flex gap-2.5! mt-3!">
+            <Button
+              className="text-xs! bg-[#028B02]! cursor-pointer! hover:opacity-80!"
+              onClick={() => {
+                window.location.href = meetingDetails.meetingLink_Admin;
+              }}
+            >
+              <HugeiconsIcon icon={Add01Icon} size={18} />
+              Start Video Meeting
+            </Button>
 
-      {meetingDetails && !showScheduler && (
-        <div className="flex gap-2.5! mt-3!">
-          <Button
-            className="text-xs! bg-[#028B02]! cursor-pointer! hover:opacity-80!"
-            onClick={() => {
-              const adminUrl = meetingDetails?.meetingLink_Admin;
-
-              window.location.href = meetingDetails?.meetingLink_Admin;
-            }}
-          >
-            <HugeiconsIcon icon={Add01Icon} size={18} />
-            Start Video Meeting
-          </Button>
-
-          <Button
-            className="text-xs! text-[#606060]! border! border-[#606060]! bg-transparent! cursor-pointer! hover:opacity-80!"
-            onClick={() => setShowScheduler(true)}
-          >
-            Reschedule
-          </Button>
-        </div>
-      )}
+            <Button
+              className="text-xs! text-[#606060]! border! border-[#606060]! bg-transparent! cursor-pointer! hover:opacity-80!"
+              onClick={() => setShowScheduler(true)}
+            >
+              Reschedule
+            </Button>
+          </div>
+        )}
     </div>
   );
 };

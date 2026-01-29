@@ -12,6 +12,11 @@ export const getRole = () => {
   return role;
 };
 
+export const canEditable = () => {
+  const loginUser = Cookies.get("userId");
+  return loginUser;
+};
+
 export const formatDate = (dateString?: string) => {
   if (!dateString) return "-";
   try {

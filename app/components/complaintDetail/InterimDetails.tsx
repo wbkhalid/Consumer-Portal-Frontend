@@ -4,6 +4,7 @@ import CustomTextArea from "../CustomTextArea";
 import CustomTextField from "../CustomTextField";
 import { toast } from "react-toastify";
 import {
+  canEditable,
   decionsVideos,
   DecisionPhotos,
   uploadFile,
@@ -39,6 +40,7 @@ const InterimDetails = ({
   //   onSuccess: () => void;
   //   onClose: () => void;
 }) => {
+  const loginUser = canEditable();
   const { data: meetingVideos } = useGetMeetingVideos({ id: complaint?.id });
   const [selectedStatus, setSelectedStatus] = useState<number | null>(null);
   const [submittionRemarks, setSubmittionRemarks] = useState("");
@@ -169,19 +171,19 @@ const InterimDetails = ({
   };
   return (
     <div className="px-5! py-4!">
-      <p className="text-sm text-[#555555] font-medium mb-2.5!">
+      {/* <p className="text-sm text-[#555555] font-medium mb-2.5!">
         Hearing Details(Interim)
-      </p>
+      </p> */}
       <div></div>
       <CustomTextArea
-        label="Interim Remarks"
+        label="Appellate Hearing"
         placeholder="Remarks"
         value={submittionRemarks}
         onChange={(e) => setSubmittionRemarks(e.target.value)}
       />
 
       <p className="block my-1! text-[#2A2A2B] font-semibold text-xs mt-2!">
-        Interim Evidence
+        Evidence (CNIC etc.)
       </p>
       <div
         className="flex justify-center flex-wrap gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-5! rounded-md cursor-pointer mt-1!"
@@ -266,19 +268,21 @@ const InterimDetails = ({
         </div>
       </div>
 
-      <div className="flex justify-between items-center my-3!">
-        <div className="text-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
-          <p> Close</p>
-        </div>
+      {loginUser === complaint?.assignedTo && (
+        <div className="flex justify-end items-center my-3!">
+          {/* <div className="text-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
+            <p> Close</p>
+          </div> */}
 
-        <Button
-          className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
-          disabled={loading}
-          onClick={handleHearingComplaint}
-        >
-          {loading ? "Resolving..." : "Set Resolved Status"}
-        </Button>
-      </div>
+          <Button
+            className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
+            disabled={loading}
+            onClick={handleHearingComplaint}
+          >
+            {loading ? "Submitting..." : "Submit"}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

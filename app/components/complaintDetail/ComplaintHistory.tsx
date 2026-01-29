@@ -27,6 +27,9 @@ const ComplaintHistory = ({
     id: complaint?.id,
   });
 
+  console.log(staffData, "staffData");
+  console.log(complaintHistoryData, "complaintHistoryData");
+
   return (
     <div className="px-5! py-4!">
       <div className="flex justify-between items-center mb-3!">
@@ -56,15 +59,16 @@ const ComplaintHistory = ({
                 </>
               ) : (
                 <>
-                  <div className="flex justify-between items-center text-sm">
-                    <p>
-                      {staffData?.find((u) => u.userId === history?.assignedTo)
+                  <div className="flex justify-between items-center text-xs">
+                    <p className="text-[#4A5565]">
+                      Assigned To :
+                      {staffData?.find((u) => u?.userId === history?.assignedTo)
                         ?.fullName || "-"}
                     </p>
                     <p className="text-sm">
-                      {statusData?.find((s) => s?.id === history?.fromStatus)
+                      {/* {statusData?.find((s) => s?.id === history?.fromStatus)
                         ?.label || "-"}{" "}
-                      to{" "}
+                      to{" "} */}
                       {statusData?.find((s) => s?.id === history?.toStatus)
                         ?.label || "-"}
                     </p>
