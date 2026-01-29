@@ -6,7 +6,6 @@ import DateFilter from "../../../../components/DateFilter";
 import SearchFilter from "../../../../components/reuseable-filters/SearchFilter";
 import ResolvedTable from "../../../../components/table/ResolvedTable";
 import { FineImposedProp } from "../../../fine-imposed-report/page";
-import DistrictComplaintTable from "./DistrictComplaintTable";
 
 interface DistrictComplaintComponentProp {
   data: FineImposedProp;

@@ -38,16 +38,40 @@ const ResolvedComponent = ({ title, status }: ResolvedListProps) => {
     assignedTo: assigneeAuthority || undefined,
   });
 
-  const filteredData = useMemo(() => {
-    if (!decidedonMeritData) return [];
-    const term = search.toLowerCase();
+  let filteredData = decidedonMeritData;
 
-    return decidedonMeritData?.filter((item) =>
-      Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(term)
-      )
-    );
-  }, [decidedonMeritData, search]);
+  if (search && decidedonMeritData) {
+    const lowerSearch = search.toLowerCase();
+
+    filteredData = decidedonMeritData.filter((d) => {
+      return (
+        d?.id?.toString().includes(lowerSearch) ||
+        d?.shopName?.toLowerCase().includes(lowerSearch) ||
+        d?.phoneNumber?.toString().includes(lowerSearch) ||
+        d?.remarks?.toLowerCase().includes(lowerSearch) ||
+        d?.assigneeRemarks?.toLowerCase().includes(lowerSearch) ||
+        d?.categoryName?.toLowerCase().includes(lowerSearch) ||
+        d?.sectionCategoryName?.toLowerCase().includes(lowerSearch) ||
+        d?.assignedTo?.toString().includes(lowerSearch) ||
+        d?.sectionsDetails?.some(
+          (s) =>
+            s?.name?.toString().includes(lowerSearch) ||
+            s?.description?.toLowerCase().includes(lowerSearch),
+        )
+      );
+    });
+  }
+
+  // const filteredData = useMemo(() => {
+  //   if (!decidedonMeritData) return [];
+  //   const term = search.toLowerCase();
+
+  //   return decidedonMeritData?.filter((item) =>
+  //     Object.values(item).some((value) =>
+  //       String(value).toLowerCase().includes(term)
+  //     )
+  //   );
+  // }, [decidedonMeritData, search]);
   return (
     <>
       <div className="flex items-center gap-1 mb-2.5!">

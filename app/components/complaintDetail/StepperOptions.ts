@@ -14,7 +14,7 @@ import {
 export const DETAIL_STEPS = [
   {
     id: 1,
-    label: "Shop Info",
+    label: "Responder Info",
     iconImage: Store01Icon,
   },
   {
@@ -34,14 +34,15 @@ export const PENDING_STEPS = [
   ...DETAIL_STEPS,
   { id: 5, label: "Assign", iconImage: AssignmentsIcon },
   { id: 9, label: "Update Phone #", iconImage: CallIcon },
-  { id: 10, label: "Send  Details", iconImage: SentIcon },
+  { id: 10, label: "Send Messenger", iconImage: SentIcon },
 ];
 export const PROCEEDING_STEPS = [
   ...DETAIL_STEPS,
   { id: 6, label: "Hearing Process", iconImage: Calendar02Icon },
+  { id: 11, label: "Interim Order", iconImage: SentIcon },
   { id: 7, label: "Order", iconImage: FileValidationIcon },
   { id: 9, label: "Update Phone #", iconImage: CallIcon },
-  { id: 10, label: "Send  Details", iconImage: SentIcon },
+  { id: 10, label: "Send Messenger", iconImage: SentIcon },
 ];
 
 export const RESOLVED_STEPS = [
@@ -54,5 +55,5 @@ export const APPEAL_STEPS = [
   { id: 5, label: "Hearing Process", iconImage: Calendar02Icon },
   { id: 6, label: "Order", iconImage: FileValidationIcon },
   { id: 7, label: "Resolved Details", iconImage: TickDouble01Icon },
-  { id: 8, label: "Send  Details", iconImage: SentIcon },
+  // { id: 8, label: "Send  Details", iconImage: SentIcon },
 ];

@@ -114,6 +114,40 @@ export const uploadFile = async (
   }
 };
 
+export const uploadMultipleFiles = async (
+  e: React.ChangeEvent<HTMLInputElement>,
+  category: string,
+) => {
+  const files = e.target.files;
+  if (!files || files.length === 0) return;
+
+  const formData = new FormData();
+  Array.from(files).forEach((file) => {
+    formData.append("files", file);
+  });
+  formData.append("category", category);
+
+  try {
+    const response = await apiClient.post(
+      `${FILE_UPLOAD_API}/upload-multiple-files`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+
+    console.log("API Response:", response.data);
+
+    // Return the array of uploaded files
+    return response.data?.data?.files || [];
+  } catch (err) {
+    console.error("Upload failed:", err);
+    return [];
+  }
+};
+
 export const statusData = [
   { id: 0, label: "Pending" },
   { id: 1, label: "Proceeding" },
@@ -148,7 +182,7 @@ export const statusColors: Record<string, { text: string; bg: string }> = {
 export const copyToClipboard = async (text: string) => {
   try {
     await navigator.clipboard.writeText(text);
-    toast.success("Link copied!");
+    // toast.success("Link copied!");
   } catch {
     toast.error("Failed to copy link");
   }

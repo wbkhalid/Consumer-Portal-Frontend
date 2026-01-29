@@ -15,11 +15,12 @@ const DetailHeader = ({
     <div className="flex justify-between items-center px-5! py-2.5!">
       <div className="flex flex-col">
         <p className="text-[#1D1C1D] font-bold">
-          {formatComplaintId(
+          {/* {formatComplaintId(
             complaint?.id,
             complaint?.entryType,
             complaint?.createdAt,
-          )}
+          )} */}
+          {complaint?.caseNo}
         </p>
         <p className="text-[#1D1C1D] text-sm">{complaint?.shopName}</p>
       </div>

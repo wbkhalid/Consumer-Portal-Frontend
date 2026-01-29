@@ -23,13 +23,16 @@ const Stepper = ({ step, setStep, steps, IsInProcess }: StepperProps) => {
     <div
       className={`flex ${
         IsInProcess ? "justify-between" : "justify-start"
-      } items-center gap-3 px-3! py-2!`}
+      } items-center   bg-[#F9F9F9]`}
     >
       {steps.map((item) => {
         const isActive = item.id === step;
 
         return (
-          <div key={item.id} className="flex items-center gap-1 relative">
+          <div
+            key={item.id}
+            className={`flex items-center gap-1 relative ${isActive ? "bg-white" : "bg-transparent"} px-2.5! py-2! h-full!`}
+          >
             <div
               onClick={() => setStep(item.id)}
               className={`flex items-center gap-1 cursor-pointer font-medium
@@ -43,7 +46,7 @@ const Stepper = ({ step, setStep, steps, IsInProcess }: StepperProps) => {
             </div>
 
             {isActive && (
-              <span className="absolute left-0 -bottom-2! w-full h-0.5 bg-(--primary) rounded-full" />
+              <span className="absolute left-0 bottom-0! w-full h-0.5 bg-(--primary) rounded-full" />
             )}
           </div>
         );

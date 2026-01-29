@@ -1,12 +1,8 @@
 "use client";
 
-import CustomComplaintTable from "./CustomComplaintTable";
 import useGetCustomComplaints from "../../../hooks/useGetCustomComplaints";
 import { useRegionFilters } from "../../../hooks/useRegionFilters";
 import { useMemo, useState } from "react";
-import FineFilter from "./FineFilter";
-import { Button } from "@radix-ui/themes";
-import DownloadWrapper from "./DownloadWrapper";
 import CustomComplaintDialog from "./CustomComplaintDialog";
 import DateFilter from "../../../components/DateFilter";
 import SectionSelectDropdown from "../../../components/reuseable-filters/SectionSelectDropdown";
@@ -55,8 +51,8 @@ const CustomComplaintComponent = () => {
 
     return customComplaintData?.filter((item) =>
       Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(term)
-      )
+        String(value).toLowerCase().includes(term),
+      ),
     );
   }, [customComplaintData, search]);
   return (

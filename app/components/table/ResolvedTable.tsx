@@ -226,7 +226,7 @@ const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
       </div> */}
 
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
-        <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]">
+        <Dialog.Content className="p-0! md:max-w-[90%]! max-h-[80vh]">
           <ComplaintDetailDialog
             selectedComplaint={selectedComplaint}
             onSuccess={() => {}}

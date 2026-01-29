@@ -14,7 +14,7 @@ import { Marker, MarkerClusterer } from "@googlemaps/markerclusterer";
 
 const HomeMap = ({ data }: { data: ComplaintsListType[] }) => {
   return (
-    <div className=" w-full h-[450px] rounded-2xl overflow-hidden shadow-sm border-2  border-[#E5E7EB] col-span-12 md:col-span-7">
+    <div className=" w-full h-[450px] rounded-2xl overflow-hidden shadow-sm border-2  border-[#E5E7EB] col-span-12">
       <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API || ""}>
         <Map
           defaultCenter={{ lat: 31.5204, lng: 74.3587 }}

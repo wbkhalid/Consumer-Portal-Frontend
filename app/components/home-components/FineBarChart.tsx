@@ -63,7 +63,7 @@ const FineBarChart = () => {
   };
 
   return (
-    <div className="bg-white border border-[#E5E7EB] rounded-2xl col-span-12 md:col-span-7">
+    <div className="bg-white border border-[#E5E7EB] rounded-2xl col-span-12 lg:col-span-7">
       <div className="flex justify-between items-center px-5! py-3.5!">
         <div className="flex gap-1.5 items-center ">
           <div className="w-12 h-12 bg-[linear-gradient(135deg,#21C35D_0%,#17A74C_100%)] rounded-[10px] flex items-center justify-center">

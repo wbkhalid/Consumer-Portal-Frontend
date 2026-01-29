@@ -38,7 +38,7 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
               <HugeiconsIcon icon={Image02Icon} color="#ffffff" />
             </div>
             <p className="text-[#4A5565] font-medium text-sm">
-              Billboard Image :{complaint?.billBoardImage?.length ? 1 : 0}
+              Shop Image :{complaint?.billBoardImage?.length ? 1 : 0}
             </p>
           </div>
           <div className="flex flex-col items-center">
@@ -59,15 +59,15 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
               Photos :{images?.length}
             </p>
           </div>
-          <div className="flex flex-col items-center">
+          {/* <div className="flex flex-col items-center">
             <div className="h-10 w-10 rounded-full bg-[#BD0000] flex justify-center items-center">
-              {/* <img src="/images/complaint-video.png" alt="feature Image" /> */}
+              <img src="/images/complaint-video.png" alt="feature Image" />
               <HugeiconsIcon icon={VideoReplayIcon} color="#ffffff" />
             </div>
             <p className="text-[#4A5565] font-medium text-sm">
               Videos :{videos?.length}
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -77,7 +77,7 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
       <div className="flex gap-5 mb-4!">
         {/* Featured Evidence */}
         <div className="flex flex-col gap-1.5">
-          <p className="text-sm text-[#555555] font-medium">Billboard Image</p>
+          <p className="text-sm text-[#555555] font-medium">Shop Image</p>
 
           {complaint?.billBoardImage ? (
             <div
@@ -129,7 +129,7 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
                 ))}
 
                 {/* Videos */}
-                {videos?.map((videoUrl, i) => (
+                {/* {videos?.map((videoUrl, i) => (
                   <div
                     key={`vid-${i}`}
                     className="relative w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
@@ -146,7 +146,7 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                ))}
+                ))} */}
               </div>
             ) : (
               <p className="text-xs text-gray-400 italic">

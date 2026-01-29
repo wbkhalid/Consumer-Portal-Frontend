@@ -7,6 +7,7 @@ import apiClient from "../../services/api-client";
 import { ADMIN_DASHBOARD_API, COMPLAINT_API } from "../../APIs";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { copyToClipboard } from "../../utils/utils";
 
 interface MediaDetailsProps {
   complaint: ManageComplainsData | ManageCustomComplainsData | null;
@@ -17,6 +18,19 @@ const SendUserDetails = ({ complaint, onSuccess }: MediaDetailsProps) => {
   const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const mapLink = `https://www.google.com/maps?q=${complaint?.latitude},${complaint?.longitude}`;
+
+  const copyComplaintDetails = async () => {
+    const textToCopy = `
+Complaint ID: ${complaint?.caseNo ?? ""}
+Responder Phone No: ${complaint?.phoneNumber ?? ""}
+Address: ${complaint?.address ?? ""}
+Google Map: https://www.google.com/maps?q=${complaint?.latitude},${complaint?.longitude}
+  `.trim();
+
+    await copyToClipboard(textToCopy);
+  };
 
   const updatePhoneNumber = async () => {
     if (!phoneNumber) {
@@ -62,6 +76,25 @@ const SendUserDetails = ({ complaint, onSuccess }: MediaDetailsProps) => {
         }
       />
 
+      <div className="mt-2!">
+        <p className="text-sm">
+          <span className="font-semibold">Complaint Case No:</span>
+          {complaint?.caseNo}
+        </p>
+        <p className="text-sm">
+          <span className="font-semibold">Responder Phone No:</span>
+          {complaint?.phoneNumber}
+        </p>
+        <p className="text-sm">
+          <span className="font-semibold">Address:</span>
+          {complaint?.address}
+        </p>
+        <p className="text-sm">
+          <span className="font-semibold">Google Map:</span>
+          {mapLink}
+        </p>
+      </div>
+
       <div className="flex justify-between items-center mt-5!">
         <Dialog.Close>
           <div className="border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]! text-center">
@@ -69,13 +102,21 @@ const SendUserDetails = ({ complaint, onSuccess }: MediaDetailsProps) => {
           </div>
         </Dialog.Close>
 
-        <Button
-          className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
-          disabled={loading}
-          onClick={updatePhoneNumber}
-        >
-          Send Details
-        </Button>
+        <div className="flex gap-1">
+          <Button
+            className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
+            onClick={copyComplaintDetails}
+          >
+            Copy Details
+          </Button>
+          <Button
+            className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
+            disabled={loading}
+            onClick={updatePhoneNumber}
+          >
+            Send Details
+          </Button>
+        </div>
       </div>
     </div>
   );

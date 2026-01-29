@@ -1,15 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import DatePicker from "../../../../components/DatePicker";
+import { useMemo } from "react";
 import { AgingReportDailyBreakdown } from "../../page";
-import DayRangeTable from "./DayRangeTable";
-import { format, parseISO } from "date-fns";
-import { Button } from "@radix-ui/themes";
-import { getDateRange } from "../../../../utils/utils";
 import Breadcrumbs from "../../../../components/Breadcrumbs";
 import SearchFilter from "../../../../components/reuseable-filters/SearchFilter";
-
 import DetailTable from "../../../../components/table/DetailTable";
 import { useSearchParams } from "next/navigation";
 

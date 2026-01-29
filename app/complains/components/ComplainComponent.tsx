@@ -97,7 +97,7 @@ const ComplainComponent = () => {
             <ClearButton />
           </div>
         </div>
-        <DetailTable rowsData={filteredData ?? []} />
+        <DetailTable rowsData={filteredData ?? []} setRefresh={setRefresh} />
       </div>
     </>
   );

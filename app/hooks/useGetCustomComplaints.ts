@@ -17,6 +17,7 @@ interface Props {
 }
 
 export interface SectionsDetails {
+  id: number;
   name: string;
   description: string;
 }
@@ -35,14 +36,24 @@ export interface ComplainantDetails {
 
 export interface ManageCustomComplainsData {
   id: number;
+  caseNo: string;
   shopName: string;
   phoneNumber: string;
   complaintType: string;
   categoryName: string;
   address: string;
-  division: string;
-  district: string;
-  tehsil: string;
+  division: {
+    id: number;
+    name: string;
+  };
+  district: {
+    id: number;
+    name: string;
+  };
+  tehsil: {
+    id: number;
+    name: string;
+  };
   latitude: number;
   longitude: number;
   finedAmount: number;

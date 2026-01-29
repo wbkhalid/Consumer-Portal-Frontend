@@ -48,8 +48,11 @@ export interface ComplaintsListType {
 }
 
 export interface ComplainDashboardType {
+  totalInProgress: number;
+  totalDecided: number;
   totalComplaints: number;
   inPendingComplaints: number;
+  adrComplaints: number;
   inProceedingComplaints: number;
   escalatedComplaints: number;
   superEscalatedComplaints: number;

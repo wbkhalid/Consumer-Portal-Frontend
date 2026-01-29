@@ -24,6 +24,7 @@ const AssignDetails = ({
   const [selectedStaff, setSelectedStaff] = useState("");
   const [loading, setLoading] = useState(false);
   const userId = Cookies.get("userId");
+  const role = Cookies.get("role");
   const { divisionId, districtId, tehsilId } = useRegionFilters();
 
   const { data: staffData } = useGetAllStaff({
@@ -31,6 +32,12 @@ const AssignDetails = ({
     districtId: districtId || "",
     tehsilId: tehsilId || "",
   });
+
+  console.log(staffData, "stafffData");
+
+  const adStaffData = staffData?.filter((user) => user?.roles?.includes("AD"));
+  const filterStaffData = role === "AD" ? adStaffData : staffData;
+
   const handleAssignComplaint = async () => {
     if (!complaint) return;
 
@@ -103,9 +110,9 @@ const AssignDetails = ({
         value={selectedStaff}
         onChange={(val) => setSelectedStaff(val as string)}
         options={
-          staffData?.map((status) => ({
-            label: status.fullName,
-            value: String(status.userId),
+          filterStaffData?.map((status) => ({
+            label: status?.fullName,
+            value: String(status?.userId),
           })) ?? []
         }
       />

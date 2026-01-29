@@ -6,7 +6,7 @@ interface CustomStatCardProps {
   value: number | string;
   icon?: React.ReactNode | string;
   iconBg: string;
-  percentage?: number;
+  percentage?: string | number;
   percentageBg?: string;
   percentageText?: string;
 }
@@ -21,7 +21,7 @@ const CustomStatCard = ({
   percentageText,
 }: CustomStatCardProps) => {
   return (
-    <div className="rounded-2xl px-6! py-5! bg-white border border-[#E5E7EB]">
+    <div className="rounded-2xl p-4! bg-white border border-[#E5E7EB]">
       <div className="flex justify-between items-start">
         <div
           className={`${iconBg} w-12 h-12 rounded-[10px] flex items-center justify-center text-white`}
@@ -33,11 +33,9 @@ const CustomStatCard = ({
             height={24}
           />
         </div>
-        <div
-          className={`${percentageBg} rounded-3xl py-0.5! px-3! flex items-center`}
-        >
-          <p className={`${percentageText} text-xs font-medium`}>
-            {percentage?.toFixed(2)}%
+        <div className={`${percentageBg} rounded-3xl py-0.5! px-2! w-fit `}>
+          <p className={`${percentageText} text-[11px] font-medium`}>
+            {percentage}
           </p>
         </div>
       </div>

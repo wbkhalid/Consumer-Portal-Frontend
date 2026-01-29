@@ -56,7 +56,7 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
       : { value: 0 };
 
   return (
-    <div className="bg-white border border-[#E5E7EB] rounded-2xl col-span-12 md:col-span-5">
+    <div className="bg-white border border-[#E5E7EB] rounded-2xl col-span-12 lg:col-span-5">
       <div className="flex gap-1.5 items-center px-5! py-3.5!">
         <div className="w-12 h-12 bg-[linear-gradient(135deg,#ED4141_0%,#DD2828_100%)] rounded-[10px] flex items-center justify-center">
           <Image
@@ -106,7 +106,7 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
               ))}
             </Pie>
 
-            <text
+            {/* <text
               x="50%"
               y="40%"
               textAnchor="middle"
@@ -114,7 +114,7 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
               className="fill-[#111827] font-extrabold text-xl"
             >
               {maxSection.value}
-            </text>
+            </text> */}
 
             <Tooltip
               contentStyle={{

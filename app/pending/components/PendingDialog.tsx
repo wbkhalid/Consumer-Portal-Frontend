@@ -35,8 +35,15 @@ const PendingDialog = ({
       <Stepper step={step} setStep={setStep} steps={PENDING_STEPS} />
       <div className="bg-[rgba(29,28,29,0.13)] h-px w-full" />
       <div className="max-h-[65vh]! overflow-y-auto!">
-        {step === 1 && <LocationDetail complaint={selectedComplaint} />}
-        {step === 2 && <ComplaintDetail complaint={selectedComplaint} />}
+        {step === 1 && (
+          <LocationDetail complaint={selectedComplaint} onSuccess={onSuccess} />
+        )}
+        {step === 2 && (
+          <ComplaintDetail
+            complaint={selectedComplaint}
+            onSuccess={onSuccess}
+          />
+        )}
         {step === 3 && (
           <MediaDetails
             complaint={selectedComplaint}

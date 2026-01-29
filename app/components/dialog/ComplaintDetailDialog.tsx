@@ -22,6 +22,7 @@ import ComplaintResolution from "../complaintDetail/ComplaintResolution";
 import ResolvedDetail from "../complaintDetail/ResolvedDetail";
 import UpdatePhoneNumber from "../complaintDetail/UpdatePhoneNumber";
 import SendUserDetails from "../complaintDetail/SendUserDetails";
+import InterimDetails from "../complaintDetail/InterimDetails";
 
 const ComplaintDetailDialog = ({
   selectedComplaint,
@@ -64,8 +65,15 @@ const ComplaintDetailDialog = ({
       <div className="bg-[rgba(29,28,29,0.13)] h-px w-full" />
 
       <div className="overflow-y-auto max-h-[65vh]!">
-        {step === 1 && <LocationDetail complaint={selectedComplaint} />}
-        {step === 2 && <ComplaintDetail complaint={selectedComplaint} />}
+        {step === 1 && (
+          <LocationDetail complaint={selectedComplaint} onSuccess={onSuccess} />
+        )}
+        {step === 2 && (
+          <ComplaintDetail
+            complaint={selectedComplaint}
+            onSuccess={onSuccess}
+          />
+        )}
         {step === 3 && (
           <MediaDetails
             complaint={selectedComplaint}
@@ -100,6 +108,14 @@ const ComplaintDetailDialog = ({
             complaint={selectedComplaint}
             onSuccess={onSuccess}
             // setRefresh={setRefresh}
+          />
+        )}
+
+        {step === 11 && (
+          <InterimDetails
+            complaint={selectedComplaint}
+            setMediaModal={setMediaModal}
+            // setMediaModal={setMediaModal}
           />
         )}
 

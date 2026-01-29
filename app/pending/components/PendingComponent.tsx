@@ -34,16 +34,41 @@ const PendingComponent = () => {
     assignedTo: assigneeAuthority || undefined,
   });
 
-  const filteredData = useMemo(() => {
-    if (!pendingData) return [];
-    const term = search.toLowerCase();
+  // const filteredData = useMemo(() => {
+  //   if (!pendingData) return [];
+  //   const term = search.toLowerCase();
 
-    return pendingData?.filter((item) =>
-      Object.values(item).some((value) =>
-        String(value).toLowerCase().includes(term),
-      ),
-    );
-  }, [pendingData, search]);
+  //   return pendingData?.filter((item) =>
+  //     Object.values(item).some((value) =>
+  //       String(value).toLowerCase().includes(term),
+  //     ),
+  //   );
+  // }, [pendingData, search]);
+
+  let filteredData = pendingData;
+
+  if (search && pendingData) {
+    const lowerSearch = search.toLowerCase();
+
+    filteredData = pendingData.filter((d) => {
+      return (
+        d?.id?.toString().includes(lowerSearch) ||
+        d?.shopName?.toLowerCase().includes(lowerSearch) ||
+        d?.phoneNumber?.toString().includes(lowerSearch) ||
+        d?.remarks?.toLowerCase().includes(lowerSearch) ||
+        d?.assigneeRemarks?.toLowerCase().includes(lowerSearch) ||
+        d?.categoryName?.toLowerCase().includes(lowerSearch) ||
+        d?.sectionCategoryName?.toLowerCase().includes(lowerSearch) ||
+        d?.assignedTo?.toString().includes(lowerSearch) ||
+        d?.sectionsDetails?.some(
+          (s) =>
+            s?.name?.toString().includes(lowerSearch) ||
+            s?.description?.toLowerCase().includes(lowerSearch),
+        )
+      );
+    });
+  }
+
   return (
     <>
       <div className="flex items-center gap-1 mb-2.5!">

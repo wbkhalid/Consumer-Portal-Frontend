@@ -5,8 +5,6 @@ import { ManageCustomComplainsData } from "../../../hooks/useGetCustomComplaints
 import { formatDate, statusData } from "../../../utils/utils";
 import PaginationControls from "../../../components/table/PaginationControls";
 import { useMemo, useState } from "react";
-import ComplaintDialog from "../../../complains/components/ComplaintDialog";
-import { Dialog } from "@radix-ui/themes";
 
 interface CustomComplaintProp {
   rowsData: ManageCustomComplainsData[];
@@ -157,11 +155,6 @@ const CustomComplaintTable = ({ rowsData }: CustomComplaintProp) => {
           setPageSize={setPageSize}
         />
       </div>
-      <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
-        <Dialog.Content className="p-0! lg:max-w-[700px]! max-h-[80vh]! overflow-hidden!">
-          <ComplaintDialog selectedComplaint={selectedComplaint} />
-        </Dialog.Content>
-      </Dialog.Root>
     </div>
   );
 };

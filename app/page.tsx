@@ -69,8 +69,11 @@ export interface ComplaintBreakdownChart {
 }
 
 export interface ComplainDashboardType {
+  totalInProgress: number;
+  totalDecided: number;
   totalComplaints: number;
   inPendingComplaints: number;
+  adrComplaints: number;
   inProceedingComplaints: number;
   escalatedComplaints: number;
   superEscalatedComplaints: number;
@@ -170,12 +173,13 @@ const MainPage = async ({ searchParams }: PageProps) => {
       <StatSummary data={complainDashboardData} />
       <div className="grid grid-cols-12 gap-2.5 ">
         <FineBarChart />
-        <ComplaintPieChart
+        <SectionPieChart data={complainDashboardData?.sectionTypeStats} />
+        {/* <ComplaintPieChart
           data={complainDashboardData?.complaintBreakdownChart}
-        />
+        /> */}
       </div>
       <div className="grid grid-cols-12 gap-2.5 mt-2.5!">
-        <SectionPieChart data={complainDashboardData?.sectionTypeStats} />
+        {/* <SectionPieChart data={complainDashboardData?.sectionTypeStats} /> */}
         <HomeMap data={complainDashboardData?.complaintsList} />
       </div>
     </div>

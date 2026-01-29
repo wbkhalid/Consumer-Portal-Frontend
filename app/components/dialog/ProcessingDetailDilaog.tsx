@@ -42,8 +42,15 @@ const ProcessingDetailDilaog = ({
       />
       <div className="bg-[rgba(29,28,29,0.13)] h-px w-full" />
       <div className="overflow-y-auto max-h-[65vh]!">
-        {step === 1 && <LocationDetail complaint={selectedComplaint} />}
-        {step === 2 && <ComplaintDetail complaint={selectedComplaint} />}
+        {step === 1 && (
+          <LocationDetail complaint={selectedComplaint} onSuccess={onSuccess} />
+        )}
+        {step === 2 && (
+          <ComplaintDetail
+            complaint={selectedComplaint}
+            onSuccess={onSuccess}
+          />
+        )}
         {step === 3 && (
           <MediaDetails
             complaint={selectedComplaint}

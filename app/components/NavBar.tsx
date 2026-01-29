@@ -95,7 +95,7 @@ const NavBar = () => {
 
           <Flex align="center" className="gap-3!">
             <Heading size="3" className="text-white">
-              Directorate of Consumer Protection Council
+              Directorate General of Enforcement (Prices & Consumer Protection)
             </Heading>
             {currentPath !== "/dashboard" && (
               <Popover.Root>

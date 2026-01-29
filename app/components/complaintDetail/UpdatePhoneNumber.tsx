@@ -89,7 +89,7 @@ const UpdatePhoneNumber = ({ complaint, onSuccess }: MediaDetailsProps) => {
   return (
     <div className="px-5! py-3!">
       <CustomTextField
-        label="Update Shop Phone Number"
+        label="Update Responder Phone Number"
         placeholder="03001234567"
         value={phoneNumber}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

@@ -82,7 +82,7 @@ const HomeFilters = () => {
     router.push(window.location.pathname);
   };
   return (
-    <div className="bg-white border-b border-b-[#E4E6EA] flex flex-col gap-1.5 md:flex-row items-center justify-between items py-2.5! px-7! -mx-2! -mt-2!">
+    <div className="bg-white border-b border-b-[#E4E6EA] flex flex-col gap-5 md:flex-row items-center  py-2.5! px-7! -mx-2! -mt-2!">
       <div className="flex gap-2 ">
         {canShowDivision && (
           <CustomSearchDropdown
