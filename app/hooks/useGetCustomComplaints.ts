@@ -34,6 +34,19 @@ export interface ComplainantDetails {
   address: string;
 }
 
+export interface InterimDetails {
+  id: number;
+  interimRemarks: string;
+  interimOrderFilesPath: [
+    {
+      filePath: string;
+      fileType: number;
+    },
+  ];
+  createdAt: string;
+  lastUpdatedAt: string;
+}
+
 export interface ManageCustomComplainsData {
   id: number;
   caseNo: string;
@@ -73,6 +86,7 @@ export interface ManageCustomComplainsData {
   assignedTo: string | null;
   decisionFilePaths: DecisionFilePaths[];
   complainantDetails: ComplainantDetails;
+  interimDetails: InterimDetails[];
 }
 
 const useGetCustomComplaints = ({

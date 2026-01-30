@@ -7,6 +7,7 @@ import {
   canEditable,
   decionsVideos,
   DecisionPhotos,
+  getRole,
   uploadFile,
 } from "../../utils/utils";
 import { Button, Dialog } from "@radix-ui/themes";
@@ -42,6 +43,13 @@ const ComplaintResolution = ({
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const userId = Cookies.get("userId");
+  const role = getRole();
+
+  const isDGorSecretary = role === "DG" || role === "SECRETARY";
+
+  // const canShowResolveButton = fromAppeal
+  //   ? isDGorSecretary
+  //   : loginUser === complaint?.assignedTo;
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

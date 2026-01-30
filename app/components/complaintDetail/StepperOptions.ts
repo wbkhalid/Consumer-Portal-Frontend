@@ -53,6 +53,7 @@ export const RESOLVED_STEPS = [
 export const APPEAL_STEPS = [
   ...DETAIL_STEPS,
   { id: 5, label: "Hearing Process", iconImage: Calendar02Icon },
+  { id: 11, label: "Interim", iconImage: SentIcon },
   { id: 6, label: "Final Order", iconImage: FileValidationIcon },
   { id: 7, label: "Resolved Details", iconImage: TickDouble01Icon },
   // { id: 8, label: "Send  Details", iconImage: SentIcon },

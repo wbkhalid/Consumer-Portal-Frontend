@@ -7,6 +7,7 @@ import {
   canEditable,
   decionsVideos,
   DecisionPhotos,
+  formatDate,
   uploadFile,
   uploadMultipleFiles,
 } from "../../utils/utils";
@@ -42,17 +43,9 @@ const InterimDetails = ({
 }) => {
   const loginUser = canEditable();
   const { data: meetingVideos } = useGetMeetingVideos({ id: complaint?.id });
-  const [selectedStatus, setSelectedStatus] = useState<number | null>(null);
-  const [submittionRemarks, setSubmittionRemarks] = useState("");
-  const [fineAmount, setFineAmount] = useState(0);
-  const [imageUrl, setImageUrl] = useState("");
-  const [videoUrl, setVideoUrl] = useState("");
+  const [interimRemarks, setInterimRemarks] = useState("");
   const [loading, setLoading] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const videoInputRef = useRef<HTMLInputElement>(null);
-  const userId = Cookies.get("userId");
 
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -98,18 +91,14 @@ const InterimDetails = ({
     setImagePreviews(updatedPreviews);
   };
 
-  const handleHearingComplaint = async () => {
+  const handleInterimComplaint = async () => {
     if (!complaint) return;
 
-    if (!selectedStatus) {
-      toast.warning("Please select a status before submitting.");
+    if (!interimRemarks.trim()) {
+      toast.warning("Please enter remarks for the  complaint.");
       return;
     }
-    if (!submittionRemarks.trim()) {
-      toast.warning("Please enter remarks for the resolved complaint.");
-      return;
-    }
-    if (!imageUrl) {
+    if (imageUrls?.length === 0) {
       toast.warning("Please Uplaod document");
       return;
     }
@@ -119,37 +108,27 @@ const InterimDetails = ({
 
       const payload = {
         complaintId: complaint?.id,
-        previousStaus: complaint?.status ?? 1,
-        status: selectedStatus,
-        updatedBy: userId,
-        assignedTo: complaint?.assignedTo,
-        hearingDate: complaint?.hearingDate,
-        verdict: 0,
-        fineAmount: fineAmount,
-        assigneeRemarks: complaint?.assigneeRemarks,
-        closingRemarks: submittionRemarks,
-        isClosed: true,
-        complaintDecisionFiles: [
-          {
-            filePath: imageUrl,
-            fileType: 0,
-          },
-          {
-            filePath: videoUrl,
-            fileType: 1,
-          },
-        ],
+        interimRemarks: interimRemarks,
+        createdBy: loginUser,
+        interimOrderFilesPath: imageUrls?.map((url) => ({
+          filePath: url,
+          fileType: 0,
+        })),
       };
 
-      console.log("📤 Sending payload:", payload);
+      console.log("Sending payload:", payload);
 
       const response = await apiClient.post(
-        COMPLAINT_API + "/update-status",
+        COMPLAINT_API + "/add-interim-details",
         payload,
       );
 
+      console.log(response, "response");
+
       if (response.status === 200) {
-        toast.success("Complaint Status successfully.");
+        toast.success(
+          response?.data?.message || "Interim details added successfully.",
+        );
 
         // onSuccess();
         // onClose();
@@ -159,14 +138,6 @@ const InterimDetails = ({
       toast.error("Something went wrong while assign Date.");
     } finally {
       setLoading(false);
-      // setSelectedComplaint(null);
-      // setHearingDate(null);
-      // setOpenDialog(false);
-      setImageUrl("");
-      setVideoUrl("");
-      setSelectedStatus(null);
-      setSubmittionRemarks("");
-      setFineAmount(0);
     }
   };
   return (
@@ -178,8 +149,8 @@ const InterimDetails = ({
       <CustomTextArea
         label="Appellate Hearing"
         placeholder="Remarks"
-        value={submittionRemarks}
-        onChange={(e) => setSubmittionRemarks(e.target.value)}
+        value={interimRemarks}
+        onChange={(e) => setInterimRemarks(e.target.value)}
       />
 
       <p className="block my-1! text-[#2A2A2B] font-semibold text-xs mt-2!">
@@ -235,6 +206,43 @@ const InterimDetails = ({
       </div>
 
       <div className="flex flex-col gap-1.5">
+        <p className="text-sm font-medium text-[#555555]">
+          Previous Interim Details
+        </p>
+        <div>
+          {complaint?.interimDetails?.map((interim, i) => (
+            <div>
+              <p>
+                <span>Interim Remarks:</span>
+                {interim?.interimRemarks}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {interim?.interimOrderFilesPath?.map((imgDetail) => (
+                  <div
+                    key={i}
+                    className="w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
+                    onClick={() =>
+                      setMediaModal({
+                        open: true,
+                        type: "image",
+                        url: imgDetail?.filePath,
+                      })
+                    }
+                  >
+                    <img
+                      src={imgDetail?.filePath}
+                      alt={`file-${i}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-1.5">
         <p className="text-sm font-medium text-[#555555]">Meeting Videos</p>
 
         <div>
@@ -243,22 +251,35 @@ const InterimDetails = ({
               {meetingVideos &&
                 meetingVideos?.length > 0 &&
                 meetingVideos?.map((file, i) => (
-                  <div
-                    key={`vid-${i}`}
-                    className="relative w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
-                    onClick={() =>
-                      setMediaModal({
-                        open: true,
-                        type: "video",
-                        url: file?.videoRecordingLink,
-                      })
-                    }
-                  >
-                    <video
-                      src={file?.videoRecordingLink}
-                      className="w-full h-full object-cover"
-                      muted
-                    />
+                  <div>
+                    <div
+                      key={`vid-${i}`}
+                      className="relative w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
+                      onClick={() =>
+                        setMediaModal({
+                          open: true,
+                          type: "video",
+                          url: file?.videoRecordingLink,
+                        })
+                      }
+                    >
+                      <video
+                        src={file?.videoRecordingLink}
+                        className="w-full h-full object-cover"
+                        muted
+                      />
+                    </div>
+                    <p className="text-xs">
+                      {formatDate(file?.createdAt)}{" "}
+                      <span>
+                        {" "}
+                        {new Date(file?.createdAt).toLocaleTimeString("en-Pk", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}
+                      </span>{" "}
+                    </p>
                   </div>
                 ))}
             </div>
@@ -277,7 +298,7 @@ const InterimDetails = ({
           <Button
             className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
             disabled={loading}
-            onClick={handleHearingComplaint}
+            onClick={handleInterimComplaint}
           >
             {loading ? "Submitting..." : "Submit"}
           </Button>

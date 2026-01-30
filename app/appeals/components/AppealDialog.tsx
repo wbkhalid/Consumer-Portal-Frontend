@@ -16,6 +16,7 @@ import ComplaintResolution from "../../components/complaintDetail/ComplaintResol
 import ResolvedDetail from "../../components/complaintDetail/ResolvedDetail";
 import SendUserDetails from "../../components/complaintDetail/SendUserDetails";
 import FullScreenMediaModal from "../../components/dialog/FullScreenMediaModal";
+import InterimDetails from "../../components/complaintDetail/InterimDetails";
 
 const AppealDialog = ({
   selectedComplaint,
@@ -26,6 +27,7 @@ const AppealDialog = ({
   onClose: () => void;
   onSuccess: () => void;
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
+  fromAppeal?: boolean;
 }) => {
   const [step, setStep] = useState(1);
   const [mediaModal, setMediaModal] = useState<{
@@ -81,6 +83,14 @@ const AppealDialog = ({
           <SendUserDetails
             complaint={selectedComplaint}
             onSuccess={onSuccess}
+          />
+        )}
+
+        {step === 11 && (
+          <InterimDetails
+            complaint={selectedComplaint}
+            setMediaModal={setMediaModal}
+            // setMediaModal={setMediaModal}
           />
         )}
       </div>

@@ -32,6 +32,19 @@ export interface ComplainantDetails {
   address: string;
 }
 
+export interface InterimDetails {
+  id: number;
+  interimRemarks: string;
+  interimOrderFilesPath: [
+    {
+      filePath: string;
+      fileType: number;
+    },
+  ];
+  createdAt: string;
+  lastUpdatedAt: string;
+}
+
 export interface ManageComplainsData {
   id: number;
   caseNo: string;
@@ -71,6 +84,7 @@ export interface ManageComplainsData {
   createdAt: string;
   decisionFilePaths: DecisionFilePaths[];
   complainantDetails: ComplainantDetails;
+  interimDetails: InterimDetails[];
 }
 
 const useGetAllComplains = ({
