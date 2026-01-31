@@ -31,7 +31,7 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
         href={`/pending${params.toString() ? `?${params.toString()}` : ""}`}
       >
         <CustomStatCard
-          title="Not Assign"
+          title="Not Assigned"
           value={data?.inPendingComplaints}
           icon={"pending.png"}
           iconBg="bg-[linear-gradient(135deg,#F87015_0%,#EB5B0D_100%)]"

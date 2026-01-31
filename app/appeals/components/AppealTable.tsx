@@ -28,10 +28,8 @@ const headers = [
   { label: "Assignee To", sortable: "assigneeTo" },
   { label: "Shop Name" },
   { label: "Shop Phone No" },
-  { label: "Nature of Complaint", sortable: "complaintType" },
   { label: "Section Name", sortable: "sectionName" },
-  { label: "Section Description" },
-  { label: "Category", sortable: "categoryName" },
+  { label: "Nature of Complaint" },
   { label: "Remarks" },
   { label: "Assignee Remarks" },
 ];
@@ -84,11 +82,7 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
                     {index + 1}
                   </TableBodyCell>
                   <TableBodyCell className="font-semibold">
-                    {formatComplaintId(
-                      item?.complaintDetails?.id,
-                      item?.complaintDetails?.entryType,
-                      item?.complaintDetails?.createdAt,
-                    )}
+                    {item?.complaintDetails?.caseNo}
                   </TableBodyCell>
 
                   <TableBodyCell>{formatDate(item?.createdAt)}</TableBodyCell>
@@ -117,9 +111,9 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
                     {item?.complaintDetails?.phoneNumber}
                   </TableBodyCell>
 
-                  <TableBodyCell>
+                  {/* <TableBodyCell>
                     {item?.complaintDetails?.sectionCategoryName}
-                  </TableBodyCell>
+                  </TableBodyCell> */}
 
                   <TableBodyCell>
                     {getUniqueSectionNumbers(
@@ -132,10 +126,10 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
                       ?.map((s) => s?.description)
                       .join(",")}
                   </TableBodyCell>
-
+                  {/* 
                   <TableBodyCell>
                     {item?.complaintDetails?.categoryName}
-                  </TableBodyCell>
+                  </TableBodyCell> */}
 
                   <TableBodyCell className="whitespace-nowrap">
                     {item?.complaintDetails?.remarks

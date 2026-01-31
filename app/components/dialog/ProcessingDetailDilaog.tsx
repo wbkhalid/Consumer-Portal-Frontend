@@ -57,7 +57,12 @@ const ProcessingDetailDilaog = ({
             setMediaModal={setMediaModal}
           />
         )}
-        {step === 4 && <ComplaintHistory complaint={selectedComplaint} />}
+        {step === 4 && (
+          <ComplaintHistory
+            complaint={selectedComplaint}
+            setMediaModal={setMediaModal}
+          />
+        )}
         {step === 5 && <HearingProcess complaint={selectedComplaint} />}
         {step === 6 && (
           <ComplaintResolution

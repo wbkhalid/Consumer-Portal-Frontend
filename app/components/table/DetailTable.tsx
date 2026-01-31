@@ -17,7 +17,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { sort } from "fast-sort";
 import ComplaintDetailDialog from "../dialog/ComplaintDetailDialog";
 import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
-import ResolvedDialog from "../dialog/ResolvedDialog";
 
 interface DetailTableProps {
   rowsData: ManageComplainsData[] | ManageCustomComplainsData[];
@@ -48,10 +47,8 @@ const DetailTable = ({
     { label: "Date", sortable: "date" },
     { label: "Shop Name" },
     { label: "Shop Phone No" },
-    { label: "Nature of Complaint", sortable: "complaintType" },
     { label: "Section Name", sortable: "sectionName" },
-    { label: "Section Description" },
-    { label: "Category", sortable: "categoryName" },
+    { label: "Nature of Complaint" },
     { label: "Status", sortable: "status" },
     { label: "Remarks" },
     { label: "Type", sortable: "type" },
@@ -151,11 +148,12 @@ const DetailTable = ({
                   {index + 1}
                 </TableBodyCell>
                 <TableBodyCell className="font-semibold">
-                  {formatComplaintId(
+                  {item?.caseNo}
+                  {/* {formatComplaintId(
                     item?.id,
                     item?.entryType,
                     item?.createdAt,
-                  )}
+                  )} */}
                 </TableBodyCell>
 
                 <TableBodyCell>{formatDate(item?.createdAt)}</TableBodyCell>
@@ -169,7 +167,7 @@ const DetailTable = ({
 
                 <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
 
-                <TableBodyCell>{item?.sectionCategoryName}</TableBodyCell>
+                {/* <TableBodyCell>{item?.sectionCategoryName}</TableBodyCell> */}
 
                 <TableBodyCell>
                   {getUniqueSectionNumbers(item?.sectionsDetails)}
@@ -179,7 +177,7 @@ const DetailTable = ({
                   {item?.sectionsDetails?.map((s) => s?.description).join(",")}
                 </TableBodyCell>
 
-                <TableBodyCell>{item?.categoryName}</TableBodyCell>
+                {/* <TableBodyCell>{item?.categoryName}</TableBodyCell> */}
 
                 <TableBodyCell>
                   {(() => {

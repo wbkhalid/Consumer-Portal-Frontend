@@ -80,12 +80,12 @@ const ComplaintDetail = ({
         <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full" />
 
         <div className="flex justify-between items-center py-2!">
-          <div className="flex flex-col gap-0.5">
+          {/* <div className="flex flex-col gap-0.5">
             <p className="text-[#555555] text-sm">Nature of Complaint</p>
             <p className="text-[15px]">{complaint?.sectionCategoryName}</p>
-          </div>
+          </div> */}
           <div className="flex flex-col gap-0.5">
-            <p className="text-[#555555] text-sm">Applicable Legal Sections</p>
+            <p className="text-[#555555] text-sm">Sections</p>
             <p className="text-[15px]">
               {getUniqueSectionNumbers(complaint?.sectionsDetails)}
             </p>
@@ -110,7 +110,7 @@ const ComplaintDetail = ({
         <div className="flex gap-5  py-2!">
           <div className="flex flex-col gap-0.5 flex-1">
             <div className="flex justify-between">
-              <p className="text-[#555555] text-sm">Section Description</p>
+              <p className="text-[#555555] text-sm">Nature of Complaint</p>
               {loginUser === complaint?.assignedTo && (
                 <HugeiconsIcon
                   icon={Edit04Icon}
@@ -135,7 +135,7 @@ const ComplaintDetail = ({
 
         <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full" />
         <div className="py-2!">
-          <p className="text-[#555555] text-sm">User Remarks</p>
+          <p className="text-[#555555] text-sm">Complaint Detail</p>
           <p className="text-sm">{complaint?.remarks || "-"}</p>
         </div>
         {/* {complaint?.assigneeRemarks && (

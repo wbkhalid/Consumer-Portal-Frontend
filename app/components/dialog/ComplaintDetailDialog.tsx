@@ -50,6 +50,7 @@ const ComplaintDetailDialog = ({
     4: RESOLVED_STEPS,
     5: RESOLVED_STEPS,
     7: RESOLVED_STEPS,
+    12: PROCEEDING_STEPS,
   };
 
   return (
@@ -80,7 +81,12 @@ const ComplaintDetailDialog = ({
             setMediaModal={setMediaModal}
           />
         )}
-        {step === 4 && <ComplaintHistory complaint={selectedComplaint} />}
+        {step === 4 && (
+          <ComplaintHistory
+            complaint={selectedComplaint}
+            setMediaModal={setMediaModal}
+          />
+        )}
         {step === 5 && (
           <AssignDetails
             complaint={selectedComplaint}
@@ -115,6 +121,7 @@ const ComplaintDetailDialog = ({
           <InterimDetails
             complaint={selectedComplaint}
             setMediaModal={setMediaModal}
+            onSuccess={onSuccess}
             // setMediaModal={setMediaModal}
           />
         )}

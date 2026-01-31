@@ -13,6 +13,7 @@ import DetailTable from "../../components/table/DetailTable";
 import ClearButton from "../../components/ClearButton";
 import CustomComplaintDialog from "../../reports/custom-complaint-report/components/CustomComplaintDialog";
 import FineFilterDropdown from "../../reports/custom-complaint-report/components/FineFilter";
+import PageHeader from "../../components/PageHeader";
 
 const ComplainComponent = () => {
   const [refresh, setRefresh] = useState(false);
@@ -61,7 +62,6 @@ const ComplainComponent = () => {
         d?.phoneNumber?.toString().includes(lowerSearch) ||
         d?.remarks?.toLowerCase().includes(lowerSearch) ||
         d?.assigneeRemarks?.toLowerCase().includes(lowerSearch) ||
-        d?.categoryName?.toLowerCase().includes(lowerSearch) ||
         d?.sectionCategoryName?.toLowerCase().includes(lowerSearch) ||
         d?.assignedTo?.toString().includes(lowerSearch) ||
         d?.sectionsDetails?.some(
@@ -76,12 +76,13 @@ const ComplainComponent = () => {
   return (
     <>
       <div className="flex justify-between items-center mb-2.5!">
-        <div className="flex items-center gap-1">
+        {/* <div className="flex items-center gap-1">
           <p className="text-[#111827] font-semibold">Total Complaints</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {filteredData?.length?.toLocaleString()} Records
           </p>
-        </div>
+        </div> */}
+        <PageHeader title="Total Complaints" count={filteredData?.length} />
         <CustomComplaintDialog setRefresh={setRefresh} />
       </div>
       <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">

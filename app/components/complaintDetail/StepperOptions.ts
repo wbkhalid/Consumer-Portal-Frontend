@@ -38,8 +38,8 @@ export const PENDING_STEPS = [
 ];
 export const PROCEEDING_STEPS = [
   ...DETAIL_STEPS,
-  { id: 6, label: "Hearing Process", iconImage: Calendar02Icon },
-  { id: 11, label: "Interim", iconImage: SentIcon },
+  { id: 6, label: "Schedule Hearing", iconImage: Calendar02Icon },
+  { id: 11, label: "Interim Order", iconImage: SentIcon },
   { id: 7, label: "Final Order", iconImage: FileValidationIcon },
   { id: 9, label: "Update Phone #", iconImage: CallIcon },
   { id: 10, label: "Send Messenger", iconImage: SentIcon },
@@ -47,14 +47,14 @@ export const PROCEEDING_STEPS = [
 
 export const RESOLVED_STEPS = [
   ...DETAIL_STEPS,
-  { id: 8, label: "Resolved Details", iconImage: TickDouble01Icon },
+  // { id: 8, label: "Resolved Details", iconImage: TickDouble01Icon },
 ];
 
 export const APPEAL_STEPS = [
   ...DETAIL_STEPS,
-  { id: 5, label: "Hearing Process", iconImage: Calendar02Icon },
-  { id: 11, label: "Interim", iconImage: SentIcon },
+  { id: 5, label: "Schedule Hearing", iconImage: Calendar02Icon },
+  { id: 11, label: "Interim Order", iconImage: SentIcon },
   { id: 6, label: "Final Order", iconImage: FileValidationIcon },
-  { id: 7, label: "Resolved Details", iconImage: TickDouble01Icon },
+  // { id: 7, label: "Resolved Details", iconImage: TickDouble01Icon },
   // { id: 8, label: "Send  Details", iconImage: SentIcon },
 ];

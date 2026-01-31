@@ -87,12 +87,12 @@ const LocationDetail = ({
             </div>
             <p className="text-[#000000] text-sm">{complaint?.tehsil?.name}</p>
           </div>
-          <div className="flex flex-col gap-0.5">
+          {/* <div className="flex flex-col gap-0.5">
             <p className="text-[#555555] text-sm">Lat Lon</p>
             <p className="text-[#000000] text-sm">{`${complaint?.latitude?.toFixed(
               2,
             )}-${complaint?.longitude?.toFixed(2)}`}</p>
-          </div>
+          </div> */}
         </div>
 
         <div className="bg-[rgba(29,28,29,0.13)] h-px w-full my-2!" />

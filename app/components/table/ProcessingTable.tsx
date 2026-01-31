@@ -47,10 +47,9 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
     { label: "Assignee To", sortable: "assigneeTo" },
     { label: "Shop Name" },
     { label: "Shop Phone No" },
-    { label: "Nature of Complaint", sortable: "complaintType" },
+
     { label: "Section Name", sortable: "sectionName" },
-    { label: "Section Description" },
-    { label: "Category", sortable: "categoryName" },
+    { label: "Nature of Complaint" },
     { label: "Remarks" },
     { label: "Assignee Remarks" },
     { label: "Type", sortable: "type" },
@@ -142,11 +141,7 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
                   {index + 1}
                 </TableBodyCell>
                 <TableBodyCell className="font-semibold">
-                  {formatComplaintId(
-                    item?.id,
-                    item?.entryType,
-                    item?.createdAt,
-                  )}
+                  {item?.caseNo}
                 </TableBodyCell>
 
                 <TableBodyCell>{formatDate(item?.createdAt)}</TableBodyCell>
@@ -165,7 +160,7 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
 
                 <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
 
-                <TableBodyCell>{item?.sectionCategoryName}</TableBodyCell>
+                {/* <TableBodyCell>{item?.sectionCategoryName}</TableBodyCell> */}
 
                 <TableBodyCell>
                   {getUniqueSectionNumbers(item?.sectionsDetails)}
@@ -175,7 +170,7 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
                   {item?.sectionsDetails?.map((s) => s?.description).join(",")}
                 </TableBodyCell>
 
-                <TableBodyCell>{item?.categoryName}</TableBodyCell>
+                {/* <TableBodyCell>{item?.categoryName}</TableBodyCell> */}
 
                 <TableBodyCell className="whitespace-nowrap">
                   {item?.remarks

@@ -357,7 +357,11 @@ const HearingProcess = ({
             <Button
               className="text-xs! bg-[#028B02]! cursor-pointer! hover:opacity-80!"
               onClick={() => {
-                window.location.href = meetingDetails.meetingLink_Admin;
+                window.open(
+                  meetingDetails.meetingLink_Admin,
+                  "_blank",
+                  "noopener,noreferrer",
+                );
               }}
             >
               <HugeiconsIcon icon={Add01Icon} size={18} />

@@ -9,6 +9,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { PieLabelRenderProps } from "recharts";
 
 const GRADIENTS = [
   { from: "#036CCF", to: "#013769" },
@@ -55,9 +56,43 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
   //       )
   //     : { value: 0 };
 
+  const renderCountLabel = (props: PieLabelRenderProps) => {
+    const { cx, cy, midAngle, innerRadius, outerRadius, value } = props;
+
+    if (
+      typeof cx !== "number" ||
+      typeof cy !== "number" ||
+      typeof midAngle !== "number" ||
+      typeof innerRadius !== "number" ||
+      typeof outerRadius !== "number" ||
+      typeof value !== "number"
+    ) {
+      return null;
+    }
+
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="#fff"
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize={10}
+        fontWeight={600}
+      >
+        {value}
+      </text>
+    );
+  };
+
   return (
     <div className="bg-white border border-[#E5E7EB] rounded-2xl col-span-12 lg:col-span-5">
-      <div className="flex gap-1.5 items-center px-5! py-3.5!">
+      <div className="flex gap-1.5 items-center px-5! py-3!">
         <div className="w-12 h-12 bg-[linear-gradient(135deg,#ED4141_0%,#DD2828_100%)] rounded-[10px] flex items-center justify-center">
           <Image
             src={`/icons/section-chart.png`}
@@ -73,7 +108,7 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
           </p> */}
         </div>
       </div>
-      <div className="h-[370px]">
+      <div className="h-[390px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <defs>
@@ -97,9 +132,10 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
               nameKey="name"
               cx="50%"
               cy="50%"
-              innerRadius={50}
+              innerRadius={30}
               stroke="none"
-              label
+              labelLine={false}
+              label={renderCountLabel}
             >
               {chartData.map((_, index) => (
                 <Cell key={index} fill={`url(#pieGradient-${index})`} />
@@ -137,7 +173,7 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
               }}
               formatter={(value, name) => [`${value} Complaints`, name]}
             />
-            {/* <Legend
+            <Legend
               verticalAlign="bottom"
               align="center"
               iconType="circle"
@@ -153,7 +189,7 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
                   {value}
                 </span>
               )}
-            /> */}
+            />
           </PieChart>
         </ResponsiveContainer>
       </div>

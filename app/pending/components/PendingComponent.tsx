@@ -10,6 +10,9 @@ import SearchFilter from "../../components/reuseable-filters/SearchFilter";
 import StaffDropdown from "../../components/reuseable-filters/StaffDropdown";
 import DistrictWiseDropdown from "../../components/reuseable-filters/DistrictWiseDropdown";
 import DateFilter from "../../components/DateFilter";
+import { ArrowLeft02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import PageHeader from "../../components/PageHeader";
 
 const PendingComponent = () => {
   const [refresh, setRefresh] = useState(false);
@@ -71,12 +74,10 @@ const PendingComponent = () => {
 
   return (
     <>
-      <div className="flex items-center gap-1 mb-2.5!">
-        <p className="text-[#111827] font-semibold">Pending Complaints</p>
-        <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-          {filteredData?.length?.toLocaleString()} Records
-        </p>
-      </div>
+      <PageHeader
+        title="Not Assigned Complaints"
+        count={filteredData?.length}
+      />
 
       <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
         <div className="flex justify-between items-center py-3! px-5!">

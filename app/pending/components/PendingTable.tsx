@@ -39,10 +39,8 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
     { label: "Date", sortable: "date" },
     { label: "Shop Name" },
     { label: "Shop Phone No" },
-    { label: "Nature of Complaint", sortable: "complaintType" },
     { label: "Section Name", sortable: "sectionName" },
-    { label: "Section Description" },
-    { label: "Category", sortable: "categoryName" },
+    { label: "Nature of Complaint" },
     { label: "Remarks" },
     { label: "Type", sortable: "type" },
     { label: "Evidence" },
@@ -124,11 +122,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
                   {index + 1}
                 </TableBodyCell>
                 <TableBodyCell className="font-semibold">
-                  {formatComplaintId(
-                    item?.id,
-                    item?.entryType,
-                    item?.createdAt,
-                  )}
+                  {item?.caseNo}
                 </TableBodyCell>
 
                 <TableBodyCell>{formatDate(item?.createdAt)}</TableBodyCell>
@@ -142,7 +136,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
 
                 <TableBodyCell>{item?.phoneNumber}</TableBodyCell>
 
-                <TableBodyCell>{item?.sectionCategoryName}</TableBodyCell>
+                {/* <TableBodyCell>{item?.sectionCategoryName}</TableBodyCell> */}
 
                 <TableBodyCell>
                   {getUniqueSectionNumbers(item?.sectionsDetails)}
@@ -152,7 +146,7 @@ const PendingTable = ({ rowsData, setRefresh }: PendingTableProps) => {
                   {item?.sectionsDetails?.map((s) => s?.description).join(",")}
                 </TableBodyCell>
 
-                <TableBodyCell>{item?.categoryName}</TableBodyCell>
+                {/* <TableBodyCell>{item?.categoryName}</TableBodyCell> */}
 
                 <TableBodyCell className="whitespace-nowrap">
                   {item?.remarks

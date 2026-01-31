@@ -10,6 +10,7 @@ import SearchFilter from "./reuseable-filters/SearchFilter";
 import StaffDropdown from "./reuseable-filters/StaffDropdown";
 import DistrictWiseDropdown from "./reuseable-filters/DistrictWiseDropdown";
 import DateFilter from "./DateFilter";
+import PageHeader from "./PageHeader";
 
 interface ProcessingListProps {
   title: string;
@@ -75,12 +76,7 @@ const ProcessingComponent = ({ title, status }: ProcessingListProps) => {
   // }, [proceedingData, search]);
   return (
     <>
-      <div className="flex items-center gap-1 mb-2.5!">
-        <p className="text-[#111827] font-semibold">{title}</p>
-        <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
-          {filteredData?.length?.toLocaleString()} Records
-        </p>
-      </div>
+      <PageHeader title={title} count={filteredData?.length} />
 
       <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
         <div className="flex justify-between items-center py-3! px-5!">

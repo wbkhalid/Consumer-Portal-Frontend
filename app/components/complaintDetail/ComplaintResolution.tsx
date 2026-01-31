@@ -20,6 +20,7 @@ const submitStatusdata = [
   { value: 4, label: "Decided (on Merit)" },
   { value: 5, label: "Ex-Parte" },
   { value: 7, label: "Non-Prosecution" },
+  { value: 7, label: "Remand" },
 ];
 
 const ComplaintResolution = ({
@@ -209,11 +210,11 @@ const ComplaintResolution = ({
       />
 
       <p className="block my-1! text-[#2A2A2B] font-semibold text-xs mt-2!">
-        Resolution Evidence
+        Upload Order
       </p>
-      <div className="grid grid-cols-12 gap-1.5 mt-1!">
+      <div className="mt-1!">
         <div
-          className="flex justify-center items-center gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-5! rounded-md cursor-pointer  relative col-span-6"
+          className="flex justify-center items-center gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-5! rounded-md cursor-pointer  relative "
           onClick={() => !imagePreview && imageInputRef.current?.click()}
         >
           {!imagePreview ? (
@@ -224,7 +225,7 @@ const ComplaintResolution = ({
                 className="w-6 h-6"
               />
               <p className="font-semibold text-[#4A5565] text-sm mb-1!">
-                Upload Case Decision Document
+                Upload
               </p>
               <p className="text-xs text-[#545861] font-medium">
                 JPG, PNG (Max: 5MB)
@@ -259,7 +260,7 @@ const ComplaintResolution = ({
           />
         </div>
 
-        <div
+        {/* <div
           className="flex justify-center items-center gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-4! rounded-md cursor-pointer  relative col-span-6"
           onClick={() => !videoPreview && videoInputRef.current?.click()}
         >
@@ -304,7 +305,7 @@ const ComplaintResolution = ({
             ref={videoInputRef}
             onChange={handleVideoChange}
           />
-        </div>
+        </div> */}
       </div>
 
       <p className="block mb-1! mt-2! text-[#2A2A2B] font-semibold text-xs">
@@ -326,7 +327,7 @@ const ComplaintResolution = ({
         ))}
       </div>
       <CustomTextField
-        label="Fine"
+        label="Fine Imposed"
         placeholder="Fine"
         value={fineAmount}
         onChange={(e) => setFineAmount(Number(e.target.value))}
@@ -346,7 +347,7 @@ const ComplaintResolution = ({
             disabled={loading}
             onClick={handleHearingComplaint}
           >
-            {loading ? "Resolving..." : "Set Resolved Status"}
+            {loading ? "Resolving..." : "Submit"}
           </Button>
         </div>
       )}

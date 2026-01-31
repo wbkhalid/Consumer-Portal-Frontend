@@ -7,6 +7,7 @@ import SearchFilter from "../../components/reuseable-filters/SearchFilter";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import FineFilterDropdown from "../../reports/custom-complaint-report/components/FineFilter";
+import PageHeader from "../../components/PageHeader";
 
 const FinedComplaintsComponent = () => {
   const router = useRouter();
@@ -36,12 +37,13 @@ const FinedComplaintsComponent = () => {
   }, [finedComplaintData, search]);
   return (
     <>
-      <div className="flex items-center gap-1 mb-2.5!">
+      {/* <div className="flex items-center gap-1 mb-2.5!">
         <p className="text-[#111827] font-semibold">Fined Complaints</p>
         <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
           {filteredData?.length?.toLocaleString()} Records
         </p>
-      </div>
+      </div> */}
+      <PageHeader title="Fined Complaints" count={filteredData?.length} />
 
       <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
         <div className="flex justify-between items-center py-3! px-5!">

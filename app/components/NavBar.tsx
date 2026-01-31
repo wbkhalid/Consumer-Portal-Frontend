@@ -167,7 +167,7 @@ const NavBar = () => {
                 <Box className="bg-white/10! rounded-full p-0.5! pr-3! cursor-pointer">
                   <Flex align="center" gap="3" className="text-white">
                     <Avatar
-                      src="/logo.png"
+                      src="/logo.jpeg"
                       fallback="?"
                       radius="full"
                       size="3"

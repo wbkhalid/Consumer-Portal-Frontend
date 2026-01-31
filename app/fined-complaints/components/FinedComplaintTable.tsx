@@ -105,11 +105,7 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
                   {index + 1}
                 </TableBodyCell>
                 <TableBodyCell className="font-semibold">
-                  {formatComplaintId(
-                    item?.id,
-                    item?.entryType,
-                    item?.createdAt,
-                  )}
+                  {item?.caseNo}
                 </TableBodyCell>
 
                 <TableBodyCell>

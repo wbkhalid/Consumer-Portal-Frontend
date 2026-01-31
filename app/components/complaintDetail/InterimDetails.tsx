@@ -1,34 +1,26 @@
 import { useRef, useState } from "react";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import CustomTextArea from "../CustomTextArea";
-import CustomTextField from "../CustomTextField";
 import { toast } from "react-toastify";
 import {
   canEditable,
-  decionsVideos,
-  DecisionPhotos,
   formatDate,
-  uploadFile,
+  toLocal,
   uploadMultipleFiles,
 } from "../../utils/utils";
-import { Button, Dialog } from "@radix-ui/themes";
+import { Button } from "@radix-ui/themes";
 import { RxCross2 } from "react-icons/rx";
-import Cookies from "js-cookie";
 import apiClient from "../../services/api-client";
 import { COMPLAINT_API } from "../../APIs";
 import useGetMeetingVideos from "../../hooks/useGetMeetingVideos";
-
-const submitStatusdata = [
-  { value: 4, label: "Decided on Merit" },
-  { value: 5, label: "Ex-Parte" },
-  { value: 7, label: "Non-Prosecution" },
-];
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { format } from "date-fns";
 
 const InterimDetails = ({
   complaint,
   setMediaModal,
-  //   onSuccess,
-  //   onClose,
+  onSuccess,
 }: {
   complaint: ManageComplainsData | null;
   setMediaModal: React.Dispatch<
@@ -38,8 +30,7 @@ const InterimDetails = ({
       url: string | null;
     }>
   >;
-  //   onSuccess: () => void;
-  //   onClose: () => void;
+  onSuccess: () => void;
 }) => {
   const loginUser = canEditable();
   const { data: meetingVideos } = useGetMeetingVideos({ id: complaint?.id });
@@ -49,12 +40,12 @@ const InterimDetails = ({
 
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    // Optional: Check size for each file
     const tooLarge = Array.from(files).some(
       (file) => file.size > 5 * 1024 * 1024,
     );
@@ -63,7 +54,6 @@ const InterimDetails = ({
       return;
     }
 
-    // Append new previews to existing previews
     const newPreviews = Array.from(files).map((file) =>
       URL.createObjectURL(file),
     );
@@ -72,7 +62,6 @@ const InterimDetails = ({
     try {
       const uploadedFiles = await uploadMultipleFiles(e, "refdocument");
       const urls = uploadedFiles?.map((file: any) => file.fileUrl);
-      // Append new uploaded URLs to existing URLs
       setImageUrls((prev) => [...prev, ...urls]);
       console.log("Uploaded URLs:", urls);
     } catch (error) {
@@ -98,10 +87,6 @@ const InterimDetails = ({
       toast.warning("Please enter remarks for the  complaint.");
       return;
     }
-    if (imageUrls?.length === 0) {
-      toast.warning("Please Uplaod document");
-      return;
-    }
 
     try {
       setLoading(true);
@@ -110,6 +95,7 @@ const InterimDetails = ({
         complaintId: complaint?.id,
         interimRemarks: interimRemarks,
         createdBy: loginUser,
+        createdAt: new Date().toISOString(),
         interimOrderFilesPath: imageUrls?.map((url) => ({
           filePath: url,
           fileType: 0,
@@ -130,8 +116,7 @@ const InterimDetails = ({
           response?.data?.message || "Interim details added successfully.",
         );
 
-        // onSuccess();
-        // onClose();
+        onSuccess();
       }
     } catch (error) {
       console.error("Error Hearing Date:", error);
@@ -141,19 +126,15 @@ const InterimDetails = ({
     }
   };
   return (
-    <div className="px-5! py-4!">
-      {/* <p className="text-sm text-[#555555] font-medium mb-2.5!">
-        Hearing Details(Interim)
-      </p> */}
-      <div></div>
+    <div className="px-5! py-4! ">
       <CustomTextArea
-        label="Appellate Hearing"
-        placeholder="Remarks"
+        label="Interim Order"
+        placeholder="Type..."
         value={interimRemarks}
         onChange={(e) => setInterimRemarks(e.target.value)}
       />
 
-      <p className="block my-1! text-[#2A2A2B] font-semibold text-xs mt-2!">
+      <p className="my-1! text-[#2A2A2B] font-semibold text-xs mt-2!">
         Evidence (CNIC etc.)
       </p>
       <div
@@ -167,9 +148,7 @@ const InterimDetails = ({
               alt="complaint-album-gray"
               className="w-6 h-6"
             />
-            <p className="font-semibold text-[#4A5565] text-sm mb-1">
-              Upload Interim Documents
-            </p>
+            <p className="font-semibold text-[#4A5565] text-sm mb-1">Upload</p>
             <p className="text-xs text-[#545861] font-medium">
               JPG, PNG (Max: 5MB each)
             </p>
@@ -205,96 +184,8 @@ const InterimDetails = ({
         />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <p className="text-sm font-medium text-[#555555]">
-          Previous Interim Details
-        </p>
-        <div>
-          {complaint?.interimDetails?.map((interim, i) => (
-            <div>
-              <p>
-                <span>Interim Remarks:</span>
-                {interim?.interimRemarks}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {interim?.interimOrderFilesPath?.map((imgDetail) => (
-                  <div
-                    key={i}
-                    className="w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
-                    onClick={() =>
-                      setMediaModal({
-                        open: true,
-                        type: "image",
-                        url: imgDetail?.filePath,
-                      })
-                    }
-                  >
-                    <img
-                      src={imgDetail?.filePath}
-                      alt={`file-${i}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <p className="text-sm font-medium text-[#555555]">Meeting Videos</p>
-
-        <div>
-          {meetingVideos && meetingVideos?.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {meetingVideos &&
-                meetingVideos?.length > 0 &&
-                meetingVideos?.map((file, i) => (
-                  <div>
-                    <div
-                      key={`vid-${i}`}
-                      className="relative w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
-                      onClick={() =>
-                        setMediaModal({
-                          open: true,
-                          type: "video",
-                          url: file?.videoRecordingLink,
-                        })
-                      }
-                    >
-                      <video
-                        src={file?.videoRecordingLink}
-                        className="w-full h-full object-cover"
-                        muted
-                      />
-                    </div>
-                    <p className="text-xs">
-                      {formatDate(file?.createdAt)}{" "}
-                      <span>
-                        {" "}
-                        {new Date(file?.createdAt).toLocaleTimeString("en-Pk", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: true,
-                        })}
-                      </span>{" "}
-                    </p>
-                  </div>
-                ))}
-            </div>
-          ) : (
-            <p className="text-xs text-gray-400 italic">No media available.</p>
-          )}
-        </div>
-      </div>
-
       {loginUser === complaint?.assignedTo && (
         <div className="flex justify-end items-center my-3!">
-          {/* <div className="text-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!">
-            <p> Close</p>
-          </div> */}
-
           <Button
             className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
             disabled={loading}
@@ -304,6 +195,119 @@ const InterimDetails = ({
           </Button>
         </div>
       )}
+      {((complaint?.interimDetails?.length ?? 0) > 0 ||
+        (meetingVideos?.length ?? 0) > 0) && (
+        <div
+          onClick={() => setIsAccordionOpen((p) => !p)}
+          className="mt-5! flex justify-between items-center border border-[rgba(29,28,29,0.13)]  rounded-xl px-4! py-3! cursor-pointer bg-[#F9FAFB]"
+        >
+          <p className="text-sm font-semibold">Previous Record</p>
+          <span className={`text-xs ${isAccordionOpen ? "rotate-180" : ""}`}>
+            <HugeiconsIcon icon={ArrowDown01Icon} />
+          </span>
+        </div>
+      )}
+
+      <div
+        className={`
+    overflow-hidden transition-all duration-300 ease-in-out
+    ${isAccordionOpen ? "max-h-fit opacity-100 mt-3!" : "max-h-0 opacity-0"}
+  `}
+      >
+        <div className="space-y-4">
+          {complaint?.interimDetails?.map((i, idx) => (
+            <div
+              key={idx}
+              className="border border-[rgba(29,28,29,0.13)] rounded-xl bg-white p-4! shadow-xs mb-2!"
+            >
+              <p className="text-sm font-semibold">
+                {formatDate(i.createdAt)}
+                {"-"}
+                <span className="text-xs text-gray-500">
+                  {/* {new Date(i.createdAt).toLocaleTimeString("en-PK", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  })} */}
+                  {i?.createdAt && format(toLocal(i?.createdAt), "hh:mm a")}
+                </span>
+              </p>
+
+              <p className="text-sm mt-1!">
+                <span className="font-semibold">Interm Remarks: </span>
+                {i.interimRemarks}
+              </p>
+
+              {i?.interimOrderFilesPath?.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2!">
+                  {i?.interimOrderFilesPath.map((img, j) => (
+                    <div
+                      key={j}
+                      className="w-20 h-20 border border-[rgba(29,28,29,0.13)] rounded-lg overflow-hidden cursor-pointer"
+                      onClick={() =>
+                        setMediaModal({
+                          open: true,
+                          type: "image",
+                          url: img.filePath,
+                        })
+                      }
+                    >
+                      <img
+                        src={img.filePath}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+
+          <div>
+            <p className="text-sm font-medium mb-2!">Meeting Recordings</p>
+
+            {meetingVideos?.length ? (
+              <div className="flex flex-wrap gap-2">
+                {meetingVideos.map((v, i) => (
+                  <div key={i} className="mb-5!">
+                    <div
+                      className="w-[90px] h-[90px] border border-[rgba(29,28,29,0.13)] rounded-xl overflow-hidden cursor-pointer"
+                      onClick={() =>
+                        setMediaModal({
+                          open: true,
+                          type: "video",
+                          url: v.videoRecordingLink,
+                        })
+                      }
+                    >
+                      <video
+                        src={v.videoRecordingLink}
+                        muted
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div></div>
+                    <p className="text-xs text-center mt-1!">
+                      {formatDate(v.createdAt)}
+                    </p>
+                    <p className="text-xs text-center text-gray-500">
+                      {new Date(v?.createdAt).toLocaleTimeString("en-PK", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-gray-400 italic">
+                No meeting recordings
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
