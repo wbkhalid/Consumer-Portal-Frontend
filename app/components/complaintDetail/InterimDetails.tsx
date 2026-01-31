@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import {
   canEditable,
   formatDate,
+  getRole,
   toLocal,
   uploadMultipleFiles,
 } from "../../utils/utils";
@@ -21,6 +22,7 @@ const InterimDetails = ({
   complaint,
   setMediaModal,
   onSuccess,
+  fromAppeal = false,
 }: {
   complaint: ManageComplainsData | null;
   setMediaModal: React.Dispatch<
@@ -31,8 +33,16 @@ const InterimDetails = ({
     }>
   >;
   onSuccess: () => void;
+  fromAppeal: boolean;
 }) => {
   const loginUser = canEditable();
+  const role = getRole();
+
+  const isDGorSecretary = role === "DG" || role === "SECRETARY";
+
+  const canShowResolveButton = fromAppeal
+    ? isDGorSecretary
+    : loginUser === complaint?.assignedTo;
   const { data: meetingVideos } = useGetMeetingVideos({ id: complaint?.id });
   const [interimRemarks, setInterimRemarks] = useState("");
   const [loading, setLoading] = useState(false);
@@ -184,7 +194,7 @@ const InterimDetails = ({
         />
       </div>
 
-      {loginUser === complaint?.assignedTo && (
+      {canShowResolveButton && (
         <div className="flex justify-end items-center my-3!">
           <Button
             className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
@@ -215,53 +225,60 @@ const InterimDetails = ({
   `}
       >
         <div className="space-y-4">
-          {complaint?.interimDetails?.map((i, idx) => (
-            <div
-              key={idx}
-              className="border border-[rgba(29,28,29,0.13)] rounded-xl bg-white p-4! shadow-xs mb-2!"
-            >
-              <p className="text-sm font-semibold">
-                {formatDate(i.createdAt)}
-                {"-"}
-                <span className="text-xs text-gray-500">
-                  {/* {new Date(i.createdAt).toLocaleTimeString("en-PK", {
+          {complaint?.interimDetails
+            ?.slice()
+            ?.sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime(),
+            )
+            ?.map((i, idx) => (
+              <div
+                key={idx}
+                className="border border-[rgba(29,28,29,0.13)] rounded-xl bg-white p-4! shadow-xs mb-2!"
+              >
+                <p className="text-sm font-semibold">
+                  {formatDate(i.createdAt)}
+                  {"-"}
+                  <span className="text-xs text-gray-500">
+                    {/* {new Date(i.createdAt).toLocaleTimeString("en-PK", {
                     hour: "2-digit",
                     minute: "2-digit",
                     hour12: true,
                   })} */}
-                  {i?.createdAt && format(toLocal(i?.createdAt), "hh:mm a")}
-                </span>
-              </p>
+                    {i?.createdAt && format(toLocal(i?.createdAt), "hh:mm a")}
+                  </span>
+                </p>
 
-              <p className="text-sm mt-1!">
-                <span className="font-semibold">Interm Remarks: </span>
-                {i.interimRemarks}
-              </p>
+                <p className="text-sm mt-1!">
+                  <span className="font-semibold">Interim Remarks: </span>
+                  {i.interimRemarks}
+                </p>
 
-              {i?.interimOrderFilesPath?.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2!">
-                  {i?.interimOrderFilesPath.map((img, j) => (
-                    <div
-                      key={j}
-                      className="w-20 h-20 border border-[rgba(29,28,29,0.13)] rounded-lg overflow-hidden cursor-pointer"
-                      onClick={() =>
-                        setMediaModal({
-                          open: true,
-                          type: "image",
-                          url: img.filePath,
-                        })
-                      }
-                    >
-                      <img
-                        src={img.filePath}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+                {i?.interimOrderFilesPath?.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2!">
+                    {i?.interimOrderFilesPath.map((img, j) => (
+                      <div
+                        key={j}
+                        className="w-20 h-20 border border-[rgba(29,28,29,0.13)] rounded-lg overflow-hidden cursor-pointer"
+                        onClick={() =>
+                          setMediaModal({
+                            open: true,
+                            type: "image",
+                            url: img.filePath,
+                          })
+                        }
+                      >
+                        <img
+                          src={img.filePath}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
 
           <div>
             <p className="text-sm font-medium mb-2!">Meeting Recordings</p>

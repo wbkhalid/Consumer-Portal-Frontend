@@ -85,6 +85,7 @@ export interface ComplainDashboardType {
   avgResolutionTime: number;
   appDownloadsCount: number;
   appealsCount: number;
+  remandsCount: number;
   totalFinesCollected: number;
   complaintCategoryStats: ComplaintCategoryStatsType[];
   sectionTypeStats: SectionTypeStatsType[];

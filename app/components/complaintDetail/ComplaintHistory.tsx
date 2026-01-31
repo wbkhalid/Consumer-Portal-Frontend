@@ -119,14 +119,14 @@ const ComplaintHistory = ({ complaint, setMediaModal }: HistoryProps) => {
 
       <div className="flex justify-between mt-2!">
         <div className="flex flex-col gap-0.5">
-          <p className="text-[#555555] text-sm">Fined Amount</p>
+          <p className="text-[#555555] text-sm">Fine Imposed</p>
           <p className="text-[15px]">
             {complaint?.finedAmount?.toLocaleString()}
             <span className="text-xs font-semibold"> (PKR)</span>
           </p>
         </div>
         <div className="flex flex-col gap-0.5">
-          <p className="text-[#555555] text-sm">Resolved Status</p>
+          <p className="text-[#555555] text-sm">Complaint Status</p>
           <p className="text-[15px]">
             {
               statusData?.find((status) => status?.id === complaint?.status)

@@ -68,12 +68,15 @@ const AppealDialog = ({
           />
         )}
 
-        {step === 5 && <HearingProcess complaint={selectedComplaint} />}
+        {step === 5 && (
+          <HearingProcess complaint={selectedComplaint} fromAppeal={true} />
+        )}
         {step === 6 && (
           <ComplaintResolution
             complaint={selectedComplaint}
             onSuccess={onSuccess}
             onClose={onClose}
+            fromAppeal={true}
           />
         )}
 
@@ -96,6 +99,7 @@ const AppealDialog = ({
             complaint={selectedComplaint}
             setMediaModal={setMediaModal}
             onSuccess={onSuccess}
+            fromAppeal={true}
             // setMediaModal={setMediaModal}
           />
         )}

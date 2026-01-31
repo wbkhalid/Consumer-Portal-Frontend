@@ -16,7 +16,6 @@ import { Dialog } from "@radix-ui/themes";
 import { useRouter, useSearchParams } from "next/navigation";
 import { sort } from "fast-sort";
 import ComplaintDetailDialog from "../dialog/ComplaintDetailDialog";
-import ProcessingDetailDilaog from "../dialog/ProcessingDetailDilaog";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { generateComplaintPDF } from "../../utils/generateComplainPdf";

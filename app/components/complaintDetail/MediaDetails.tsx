@@ -56,7 +56,7 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
               <HugeiconsIcon icon={Album02Icon} color="#ffffff" />
             </div>
             <p className="text-[#4A5565] font-medium text-sm">
-              Photos :{images?.length}
+              Evidence:{images?.length}
             </p>
           </div>
           {/* <div className="flex flex-col items-center">
@@ -103,7 +103,7 @@ const MediaDetails = ({ complaint, setMediaModal }: MediaDetailsProps) => {
 
         {/* Files */}
         <div className="flex flex-col gap-1.5">
-          <p className="text-sm font-medium text-[#555555]">Files</p>
+          <p className="text-sm font-medium text-[#555555]">Evidence</p>
 
           <div>
             {complaint?.listOfImage?.length ? (

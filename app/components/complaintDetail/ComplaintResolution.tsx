@@ -20,17 +20,20 @@ const submitStatusdata = [
   { value: 4, label: "Decided (on Merit)" },
   { value: 5, label: "Ex-Parte" },
   { value: 7, label: "Non-Prosecution" },
-  { value: 7, label: "Remand" },
 ];
+
+const appealStatusData = [...submitStatusdata, { value: 13, label: "Remand" }];
 
 const ComplaintResolution = ({
   complaint,
   onSuccess,
   onClose,
+  fromAppeal = false,
 }: {
   complaint: ManageComplainsData | null;
   onSuccess: () => void;
   onClose: () => void;
+  fromAppeal?: boolean;
 }) => {
   const loginUser = canEditable();
   const [selectedStatus, setSelectedStatus] = useState<number | null>(null);
@@ -48,9 +51,11 @@ const ComplaintResolution = ({
 
   const isDGorSecretary = role === "DG" || role === "SECRETARY";
 
-  // const canShowResolveButton = fromAppeal
-  //   ? isDGorSecretary
-  //   : loginUser === complaint?.assignedTo;
+  const canShowResolveButton = fromAppeal
+    ? isDGorSecretary
+    : loginUser === complaint?.assignedTo;
+
+  const statusData = fromAppeal ? appealStatusData : submitStatusdata;
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -312,7 +317,7 @@ const ComplaintResolution = ({
         Resolution Status
       </p>
       <div className="flex gap-3 mb-2!">
-        {submitStatusdata?.map((status) => (
+        {statusData?.map((status) => (
           <div
             className={`flex-1 ${
               selectedStatus === status?.value
@@ -333,7 +338,7 @@ const ComplaintResolution = ({
         onChange={(e) => setFineAmount(Number(e.target.value))}
       />
 
-      {loginUser === complaint?.assignedTo && (
+      {canShowResolveButton && (
         <div className="flex justify-end items-center my-3!">
           {/* <div
             className="text-center border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]!"

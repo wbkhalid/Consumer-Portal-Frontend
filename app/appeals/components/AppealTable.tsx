@@ -152,15 +152,7 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
             </tbody>
           </table>
         </div>
-        {/* <div className="absolute bottom-0 py-1! w-full bg-white border-t border-[#e2e8f0]">
-          <PaginationControls
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-          />
-        </div> */}
+
         <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
           <Dialog.Content className="p-0! lg:max-w-[920px]! max-h-[80vh]! overflow-hidden!">
             <AppealDialog

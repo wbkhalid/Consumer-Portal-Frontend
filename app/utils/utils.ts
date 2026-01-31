@@ -21,7 +21,7 @@ export const formatDate = (dateString?: string) => {
   if (!dateString) return "-";
   try {
     const localDate = new Date(dateString);
-    return format(localDate, "MMM dd, yyyy");
+    return format(localDate, "dd MMM yyyy");
   } catch {
     return "-";
   }
@@ -162,6 +162,8 @@ export const statusData = [
   { id: 5, label: "Ex-Parte" },
   { id: 6, label: "Withdraw" },
   { id: 7, label: "Non-Prosecution" },
+  { id: 12, label: "Alternate Dispute Resolution (ADR)" },
+  { id: 13, label: "Remand" },
 ];
 
 export const appealStatusData = [

@@ -125,14 +125,14 @@ const AssignDetails = ({
           onChange={(e) => setRemarks(e.target.value)}
         />
       </div>
-      <div className="flex justify-between items-center mt-5!">
+      <div className="flex justify-end items-center mt-5!">
         {/* <Dialog.Close> */}
-        <div
+        {/* <div
           className="border! border-[#E2E8F0]! text-[#606060] rounded-[13px] py-1.5! px-3.5! cursor-pointer min-w-[150px]! text-[15px]! text-center"
           onClick={onClose}
         >
           <p> Close</p>
-        </div>
+        </div> */}
         {/* </Dialog.Close> */}
 
         <Button

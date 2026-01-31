@@ -94,12 +94,15 @@ const ComplaintDetailDialog = ({
             onClose={onClose}
           />
         )}
-        {step === 6 && <HearingProcess complaint={selectedComplaint} />}
+        {step === 6 && (
+          <HearingProcess complaint={selectedComplaint} fromAppeal={false} />
+        )}
         {step === 7 && (
           <ComplaintResolution
             complaint={selectedComplaint}
             onSuccess={onSuccess}
             onClose={onClose}
+            fromAppeal={false}
           />
         )}
 
@@ -122,6 +125,7 @@ const ComplaintDetailDialog = ({
             complaint={selectedComplaint}
             setMediaModal={setMediaModal}
             onSuccess={onSuccess}
+            fromAppeal={false}
             // setMediaModal={setMediaModal}
           />
         )}

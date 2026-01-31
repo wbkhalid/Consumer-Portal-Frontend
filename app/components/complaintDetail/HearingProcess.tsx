@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@radix-ui/themes";
+import { Button, Spinner } from "@radix-ui/themes";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
@@ -15,12 +15,11 @@ import {
   canEditable,
   copyToClipboard,
   formatDate,
-  toLocal,
+  getRole,
 } from "../../utils/utils";
 import cookies from "js-cookie";
 import apiClient from "../../services/api-client";
 import { ADMIN_DASHBOARD_API } from "../../APIs";
-import Cookies from "js-cookie";
 
 interface MeetingDetails {
   id: number;
@@ -30,14 +29,24 @@ interface MeetingDetails {
   meetingLink_Admin: string;
   meetingLink_Client: string;
   ptclMeetingStatus: number;
+  isExpired: boolean;
 }
 
 const HearingProcess = ({
   complaint,
+  fromAppeal = false,
 }: {
   complaint: ManageComplainsData | null;
+  fromAppeal: boolean;
 }) => {
   const loginUser = canEditable();
+  const role = getRole();
+
+  const isDGorSecretary = role === "DG" || role === "SECRETARY";
+
+  const canShowResolveButton = fromAppeal
+    ? isDGorSecretary
+    : loginUser === complaint?.assignedTo;
   const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(
     null,
   );
@@ -47,48 +56,6 @@ const HearingProcess = ({
 
   const ptclUserName = cookies.get("ptclUsername") || "";
   const ptclPassword = cookies.get("ptclPassword") || "";
-
-  const reScheduleMeeting = async (meetingDetails: MeetingDetails) => {
-    if (!hearingDate) {
-      toast.warning("Please select hearing date");
-      return;
-    }
-    try {
-      const payload = {
-        id: meetingDetails?.id,
-        caseNo: meetingDetails?.caseNo,
-        meetingDate: format(hearingDate, "yyyy-MM-dd'T'HH:mm"),
-        meetingTime: format(hearingDate, "yyyy-MM-dd'T'HH:mm"),
-        meetingLink_Admin: meetingDetails?.meetingLink_Admin,
-        meetingLink_Client: meetingDetails?.meetingLink_Client,
-        meeting_Remarks: "string123",
-        ptclMeetingStatus: 3,
-      };
-
-      const response = await apiClient.post(
-        `${ADMIN_DASHBOARD_API}/reschedule-meeting
-  `,
-        payload,
-      );
-
-      if (response?.data?.responseCode === 200) {
-        toast?.success(response?.data?.responseMessage || "Meeting reschedule");
-        await sendMeetingLinks(response?.data?.data);
-
-        setHearingDate(null);
-        setTimeout(() => {
-          getMeetingDetails();
-        }, 2000);
-      }
-
-      console.log(response?.data?.data, "response reschudle");
-    } catch (error) {
-      console.error("Error sending meeting links", error);
-      toast.error("Failed to send meeting links");
-    } finally {
-      setShowScheduler(false);
-    }
-  };
 
   const sendMeetingLinks = async (meetingDetails: any) => {
     try {
@@ -102,8 +69,6 @@ const HearingProcess = ({
       const meetingLink =
         meetingDetails?.meeting_link_client ??
         meetingDetails?.meetingLink_Client;
-
-      console.log(meetingLink, "meetingLink");
 
       const payload = {
         complaintId: complaint?.id,
@@ -139,8 +104,8 @@ const HearingProcess = ({
 
       console.log(data, "data2222444");
 
-      if (data) {
-        setMeetingDetails(data);
+      if (data?.data) {
+        setMeetingDetails(data?.data);
         setShowScheduler(false);
       } else {
         setMeetingDetails(null);
@@ -204,6 +169,7 @@ const HearingProcess = ({
   };
 
   const scheduleHearing = async () => {
+    if (!complaint?.id) return;
     if (!hearingDate) {
       toast.warning("Please select hearing date");
       return;
@@ -223,14 +189,15 @@ const HearingProcess = ({
       );
 
       const data = await response.json();
-      console.log(data, "..///data//...");
 
       if (data?.status === true && data?.token) {
-        await createMeeting(data?.token);
+        await createMeeting(data.token);
       } else {
         toast.error(data?.message);
+        setLoading(false);
       }
-    } catch {
+    } catch (error) {
+      console.error(error);
       toast.error("Failed to schedule hearing");
       setLoading(false);
     }
@@ -247,17 +214,13 @@ const HearingProcess = ({
                 <b>Meeting ID:</b> {meetingDetails.id}
               </p>
 
-              {meetingDetails.ptclMeetingStatus === 0 ? (
-                <span className="px-3! py-1! rounded-full text-xs bg-[#FFF7D6] text-[#CBA611] border">
-                  Scheduled
-                </span>
-              ) : meetingDetails.ptclMeetingStatus === 3 ? (
-                <span className="px-3! py-1! rounded-full text-xs bg-[#FFF7D6] text-[#CBA611] border">
-                  Re-Scheduled
+              {meetingDetails?.isExpired ? (
+                <span className="px-3! py-1! rounded-full text-xs bg-[#f4caca] text-[#f02727] border">
+                  Expired
                 </span>
               ) : (
-                <span className="px-3 py-1 rounded-full text-xs bg-[#E6F7EF] text-green-600 border">
-                  Completed
+                <span className="px-3! py-1! rounded-full text-xs bg-[#FFF7D6] text-[#CBA611] border">
+                  Scheduled
                 </span>
               )}
             </div>
@@ -283,9 +246,9 @@ const HearingProcess = ({
             <div className="flex gap-1 items-center">
               <p className="break-all">
                 <b>Admin Link:</b>{" "}
-                {meetingDetails.meetingLink_Admin.length > 70
-                  ? meetingDetails.meetingLink_Admin.slice(0, 70) + "..."
-                  : meetingDetails.meetingLink_Admin}
+                {meetingDetails?.meetingLink_Admin?.length > 70
+                  ? meetingDetails?.meetingLink_Admin?.slice(0, 70) + "..."
+                  : meetingDetails?.meetingLink_Admin}
               </p>
 
               <HugeiconsIcon
@@ -301,9 +264,9 @@ const HearingProcess = ({
             <div className="flex gap-1 items-center">
               <p className="break-all">
                 <b>Client Link:</b>{" "}
-                {meetingDetails.meetingLink_Client.length > 70
-                  ? meetingDetails.meetingLink_Client.slice(0, 70) + "..."
-                  : meetingDetails.meetingLink_Client}
+                {meetingDetails?.meetingLink_Client?.length > 70
+                  ? meetingDetails?.meetingLink_Client?.slice(0, 70) + "..."
+                  : meetingDetails?.meetingLink_Client}
               </p>
 
               <HugeiconsIcon
@@ -333,27 +296,22 @@ const HearingProcess = ({
               onChange={(e) => setHearingDate(parseISO(e.target.value))}
             />
 
-            {loginUser === complaint?.assignedTo && (
+            {canShowResolveButton && (
               <Button
                 className="rounded-full! text-xs! cursor-pointer!"
-                onClick={
-                  meetingDetails && showScheduler
-                    ? () => reScheduleMeeting(meetingDetails)
-                    : scheduleHearing
-                }
+                onClick={scheduleHearing}
                 disabled={loading}
               >
                 <HugeiconsIcon icon={Add01Icon} size={18} />
-                {loading ? "Scheduling..." : "Schedule Hearing"}
+                {loading ? <Spinner /> : "Schedule Hearing"}
               </Button>
             )}
           </div>
         )}
       </div>
-      {loginUser === complaint?.assignedTo &&
-        meetingDetails &&
-        !showScheduler && (
-          <div className="flex gap-2.5! mt-3!">
+      {canShowResolveButton && meetingDetails && !showScheduler && (
+        <div className="flex gap-2.5! mt-3!">
+          {!meetingDetails?.isExpired && (
             <Button
               className="text-xs! bg-[#028B02]! cursor-pointer! hover:opacity-80!"
               onClick={() => {
@@ -367,15 +325,23 @@ const HearingProcess = ({
               <HugeiconsIcon icon={Add01Icon} size={18} />
               Start Video Meeting
             </Button>
+          )}
 
+          {meetingDetails?.isExpired && (
             <Button
               className="text-xs! text-[#606060]! border! border-[#606060]! bg-transparent! cursor-pointer! hover:opacity-80!"
               onClick={() => setShowScheduler(true)}
             >
               Reschedule
             </Button>
-          </div>
-        )}
+          )}
+        </div>
+      )}
+      <Button>Uplaod Video</Button>
+      <p>
+        Where compalainant/Respondant are Present in office for proceeding and
+        if video is recoreded upload here
+      </p>
     </div>
   );
 };

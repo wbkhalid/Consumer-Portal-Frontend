@@ -185,6 +185,17 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
           percentageText="text-[#DC2A7A]"
         />
       </Link>
+      <Link href={`/remand${params.toString() ? `?${params.toString()}` : ""}`}>
+        <CustomStatCard
+          title="Remand"
+          value={data?.remandsCount}
+          icon={"appeals.png"}
+          iconBg="bg-[linear-gradient(135deg,#EA4495_0%,#DC2A7A_100%)]"
+          // percentage={"15 Days"}
+          // percentageBg="bg-[rgba(220,42,122,0.15)]"
+          // percentageText="text-[#DC2A7A]"
+        />
+      </Link>
       {/* <Link
         href={`/red-hot-complaints${
           params.toString() ? `?${params.toString()}` : ""
