@@ -1,6 +1,8 @@
 "use client";
 
 import { Dialog } from "@radix-ui/themes";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Cancel01Icon } from "@hugeicons/core-free-icons";
 
 const FullScreenMediaModal = ({
   open,
@@ -17,8 +19,16 @@ const FullScreenMediaModal = ({
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content className="p-0! rounded-sm! overflow-hidden bg-black">
-        <div className="w-[500px] h-[300px]">
+      <Dialog.Content className="p-0! rounded-none!  max-w-[70%]! h-[80vh] ">
+        <div
+          onClick={() => onOpenChange(false)}
+          className="absolute top-3 right-3 z-50 text-red-500 hover:opacity-70 cursor-pointer"
+        >
+          <HugeiconsIcon icon={Cancel01Icon} size={22} />
+        </div>
+
+        {/* Media Container */}
+        <div className="w-full h-full flex items-center justify-center">
           {type === "image" ? (
             <img
               src={url}
@@ -31,7 +41,7 @@ const FullScreenMediaModal = ({
               controls
               autoPlay
               playsInline
-              className="absolute inset-0 w-full h-full object-contain"
+              className="w-full h-full object-contain"
             />
           )}
         </div>

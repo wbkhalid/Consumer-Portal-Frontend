@@ -9,12 +9,15 @@ import {
   DecisionPhotos,
   getRole,
   uploadFile,
+  uploadMultipleFiles,
 } from "../../utils/utils";
-import { Button, Dialog } from "@radix-ui/themes";
+import { Button } from "@radix-ui/themes";
 import { RxCross2 } from "react-icons/rx";
 import Cookies from "js-cookie";
 import apiClient from "../../services/api-client";
 import { COMPLAINT_API } from "../../APIs";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { AddInvoiceIcon } from "@hugeicons/core-free-icons";
 
 const submitStatusdata = [
   { value: 4, label: "Decided (on Merit)" },
@@ -57,78 +60,119 @@ const ComplaintResolution = ({
 
   const statusData = fromAppeal ? appealStatusData : submitStatusdata;
 
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    console.log("Selected Image:", file);
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    if (!file) return;
-
-    // 5MB = 5 * 1024 * 1024
-    if (file.size > 5 * 1024 * 1024) {
-      toast.warning("Image size must be less than 5MB.");
+    const tooLarge = Array.from(files).some(
+      (file) => file.size > 5 * 1024 * 1024,
+    );
+    if (tooLarge) {
+      toast.warning("All images must be less than 5MB.");
       return;
     }
 
-    setImagePreview(URL.createObjectURL(file));
+    const newPreviews = Array.from(files).map((file) =>
+      URL.createObjectURL(file),
+    );
+    setImagePreviews((prev) => [...prev, ...newPreviews]);
 
     try {
-      const fileName = await uploadFile(e, DecisionPhotos);
-      setImageUrl(fileName?.data?.fileUrl);
-      console.log(fileName?.data?.fileUrl, "file");
+      const uploadedFiles = await uploadMultipleFiles(e, DecisionPhotos);
+      const urls = uploadedFiles?.map((file: any) => file.fileUrl);
+      setImageUrls((prev) => [...prev, ...urls]);
+      console.log("Uploaded URLs:", urls);
     } catch (error) {
-      toast.error("Error uploading file.");
+      toast.error("Error uploading files.");
       console.error("Upload error:", error);
     }
   };
 
-  const removeImage = () => {
-    setImageUrl("");
-    setImagePreview(null);
-    if (imageInputRef.current) {
-      imageInputRef.current.value = "";
-    }
+  const removeImageAt = (index: number) => {
+    const updatedUrls = [...imageUrls];
+    updatedUrls.splice(index, 1);
+    setImageUrls(updatedUrls);
+
+    const updatedPreviews = [...imagePreviews];
+    updatedPreviews.splice(index, 1);
+    setImagePreviews(updatedPreviews);
   };
 
-  const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   console.log("Selected Image:", file);
 
-    const url = URL.createObjectURL(file);
-    const video = document.createElement("video");
-    video.preload = "metadata";
+  //   if (!file) return;
 
-    video.preload = "metadata";
-    video.onloadedmetadata = async () => {
-      URL.revokeObjectURL(url);
+  //   if (file.size > 5 * 1024 * 1024) {
+  //     toast.warning("Image size must be less than 5MB.");
+  //     return;
+  //   }
 
-      const duration = video.duration;
-      if (duration > 15 * 60) {
-        toast.warning("Video must be less than 15 minutes.");
-        return;
-      }
-      video.src = url;
-    };
+  //   setImagePreview(URL.createObjectURL(file));
 
-    setVideoPreview(url);
+  //   try {
+  //     const fileName = await uploadFile(e, DecisionPhotos);
+  //     setImageUrl(fileName?.data?.fileUrl);
+  //     console.log(fileName?.data?.fileUrl, "file");
+  //   } catch (error) {
+  //     toast.error("Error uploading file.");
+  //     console.error("Upload error:", error);
+  //   }
+  // };
 
-    try {
-      const fileName = await uploadFile(e, decionsVideos);
-      setVideoUrl(fileName?.data?.fileUrl);
-      console.log(fileName?.data?.fileUrl, "file");
-    } catch (error) {
-      toast.error("Error uploading file.");
-      console.error("Upload error:", error);
-    }
-  };
+  // const removeImage = () => {
+  //   setImageUrl("");
+  //   setImagePreview(null);
+  //   if (imageInputRef.current) {
+  //     imageInputRef.current.value = "";
+  //   }
+  // };
 
-  const removeVideo = () => {
-    setVideoUrl("");
-    setVideoPreview(null);
+  // const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
 
-    if (videoInputRef.current) {
-      videoInputRef.current.value = "";
-    }
-  };
+  //   const url = URL.createObjectURL(file);
+  //   const video = document.createElement("video");
+  //   video.preload = "metadata";
+
+  //   video.preload = "metadata";
+  //   video.onloadedmetadata = async () => {
+  //     URL.revokeObjectURL(url);
+
+  //     const duration = video.duration;
+  //     if (duration > 15 * 60) {
+  //       toast.warning("Video must be less than 15 minutes.");
+  //       return;
+  //     }
+  //     video.src = url;
+  //   };
+
+  //   setVideoPreview(url);
+
+  //   try {
+  //     const fileName = await uploadFile(e, decionsVideos);
+  //     setVideoUrl(fileName?.data?.fileUrl);
+  //     console.log(fileName?.data?.fileUrl, "file");
+  //   } catch (error) {
+  //     toast.error("Error uploading file.");
+  //     console.error("Upload error:", error);
+  //   }
+  // };
+
+  // const removeVideo = () => {
+  //   setVideoUrl("");
+  //   setVideoPreview(null);
+
+  //   if (videoInputRef.current) {
+  //     videoInputRef.current.value = "";
+  //   }
+  // };
 
   const handleHearingComplaint = async () => {
     if (!complaint) return;
@@ -141,10 +185,10 @@ const ComplaintResolution = ({
       toast.warning("Please enter remarks for the resolved complaint.");
       return;
     }
-    if (!imageUrl) {
-      toast.warning("Please Uplaod document");
-      return;
-    }
+    // if (!imageUrl) {
+    //   toast.warning("Please Uplaod document");
+    //   return;
+    // }
 
     try {
       setLoading(true);
@@ -161,16 +205,10 @@ const ComplaintResolution = ({
         assigneeRemarks: complaint?.assigneeRemarks,
         closingRemarks: submittionRemarks,
         isClosed: true,
-        complaintDecisionFiles: [
-          {
-            filePath: imageUrl,
-            fileType: 0,
-          },
-          {
-            filePath: videoUrl,
-            fileType: 1,
-          },
-        ],
+        complaintDecisionFiles: imageUrls?.map((url) => ({
+          filePath: url,
+          fileType: 0,
+        })),
       };
 
       console.log("📤 Sending payload:", payload);
@@ -217,8 +255,63 @@ const ComplaintResolution = ({
       <p className="block my-1! text-[#2A2A2B] font-semibold text-xs mt-2!">
         Upload Order
       </p>
-      <div className="mt-1!">
-        <div
+
+      <div
+        className="flex justify-center flex-wrap gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-5! rounded-md cursor-pointer mt-1!"
+        onClick={() => imageInputRef.current?.click()}
+      >
+        {imagePreviews.length === 0 ? (
+          <div className="flex flex-col items-center">
+            <img
+              src="/images/complaint-album-gray.png"
+              alt="complaint-album-gray"
+              className="w-6 h-6"
+            />
+            <p className="font-semibold text-[#4A5565] text-sm mb-1">Upload</p>
+            <p className="text-xs text-[#545861] font-medium">
+              JPG, PNG (Max: 5MB each)
+            </p>
+          </div>
+        ) : (
+          imagePreviews.map((preview, i) => (
+            <>
+              <div key={i} className="relative w-16 h-16">
+                <img
+                  src={preview}
+                  alt={`Uploaded ${i}`}
+                  className="w-full h-full object-contain"
+                />
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeImageAt(i);
+                  }}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600"
+                >
+                  <RxCross2 size={12} />
+                </button>
+              </div>
+            </>
+          ))
+        )}
+        {imagePreviews.length !== 0 && (
+          <div className="flex gap-1 items-center ml-3! text-(--primary)">
+            <HugeiconsIcon icon={AddInvoiceIcon} />
+            <p className="text-xs font-bold">Add More</p>
+          </div>
+        )}
+
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          ref={imageInputRef}
+          onChange={handleImageChange}
+        />
+      </div>
+
+      {/* <div
           className="flex justify-center items-center gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-5! rounded-md cursor-pointer  relative "
           onClick={() => !imagePreview && imageInputRef.current?.click()}
         >
@@ -263,9 +356,9 @@ const ComplaintResolution = ({
             ref={imageInputRef}
             onChange={handleImageChange}
           />
-        </div>
+        </div> */}
 
-        {/* <div
+      {/* <div
           className="flex justify-center items-center gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-4! rounded-md cursor-pointer  relative col-span-6"
           onClick={() => !videoPreview && videoInputRef.current?.click()}
         >
@@ -311,7 +404,6 @@ const ComplaintResolution = ({
             onChange={handleVideoChange}
           />
         </div> */}
-      </div>
 
       <p className="block mb-1! mt-2! text-[#2A2A2B] font-semibold text-xs">
         Resolution Status

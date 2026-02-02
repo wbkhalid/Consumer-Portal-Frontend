@@ -9,6 +9,7 @@ interface CustomStatCardProps {
   percentage?: string | number;
   percentageBg?: string;
   percentageText?: string;
+  spanText?: string;
 }
 
 const CustomStatCard = ({
@@ -19,6 +20,7 @@ const CustomStatCard = ({
   percentage,
   percentageBg,
   percentageText,
+  spanText,
 }: CustomStatCardProps) => {
   return (
     <div className="rounded-2xl p-4! bg-white border border-[#E5E7EB]">
@@ -43,7 +45,7 @@ const CustomStatCard = ({
         {value?.toLocaleString()}
       </p>
       <p className="text-[#969799] font-semibold text-[10px] xl:text-[12px] uppercase">
-        {title}
+        {title} {spanText && <span className="text-[8px]">({spanText})</span>}
       </p>
     </div>
   );

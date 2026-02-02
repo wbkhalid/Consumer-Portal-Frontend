@@ -138,7 +138,7 @@ const InterimDetails = ({
   return (
     <div className="px-5! py-4! ">
       <CustomTextArea
-        label="Interim Order"
+        label="Order Sheet"
         placeholder="Type..."
         value={interimRemarks}
         onChange={(e) => setInterimRemarks(e.target.value)}
@@ -251,7 +251,7 @@ const InterimDetails = ({
                 </p>
 
                 <p className="text-sm mt-1!">
-                  <span className="font-semibold">Interim Remarks: </span>
+                  <span className="font-semibold">Order Sheet: </span>
                   {i.interimRemarks}
                 </p>
 

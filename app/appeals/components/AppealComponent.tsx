@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ClearButton from "../../components/ClearButton";
 import SearchFilter from "../../components/reuseable-filters/SearchFilter";
 import useGetAppeals from "../../hooks/useGetAppeals";
@@ -8,7 +8,8 @@ import { useSearchParams } from "next/navigation";
 import PageHeader from "../../components/PageHeader";
 
 const AppealComponent = () => {
-  const { data: appealData } = useGetAppeals();
+  const [refresh, setRefresh] = useState(false);
+  const { data: appealData } = useGetAppeals({ refresh });
   const searchParams = useSearchParams();
   const search = searchParams.get("search") ?? "";
 
@@ -60,7 +61,7 @@ const AppealComponent = () => {
             <ClearButton />
           </div> */}
         </div>
-        <AppealTable rowsData={filteredData ?? []} />
+        <AppealTable rowsData={filteredData ?? []} setRefresh={setRefresh} />
       </div>
     </>
   );

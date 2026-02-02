@@ -27,7 +27,7 @@ export const DETAIL_STEPS = [
     label: "Evidence",
     iconImage: Album02Icon,
   },
-  { id: 4, label: "Complaint Record", iconImage: UserMultipleIcon },
+  { id: 4, label: "Record", iconImage: UserMultipleIcon },
 ];
 
 export const PENDING_STEPS = [

@@ -201,18 +201,23 @@ const HomeFilters = ({ total, downloads }: Props) => {
           </button>
         </div>
       </div>
-      <div
-        className="flex items-center gap-0.5 shadow-lg px-2! py-1! rounded-sm cursor-pointer"
-        onClick={() => router.push("/users")}
-      >
-        <HugeiconsIcon icon={DownloadSquare01Icon} size={20} />
-        <div>
-          <p className="text-[#182236] font-bold  text-[10px] text-center">
-            {downloads}
-          </p>
-          <p className="text-[#969799] font-semibold text-[10px]">Downloads</p>
+
+      {canShowDivision && (
+        <div
+          className="flex items-center gap-0.5 shadow-lg px-2! py-1! rounded-sm cursor-pointer"
+          onClick={() => router.push("/users")}
+        >
+          {/* <HugeiconsIcon icon={DownloadSquare01Icon} size={20} /> */}
+          <div>
+            <p className="text-[#182236] font-bold  text-[10px] text-center">
+              {downloads}
+            </p>
+            <p className="text-[#969799] font-semibold text-[10px]">
+              Total Users
+            </p>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

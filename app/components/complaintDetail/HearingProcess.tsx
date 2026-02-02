@@ -53,11 +53,34 @@ const HearingProcess = ({
   const [showScheduler, setShowScheduler] = useState(false);
   const [hearingDate, setHearingDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadingResend, setLoadingResend] = useState(false);
 
   const ptclUserName = cookies.get("ptclUsername") || "";
   const ptclPassword = cookies.get("ptclPassword") || "";
 
+  const deleteMeetingByCaseNo = async (caseNo: string | number) => {
+    try {
+      const res = await apiClient.delete(
+        `${ADMIN_DASHBOARD_API}/by-caseno/${caseNo}`,
+      );
+
+      if (res?.data?.responseCode === 200 || res?.data?.responseCode === 404) {
+        return true;
+      }
+    } catch (error: any) {
+      console.error(error);
+
+      if (error?.response?.data?.responseCode === 404) {
+        return true;
+      }
+
+      toast.error("Failed to delete meeting");
+      return false;
+    }
+  };
+
   const sendMeetingLinks = async (meetingDetails: any) => {
+    setLoadingResend(true);
     try {
       const meetingDateTime = meetingDetails?.meeting_start_date?.replace(
         " ",
@@ -91,6 +114,8 @@ const HearingProcess = ({
     } catch (error) {
       console.error("Error sending meeting links", error);
       toast.error("Failed to send meeting links");
+    } finally {
+      setLoadingResend(false);
     }
   };
 
@@ -191,6 +216,14 @@ const HearingProcess = ({
       const data = await response.json();
 
       if (data?.status === true && data?.token) {
+        if (meetingDetails?.id) {
+          const isDeleted = await deleteMeetingByCaseNo(complaint.id);
+
+          if (!isDeleted) {
+            setLoading(false);
+            return;
+          }
+        }
         await createMeeting(data.token);
       } else {
         toast.error(data?.message);
@@ -335,12 +368,20 @@ const HearingProcess = ({
               Reschedule
             </Button>
           )}
+          {!meetingDetails?.isExpired && canShowResolveButton && (
+            <Button
+              className="text-xs! text-[#606060]! border! border-[#606060]! bg-transparent! cursor-pointer! hover:opacity-80!"
+              onClick={() => sendMeetingLinks(meetingDetails)}
+            >
+              {loadingResend ? <Spinner /> : "Resend"}
+            </Button>
+          )}
         </div>
       )}
       <Button>Uplaod Video</Button>
       <p>
         Where compalainant/Respondant are Present in office for proceeding and
-        if video is recoreded upload here
+        if video is recorded upload here
       </p>
     </div>
   );

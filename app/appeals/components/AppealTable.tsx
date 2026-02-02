@@ -18,6 +18,7 @@ import AppealDialog from "./AppealDialog";
 
 interface AppealsTableProps {
   rowsData: ManageAppealsData[];
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const headers = [
@@ -34,7 +35,7 @@ const headers = [
   { label: "Assignee Remarks" },
 ];
 
-const AppealTable = ({ rowsData }: AppealsTableProps) => {
+const AppealTable = ({ rowsData, setRefresh }: AppealsTableProps) => {
   const role = getRole();
   const { data: staffData } = useGetAllStaff();
   const [openDialog, setOpenDialog] = useState(false);
@@ -154,13 +155,20 @@ const AppealTable = ({ rowsData }: AppealsTableProps) => {
         </div>
 
         <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
-          <Dialog.Content className="p-0! lg:max-w-[920px]! max-h-[80vh]! overflow-hidden!">
+          <Dialog.Content
+            className="p-0! lg:max-w-[90%]! max-h-[80vh]! overflow-hidden!"
+            onInteractOutside={(event) => event.preventDefault()}
+          >
             <AppealDialog
               selectedComplaint={selectedComplaint}
               onClose={() => {
                 setOpenDialog(false);
+                setRefresh(true);
               }}
-              onSuccess={() => {}}
+              onSuccess={() => {
+                setOpenDialog(false);
+                setRefresh(true);
+              }}
             />
           </Dialog.Content>
         </Dialog.Root>

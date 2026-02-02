@@ -51,6 +51,7 @@ const ComplaintDetailDialog = ({
     5: RESOLVED_STEPS,
     7: RESOLVED_STEPS,
     12: PROCEEDING_STEPS,
+    13: PROCEEDING_STEPS,
   };
 
   return (

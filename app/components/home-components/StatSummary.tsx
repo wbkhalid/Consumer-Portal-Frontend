@@ -50,6 +50,7 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
           percentage={"1 -7 Days"}
           percentageBg="bg-[rgba(149,55,235,0.15)]"
           percentageText="text-[#9537EB]"
+          spanText="Alternate Dispute Resolution"
         />
       </Link>
       <Link

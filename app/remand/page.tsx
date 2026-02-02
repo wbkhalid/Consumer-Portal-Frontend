@@ -5,7 +5,7 @@ const RemandPage = () => {
   return (
     <div>
       <Suspense fallback={<div>Loading remand complaints...</div>}>
-        <ProcessingComponent title="Remand Complaints" status={1} />
+        <ProcessingComponent title="Remand Complaints" status={13} />
       </Suspense>
     </div>
   );
