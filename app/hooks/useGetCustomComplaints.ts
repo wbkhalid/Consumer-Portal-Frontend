@@ -47,6 +47,17 @@ export interface InterimDetails {
   lastUpdatedAt: string;
 }
 
+export interface AppealDecisionDetails {
+  decisionDate: string;
+  decisionRemarks: string;
+  decisionFilePaths: [
+    {
+      filePath: string;
+      fileType: number;
+    },
+  ];
+}
+
 export interface ManageCustomComplainsData {
   id: number;
   caseNo: string;
@@ -70,6 +81,7 @@ export interface ManageCustomComplainsData {
   latitude: number;
   longitude: number;
   finedAmount: number;
+  fineCollectionDate: null | string;
   billBoardImage: string;
   sectionCategoryName: string;
   sectionsDetails: SectionsDetails[];
@@ -87,6 +99,7 @@ export interface ManageCustomComplainsData {
   decisionFilePaths: DecisionFilePaths[];
   complainantDetails: ComplainantDetails;
   interimDetails: InterimDetails[];
+  appealDecisionDetails: AppealDecisionDetails[];
 }
 
 const useGetCustomComplaints = ({

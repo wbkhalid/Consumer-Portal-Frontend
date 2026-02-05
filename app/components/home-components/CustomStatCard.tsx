@@ -44,7 +44,7 @@ const CustomStatCard = ({
       <p className="text-[#182236] font-bold text-xl my-2!">
         {value?.toLocaleString()}
       </p>
-      <p className="text-[#969799] font-semibold text-[10px] xl:text-[12px] uppercase">
+      <p className="text-[#969799] font-semibold text-[10px] xl:text-[11px] uppercase">
         {title} {spanText && <span className="text-[8px]">({spanText})</span>}
       </p>
     </div>

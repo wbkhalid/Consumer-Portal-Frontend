@@ -25,7 +25,10 @@ const submitStatusdata = [
   { value: 7, label: "Non-Prosecution" },
 ];
 
-const appealStatusData = [...submitStatusdata, { value: 13, label: "Remand" }];
+const appealStatusData = [
+  ...submitStatusdata,
+  { value: 13, label: "Remanded" },
+];
 
 const ComplaintResolution = ({
   complaint,
@@ -41,7 +44,7 @@ const ComplaintResolution = ({
   const loginUser = canEditable();
   const [selectedStatus, setSelectedStatus] = useState<number | null>(null);
   const [submittionRemarks, setSubmittionRemarks] = useState("");
-  const [fineAmount, setFineAmount] = useState(0);
+  const [fineAmount, setFineAmount] = useState(complaint?.finedAmount || 0);
   const [imageUrl, setImageUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -59,6 +62,7 @@ const ComplaintResolution = ({
     : loginUser === complaint?.assignedTo;
 
   const statusData = fromAppeal ? appealStatusData : submitStatusdata;
+  const [fineError, setFineError] = useState<string | null>(null);
 
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -205,6 +209,7 @@ const ComplaintResolution = ({
         assigneeRemarks: complaint?.assigneeRemarks,
         closingRemarks: submittionRemarks,
         isClosed: true,
+        isAppeal: fromAppeal ? true : false,
         complaintDecisionFiles: imageUrls?.map((url) => ({
           filePath: url,
           fileType: 0,
@@ -426,8 +431,20 @@ const ComplaintResolution = ({
       <CustomTextField
         label="Fine Imposed"
         placeholder="Fine"
+        type="number"
         value={fineAmount}
-        onChange={(e) => setFineAmount(Number(e.target.value))}
+        error={fineError || undefined}
+        onChange={(e) => {
+          const value = Number(e.target.value);
+
+          if (value > 100000) {
+            setFineError("Maximum fine allowed is 100,000");
+            return;
+          }
+
+          setFineError(null);
+          setFineAmount(value);
+        }}
       />
 
       {canShowResolveButton && (

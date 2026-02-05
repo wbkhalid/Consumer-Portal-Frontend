@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import CustomTextField from "../../../components/CustomTextField";
 
-const MAX_FINE = 1_000_000;
+const MAX_FINE = 100_000;
 
 const FineFilterDropdown = () => {
   const router = useRouter();

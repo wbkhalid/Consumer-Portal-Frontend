@@ -45,6 +45,17 @@ export interface InterimDetails {
   lastUpdatedAt: string;
 }
 
+export interface AppealDecisionDetails {
+  decisionDate: string;
+  decisionRemarks: string;
+  decisionFilePaths: [
+    {
+      filePath: string;
+      fileType: number;
+    },
+  ];
+}
+
 export interface ManageComplainsData {
   id: number;
   caseNo: string;
@@ -73,6 +84,7 @@ export interface ManageComplainsData {
   entryType: number;
   status: number;
   finedAmount: number;
+  fineCollectionDate: null | string;
   remarks: string | null;
   hearingDate: string | null;
   assigneeRemarks: string | null;
@@ -85,6 +97,7 @@ export interface ManageComplainsData {
   decisionFilePaths: DecisionFilePaths[];
   complainantDetails: ComplainantDetails;
   interimDetails: InterimDetails[];
+  appealDecisionDetails: AppealDecisionDetails[];
 }
 
 const useGetAllComplains = ({

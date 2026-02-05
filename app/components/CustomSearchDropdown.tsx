@@ -159,7 +159,7 @@ const CustomSearchDropdown: React.FC<CustomSearchDropdownProps> = ({
         styles={{
           control: (base, state) => ({
             ...base,
-            backgroundColor: isHome ? "#F5F6F8" : "#fff",
+            backgroundColor: isHome ? "transparent" : "#fff",
             borderWidth: 1,
             borderColor: state.isFocused ? "var(--primary)" : "#D1D5DB",
             boxShadow: "none",

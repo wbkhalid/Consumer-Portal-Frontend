@@ -135,6 +135,16 @@ const FineBarChart = () => {
                   <stop offset="0%" stopColor="#036CCF" />
                   <stop offset="100%" stopColor="#013769" />
                 </linearGradient>
+                <linearGradient
+                  id="fineCollectedGradient"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="0%" stopColor="#21C35D" />
+                  <stop offset="100%" stopColor="#17A74C" />
+                </linearGradient>
               </defs>
 
               <CartesianGrid
@@ -176,6 +186,12 @@ const FineBarChart = () => {
               <Bar
                 dataKey="totalFine"
                 fill="url(#fineBarGradient)"
+                radius={20}
+                barSize={35}
+              />
+              <Bar
+                dataKey="totalFineCollected"
+                fill="url(#fineCollectedGradient)"
                 radius={20}
                 barSize={35}
               />

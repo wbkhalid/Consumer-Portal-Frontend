@@ -23,6 +23,7 @@ import ResolvedDetail from "../complaintDetail/ResolvedDetail";
 import UpdatePhoneNumber from "../complaintDetail/UpdatePhoneNumber";
 import SendUserDetails from "../complaintDetail/SendUserDetails";
 import InterimDetails from "../complaintDetail/InterimDetails";
+import FineCollection from "../complaintDetail/FineCollection";
 
 const ComplaintDetailDialog = ({
   selectedComplaint,
@@ -107,11 +108,15 @@ const ComplaintDetailDialog = ({
           />
         )}
 
-        {step === 8 && (
+        {/* {step === 8 && (
           <ResolvedDetail
             complaint={selectedComplaint}
             setMediaModal={setMediaModal}
           />
+        )} */}
+
+        {step === 8 && (
+          <FineCollection complaint={selectedComplaint} onSuccess={onSuccess} />
         )}
         {step === 9 && (
           <UpdatePhoneNumber

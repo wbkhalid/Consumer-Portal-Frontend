@@ -163,11 +163,11 @@ const AppealTable = ({ rowsData, setRefresh }: AppealsTableProps) => {
               selectedComplaint={selectedComplaint}
               onClose={() => {
                 setOpenDialog(false);
-                setRefresh(true);
+                setRefresh((prev) => !prev);
               }}
               onSuccess={() => {
                 setOpenDialog(false);
-                setRefresh(true);
+                setRefresh((prev) => !prev);
               }}
             />
           </Dialog.Content>

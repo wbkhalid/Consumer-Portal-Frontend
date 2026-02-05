@@ -20,6 +20,7 @@ import {
 import cookies from "js-cookie";
 import apiClient from "../../services/api-client";
 import { ADMIN_DASHBOARD_API } from "../../APIs";
+import { RxCross2 } from "react-icons/rx";
 
 interface MeetingDetails {
   id: number;
@@ -53,7 +54,8 @@ const HearingProcess = ({
   const [showScheduler, setShowScheduler] = useState(false);
   const [hearingDate, setHearingDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(false);
-  const [loadingResend, setLoadingResend] = useState(false);
+  // const [loadingResend, setLoadingResend] = useState(false);
+  const [videoPreview, setVideoPreview] = useState("");
 
   const ptclUserName = cookies.get("ptclUsername") || "";
   const ptclPassword = cookies.get("ptclPassword") || "";
@@ -80,7 +82,6 @@ const HearingProcess = ({
   };
 
   const sendMeetingLinks = async (meetingDetails: any) => {
-    setLoadingResend(true);
     try {
       const meetingDateTime = meetingDetails?.meeting_start_date?.replace(
         " ",
@@ -114,8 +115,6 @@ const HearingProcess = ({
     } catch (error) {
       console.error("Error sending meeting links", error);
       toast.error("Failed to send meeting links");
-    } finally {
-      setLoadingResend(false);
     }
   };
 
@@ -323,9 +322,9 @@ const HearingProcess = ({
               type="datetime-local"
               className="border p-2! rounded-md text-xs"
               value={
-                hearingDate ? format(hearingDate, "yyyy-MM-dd'T'HH:mm") : ""
+                hearingDate ? format(hearingDate, "dd-MMM-yyyy'T'HH:mm") : ""
               }
-              min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
+              min={format(new Date(), "dd-MMM-yyyy'T'HH:mm")}
               onChange={(e) => setHearingDate(parseISO(e.target.value))}
             />
 
@@ -368,21 +367,69 @@ const HearingProcess = ({
               Reschedule
             </Button>
           )}
-          {!meetingDetails?.isExpired && canShowResolveButton && (
+          {/* {!meetingDetails?.isExpired && canShowResolveButton && (
             <Button
               className="text-xs! text-[#606060]! border! border-[#606060]! bg-transparent! cursor-pointer! hover:opacity-80!"
               onClick={() => sendMeetingLinks(meetingDetails)}
             >
               {loadingResend ? <Spinner /> : "Resend"}
             </Button>
-          )}
+          )} */}
         </div>
       )}
-      <Button>Uplaod Video</Button>
+      {/* <Button>Uplaod Video</Button>
       <p>
         Where compalainant/Respondant are Present in office for proceeding and
         if video is recorded upload here
-      </p>
+      </p> */}
+
+      <div
+        className="flex justify-center items-center gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-4! rounded-md cursor-pointer  relative col-span-6 mt-2!"
+        // onClick={() => !videoPreview && videoInputRef.current?.click()}
+      >
+        {!videoPreview ? (
+          <div className="flex flex-col items-center">
+            <img
+              src="/images/complaint-video-gray.png"
+              alt="complaint-video-gray"
+              className="w-6 h-6"
+            />
+            <p className="font-semibold text-[#4A5565] text-sm mb-1!">
+              Uplaod Video
+            </p>
+            <p className="text-xs text-[#545861] font-medium">
+              Where Complainant/Respondant are present in office for proceeding
+              and if video is recorded upload here
+            </p>
+          </div>
+        ) : (
+          <div className="relative">
+            <video
+              // src={videoPreview}
+              controls
+              className="w-16 h-16 object-contain"
+            />
+
+            <button
+              // onClick={(e) => {
+              //   e.stopPropagation();
+              //   removeVideo();
+              // }}
+              className="absolute -top-2 -right-6 bg-red-500 text-white rounded-full p-0.5! cursor-pointer  hover:bg-red-600"
+            >
+              <RxCross2 size={12} />
+            </button>
+          </div>
+        )}
+
+        <input
+          type="file"
+          accept="video/*"
+          className="hidden"
+          // ref={videoInputRef}
+          // onChange={handleVideoChange}
+        />
+      </div>
     </div>
   );
 };

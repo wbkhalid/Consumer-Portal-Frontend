@@ -14,19 +14,19 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
   if (tehsilId) params.set("tehsilId", tehsilId);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-4 lg:grid-cols-6 gap-2.5 py-2.5! ">
-      {/* <Link
-        href={`/complains${params.toString() ? `?${params.toString()}` : ""}`}
-      > */}
-      <CustomStatCard
-        title="In Progress Complaints"
-        value={data?.totalInProgress}
-        icon={"totalComplaints.png"}
-        iconBg="bg-[linear-gradient(135deg,#397FF5_0%,#2867ED_100%)]"
-        // percentage={data?.complaintsGrowthPercentages?.totalComplaints}
-        // percentageBg="bg-[rgba(22,167,118,0.15)]"
-        // percentageText="text-[#16A34A]"
-      />
-      {/* </Link> */}
+      <Link
+        href={`/in-progress${params.toString() ? `?${params.toString()}` : ""}`}
+      >
+        <CustomStatCard
+          title="In Progress Complaints"
+          value={data?.totalInProgress}
+          icon={"totalPending.png"}
+          iconBg="bg-[linear-gradient(135deg,#397FF5_0%,#2867ED_100%)]"
+          // percentage={data?.complaintsGrowthPercentages?.totalComplaints}
+          // percentageBg="bg-[rgba(22,167,118,0.15)]"
+          // percentageText="text-[#16A34A]"
+        />
+      </Link>
       <Link
         href={`/pending${params.toString() ? `?${params.toString()}` : ""}`}
       >
@@ -94,23 +94,23 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
           percentageText="text-[#DE2929]"
         />
       </Link>
-      {/* <Link
-        href={`/decided-on-merit${
+      <Link
+        href={`/total-resolved${
           params.toString() ? `?${params.toString()}` : ""
         }`}
-      > */}
-      <CustomStatCard
-        title="Total Cases Decided"
-        value={data?.totalDecided}
-        icon={"decidedOnMerit.png"}
-        iconBg="bg-[linear-gradient(135deg,#21C35D_0%,#17A74C_100%)]"
-        // percentage={
-        //   data?.complaintsGrowthPercentages?.decidedOnMeritComplaints
-        // }
-        // percentageBg="bg-[rgba(22,167,118,0.15)]"
-        // percentageText="text-[#17A74C]"
-      />
-      {/* </Link> */}
+      >
+        <CustomStatCard
+          title="Total Complaints Decided"
+          value={data?.totalDecided}
+          icon={"decidedOnMerit.png"}
+          iconBg="bg-[linear-gradient(135deg,#21C35D_0%,#17A74C_100%)]"
+          // percentage={
+          //   data?.complaintsGrowthPercentages?.decidedOnMeritComplaints
+          // }
+          // percentageBg="bg-[rgba(22,167,118,0.15)]"
+          // percentageText="text-[#17A74C]"
+        />
+      </Link>
       <Link
         href={`/decided-on-merit${
           params.toString() ? `?${params.toString()}` : ""
@@ -186,17 +186,17 @@ const StatSummary = ({ data }: { data: ComplainDashboardType }) => {
           percentageText="text-[#DC2A7A]"
         />
       </Link>
-      <Link href={`/remand${params.toString() ? `?${params.toString()}` : ""}`}>
+      {/* <Link href={`/remand${params.toString() ? `?${params.toString()}` : ""}`}>
         <CustomStatCard
           title="Remand"
           value={data?.remandsCount}
           icon={"appeals.png"}
           iconBg="bg-[linear-gradient(135deg,#EA4495_0%,#DC2A7A_100%)]"
-          // percentage={"15 Days"}
-          // percentageBg="bg-[rgba(220,42,122,0.15)]"
-          // percentageText="text-[#DC2A7A]"
+          percentage={"15 Days"}
+          percentageBg="bg-[rgba(220,42,122,0.15)]"
+          percentageText="text-[#DC2A7A]"
         />
-      </Link>
+      </Link> */}
       {/* <Link
         href={`/red-hot-complaints${
           params.toString() ? `?${params.toString()}` : ""

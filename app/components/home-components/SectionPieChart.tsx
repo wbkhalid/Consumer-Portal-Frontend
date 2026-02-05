@@ -82,7 +82,7 @@ const SectionPieChart = ({ data }: { data: SectionTypeStatsType[] }) => {
         fill="#fff"
         textAnchor="middle"
         dominantBaseline="central"
-        fontSize={10}
+        fontSize={13}
         fontWeight={600}
       >
         {value}

@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@radix-ui/themes";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
@@ -9,17 +8,11 @@ import useGetSelectedDistrict from "../../hooks/useGetSelectedDistrict";
 import useGetSelectedTehsil from "../../hooks/useGetSelectedTehsil";
 import { getRole } from "../../utils/utils";
 import CustomSearchDropdown from "../../components/CustomSearchDropdown";
-import { IoIosTrendingUp } from "react-icons/io";
-import Link from "next/link";
-import { DownloadSquare01Icon } from "@hugeicons/core-free-icons";
+import { FilterIcon, Search02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import Image from "next/image";
 
-interface Props {
-  total: number;
-  downloads: number;
-}
-
-const HomeFilters = ({ total, downloads }: Props) => {
+const HomeFilters = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -27,18 +20,27 @@ const HomeFilters = ({ total, downloads }: Props) => {
   const cookieDivisionId = Cookies.get("divisionId");
   const cookieDistrictId = Cookies.get("districtId");
 
+  const normalizeParam = (val: string | null | undefined) => {
+    if (!val || val === "0") return null;
+    return val;
+  };
+
   const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
   const [selectedTehsil, setSelectedTehsil] = useState<string | null>(null);
 
   useEffect(() => {
     setSelectedDivision(
-      searchParams.get("divisionId") ?? cookieDivisionId ?? null,
+      normalizeParam(searchParams.get("divisionId")) ??
+        normalizeParam(cookieDivisionId),
     );
+
     setSelectedDistrict(
-      searchParams.get("districtId") ?? cookieDistrictId ?? null,
+      normalizeParam(searchParams.get("districtId")) ??
+        normalizeParam(cookieDistrictId),
     );
-    setSelectedTehsil(searchParams.get("tehsilId"));
+
+    setSelectedTehsil(normalizeParam(searchParams.get("tehsilId")));
   }, [searchParams, cookieDivisionId, cookieDistrictId]);
 
   if (role === "AC") return null;
@@ -91,133 +93,108 @@ const HomeFilters = ({ total, downloads }: Props) => {
     router.push(window.location.pathname);
   };
   return (
-    <div className="flex justify-between items-center bg-white border-b border-b-[#E4E6EA] -mx-2! -mt-2! py-2.5! px-7!">
-      <div className="flex gap-3">
-        <p
-          className="text-[#969799] font-semibold text-[10px] xl:text-sm uppercase bg-[#F5F6F8]! border border-[#D1D5DB] py-1! px-2! rounded-lg cursor-pointer"
-          onClick={() =>
-            router.push(
-              `/complains${searchParams.toString() ? `?${searchParams.toString()}` : ""}`,
-            )
-          }
+    <div className="flex justify-end items-center gap-2.5 rounded-xl border border-[rgba(255,255,255,0.8)] py-2.5! px-7! shadow-[inset_0px_0px_4px_rgba(0,0,0,0.05)] mt-2.5! w-fit">
+      <div className="flex gap-2">
+        {/* <div className="flex gap-2 items-center">
+            <HugeiconsIcon icon={FilterIcon} color="#90A1B9" size={16} />
+            <p className="text-[#62748E] font-bold text-[10px] uppercase tracking-widest">
+              Filter
+            </p>
+            <div className="bg-[#62748E] w-px h-4" />
+          </div> */}
+        {canShowDivision && (
+          <CustomSearchDropdown
+            placeholder="Select Division"
+            options={[
+              { label: "All Divisions", value: "ALL" },
+              ...(divisionData?.map((d) => ({
+                label: d.name,
+                value: String(d.id),
+              })) ?? []),
+            ]}
+            value={selectedDivision}
+            onChange={(val) => {
+              if (val === "ALL") {
+                setSelectedDivision(null);
+                setSelectedDistrict(null);
+                setSelectedTehsil(null);
+              } else {
+                setSelectedDivision(String(val));
+                setSelectedDistrict(null);
+                setSelectedTehsil(null);
+              }
+            }}
+            isHome={true}
+          />
+        )}
+
+        {canShowDistrict && (
+          <CustomSearchDropdown
+            placeholder="Select District"
+            options={[
+              { label: "All Districts", value: "ALL" },
+              ...(districtData?.map((d) => ({
+                label: d.name,
+                value: String(d.id),
+              })) ?? []),
+            ]}
+            value={selectedDistrict}
+            onChange={(val) => {
+              if (val === "ALL") {
+                setSelectedDistrict(null);
+                setSelectedTehsil(null);
+              } else {
+                setSelectedDistrict(String(val));
+                setSelectedTehsil(null);
+              }
+            }}
+            isHome={true}
+          />
+        )}
+
+        {canShowTehsil && (
+          <CustomSearchDropdown
+            placeholder="Select Tehsil"
+            options={[
+              { label: "All Tehsils", value: "ALL" },
+              ...(tehsilData?.map((t) => ({
+                label: t.name,
+                value: String(t.id),
+              })) ?? []),
+            ]}
+            value={selectedTehsil}
+            onChange={(val) => {
+              if (val === "ALL") {
+                setSelectedTehsil(null);
+              } else {
+                setSelectedTehsil(String(val));
+              }
+            }}
+            isHome={true}
+          />
+        )}
+      </div>
+      <div className="flex gap-1 items-center">
+        <button
+          className="bg-(--primary) flex gap-1.5 text-white cursor-pointer py-1! px-3! rounded-xl! text-xs  font-semibold hover:opacity-90 uppercase tracking-widest"
+          onClick={handleApplyFilter}
         >
-          Total Complaints:{" "}
-          <span className="text-[#182236] font-bold text-sm">{total}</span>
-        </p>
-        {/* <p className="text-[#969799] font-semibold text-[10px] xl:text-sm uppercase">
-          <IoIosTrendingUp className="text-green-400" />
-          <span className="text-[#182236] font-bold text-sm">
-            {days?.toFixed(0)}
-          </span>
-        </p> */}
-      </div>
+          {/* <HugeiconsIcon icon={Search02Icon} size={18} /> */}
+          Apply Filter
+        </button>
 
-      <div className=" flex gap-3  items-center">
-        <div className="flex gap-2">
-          {canShowDivision && (
-            <CustomSearchDropdown
-              placeholder="Select Division"
-              options={[
-                { label: "All Divisions", value: "ALL" },
-                ...(divisionData?.map((d) => ({
-                  label: d.name,
-                  value: String(d.id),
-                })) ?? []),
-              ]}
-              value={selectedDivision}
-              onChange={(val) => {
-                if (val === "ALL") {
-                  setSelectedDivision(null);
-                  setSelectedDistrict(null);
-                  setSelectedTehsil(null);
-                } else {
-                  setSelectedDivision(String(val));
-                  setSelectedDistrict(null);
-                  setSelectedTehsil(null);
-                }
-              }}
-              isHome={true}
-            />
-          )}
-
-          {canShowDistrict && (
-            <CustomSearchDropdown
-              placeholder="Select District"
-              options={[
-                { label: "All Districts", value: "ALL" },
-                ...(districtData?.map((d) => ({
-                  label: d.name,
-                  value: String(d.id),
-                })) ?? []),
-              ]}
-              value={selectedDistrict}
-              onChange={(val) => {
-                if (val === "ALL") {
-                  setSelectedDistrict(null);
-                  setSelectedTehsil(null);
-                } else {
-                  setSelectedDistrict(String(val));
-                  setSelectedTehsil(null);
-                }
-              }}
-              isHome={true}
-            />
-          )}
-
-          {canShowTehsil && (
-            <CustomSearchDropdown
-              placeholder="Select Tehsil"
-              options={[
-                { label: "All Tehsils", value: "ALL" },
-                ...(tehsilData?.map((t) => ({
-                  label: t.name,
-                  value: String(t.id),
-                })) ?? []),
-              ]}
-              value={selectedTehsil}
-              onChange={(val) => {
-                if (val === "ALL") {
-                  setSelectedTehsil(null);
-                } else {
-                  setSelectedTehsil(String(val));
-                }
-              }}
-              isHome={true}
-            />
-          )}
-        </div>
-        <div className="flex gap-1 items-center">
-          <button
-            className="bg-(--primary) text-white cursor-pointer py-1! px-3! rounded-lg! text-xs  font-semibold hover:opacity-90"
-            onClick={handleApplyFilter}
-          >
-            Apply Filters
-          </button>
-          <button
-            className="border border-[#D96F64] text-[#D96F64] cursor-pointer py-1! px-3! rounded-lg! text-xs  font-semibold hover:opacity-90"
-            onClick={handleClearFilter}
-          >
-            Reset Filters
-          </button>
-        </div>
-      </div>
-
-      {canShowDivision && (
         <div
-          className="flex items-center gap-0.5 shadow-lg px-2! py-1! rounded-sm cursor-pointer"
-          onClick={() => router.push("/users")}
+          className="border-[0.6px] border-[rgba(226,232,240,0.8)] rounded-lg p-1! cursor-pointer"
+          onClick={handleClearFilter}
         >
-          {/* <HugeiconsIcon icon={DownloadSquare01Icon} size={20} /> */}
-          <div>
-            <p className="text-[#182236] font-bold  text-[10px] text-center">
-              {downloads}
-            </p>
-            <p className="text-[#969799] font-semibold text-[10px]">
-              Total Users
-            </p>
-          </div>
+          <Image
+            src="/icons/refresh.png"
+            alt="refresh"
+            width={18}
+            height={18}
+          />
         </div>
-      )}
+      </div>
     </div>
   );
 };

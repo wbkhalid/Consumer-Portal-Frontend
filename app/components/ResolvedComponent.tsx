@@ -29,7 +29,9 @@ const ResolvedComponent = ({ title, status }: ResolvedListProps) => {
   const districtParam = searchParams.get("district");
   const { divisionId, districtId, tehsilId } = useRegionFilters();
   const role = getRole();
+  const [refresh, setRefresh] = useState(false);
   const { data: decidedonMeritData } = useGetAllComplains({
+    refresh,
     status,
     startDate: startDate || undefined,
     endDate: endDate || undefined,
@@ -104,7 +106,7 @@ const ResolvedComponent = ({ title, status }: ResolvedListProps) => {
             </button>
           </div>
         </div>
-        <ResolvedTable rowsData={filteredData ?? []} />
+        <ResolvedTable rowsData={filteredData ?? []} setRefresh={setRefresh} />
       </div>
     </>
   );

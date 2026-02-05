@@ -163,7 +163,7 @@ export const statusData = [
   { id: 6, label: "Withdraw" },
   { id: 7, label: "Non-Prosecution" },
   { id: 12, label: "Alternate Dispute Resolution (ADR)" },
-  { id: 13, label: "Remand" },
+  { id: 13, label: "Remanded" },
 ];
 
 export const appealStatusData = [
@@ -182,6 +182,10 @@ export const statusColors: Record<string, { text: string; bg: string }> = {
   "Non-Prosecution": { text: "#4f5866", bg: "rgba(79,88,102,0.2)" },
   Withdraw: { text: "#0795b6", bg: "rgba(7,149,182,0.2)" },
   "Ex-Parte": { text: "#5148e6", bg: "rgba(81,72,230,0.2)" },
+  "Alternate Dispute Resolution (ADR)": {
+    text: "#5148e6",
+    bg: "rgba(81,72,230,0.2)",
+  },
 };
 
 // type QueryValue = string | string[] | undefined;

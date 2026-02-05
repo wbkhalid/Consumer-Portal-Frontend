@@ -6,6 +6,7 @@ import FineBarChart from "./components/home-components/FineBarChart";
 import ComplaintPieChart from "./components/home-components/ComplaintPieChart";
 import SectionPieChart from "./components/home-components/SectionPieChart";
 import HomeMap from "./components/home-components/HomeMap";
+import HomeHeader from "./components/home-components/HomeHeader";
 
 interface PageProps {
   searchParams: Promise<{
@@ -99,6 +100,7 @@ export interface ComplainDashboardType {
 export interface FineInsightType {
   label: string;
   totalFine: number;
+  totalFineCollected: number;
 }
 
 export interface FineInsightApiResponse {
@@ -170,10 +172,11 @@ const MainPage = async ({ searchParams }: PageProps) => {
 
   return (
     <div>
-      <HomeFilters
+      <HomeHeader data={complainDashboardData} />
+      {/* <HomeFilters
         total={complainDashboardData?.totalComplaints}
         downloads={complainDashboardData?.appDownloadsCount}
-      />
+      /> */}
       <StatSummary data={complainDashboardData} />
       <div className="grid grid-cols-12 gap-2.5 ">
         <FineBarChart />

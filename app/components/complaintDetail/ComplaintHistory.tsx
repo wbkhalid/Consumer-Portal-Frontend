@@ -53,9 +53,100 @@ const ComplaintHistory = ({ complaint, setMediaModal }: HistoryProps) => {
         <p className="text-sm">{complaint?.closingRemarks}</p>
       </div> */}
 
+      <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-1! rounded-[5px]! mb-2!">
+        <div className="flex justify-between mt-2!">
+          <div className="flex flex-col gap-0.5">
+            <p className="text-[#555555] text-sm">Fine Imposed</p>
+            <p className="text-[15px]">
+              {complaint?.finedAmount?.toLocaleString()}
+              <span className="text-xs font-semibold"> (PKR)</span>
+            </p>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <p className="text-[#555555] text-sm">Complaint Status</p>
+            <p className="text-[15px]">
+              {
+                statusData?.find((status) => status?.id === complaint?.status)
+                  ?.label
+              }
+            </p>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <p className="text-[#555555] text-sm">Resolved Date</p>
+            <p className="text-[15px]">{formatDate(complaint?.closedDate)}</p>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <p className="text-[#555555] text-sm">Resolved Time</p>
+            <p className="text-[15px]">
+              {complaint?.closedDate &&
+                format(toLocal(complaint.closedDate), "hh:mm a")}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-1! rounded-[5px]! mb-2!">
+        <div className="flex flex-col gap-1.5">
+          <p className="text-sm font-medium text-[#555555]">Appeal Order</p>
+
+          {complaint?.appealDecisionDetails?.map((appeal, index) => (
+            <div key={index} className="mb-3!">
+              <p className="text-sm mt-1!">
+                <span className="font-semibold">Date: </span>
+                {formatDate(appeal?.decisionDate)}
+              </p>
+
+              <p className="text-sm mt-1!">
+                <span className="font-semibold">Order: </span>
+                {appeal?.decisionRemarks}
+              </p>
+
+              <div className="mt-2!">
+                {appeal?.decisionFilePaths &&
+                appeal.decisionFilePaths.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {appeal.decisionFilePaths.map((file, i) => (
+                      <div
+                        key={`appeal-img-${index}-${i}`}
+                        className="w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
+                        onClick={() =>
+                          setMediaModal({
+                            open: true,
+                            type: file.fileType === 1 ? "video" : "image",
+                            url: file.filePath,
+                          })
+                        }
+                      >
+                        {file.fileType === 1 ? (
+                          <video
+                            src={file.filePath}
+                            className="w-full h-full object-cover"
+                            muted
+                          />
+                        ) : (
+                          <img
+                            src={file.filePath}
+                            alt={`appeal-img-${i}`}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-400 italic">
+                    No media available.
+                  </p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-1! rounded-[5px]!">
         <div className="flex flex-col gap-1.5">
-          <p className="text-sm font-medium text-[#555555]">Final Orders</p>
+          <p className="text-sm font-medium text-[#555555]">Final Order</p>
 
           <div>
             {complaint?.decisionFilePaths &&
@@ -113,46 +204,7 @@ const ComplaintHistory = ({ complaint, setMediaModal }: HistoryProps) => {
           </div>
         </div>
 
-        <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full my-1!" />
-
-        <div className="flex flex-col gap-1.5">
-          <p className="text-sm font-medium text-[#555555]">Meeting Videos</p>
-
-          <div>
-            {meetingVideos && meetingVideos?.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {meetingVideos &&
-                  meetingVideos?.length > 0 &&
-                  meetingVideos?.map((file, i) => (
-                    <div
-                      key={`vid-${i}`}
-                      className="relative w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
-                      onClick={() =>
-                        setMediaModal({
-                          open: true,
-                          type: "video",
-                          url: file?.videoRecordingLink,
-                        })
-                      }
-                    >
-                      <video
-                        src={file?.videoRecordingLink}
-                        // poster="/logo.png"
-                        className="w-full h-full object-cover"
-                        muted
-                      />
-                    </div>
-                  ))}
-              </div>
-            ) : (
-              <p className="text-xs text-gray-400 italic">
-                No media available.
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full my-1!" />
+        {/* <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full my-1!" />
 
         <div className="flex justify-between mt-2!">
           <div className="flex flex-col gap-0.5">
@@ -181,6 +233,56 @@ const ComplaintHistory = ({ complaint, setMediaModal }: HistoryProps) => {
               {complaint?.closedDate &&
                 format(toLocal(complaint.closedDate), "hh:mm a")}
             </p>
+          </div>
+        </div> */}
+      </div>
+
+      <div className="bg-[#F9FAFB] border border-[#E5E7EB] p-1! rounded-[5px]! mt-2!">
+        <div className="flex flex-col gap-1.5">
+          <p className="text-sm font-medium text-[#555555]">Meeting Videos</p>
+
+          <div>
+            {meetingVideos && meetingVideos?.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {meetingVideos &&
+                  meetingVideos?.length > 0 &&
+                  meetingVideos?.map((file, i) => (
+                    <div key={i} className="mb-5!">
+                      <div
+                        className="relative w-[90px] h-[90px] rounded-xl border border-[#CBD5E1] overflow-hidden bg-[#F8FAFC] cursor-pointer!"
+                        onClick={() =>
+                          setMediaModal({
+                            open: true,
+                            type: "video",
+                            url: file?.videoRecordingLink,
+                          })
+                        }
+                      >
+                        <video
+                          src={file?.videoRecordingLink}
+                          // poster="/logo.png"
+                          className="w-full h-full object-cover"
+                          muted
+                        />
+                      </div>
+                      <p className="text-xs text-center mt-1!">
+                        {formatDate(file?.createdAt)}
+                      </p>
+                      <p className="text-xs text-center text-gray-500">
+                        {new Date(file?.createdAt).toLocaleTimeString("en-PK", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}
+                      </p>
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <p className="text-xs text-gray-400 italic">
+                No media available.
+              </p>
+            )}
           </div>
         </div>
       </div>

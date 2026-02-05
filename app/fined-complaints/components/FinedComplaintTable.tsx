@@ -5,7 +5,7 @@ import TableBodyCell from "../../components/table/TableBodyCell";
 import TableHeaderCell from "../../components/table/TableHeaderCell";
 import PaginationControls from "../../components/table/PaginationControls";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
-import { formatComplaintId } from "../../utils/utils";
+import { formatComplaintId, formatDate } from "../../utils/utils";
 import { Dialog } from "@radix-ui/themes";
 import { useRouter, useSearchParams } from "next/navigation";
 import { sort } from "fast-sort";
@@ -36,7 +36,8 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
     { label: "Shop Name" },
     { label: "Phone #" },
     { label: "Address" },
-    { label: "Fined Amount", sortable: "finedAmount" },
+    { label: "Fine Amount", sortable: "finedAmount" },
+    { label: "Collection Date" },
   ];
 
   const handleSort = (field: SortKey) => {
@@ -120,6 +121,9 @@ const DetailTable = ({ rowsData }: DetailTableProps) => {
                 <TableBodyCell>{item?.address || "-"}</TableBodyCell>
 
                 <TableBodyCell>{item?.finedAmount ?? 0}</TableBodyCell>
+                <TableBodyCell>
+                  {formatDate(item?.fineCollectionDate ?? undefined)}
+                </TableBodyCell>
               </tr>
             ))}
           </tbody>

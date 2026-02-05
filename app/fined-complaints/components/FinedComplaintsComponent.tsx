@@ -43,7 +43,7 @@ const FinedComplaintsComponent = () => {
           {filteredData?.length?.toLocaleString()} Records
         </p>
       </div> */}
-      <PageHeader title="Fined Complaints" count={filteredData?.length} />
+      <PageHeader title="Fine Detail" count={filteredData?.length} />
 
       <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
         <div className="flex justify-between items-center py-3! px-5!">

@@ -20,9 +20,14 @@ import ComplaintDetailDialog from "../dialog/ComplaintDetailDialog";
 interface ResolvedTableProps {
   rowsData: ManageComplainsData[] | ManageCustomComplainsData[];
   isBreadCrumbs?: boolean;
+  setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
+const ResolvedTable = ({
+  rowsData,
+  isBreadCrumbs,
+  setRefresh,
+}: ResolvedTableProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   // const [currentPage, setCurrentPage] = useState(1);
@@ -224,8 +229,14 @@ const ResolvedTable = ({ rowsData, isBreadCrumbs }: ResolvedTableProps) => {
         <Dialog.Content className="p-0! md:max-w-[90%]! max-h-[80vh]">
           <ComplaintDetailDialog
             selectedComplaint={selectedComplaint}
-            onSuccess={() => {}}
-            onClose={() => {}}
+            onSuccess={() => {
+              setOpenDialog(false);
+              setRefresh?.((prev) => !prev);
+            }}
+            onClose={() => {
+              setOpenDialog(false);
+              setRefresh?.((prev) => !prev);
+            }}
           />
         </Dialog.Content>
       </Dialog.Root>

@@ -135,7 +135,7 @@ const ComplaintDetail = ({
 
         <div className="bg-[rgba(29,28,29,0.13)] h-[0.5px] w-full" />
         <div className="py-2!">
-          <p className="text-[#555555] text-sm">Complaint Detail</p>
+          <p className="text-[#555555] text-sm"> Detail of Complaint</p>
           <p className="text-sm">{complaint?.remarks || "-"}</p>
         </div>
         {/* {complaint?.assigneeRemarks && (

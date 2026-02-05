@@ -47,7 +47,7 @@ export const PROCEEDING_STEPS = [
 
 export const RESOLVED_STEPS = [
   ...DETAIL_STEPS,
-  // { id: 8, label: "Resolved Details", iconImage: TickDouble01Icon },
+  { id: 8, label: "Fine Collection", iconImage: TickDouble01Icon },
 ];
 
 export const APPEAL_STEPS = [
