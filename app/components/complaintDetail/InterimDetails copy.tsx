@@ -14,7 +14,7 @@ import { RxCross2 } from "react-icons/rx";
 import apiClient from "../../services/api-client";
 import { COMPLAINT_API } from "../../APIs";
 import useGetMeetingVideos from "../../hooks/useGetMeetingVideos";
-import { ArrowDown01Icon, Download03Icon } from "@hugeicons/core-free-icons";
+import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { format } from "date-fns";
 import jsPDF from "jspdf";
@@ -145,11 +145,11 @@ const InterimDetails = ({
     // // Lines ke baad
     // y += 10;
 
-    // doc.setFont("helvetica", "bold");
-    // doc.text("Interim Orders:", 15, y);
-    // y += 8;
+    doc.setFont("helvetica", "bold");
+    doc.text("Interim Orders:", 15, y);
+    y += 8;
 
-    // doc.setFont("helvetica", "normal");
+    doc.setFont("helvetica", "normal");
 
     complaint?.interimDetails
       ?.slice()
@@ -158,8 +158,10 @@ const InterimDetails = ({
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       )
       ?.forEach((item, index) => {
-        const heading = `${index + 1}. ${formatDate(item?.createdAt)} - ${format(toLocal(item?.createdAt), "hh:mm a")}
-        `;
+        const heading = `${index + 1}. ${format(
+          new Date(item.createdAt),
+          "dd.MM.yyyy hh:mm a",
+        )}`;
 
         doc.setFont("helvetica", "bold");
         doc.text(heading, 15, y);
@@ -175,11 +177,14 @@ const InterimDetails = ({
         doc.text(wrappedRemarks, 15, y);
         y += wrappedRemarks.length * 6 + 6;
 
+        // Page break
         if (y > 260) {
           doc.addPage();
           y = 20;
         }
       });
+
+    // Announced
 
     doc.setFont("helvetica", "bold");
     doc.setFont("helvetica", "bold");
@@ -196,6 +201,7 @@ const InterimDetails = ({
 
     doc.text("(Authority under Punjab Consumer Protection Act, 2005)", 60, y);
 
+    // Save PDF
     doc.save(`Interim_Order_${complaint?.caseNo}.pdf`);
   };
 
@@ -298,18 +304,6 @@ const InterimDetails = ({
   };
   return (
     <div className="px-5! py-4! ">
-      <div className="flex justify-between mb-1!">
-        <p className="text-[#2A2A2B] font-semibold text-sm ">Interm Details</p>
-        {canShowResolveButton && (
-          <div
-            className="h-full! flex gap-1 items-center bg-white border border-[#D5D7DA] rounded-lg px-2! py-1! text-[#414651] font-bold text-xs cursor-pointer"
-            onClick={() => downloadInterimPDF(complaint, interimRemarks)}
-          >
-            Download Interim
-            <HugeiconsIcon icon={Download03Icon} size={14} color="#414651" />
-          </div>
-        )}
-      </div>
       <CustomTextArea
         label="Order Sheet"
         placeholder="Type..."
@@ -369,20 +363,12 @@ const InterimDetails = ({
 
       {canShowResolveButton && (
         <div className="flex justify-end items-center gap-2 my-3!">
-          {/* <Button
+          <Button
             className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
             onClick={() => downloadInterimPDF(complaint, interimRemarks)}
           >
             Download Interim
-          </Button> */}
-
-          {/* <div
-            className="h-full! flex gap-1 items-center bg-white border border-[#D5D7DA] rounded-lg px-3! py-2! text-[#414651] font-bold text-sm cursor-pointer"
-            onClick={() => downloadInterimPDF(complaint, interimRemarks)}
-          >
-            Download Interim
-            <HugeiconsIcon icon={Download03Icon} size={16} color="#414651" />
-          </div> */}
+          </Button>
 
           <Button
             className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"

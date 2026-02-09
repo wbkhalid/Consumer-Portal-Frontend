@@ -23,6 +23,7 @@ import DateFilter from "../../../components/DateFilter";
 import ClearButton from "../../../components/ClearButton";
 import { ManageComplainsData } from "../../../hooks/useGetAllComplains";
 import { ManageCustomComplainsData } from "../../../hooks/useGetCustomComplaints";
+import PageHeader from "../../../components/PageHeader";
 
 export interface SectionReport {
   districtName: string;
@@ -107,12 +108,13 @@ const SectionReportPage = async ({ searchParams }: Props) => {
   return (
     <>
       <div className="flex justify-between items-center mb-2.5!">
-        <div className="flex items-center gap-1">
+        {/* <div className="flex items-center gap-1">
           <p className="text-[#111827] font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {data?.length} Records
           </p>
-        </div>
+        </div> */}
+        <PageHeader title={fileName} count={data?.length} />
       </div>
       <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">
         <div className="flex justify-between items-center py-3! px-5!">

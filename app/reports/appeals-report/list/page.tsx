@@ -9,6 +9,7 @@ import SearchFilter from "../../../components/reuseable-filters/SearchFilter";
 import DateFilter from "../../../components/DateFilter";
 import ClearButton from "../../../components/ClearButton";
 import { ManageComplainsData } from "../../../hooks/useGetAllComplains";
+import PageHeader from "../../../components/PageHeader";
 
 export interface AppealReport {
   districtName: string;
@@ -81,12 +82,13 @@ const AppealsReportPage = async ({ searchParams }: Props) => {
   return (
     <>
       <div className="flex justify-between items-center mb-2.5!">
-        <div className="flex items-center gap-1">
+        {/* <div className="flex items-center gap-1">
           <p className="text-[#111827] font-semibold">{fileName}</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {data?.length?.toLocaleString()} Records
           </p>
-        </div>
+        </div> */}
+        <PageHeader title={fileName} count={data?.length} />
         <DownloadWrapper data={data} fileName={fileName} />
       </div>
       <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">

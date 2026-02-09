@@ -10,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AddSquareIcon } from "@hugeicons/core-free-icons";
 import { getRole } from "../../utils/utils";
+import PageHeader from "../../components/PageHeader";
 
 const StaffComponent = () => {
   const searchParams = useSearchParams();
@@ -39,12 +40,14 @@ const StaffComponent = () => {
   return (
     <>
       <div className="flex justify-between items-center mb-2.5!">
-        <div className="flex items-center gap-1">
+        {/* <div className="flex items-center gap-1">
           <p className="text-[#111827] font-semibold">Staff Management</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {filteredData?.length?.toLocaleString()} Records
           </p>
-        </div>
+        </div> */}
+
+        <PageHeader title={"Staff Management"} count={filteredData?.length} />
         {role?.toLocaleLowerCase() === "admin" && (
           <Button
             className="border! border-(--primary)! cursor-pointer! rounded-lg! bg-[linear-gradient(180deg,#036CCF_-46.25%,#013769_100%)]! shadow-[0px_1px_2px_rgba(10,13,18,0.05)]! hover:opacity-95! transition-all!"

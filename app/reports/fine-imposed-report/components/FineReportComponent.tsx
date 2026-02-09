@@ -11,6 +11,7 @@ import YearFilter from "../../../components/YearFilter";
 import SearchFilter from "../../../components/reuseable-filters/SearchFilter";
 import ClearButton from "../../../components/ClearButton";
 import { useSearchParams } from "next/navigation";
+import PageHeader from "../../../components/PageHeader";
 
 interface FineReportComponentProp {
   data: FineImposedProp[];
@@ -104,12 +105,14 @@ const FineReportComponent = ({ data }: FineReportComponentProp) => {
   return (
     <>
       <div className="flex justify-between items-center mb-2.5!">
-        <div className="flex items-center gap-1">
+        {/* <div className="flex items-center gap-1">
           <p className="text-[#111827] font-semibold">Fine Imposed Report</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {data?.length?.toLocaleString()} Records
           </p>
-        </div>
+        </div> */}
+
+        <PageHeader title={"Fine Imposed Report"} count={data?.length} />
 
         <DownloadDropdown
           onExportExcel={() => exportFineReportToExcel(data)}

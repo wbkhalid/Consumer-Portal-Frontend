@@ -15,6 +15,7 @@ import FineFilterDropdown from "./FineFilter";
 import SearchFilter from "../../../components/reuseable-filters/SearchFilter";
 import DetailTable from "../../../components/table/DetailTable";
 import ClearButton from "../../../components/ClearButton";
+import PageHeader from "../../../components/PageHeader";
 
 const CustomComplaintComponent = () => {
   const [refresh, setRefresh] = useState(false);
@@ -58,12 +59,13 @@ const CustomComplaintComponent = () => {
   return (
     <>
       <div className="flex justify-between items-center mb-2.5!">
-        <div className="flex items-center gap-1">
+        {/* <div className="flex items-center gap-1">
           <p className="text-[#111827] font-semibold">Custom Complaints</p>
           <p className="border border-(--primary) text-(--primary) font-semibold rounded-full px-1! py-0.5! text-xs">
             {filteredData?.length?.toLocaleString()} Records
           </p>
-        </div>
+        </div> */}
+        <PageHeader title={"Custom Complaints"} count={filteredData?.length} />
         <CustomComplaintDialog setRefresh={setRefresh} />
       </div>
       <div className="border border-[#E9EAEB]  rounded-lg overflow-hidden  bg-white">

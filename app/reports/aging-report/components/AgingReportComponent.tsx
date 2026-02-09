@@ -5,6 +5,7 @@ import AgingReportTable from "./AgingReportTable";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import PageHeader from "../../../components/PageHeader";
 
 interface AgingReportComponentProp {
   data: AgingReportProp[];
@@ -76,7 +77,8 @@ const AgingReportComponent = ({ data }: AgingReportComponentProp) => {
   return (
     <>
       <div className="flex justify-between items-center mb-2.5!">
-        <p className="text-[#111827] font-semibold">Aging Report</p>
+        {/* <p className="text-[#111827] font-semibold">Aging Report</p> */}
+        <PageHeader title={"Aging Report"} />
 
         <DownloadDropdown
           onExportExcel={() => exportAgingReportToExcel(data)}

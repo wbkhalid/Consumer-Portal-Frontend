@@ -148,7 +148,7 @@ const DetailTable = ({
                   {index + 1}
                 </TableBodyCell>
                 <TableBodyCell className="font-semibold">
-                  {item?.caseNo}
+                  {"item?.caseNo"}
                   {/* {formatComplaintId(
                     item?.id,
                     item?.entryType,
