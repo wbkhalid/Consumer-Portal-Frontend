@@ -7,6 +7,9 @@ import ComplaintPieChart from "./components/home-components/ComplaintPieChart";
 import SectionPieChart from "./components/home-components/SectionPieChart";
 import HomeMap from "./components/home-components/HomeMap";
 import HomeHeader from "./components/home-components/HomeHeader";
+import RefreshOnFocus from "./components/RefreshOnFocus";
+
+// export const dynamic = "force-dynamic";
 
 interface PageProps {
   searchParams: Promise<{
@@ -172,6 +175,7 @@ const MainPage = async ({ searchParams }: PageProps) => {
 
   return (
     <div>
+      <RefreshOnFocus />
       <HomeHeader data={complainDashboardData} />
       {/* <HomeFilters
         total={complainDashboardData?.totalComplaints}

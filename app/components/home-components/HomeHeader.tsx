@@ -59,14 +59,14 @@ const HomeHeader = ({ data }: { data: ComplainDashboardType }) => {
           </Link>
 
           <Link
-            href={`/remand${params.toString() ? `?${params.toString()}` : ""}`}
+            href={`/appeals${params.toString() ? `?${params.toString()}` : ""}`}
           >
             <div className="bg-[rgba(238,242,255,0.3)] border border-[#E5E7EB] rounded-3xl py-2! px-4! flex gap-4  min-w-[200px]">
               <div
                 className={`bg-[linear-gradient(135deg,#615FFF_0%,#3A3999_100%)] w-11 h-11 rounded-[14px] flex items-center justify-center text-white`}
               >
                 <Image
-                  src={`/icons/remand.png`}
+                  src={`/icons/appeals.png`}
                   alt={`total-complaints.png`}
                   width={24}
                   height={24}
@@ -75,10 +75,10 @@ const HomeHeader = ({ data }: { data: ComplainDashboardType }) => {
 
               <div>
                 <p className="text-[#6B7280] font-bold text-[10px] uppercase">
-                  REMANDED
+                  Appeals
                 </p>
                 <p className="text-[#182236] font-bold text-2xl">
-                  {data?.remandsCount}
+                  {data?.appealsCount}
                   {/* <span className="text-[#6B7280] font-bold text-[10px] uppercase ml-2!">
                     total
                   </span> */}

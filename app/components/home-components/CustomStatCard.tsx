@@ -9,7 +9,7 @@ interface CustomStatCardProps {
   percentage?: string | number;
   percentageBg?: string;
   percentageText?: string;
-  spanText?: string;
+  // spanText?: string;
 }
 
 const CustomStatCard = ({
@@ -20,10 +20,10 @@ const CustomStatCard = ({
   percentage,
   percentageBg,
   percentageText,
-  spanText,
+  // spanText,
 }: CustomStatCardProps) => {
   return (
-    <div className="rounded-2xl p-4! bg-white border border-[#E5E7EB]">
+    <div className="rounded-2xl p-2! lg:p-3! 2xl:p-4! bg-white border border-[#E5E7EB] h-full ">
       <div className="flex justify-between items-start">
         <div
           className={`${iconBg} w-12 h-12 rounded-[10px] flex items-center justify-center text-white`}
@@ -36,7 +36,9 @@ const CustomStatCard = ({
           />
         </div>
         <div className={`${percentageBg} rounded-3xl py-0.5! px-2! w-fit `}>
-          <p className={`${percentageText} text-[11px] font-medium`}>
+          <p
+            className={`${percentageText} text-[10px] xl:text-[11px] font-medium`}
+          >
             {percentage}
           </p>
         </div>
@@ -45,7 +47,7 @@ const CustomStatCard = ({
         {value?.toLocaleString()}
       </p>
       <p className="text-[#969799] font-semibold text-[10px] xl:text-[11px] uppercase">
-        {title} {spanText && <span className="text-[8px]">({spanText})</span>}
+        {title}
       </p>
     </div>
   );

@@ -17,6 +17,7 @@ import useGetMeetingVideos from "../../hooks/useGetMeetingVideos";
 import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { format } from "date-fns";
+import jsPDF from "jspdf";
 
 const InterimDetails = ({
   complaint,
@@ -37,6 +38,130 @@ const InterimDetails = ({
 }) => {
   const loginUser = canEditable();
   const role = getRole();
+
+  const loadImage = (src: string): Promise<HTMLImageElement> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => resolve(img);
+    });
+  };
+
+  const downloadInterimPDF = async (
+    complaint: ManageComplainsData | null,
+    remarks: string,
+  ) => {
+    if (!complaint) return;
+
+    const doc = new jsPDF("p", "mm", "a4");
+
+    // Margins
+    let y = 20;
+
+    // Header
+
+    const logo = await loadImage("/logo.jpeg");
+    const imgY = 10;
+    const imgH = 20;
+    const centerY = imgY + imgH / 2;
+    const textY = centerY + 5;
+
+    // Left logo
+    doc.addImage(logo, "JPEG", 15, imgY, 20, 20);
+
+    // Right logo
+    // doc.addImage(logo, "JPEG", 175, imgY, 20, 20);
+
+    // Center text
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("INTERIM ORDER SHEET", 105, textY, { align: "center" });
+
+    y += 15;
+    doc.setFontSize(10);
+
+    // Complaint Info Table (manual)
+    doc.rect(15, y, 180, 20);
+    doc.line(75, y, 75, y + 20);
+    doc.line(135, y, 135, y + 20);
+
+    doc.text("Complaint Name", 18, y + 6);
+    doc.text("v/s", 100, y + 10);
+    doc.text("Respondent Name", 138, y + 6);
+
+    doc.setFont("helvetica", "normal");
+
+    doc.text(complaint?.complainantDetails?.fullName || "-", 18, y + 14);
+    doc.text(complaint?.shopName || "-", 138, y + 14);
+
+    y += 30;
+
+    // Complaint Number & Nature
+    doc.setFont("helvetica", "bold");
+    doc.text("Complaint No:", 15, y);
+
+    // Value (NORMAL) – thora aage se start
+    doc.setFont("helvetica", "normal");
+    doc.text(complaint?.caseNo || "-", 45, y);
+
+    y += 6;
+    // Label
+    doc.setFont("helvetica", "bold");
+    doc.text("Nature of Complaint:", 15, y);
+
+    doc.setFont("helvetica", "normal");
+
+    const natureText =
+      complaint?.sectionsDetails?.map((s) => s?.description).join(", ") || "-";
+
+    const wrappedText = doc.splitTextToSize(natureText, 140);
+
+    doc.text(wrappedText, 55, y);
+
+    y += wrappedText.length * 6;
+
+    y += 12;
+
+    // Order Date
+    doc.setFont("helvetica", "bold");
+    doc.text(`ORDER / ${format(new Date(), "dd.MM.yyyy")}`, 15, y);
+    doc.setFont("helvetica", "normal");
+
+    y += 8;
+    doc.text("Present:      Parties Name", 15, y);
+
+    y += 15;
+
+    // First horizontal line
+    doc.line(15, y, 195, y);
+
+    y += 20; // gap between lines (adjust as needed)
+
+    // Second horizontal line
+    doc.line(15, y, 195, y);
+
+    y += 25;
+
+    // Announced
+
+    doc.setFont("helvetica", "bold");
+    doc.setFont("helvetica", "bold");
+    doc.text("Announced:", 15, y);
+
+    const announcedWidth = doc.getTextWidth("Announced:");
+    doc.line(15, y + 2, 15 + announcedWidth, y + 2);
+
+    const dateText = format(new Date(), "dd.MM.yyyy");
+    doc.text(dateText, 15, y + 6);
+
+    const dateWidth = doc.getTextWidth(dateText);
+    doc.line(15, y + 8, 15 + dateWidth, y + 8);
+
+    doc.text("(Authority under Punjab Consumer Protection Act, 2005)", 60, y);
+
+    // Save PDF
+    doc.save(`Interim_Order_${complaint?.caseNo}.pdf`);
+  };
 
   const isDGorSecretary = role === "DG" || role === "SECRETARY";
 
@@ -195,7 +320,14 @@ const InterimDetails = ({
       </div>
 
       {canShowResolveButton && (
-        <div className="flex justify-end items-center my-3!">
+        <div className="flex justify-end items-center gap-2 my-3!">
+          <Button
+            className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
+            onClick={() => downloadInterimPDF(complaint, interimRemarks)}
+          >
+            Download Interim
+          </Button>
+
           <Button
             className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
             disabled={loading}
@@ -205,6 +337,7 @@ const InterimDetails = ({
           </Button>
         </div>
       )}
+
       {((complaint?.interimDetails?.length ?? 0) > 0 ||
         (meetingVideos?.length ?? 0) > 0) && (
         <div

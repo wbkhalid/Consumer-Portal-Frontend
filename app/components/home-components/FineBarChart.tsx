@@ -62,6 +62,21 @@ const FineBarChart = () => {
     });
   };
 
+  const getBarSizeByPeriod = (period: number) => {
+    switch (period) {
+      case 0: // Day
+        return 100;
+      case 1: // Week
+        return 35;
+      case 2: // Month
+        return 10;
+      case 3: // Year
+        return 20;
+      default:
+        return 30;
+    }
+  };
+
   return (
     <div className="bg-white border border-[#E5E7EB] rounded-2xl col-span-12 lg:col-span-7">
       <div className="flex justify-between items-center px-5! py-3.5!">
@@ -179,7 +194,15 @@ const FineBarChart = () => {
                   borderRadius: "10px",
                   color: "#ffffff",
                 }}
-                formatter={(value) => [`${value}`, "Total Fine"]}
+                formatter={(value, name) => {
+                  if (name === "totalFine") {
+                    return [`${value}`, "Total Fine Imposed"];
+                  }
+                  if (name === "totalFineCollected") {
+                    return [`${value}`, "Total Fine Collected"];
+                  }
+                  return [value, name];
+                }}
                 cursor={{ fill: "transparent" }}
               />
 
@@ -187,13 +210,13 @@ const FineBarChart = () => {
                 dataKey="totalFine"
                 fill="url(#fineBarGradient)"
                 radius={20}
-                barSize={35}
+                barSize={getBarSizeByPeriod(activePeriod)}
               />
               <Bar
                 dataKey="totalFineCollected"
                 fill="url(#fineCollectedGradient)"
                 radius={20}
-                barSize={35}
+                barSize={getBarSizeByPeriod(activePeriod)}
               />
             </BarChart>
           </ResponsiveContainer>

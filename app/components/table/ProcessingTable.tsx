@@ -235,7 +235,6 @@ const ProcessingTable = ({ rowsData, setRefresh }: ProcessingTableProps) => {
             onClose={() => {
               setSelectedComplaint(null);
               setOpenDialog(false);
-              setRefresh((prev) => !prev);
             }}
             onSuccess={() => {
               setRefresh((prev) => !prev);
