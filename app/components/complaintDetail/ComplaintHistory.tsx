@@ -317,6 +317,10 @@ const ComplaintHistory = ({ complaint, setMediaModal }: HistoryProps) => {
               </p>
 
               <p className="text-sm mt-1!">
+                <span className="font-semibold">Present Parties: </span>
+                {i.presentPartiesName}
+              </p>
+              <p className="text-sm mt-1!">
                 <span className="font-semibold">Order Sheet: </span>
                 {i.interimRemarks}
               </p>

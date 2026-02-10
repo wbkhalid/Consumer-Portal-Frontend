@@ -47,10 +47,7 @@ const InterimDetails = ({
     });
   };
 
-  const downloadInterimPDF = async (
-    complaint: ManageComplainsData | null,
-    remarks: string,
-  ) => {
+  const downloadInterimPDF = async (complaint: ManageComplainsData | null) => {
     if (!complaint) return;
 
     const doc = new jsPDF("p", "mm", "a4");
@@ -122,79 +119,77 @@ const InterimDetails = ({
 
     y += 12;
 
-    // Order Date
-    doc.setFont("helvetica", "bold");
-    doc.text(`ORDER / ${format(new Date(), "dd.MM.yyyy")}`, 15, y);
-    doc.setFont("helvetica", "normal");
-
-    y += 8;
-    doc.text("Present:      Parties Name", 15, y);
-
-    y += 15;
-
-    // // First horizontal line
-    // doc.line(15, y, 195, y);
-
-    // y += 20; // gap between lines (adjust as needed)
-
-    // // Second horizontal line
-    // doc.line(15, y, 195, y);
-
-    // y += 25;
-
-    // // Lines ke baad
-    // y += 10;
-
-    // doc.setFont("helvetica", "bold");
-    // doc.text("Interim Orders:", 15, y);
-    // y += 8;
-
-    // doc.setFont("helvetica", "normal");
-
     complaint?.interimDetails
       ?.slice()
-      ?.sort(
-        (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-      )
+      ?.sort((a, b) => (b.id || 0) - (a.id || 0))
       ?.forEach((item, index) => {
-        const heading = `${index + 1}. ${formatDate(item?.createdAt)} - ${format(toLocal(item?.createdAt), "hh:mm a")}
-        `;
-
         doc.setFont("helvetica", "bold");
-        doc.text(heading, 15, y);
+        doc.text(
+          `ORDER / ${formatDate(item?.createdAt)} - ${format(
+            toLocal(item?.createdAt),
+            "hh:mm a",
+          )}`,
+          15,
+          y,
+        );
+
         y += 6;
+        // Present label
+        doc.setFont("helvetica", "bold");
+        doc.text("Present:", 15, y);
+
+        // Wrapped present parties text
+        doc.setFont("helvetica", "normal");
+        const presentText = item?.presentPartiesName || "-";
+        const wrappedPresent = doc.splitTextToSize(presentText, 170);
+
+        wrappedPresent.forEach((line: string) => {
+          doc.text(line, 30, y);
+          y += 4;
+        });
+
+        y += 6;
+
+        doc.setFont("helvetica", "normal");
 
         doc.setFont("helvetica", "normal");
 
         const wrappedRemarks = doc.splitTextToSize(
           item.interimRemarks || "-",
-          170,
+          185,
         );
 
         doc.text(wrappedRemarks, 15, y);
         y += wrappedRemarks.length * 6 + 6;
+
+        doc.setFont("helvetica", "bold");
+        doc.text("Announced:", 15, y);
+        const announcedWidth = doc.getTextWidth("Announced:");
+        doc.line(15, y + 2, 15 + announcedWidth, y + 2);
+
+        y += 6;
+        doc.setFont("helvetica", "bold");
+        const dateText = `${formatDate(item?.createdAt)} - ${format(
+          toLocal(item?.createdAt),
+          "hh:mm a",
+        )}`;
+        doc.text(dateText, 15, y);
+        const dateWidth = doc.getTextWidth(dateText);
+        doc.line(15, y + 2, 15 + dateWidth, y + 2);
+
+        // y += 8;
+        doc.text(
+          "(Authority under Punjab Consumer Protection Act, 2005)",
+          60,
+          y,
+        );
+        y += 12;
 
         if (y > 260) {
           doc.addPage();
           y = 20;
         }
       });
-
-    doc.setFont("helvetica", "bold");
-    doc.setFont("helvetica", "bold");
-    doc.text("Announced:", 15, y);
-
-    const announcedWidth = doc.getTextWidth("Announced:");
-    doc.line(15, y + 2, 15 + announcedWidth, y + 2);
-
-    const dateText = format(new Date(), "dd.MM.yyyy");
-    doc.text(dateText, 15, y + 6);
-
-    const dateWidth = doc.getTextWidth(dateText);
-    doc.line(15, y + 8, 15 + dateWidth, y + 8);
-
-    doc.text("(Authority under Punjab Consumer Protection Act, 2005)", 60, y);
 
     doc.save(`Interim_Order_${complaint?.caseNo}.pdf`);
   };
@@ -206,49 +201,61 @@ const InterimDetails = ({
     : loginUser === complaint?.assignedTo;
   const { data: meetingVideos } = useGetMeetingVideos({ id: complaint?.id });
   const [interimRemarks, setInterimRemarks] = useState("");
+  const [presentParties, setPresentParties] = useState("");
   const [loading, setLoading] = useState(false);
-  const imageInputRef = useRef<HTMLInputElement>(null);
+  const evidenceInputRef = useRef<HTMLInputElement>(null);
+  const cnicInputRef = useRef<HTMLInputElement>(null);
 
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [evidenceUrls, setEvidenceUrls] = useState<string[]>([]);
+  const [evidencePreviews, setEvidencePreviews] = useState<string[]>([]);
+
+  const [cnicUrls, setCnicUrls] = useState<string[]>([]);
+  const [cnicPreviews, setCnicPreviews] = useState<string[]>([]);
+
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEvidenceChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const files = e.target.files;
-    if (!files || files.length === 0) return;
+    if (!files?.length) return;
 
-    const tooLarge = Array.from(files).some(
-      (file) => file.size > 5 * 1024 * 1024,
-    );
-    if (tooLarge) {
-      toast.warning("All images must be less than 5MB.");
-      return;
-    }
-
-    const newPreviews = Array.from(files).map((file) =>
-      URL.createObjectURL(file),
-    );
-    setImagePreviews((prev) => [...prev, ...newPreviews]);
+    const previews = Array.from(files).map((file) => URL.createObjectURL(file));
+    setEvidencePreviews((prev) => [...prev, ...previews]);
 
     try {
       const uploadedFiles = await uploadMultipleFiles(e, "refdocument");
-      const urls = uploadedFiles?.map((file: any) => file.fileUrl);
-      setImageUrls((prev) => [...prev, ...urls]);
-      console.log("Uploaded URLs:", urls);
-    } catch (error) {
-      toast.error("Error uploading files.");
-      console.error("Upload error:", error);
+      const urls = uploadedFiles?.map((f: any) => f.fileUrl);
+      setEvidenceUrls((prev) => [...prev, ...urls]);
+    } catch {
+      toast.error("Evidence upload failed");
     }
   };
 
-  const removeImageAt = (index: number) => {
-    const updatedUrls = [...imageUrls];
-    updatedUrls.splice(index, 1);
-    setImageUrls(updatedUrls);
+  const handleCNICChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files?.length) return;
 
-    const updatedPreviews = [...imagePreviews];
-    updatedPreviews.splice(index, 1);
-    setImagePreviews(updatedPreviews);
+    const previews = Array.from(files).map((file) => URL.createObjectURL(file));
+    setCnicPreviews((prev) => [...prev, ...previews]);
+
+    try {
+      const uploadedFiles = await uploadMultipleFiles(e, "interimcnic");
+      const urls = uploadedFiles?.map((f: any) => f.fileUrl);
+      setCnicUrls((prev) => [...prev, ...urls]);
+    } catch {
+      toast.error("CNIC upload failed");
+    }
+  };
+
+  const removeEvidenceAt = (index: number) => {
+    setEvidenceUrls((prev) => prev.filter((_, i) => i !== index));
+    setEvidencePreviews((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const removeCNICAt = (index: number) => {
+    setCnicUrls((prev) => prev.filter((_, i) => i !== index));
+    setCnicPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleInterimComplaint = async () => {
@@ -258,16 +265,36 @@ const InterimDetails = ({
       toast.warning("Please enter remarks for the  complaint.");
       return;
     }
+    if (!presentParties.trim()) {
+      toast.warning("Please enter presenet parties for the  complaint.");
+      return;
+    }
+    if (!presentParties.trim()) {
+      toast.warning("Please enter presenet parties for the  complaint.");
+      return;
+    }
+
+    if (cnicUrls.length === 0) {
+      toast.warning("Please upload CNIC evidence.");
+      return;
+    }
 
     try {
       setLoading(true);
 
       const payload = {
-        complaintId: complaint?.id,
-        interimRemarks: interimRemarks,
+        complaintId: complaint.id,
+        interimRemarks,
+        presentPartiesName: presentParties,
         createdBy: loginUser,
         createdAt: new Date().toISOString(),
-        interimOrderFilesPath: imageUrls?.map((url) => ({
+
+        interimOrderFilesPath: evidenceUrls.map((url) => ({
+          filePath: url,
+          fileType: 0,
+        })),
+
+        presentPartiesCNIC: cnicUrls.map((url) => ({
           filePath: url,
           fileType: 0,
         })),
@@ -299,17 +326,25 @@ const InterimDetails = ({
   return (
     <div className="px-5! py-4! ">
       <div className="flex justify-between mb-1!">
-        <p className="text-[#2A2A2B] font-semibold text-sm ">Interm Details</p>
+        <p className="text-[#2A2A2B] font-semibold text-sm ">Interim Details</p>
         {canShowResolveButton && (
           <div
             className="h-full! flex gap-1 items-center bg-white border border-[#D5D7DA] rounded-lg px-2! py-1! text-[#414651] font-bold text-xs cursor-pointer"
-            onClick={() => downloadInterimPDF(complaint, interimRemarks)}
+            onClick={() => downloadInterimPDF(complaint)}
           >
             Download Interim
             <HugeiconsIcon icon={Download03Icon} size={14} color="#414651" />
           </div>
         )}
       </div>
+
+      <CustomTextArea
+        label="Present Parties"
+        placeholder="Type..."
+        value={presentParties}
+        onChange={(e) => setPresentParties(e.target.value)}
+      />
+      <div className="mb-1!" />
       <CustomTextArea
         label="Order Sheet"
         placeholder="Type..."
@@ -317,14 +352,12 @@ const InterimDetails = ({
         onChange={(e) => setInterimRemarks(e.target.value)}
       />
 
-      <p className="my-1! text-[#2A2A2B] font-semibold text-xs mt-2!">
-        Evidence (CNIC etc.)
-      </p>
+      <p className="my-1! text-[#2A2A2B] font-semibold text-xs mt-2!">CNIC</p>
       <div
         className="flex justify-center flex-wrap gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-5! rounded-md cursor-pointer mt-1!"
-        onClick={() => imageInputRef.current?.click()}
+        onClick={() => cnicInputRef.current?.click()}
       >
-        {imagePreviews.length === 0 ? (
+        {cnicPreviews.length === 0 ? (
           <div className="flex flex-col items-center">
             <img
               src="/images/complaint-album-gray.png"
@@ -337,7 +370,7 @@ const InterimDetails = ({
             </p>
           </div>
         ) : (
-          imagePreviews.map((preview, i) => (
+          cnicPreviews.map((preview, i) => (
             <div key={i} className="relative w-16 h-16">
               <img
                 src={preview}
@@ -347,7 +380,7 @@ const InterimDetails = ({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  removeImageAt(i);
+                  removeCNICAt(i);
                 }}
                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600"
               >
@@ -362,28 +395,63 @@ const InterimDetails = ({
           accept="image/*"
           multiple
           className="hidden"
-          ref={imageInputRef}
-          onChange={handleImageChange}
+          ref={cnicInputRef}
+          onChange={handleCNICChange}
+        />
+      </div>
+
+      <p className="my-1! text-[#2A2A2B] font-semibold text-xs mt-2!">
+        Evidence
+      </p>
+      <div
+        className="flex justify-center flex-wrap gap-3 bg-[#F9FAFB] border border-[#E5E7EB] p-5! rounded-md cursor-pointer mt-1!"
+        onClick={() => evidenceInputRef.current?.click()}
+      >
+        {evidencePreviews.length === 0 ? (
+          <div className="flex flex-col items-center">
+            <img
+              src="/images/complaint-album-gray.png"
+              alt="complaint-album-gray"
+              className="w-6 h-6"
+            />
+            <p className="font-semibold text-[#4A5565] text-sm mb-1">Upload</p>
+            <p className="text-xs text-[#545861] font-medium">
+              JPG, PNG (Max: 5MB each)
+            </p>
+          </div>
+        ) : (
+          evidencePreviews.map((preview, i) => (
+            <div key={i} className="relative w-16 h-16">
+              <img
+                src={preview}
+                alt={`Uploaded ${i}`}
+                className="w-full h-full object-contain"
+              />
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeEvidenceAt(i);
+                }}
+                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 hover:bg-red-600"
+              >
+                <RxCross2 size={12} />
+              </button>
+            </div>
+          ))
+        )}
+
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          ref={evidenceInputRef}
+          onChange={handleEvidenceChange}
         />
       </div>
 
       {canShowResolveButton && (
         <div className="flex justify-end items-center gap-2 my-3!">
-          {/* <Button
-            className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
-            onClick={() => downloadInterimPDF(complaint, interimRemarks)}
-          >
-            Download Interim
-          </Button> */}
-
-          {/* <div
-            className="h-full! flex gap-1 items-center bg-white border border-[#D5D7DA] rounded-lg px-3! py-2! text-[#414651] font-bold text-sm cursor-pointer"
-            onClick={() => downloadInterimPDF(complaint, interimRemarks)}
-          >
-            Download Interim
-            <HugeiconsIcon icon={Download03Icon} size={16} color="#414651" />
-          </div> */}
-
           <Button
             className="cursor-pointer! hover:opacity-85! text-white! rounded-xl! text-[15px]! py-2.5! px-3.5! min-w-[150px]!"
             disabled={loading}
@@ -430,13 +498,13 @@ const InterimDetails = ({
                   {formatDate(i.createdAt)}
                   {"-"}
                   <span className="text-xs text-gray-500">
-                    {/* {new Date(i.createdAt).toLocaleTimeString("en-PK", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                  })} */}
                     {i?.createdAt && format(toLocal(i?.createdAt), "hh:mm a")}
                   </span>
+                </p>
+
+                <p className="text-sm mt-1!">
+                  <span className="font-semibold">Present Parties: </span>
+                  {i?.presentPartiesName}
                 </p>
 
                 <p className="text-sm mt-1!">

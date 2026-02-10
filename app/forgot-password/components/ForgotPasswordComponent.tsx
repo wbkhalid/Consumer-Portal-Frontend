@@ -22,7 +22,7 @@ const schema = z.object({
 
 type Login = z.infer<typeof schema>;
 
-const LoginComponent = () => {
+const ForgotPasswordComponent = () => {
   const {
     register,
     handleSubmit,
@@ -88,23 +88,9 @@ const LoginComponent = () => {
         className="h-screen w-screen bg-cover bg-center flex justify-center items-center"
         style={{ backgroundImage: 'url("/images/bg-login.png")' }}
       >
-        <div className="max-w-[480px] flex flex-col items-center rounded-3xl bg-white/10 backdrop-blur-md border border-white/40 p-7!">
-          <div className="flex gap-2.5 items-center mb-1!">
-            <Image
-              src="/logo-white.png"
-              alt="login-logo"
-              width={90}
-              height={90}
-            />
-            <Image src="/images/cm.png" alt="login-cm" width={90} height={90} />
-          </div>
+        <div className="w-[480px] flex flex-col items-center rounded-3xl bg-white/10 backdrop-blur-md border border-white/40 p-7!">
           <p className="text-white font-extrabold text-2xl text-center">
-            Directorate General of Enforcement
-            <br /> (Prices & Consumer Protection)
-          </p>
-          <p className="text-white text-center my-1!">
-            Please enter your email or phone and password to log in and
-            continue.
+            Forgot Password?
           </p>
 
           <div className="w-full flex flex-col gap-3 mt-3!">
@@ -116,13 +102,6 @@ const LoginComponent = () => {
               error={errors.emailOrPhone?.message}
               {...register("emailOrPhone")}
             />
-            <CustomPasswordField
-              label="Password"
-              placeholder="Password"
-              isRegister
-              {...register("password")}
-              error={errors?.password?.message}
-            />
           </div>
 
           <Button
@@ -130,22 +109,18 @@ const LoginComponent = () => {
             className="rounded-full! w-full! mt-4! cursor-pointer!"
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Logging in..." : "Login"}
+            Send OTP
           </Button>
-          {/* <p
+          <p
             className="text-white mt-1! cursor-pointer hover:underline"
-            onClick={() =>
-              router.push(
-                `/forgot-password?value=${encodeURIComponent(watch("emailOrPhone") || "")}`,
-              )
-            }
+            onClick={() => router.push(`/login`)}
           >
-            Fogot Password?
-          </p> */}
+            Back to Login
+          </p>
         </div>
       </div>
     </form>
   );
 };
 
-export default LoginComponent;
+export default ForgotPasswordComponent;

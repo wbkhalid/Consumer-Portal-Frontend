@@ -6,7 +6,12 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
 
   // Public routes (no login required)
-  const publicPaths = ["/login", "/privacy-policy", "/dashboard"];
+  const publicPaths = [
+    "/login",
+    "/privacy-policy",
+    "/dashboard",
+    "/forgot-password",
+  ];
 
   // Agar user login hai aur login page open kare
   if (token && pathname === "/login") {

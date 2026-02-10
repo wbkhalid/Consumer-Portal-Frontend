@@ -16,7 +16,7 @@ interface PageProps {
     divisionId?: string;
     districtId?: string;
     tehsilId?: string;
-    period?: string;
+    // period?: string;
   }>;
 }
 
@@ -117,7 +117,7 @@ const MainPage = async ({ searchParams }: PageProps) => {
     divisionId: filterDivisionId,
     districtId: filterDistrictId,
     tehsilId: filterTehsilId,
-    period = "3",
+    // period = "3",
   } = await searchParams;
   const cookieStore = await cookies();
   const role = cookieStore.get("role")?.value || "";
@@ -160,8 +160,8 @@ const MainPage = async ({ searchParams }: PageProps) => {
     baseParams.append("districtId", cookieDistrictId || "");
     baseParams.append("tehsilId", cookieTehsilId || "");
   }
-  const fineParams = new URLSearchParams(baseParams);
-  fineParams.set("period", period);
+  // const fineParams = new URLSearchParams(baseParams);
+  // fineParams.set("period", period);
 
   console.log(baseParams, "baseParams");
 

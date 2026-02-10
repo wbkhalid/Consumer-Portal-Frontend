@@ -35,6 +35,13 @@ export interface ComplainantDetails {
 export interface InterimDetails {
   id: number;
   interimRemarks: string;
+  presentPartiesName: string;
+  presentPartiesCNIC: [
+    {
+      filePath: string;
+      fileType: number;
+    },
+  ];
   interimOrderFilesPath: [
     {
       filePath: string;

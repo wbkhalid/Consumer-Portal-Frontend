@@ -7,7 +7,7 @@ import NavBar from "./NavBar";
 const NavbarToggle = ({ children }: PropsWithChildren) => {
   const currentPath = usePathname();
 
-  if (currentPath === "/login" || currentPath === "/register") {
+  if (currentPath === "/login" || currentPath === "/forgot-password") {
     return <main>{children}</main>;
   }
 

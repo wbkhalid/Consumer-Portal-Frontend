@@ -11,15 +11,23 @@ import {
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Marker, MarkerClusterer } from "@googlemaps/markerclusterer";
+import Cookies from "js-cookie";
 
 const HomeMap = ({ data }: { data: ComplaintsListType[] }) => {
+  // const lat = Cookies.get("lat") ?? 31.5204;
+  // const long = Cookies.get("long") ?? 74.3587;
+  //  31.5204, lng: 74.3587
+
   return (
     <div className=" w-full h-[450px] rounded-2xl overflow-hidden shadow-sm border-2  border-[#E5E7EB] col-span-12">
       <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API || ""}>
         <Map
-          defaultCenter={{ lat: 31.5204, lng: 74.3587 }}
+          defaultCenter={{
+            lat: 31.5204,
+            lng: 74.3587,
+          }}
           mapId={process.env.NEXT_PUBLIC_GOOGLE_MAP_ID}
-          defaultZoom={7}
+          defaultZoom={9}
           mapTypeId="hybrid"
           disableDefaultUI
           fullscreenControl={true}
@@ -91,7 +99,7 @@ const Markers = ({ complaints }: Props) => {
           onClick={() => setSelectedComplaint(complaint)}
         >
           <Image
-            src="/images/green-marker.png"
+            src="/images/gradient-marker.png"
             width={24}
             height={24}
             alt="marker"
@@ -110,8 +118,8 @@ const Markers = ({ complaints }: Props) => {
         >
           <div
             style={{
-              backgroundColor: "#014D54",
-              border: "1px solid #1BCEF5",
+              backgroundColor: "var(--primary)",
+              // border: "1px solid #1BCEF5",
               borderRadius: 0,
               padding: "4px 8px",
               minWidth: "120px",
