@@ -1,13 +1,14 @@
 "use client";
 import TableHeaderCell from "../../../components/table/TableHeaderCell";
 import TableBodyCell from "../../../components/table/TableBodyCell";
-import { ManageCustomComplainsData } from "../../../hooks/useGetCustomComplaints";
+
 import { formatDate, statusData } from "../../../utils/utils";
 import PaginationControls from "../../../components/table/PaginationControls";
 import { useMemo, useState } from "react";
+import { ManageComplainsData } from "../../../hooks/useGetAllComplains";
 
 interface CustomComplaintProp {
-  rowsData: ManageCustomComplainsData[];
+  rowsData: ManageComplainsData[];
 }
 
 const CustomComplaintTable = ({ rowsData }: CustomComplaintProp) => {
@@ -18,7 +19,7 @@ const CustomComplaintTable = ({ rowsData }: CustomComplaintProp) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [selectedComplaint, setSelectedComplaint] =
-    useState<ManageCustomComplainsData | null>(null);
+    useState<ManageComplainsData | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
 
   const headers = [
@@ -60,8 +61,8 @@ const CustomComplaintTable = ({ rowsData }: CustomComplaintProp) => {
         aValue = a.sectionsDetails?.map((s) => s.description).join(", ") ?? "";
         bValue = b.sectionsDetails?.map((s) => s.description).join(", ") ?? "";
       } else {
-        aValue = String(a[key as keyof ManageCustomComplainsData] ?? "");
-        bValue = String(b[key as keyof ManageCustomComplainsData] ?? "");
+        aValue = String(a[key as keyof ManageComplainsData] ?? "");
+        bValue = String(b[key as keyof ManageComplainsData] ?? "");
       }
 
       if (aValue < bValue) return direction === "asc" ? -1 : 1;

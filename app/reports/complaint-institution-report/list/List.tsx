@@ -1,8 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import CustomTableHeaderCell from "../../../components/table/CustomTableHeaderCell";
 import TableBodyCell from "../../../components/table/TableBodyCell";
-import { BaseQuery, Column } from "../../../utils/utils";
+import { BaseQuery, buildQueryString, Column } from "../../../utils/utils";
 import { ComplaintInstitution } from "./page";
 
 export type Query = BaseQuery<ComplaintInstitution>;
@@ -16,7 +17,8 @@ interface Props {
 
 const List = ({ data, searchParams }: Props) => {
   const { totalWalkIn, totalOnline, totalofTotal } = calculateTotals(data);
-
+  const router = useRouter();
+  const queryString = buildQueryString(searchParams);
   const columns = getColumns();
 
   return (
@@ -45,9 +47,14 @@ const List = ({ data, searchParams }: Props) => {
               return (
                 <tr
                   key={index + 1}
-                  className={`transition-colors duration-150 ${
-                    index % 2 === 0 ? "bg-[#FAFAFA]" : "bg-white"
-                  } hover:bg-gray-100`}
+                  className={`transition-colors duration-150 cursor-pointer hover:bg-gray-100`}
+                  onClick={() =>
+                    router.push(
+                      `/reports/complaint-institution-report/${encodeURIComponent(
+                        d?.districtName,
+                      )}${queryString ? `?${queryString}` : ""}`,
+                    )
+                  }
                 >
                   <TableBodyCell>{index + 1}</TableBodyCell>
                   <TableBodyCell>{d.districtName}</TableBodyCell>

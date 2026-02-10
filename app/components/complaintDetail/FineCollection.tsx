@@ -1,6 +1,5 @@
 import { Button, Spinner } from "@radix-ui/themes";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
-import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 import CustomTextField from "../CustomTextField";
 import DatePicker from "../DatePicker";
 import { canEditable } from "../../utils/utils";
@@ -10,7 +9,7 @@ import apiClient from "../../services/api-client";
 import { toast } from "react-toastify";
 
 interface FineCollectionProp {
-  complaint: ManageComplainsData | ManageCustomComplainsData | null;
+  complaint: ManageComplainsData | null;
   onSuccess: () => void;
 }
 

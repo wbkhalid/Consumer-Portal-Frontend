@@ -22,13 +22,13 @@ import SectionCategoryDropdown from "../../../components/reuseable-filters/Secti
 import DateFilter from "../../../components/DateFilter";
 import ClearButton from "../../../components/ClearButton";
 import { ManageComplainsData } from "../../../hooks/useGetAllComplains";
-import { ManageCustomComplainsData } from "../../../hooks/useGetCustomComplaints";
+
 import PageHeader from "../../../components/PageHeader";
 
 export interface SectionReport {
   districtName: string;
   complaintCount: number;
-  complaints: ManageComplainsData[] | ManageCustomComplainsData[];
+  complaints: ManageComplainsData[];
 }
 
 interface Props {

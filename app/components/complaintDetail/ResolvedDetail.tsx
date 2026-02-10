@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
-import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+
 import useGetMeetingVideos from "../../hooks/useGetMeetingVideos";
 import {
   formatDate,
@@ -10,7 +10,7 @@ import {
 } from "../../utils/utils";
 
 interface MediaDetailsProps {
-  complaint: ManageComplainsData | ManageCustomComplainsData | null;
+  complaint: ManageComplainsData | null;
   setMediaModal: React.Dispatch<
     React.SetStateAction<{
       open: boolean;

@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
-import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+
 import {
   canEditable,
   formatDate,
@@ -22,7 +22,7 @@ const ComplaintDetail = ({
   complaint,
   onSuccess,
 }: {
-  complaint: ManageComplainsData | ManageCustomComplainsData | null;
+  complaint: ManageComplainsData | null;
   onSuccess: () => void;
 }) => {
   const loginUser = canEditable();

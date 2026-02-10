@@ -16,10 +16,9 @@ import { Dialog } from "@radix-ui/themes";
 import { useRouter, useSearchParams } from "next/navigation";
 import { sort } from "fast-sort";
 import ComplaintDetailDialog from "../dialog/ComplaintDetailDialog";
-import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 
 interface DetailTableProps {
-  rowsData: ManageComplainsData[] | ManageCustomComplainsData[];
+  rowsData: ManageComplainsData[];
   isBreadCrumbs?: boolean;
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -32,9 +31,8 @@ const DetailTable = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedComplaint, setSelectedComplaint] = useState<
-    ManageComplainsData | ManageCustomComplainsData | null
-  >(null);
+  const [selectedComplaint, setSelectedComplaint] =
+    useState<ManageComplainsData | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   // const [pageSize, setPageSize] = useState(10);
 
@@ -57,7 +55,7 @@ const DetailTable = ({
 
   const sortFieldMapping: Record<
     string,
-    (item: ManageComplainsData | ManageCustomComplainsData) => string | number
+    (item: ManageComplainsData) => string | number
   > = {
     id: (i) => i.id,
     date: (i) => new Date(i.createdAt).getTime(),
@@ -148,7 +146,7 @@ const DetailTable = ({
                   {index + 1}
                 </TableBodyCell>
                 <TableBodyCell className="font-semibold">
-                  {"item?.caseNo"}
+                  {item?.caseNo}
                   {/* {formatComplaintId(
                     item?.id,
                     item?.entryType,

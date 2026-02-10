@@ -1,5 +1,6 @@
 import { ADMIN_DASHBOARD_API } from "../APIs";
 import useData from "./useData";
+import { ManageComplainsData } from "./useGetAllComplains";
 
 interface Props {
   divisionId?: number | string;
@@ -58,49 +59,49 @@ export interface AppealDecisionDetails {
   ];
 }
 
-export interface ManageCustomComplainsData {
-  id: number;
-  caseNo: string;
-  shopName: string;
-  phoneNumber: string;
-  complaintType: string;
-  categoryName: string;
-  address: string;
-  division: {
-    id: number;
-    name: string;
-  };
-  district: {
-    id: number;
-    name: string;
-  };
-  tehsil: {
-    id: number;
-    name: string;
-  };
-  latitude: number;
-  longitude: number;
-  finedAmount: number;
-  fineCollectionDate: null | string;
-  billBoardImage: string;
-  sectionCategoryName: string;
-  sectionsDetails: SectionsDetails[];
-  entryType: number;
-  status: number;
-  remarks: string | null;
-  hearingDate: string | null;
-  closingRemarks: string | null;
-  assigneeRemarks: string | null;
-  listAudio: string[];
-  listOfImage: string[];
-  createdAt: string;
-  closedDate: string;
-  assignedTo: string | null;
-  decisionFilePaths: DecisionFilePaths[];
-  complainantDetails: ComplainantDetails;
-  interimDetails: InterimDetails[];
-  appealDecisionDetails: AppealDecisionDetails[];
-}
+// export interface ManageCustomComplainsData {
+//   id: number;
+//   caseNo: string;
+//   shopName: string;
+//   phoneNumber: string;
+//   complaintType: string;
+//   categoryName: string;
+//   address: string;
+//   division: {
+//     id: number;
+//     name: string;
+//   };
+//   district: {
+//     id: number;
+//     name: string;
+//   };
+//   tehsil: {
+//     id: number;
+//     name: string;
+//   };
+//   latitude: number;
+//   longitude: number;
+//   finedAmount: number;
+//   fineCollectionDate: null | string;
+//   billBoardImage: string;
+//   sectionCategoryName: string;
+//   sectionsDetails: SectionsDetails[];
+//   entryType: number;
+//   status: number;
+//   remarks: string | null;
+//   hearingDate: string | null;
+//   closingRemarks: string | null;
+//   assigneeRemarks: string | null;
+//   listAudio: string[];
+//   listOfImage: string[];
+//   createdAt: string;
+//   closedDate: string;
+//   assignedTo: string | null;
+//   decisionFilePaths: DecisionFilePaths[];
+//   complainantDetails: ComplainantDetails;
+//   interimDetails: InterimDetails[];
+//   appealDecisionDetails: AppealDecisionDetails[];
+// }
 
 const useGetCustomComplaints = ({
   refresh = false,
@@ -162,7 +163,7 @@ const useGetCustomComplaints = ({
   console.log(queryString, "query");
   console.log(sectionIds, "..////..");
 
-  return useData<ManageCustomComplainsData>({
+  return useData<ManageComplainsData>({
     refresh,
     endpoint: `${ADMIN_DASHBOARD_API}/custom-complaints${
       queryString ? `?${queryString}` : ""

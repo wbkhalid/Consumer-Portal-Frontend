@@ -1,12 +1,13 @@
 "use client";
 
 import DownloadDropDown from "../../../components/DownloadDropDown/DownloadDropDown";
-import { ManageCustomComplainsData } from "../../../hooks/useGetCustomComplaints";
+import { ManageComplainsData } from "../../../hooks/useGetAllComplains";
+
 import { exportDataToExcel, exportDataToPDF } from "../../../utils/utils";
 import { getColumns } from "./CustomComplaintTable";
 
 interface Props {
-  data: ManageCustomComplainsData[];
+  data: ManageComplainsData[];
   fileName: string;
 }
 
@@ -33,7 +34,7 @@ const DownloadWrapper = ({ data, fileName }: Props) => {
     exportDataToExcel(
       buildRows(),
       columns,
-      `${fileName} - ${new Date().toLocaleDateString()}.xlsx`
+      `${fileName} - ${new Date().toLocaleDateString()}.xlsx`,
     );
   };
 
@@ -41,7 +42,7 @@ const DownloadWrapper = ({ data, fileName }: Props) => {
     exportDataToPDF(
       columns,
       buildRows(),
-      `${fileName} - ${new Date().toLocaleDateString()}.pdf`
+      `${fileName} - ${new Date().toLocaleDateString()}.pdf`,
     );
   };
 

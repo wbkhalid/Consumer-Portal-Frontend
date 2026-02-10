@@ -2,7 +2,6 @@
 
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import { useState } from "react";
-import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 import { ManageAppealsData } from "../../hooks/useGetAppeals";
 import DetailHeader from "../../components/complaintDetail/DetailHeader";
 import Stepper from "../../components/complaintDetail/Stepper";
@@ -23,7 +22,7 @@ const AppealDialog = ({
   onClose,
   onSuccess,
 }: {
-  selectedComplaint: ManageComplainsData | ManageCustomComplainsData | null;
+  selectedComplaint: ManageComplainsData | null;
   onClose: () => void;
   onSuccess: () => void;
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;

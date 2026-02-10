@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CustomTextField from "../CustomTextField";
 import { Button, Dialog } from "@radix-ui/themes";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
-import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+
 import apiClient from "../../services/api-client";
 import { ADMIN_DASHBOARD_API, COMPLAINT_API } from "../../APIs";
 import { toast } from "react-toastify";
@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { canEditable, copyToClipboard } from "../../utils/utils";
 
 interface MediaDetailsProps {
-  complaint: ManageComplainsData | ManageCustomComplainsData | null;
+  complaint: ManageComplainsData | null;
   onSuccess: () => void;
 }
 

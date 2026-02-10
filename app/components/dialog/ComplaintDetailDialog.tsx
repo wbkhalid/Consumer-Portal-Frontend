@@ -13,7 +13,7 @@ import {
   PROCEEDING_STEPS,
   RESOLVED_STEPS,
 } from "../complaintDetail/StepperOptions";
-import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+
 import FullScreenMediaModal from "./FullScreenMediaModal";
 import ComplaintHistory from "../complaintDetail/ComplaintHistory";
 import AssignDetails from "../complaintDetail/AssignDetails";
@@ -30,7 +30,7 @@ const ComplaintDetailDialog = ({
   onClose,
   onSuccess,
 }: {
-  selectedComplaint: ManageComplainsData | null | ManageCustomComplainsData;
+  selectedComplaint: ManageComplainsData | null;
   onClose: () => void;
   onSuccess: () => void;
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;

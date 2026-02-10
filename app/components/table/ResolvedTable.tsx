@@ -14,11 +14,11 @@ import { Dialog } from "@radix-ui/themes";
 import { useRouter, useSearchParams } from "next/navigation";
 import { sort } from "fast-sort";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
-import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+
 import ComplaintDetailDialog from "../dialog/ComplaintDetailDialog";
 
 interface ResolvedTableProps {
-  rowsData: ManageComplainsData[] | ManageCustomComplainsData[];
+  rowsData: ManageComplainsData[];
   isBreadCrumbs?: boolean;
   setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -59,7 +59,7 @@ const ResolvedTable = ({
 
   const sortFieldMapping: Record<
     string,
-    (item: ManageComplainsData | ManageCustomComplainsData) => string | number
+    (item: ManageComplainsData) => string | number
   > = {
     id: (i) => i.id,
     date: (i) => new Date(i.createdAt).getTime(),

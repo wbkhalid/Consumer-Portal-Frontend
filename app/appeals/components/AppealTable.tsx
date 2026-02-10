@@ -13,7 +13,6 @@ import useGetAllStaff from "../../hooks/useGetAllStaff";
 import { Dialog } from "@radix-ui/themes";
 import ComplaintDetailDialog from "../../components/dialog/ComplaintDetailDialog";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
-import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 import AppealDialog from "./AppealDialog";
 
 interface AppealsTableProps {
@@ -39,9 +38,8 @@ const AppealTable = ({ rowsData, setRefresh }: AppealsTableProps) => {
   const role = getRole();
   const { data: staffData } = useGetAllStaff();
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedComplaint, setSelectedComplaint] = useState<
-    ManageComplainsData | ManageCustomComplainsData | null
-  >(null);
+  const [selectedComplaint, setSelectedComplaint] =
+    useState<ManageComplainsData | null>(null);
   const isAllowed = role === "Secretary" || role === "DG";
   return (
     <>

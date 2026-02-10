@@ -8,12 +8,14 @@ import DateFilter from "../../../components/DateFilter";
 import ClearButton from "../../../components/ClearButton";
 import ErrorMessage from "../../../components/Form/ErrorMessage";
 import PageHeader from "../../../components/PageHeader";
+import { ManageComplainsData } from "../../../hooks/useGetAllComplains";
 
 export interface ComplaintInstitution {
   districtName: string;
   walkIn: number;
   online: number;
   total: number;
+  complaints: ManageComplainsData[];
 }
 
 interface Props {

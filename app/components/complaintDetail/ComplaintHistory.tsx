@@ -2,7 +2,6 @@ import { format } from "date-fns";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
 import useGetAllStaff from "../../hooks/useGetAllStaff";
 import useGetComplaintHistory from "../../hooks/useGetComplaintHistory";
-import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
 import { useRegionFilters } from "../../hooks/useRegionFilters";
 import {
   formatDate,
@@ -14,7 +13,7 @@ import {
 import useGetMeetingVideos from "../../hooks/useGetMeetingVideos";
 
 interface HistoryProps {
-  complaint: ManageComplainsData | ManageCustomComplainsData | null;
+  complaint: ManageComplainsData | null;
   setMediaModal: React.Dispatch<
     React.SetStateAction<{
       open: boolean;

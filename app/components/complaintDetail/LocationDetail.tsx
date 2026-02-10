@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
-import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+
 import { Button, Dialog } from "@radix-ui/themes";
 import { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -17,7 +17,7 @@ const LocationDetail = ({
   complaint,
   onSuccess,
 }: {
-  complaint: ManageComplainsData | ManageCustomComplainsData | null;
+  complaint: ManageComplainsData | null;
   onSuccess: () => void;
 }) => {
   const loginUser = canEditable();

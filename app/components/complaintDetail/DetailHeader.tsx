@@ -1,14 +1,14 @@
 import { Dialog } from "@radix-ui/themes";
 import { RxCross2 } from "react-icons/rx";
 import { ManageComplainsData } from "../../hooks/useGetAllComplains";
-import { ManageCustomComplainsData } from "../../hooks/useGetCustomComplaints";
+
 import { formatComplaintId } from "../../utils/utils";
 
 const DetailHeader = ({
   complaint,
   onClose,
 }: {
-  complaint: ManageComplainsData | ManageCustomComplainsData | null;
+  complaint: ManageComplainsData | null;
   onClose: () => void;
 }) => {
   return (
